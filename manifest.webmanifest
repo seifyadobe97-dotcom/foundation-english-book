@@ -1,0 +1,11 @@
+{
+  "name":"Foundation English — Institute Interactive Book",
+  "short_name":"Foundation English",
+  "start_url":"./index.html",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#edf0f1",
+  "theme_color":"#479599",
+  "icons":[{"src":"logo.svg","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}],
+  "categories":["education","books"]
+}
