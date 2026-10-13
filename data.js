@@ -1,7 +1,32 @@
 window.DATA={
-vocab:{A:[["apple","🍎"],["ant","🐜"],["arm","💪"],["arrow","➡️"],["axe","🪓"],["angry","😠"]],B:[["bear","🐻"],["banana","🍌"],["baby","👶"],["book","📘"],["bag","🎒"],["ball","⚽"]],C:[["cat","🐱"],["car","🚗"],["camel","🐫"],["cake","🎂"],["carrot","🥕"],["cow","🐄"]]},
-dictionary:{A:{apple:"تفاحة",ant:"نملة",arm:"ذراع",arrow:"سهم",axe:"فأس",angry:"غاضب"},B:{bear:"دب",banana:"موزة",baby:"طفل رضيع",book:"كتاب",bag:"حقيبة",ball:"كرة"},C:{cat:"قطة",car:"سيارة",camel:"جمل",cake:"كعكة",carrot:"جزرة",cow:"بقرة"}},
+vocab:{
+A:[["apple","🍎"],["ant","🐜"],["arm","💪"],["arrow","➡️"],["axe","🪓"],["angry","😠"]],
+B:[["bear","🐻"],["banana","🍌"],["baby","👶"],["book","📘"],["bag","🎒"],["ball","⚽"]],
+C:[["cat","🐱"],["car","🚗"],["camel","🐫"],["cake","🎂"],["carrot","🥕"],["cow","🐄"]]
+},
+dictionary:{
+A:{apple:"تفاحة",ant:"نملة",arm:"ذراع",arrow:"سهم",axe:"فأس",angry:"غاضب"},
+B:{bear:"دب",banana:"موزة",baby:"طفل رضيع",book:"كتاب",bag:"حقيبة",ball:"كرة"},
+C:{cat:"قطة",car:"سيارة",camel:"جمل",cake:"كعكة",carrot:"جزرة",cow:"بقرة"}
+},
 ipa:{A:["æ","IPA VOWEL","apple"],B:["b","IPA CONSONANT","bear"],C:["k","IPA CONSONANT","cat"]},
+sentences:{
+A:[
+{word:"apple",text:"I eat an apple."},
+{word:"ant",text:"The ant is small."},
+{word:"arm",text:"This is my arm."}
+],
+B:[
+{word:"bear",text:"The bear is big."},
+{word:"banana",text:"The banana is yellow."},
+{word:"baby",text:"The baby is happy."}
+],
+C:[
+{word:"cat",text:"The cat is cute."},
+{word:"car",text:"The car is red."},
+{word:"camel",text:"The camel is tall."}
+]
+},
 audio:{
 A:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/399142f3-c652-43e9-9fa3-a4e6b81da355.mp3",
 B:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/f963c3d0-eeed-4e90-abbc-4dfe3ca47ceb.mp3",
