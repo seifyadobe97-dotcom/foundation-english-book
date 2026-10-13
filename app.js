@@ -1,4 +1,4 @@
-const V=DATA.vocab,D=DATA.dictionary,A=DATA.audio,S=DATA.sentences;
+const V=DATA.vocab,D=DATA.dictionary,A=DATA.audio,E=DATA.examples;
 let page=1,au=null,btn=null;
 const total=6,$=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
 
@@ -8,24 +8,29 @@ function fallback(k,b){b.classList.remove('playing');if(!('speechSynthesis'in wi
 function play(k,b){stop();b.classList.add('playing');btn=b;if(!A[k]){speak(k,b);return}const u=new Audio(A[k]);au=u;u.onended=()=>{b.classList.remove('playing');au=null;btn=null};u.onerror=()=>fallback(k,b);u.play().catch(()=>fallback(k,b))}
 function speak(text,b){stop();if(!('speechSynthesis'in window)){toast('Sentence audio unavailable');return}const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=.78;u.pitch=1;btn=b;b.classList.add('playing');u.onend=()=>{b.classList.remove('playing');btn=null};u.onerror=()=>{b.classList.remove('playing');btn=null};speechSynthesis.speak(u)}
 
+function highlight(text,word){return text.replace(new RegExp('\\b'+word+'\\b','i'),m=>'<mark>'+m+'</mark>')}
 function build(L){
-  const v=$('#v'+L),d=$('#d'+L),s=$('#s'+L);
+  const v=$('#v'+L),d=$('#d'+L);
   v.innerHTML='';
   d.innerHTML='<h3>قاموس<span>DICTIONARY</span></h3>';
   V[L].forEach(([w,e])=>{
     const c=document.createElement('div');c.className='card';
-    c.innerHTML='<div class="emoji">'+e+'</div><div class="word"><span>'+w+'</span></div>';
-    const b=document.createElement('button');b.className='play';b.textContent='🔊';b.setAttribute('aria-label','Play '+w);
-    b.onclick=()=>play(w,b);c.querySelector('.word').appendChild(b);v.appendChild(c);
-    const r=document.createElement('div');r.className='de';r.innerHTML='<span class="ar">'+D[L][w]+'</span><span class="en">'+w+'</span>';d.appendChild(r);
-  });
-  s.innerHTML='';
-  S[L].forEach((item,i)=>{
-    const row=document.createElement('div');row.className='sentenceRow';
-    const highlighted=item.text.replace(new RegExp('\\b'+item.word+'\\b','i'),m=>'<mark>'+m+'</mark>');
-    row.innerHTML='<span class="sentenceNo">'+(i+1)+'</span><p>'+highlighted+'</p>';
-    const b=document.createElement('button');b.className='sentencePlay';b.textContent='🔊';b.setAttribute('aria-label','Play sentence');
-    b.onclick=()=>speak(item.text,b);row.appendChild(b);s.appendChild(row);
+    c.innerHTML='<div class="emoji">'+e+'</div><div class="word"><span>'+w+'</span></div><div class="cardExamples"></div>';
+    const wb=document.createElement('button');wb.className='play';wb.textContent='🔊';wb.setAttribute('aria-label','Play '+w);
+    wb.onclick=()=>play(w,wb);c.querySelector('.word').appendChild(wb);
+
+    const ex=c.querySelector('.cardExamples');
+    (E[w]||[]).forEach((sentence,i)=>{
+      const row=document.createElement('div');row.className='cardExample';
+      row.innerHTML='<span class="exNo">'+(i+1)+'</span><p>'+highlight(sentence,w)+'</p>';
+      const sb=document.createElement('button');sb.className='examplePlay';sb.textContent='🔊';sb.setAttribute('aria-label','Play example sentence');
+      sb.onclick=()=>speak(sentence,sb);row.appendChild(sb);ex.appendChild(row);
+    });
+    v.appendChild(c);
+
+    const r=document.createElement('div');r.className='de';
+    r.innerHTML='<span class="ar">'+D[L][w]+'</span><span class="en">'+w+'</span>';
+    d.appendChild(r);
   });
 }
 ['A','B','C'].forEach(build);
@@ -97,7 +102,7 @@ $('#install').onclick=async()=>{if(prompt){prompt.prompt();await prompt.userChoi
 $('#closeHelp').onclick=()=>$('#help').hidden=true;$('#help').onclick=e=>{if(e.target.id==='help')e.currentTarget.hidden=true};
 
 let x=null,y=null;
-addEventListener('touchstart',e=>{if(e.target.closest('.options,.sentenceRow,.quizActions'))return;x=e.changedTouches[0].clientX;y=e.changedTouches[0].clientY},{passive:true});
+addEventListener('touchstart',e=>{if(e.target.closest('.options,.cardExample,.quizActions'))return;x=e.changedTouches[0].clientX;y=e.changedTouches[0].clientY},{passive:true});
 addEventListener('touchend',e=>{if(x===null)return;const dx=e.changedTouches[0].clientX-x,dy=e.changedTouches[0].clientY-y;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.4)show(dx<0?page+1:page-1);x=y=null},{passive:true});
 addEventListener('load',()=>setTimeout(()=>$('#splash').classList.add('hide'),350));
 if('serviceWorker'in navigator&&location.protocol==='https:')navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
