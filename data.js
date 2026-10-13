@@ -10,22 +10,27 @@ B:{bear:"دب",banana:"موزة",baby:"طفل رضيع",book:"كتاب",bag:"ح�
 C:{cat:"قطة",car:"سيارة",camel:"جمل",cake:"كعكة",carrot:"جزرة",cow:"بقرة"}
 },
 ipa:{A:["æ","IPA VOWEL","apple"],B:["b","IPA CONSONANT","bear"],C:["k","IPA CONSONANT","cat"]},
-sentences:{
-A:[
-{word:"apple",text:"I eat an apple."},
-{word:"ant",text:"The ant is small."},
-{word:"arm",text:"This is my arm."}
-],
-B:[
-{word:"bear",text:"The bear is big."},
-{word:"banana",text:"The banana is yellow."},
-{word:"baby",text:"The baby is happy."}
-],
-C:[
-{word:"cat",text:"The cat is cute."},
-{word:"car",text:"The car is red."},
-{word:"camel",text:"The camel is tall."}
-]
+examples:{
+apple:["I eat an apple.","The apple is red.","This is my apple."],
+ant:["The ant is small.","I see an ant.","The ant is on a leaf."],
+arm:["This is my arm.","My arm is strong.","I raise my arm."],
+arrow:["This is an arrow.","The arrow points right.","I see a blue arrow."],
+axe:["This is an axe.","The axe is heavy.","He has an axe."],
+angry:["I am angry.","The boy is angry.","She looks angry."],
+
+bear:["The bear is big.","I see a bear.","The bear is brown."],
+banana:["The banana is yellow.","I eat a banana.","This banana is sweet."],
+baby:["The baby is happy.","I see a baby.","The baby is small."],
+book:["This is a book.","I read a book.","The book is blue."],
+bag:["This is my bag.","The bag is red.","I carry my bag."],
+ball:["This is a ball.","I kick the ball.","The ball is round."],
+
+cat:["The cat is cute.","I see a cat.","The cat is small."],
+car:["The car is red.","I see a car.","The car is fast."],
+camel:["The camel is tall.","I see a camel.","The camel is brown."],
+cake:["This is a cake.","I like cake.","The cake is sweet."],
+carrot:["This is a carrot.","The carrot is orange.","I eat a carrot."],
+cow:["The cow is big.","I see a cow.","The cow is black and white."]
 },
 audio:{
 A:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/399142f3-c652-43e9-9fa3-a4e6b81da355.mp3",
