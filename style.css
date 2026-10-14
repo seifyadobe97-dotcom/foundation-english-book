@@ -386,3 +386,76 @@
 
   .coverFoot{bottom:4.5%}
 }
+
+
+/* ===== LISTENING + PHONICS PRACTICE V6 ===== */
+.listeningPage .quizHeader p{max-width:360px}
+.listenTop{
+  display:grid;
+  grid-template-columns:110px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+  margin-bottom:7px
+}
+.listenQ{
+  min-height:42px;
+  border:0;
+  border-radius:12px;
+  background:var(--t);
+  color:#fff;
+  font-weight:900;
+  font-size:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  cursor:pointer;
+  box-shadow:0 5px 12px rgba(71,149,153,.18)
+}
+.listenQ.playing{
+  background:#367d81;
+  outline:4px solid rgba(71,149,153,.18)
+}
+.pictureOptions button{
+  font-size:32px !important;
+  line-height:1;
+  min-height:58px !important
+}
+.letterOptions button{
+  font-size:18px !important
+}
+
+@media(max-width:760px){
+  .listeningPage .quizHeader{
+    margin-bottom:14px !important
+  }
+  .listenTop{
+    display:block;
+    margin-bottom:8px
+  }
+  .listenQ{
+    width:100%;
+    min-height:50px;
+    font-size:14px;
+    border-radius:12px;
+    margin-bottom:10px
+  }
+  .listenTop .qtop{
+    width:100%;
+  }
+  .listeningPage .quizq{
+    padding:15px 12px !important
+  }
+  .listeningPage .options.pictureOptions,
+  .listeningPage .options.letterOptions{
+    grid-template-columns:repeat(3,1fr) !important;
+  }
+  .listeningPage .pictureOptions button{
+    min-height:72px !important;
+    font-size:40px !important
+  }
+  .listeningPage .letterOptions button{
+    min-height:54px !important;
+    font-size:20px !important
+  }
+}
