@@ -459,3 +459,339 @@
     font-size:20px !important
   }
 }
+
+
+/* ===== LEARNING SYSTEM V14 ===== */
+.masteryCount{
+  min-width:58px;
+  padding:7px 9px;
+  border-radius:10px;
+  background:#eef7f7;
+  color:var(--t);
+  font-size:10px;
+  font-weight:900;
+  text-align:center;
+}
+#arabicToggle.off{
+  background:#fff6f1;
+  color:var(--o);
+  border-color:#f2d8ca;
+}
+body.hideArabic .dict .ar{display:none}
+body.hideArabic .dict .de{grid-template-columns:1fr}
+body.hideArabic .dict .en{justify-self:start;font-size:12px}
+
+.lesson{
+  aspect-ratio:auto;
+  min-height:1120px;
+  height:auto;
+  overflow:visible;
+  padding-bottom:76px;
+}
+.lesson .footer{
+  bottom:18px;
+}
+.letter{
+  gap:10px;
+}
+.letterVoices{
+  position:absolute;
+  right:9%;
+  bottom:11%;
+  display:flex;
+  gap:6px;
+}
+.voicePair,.sentenceVoices,.microAudio,.listenVoices{
+  display:inline-flex;
+  gap:5px;
+  align-items:center;
+}
+.voiceBtn{
+  width:30px;
+  height:30px;
+  border:0;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  background:var(--t);
+  color:#fff;
+  font-size:11px;
+  box-shadow:0 3px 8px rgba(0,0,0,.10);
+  transition:.15s;
+}
+.voiceBtn.slowPlay{
+  background:#f4efe9;
+  color:#725f53;
+  border:1px solid #e4dbd1;
+}
+.voiceBtn.playing{
+  outline:3px solid rgba(71,149,153,.20);
+  transform:scale(.96);
+}
+.word .voicePair{margin-left:4px}
+.word .voiceBtn{width:27px;height:27px;font-size:10px}
+.cardExample{
+  grid-template-columns:18px minmax(0,1fr) auto !important;
+}
+.sentenceVoices .voiceBtn{width:24px;height:24px;font-size:8px}
+.sound .badge{
+  white-space:nowrap;
+  font-size:6.4px;
+}
+
+/* Quick practice inside each letter */
+.microPractice{
+  margin:16px 6.2% 8px;
+  padding:14px;
+  border:1px solid #dfe8e8;
+  border-radius:17px;
+  background:linear-gradient(180deg,#fbfdfd,#f7fbfb);
+}
+.microPractice.mastered{
+  border-color:#9bcfaf;
+  background:linear-gradient(180deg,#fbfffc,#f1fbf5);
+}
+.microHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding-bottom:9px;
+  margin-bottom:9px;
+  border-bottom:1px solid #e4ecec;
+}
+.microHead b{
+  display:block;
+  color:var(--t);
+  font-size:11px;
+  letter-spacing:1.1px;
+}
+.microHead span{
+  display:block;
+  margin-top:3px;
+  color:#8a9090;
+  font-size:8px;
+}
+.microScore{
+  min-width:62px;
+  padding:7px 9px;
+  border-radius:10px;
+  background:#fff;
+  color:var(--t);
+  text-align:center;
+  font-size:11px;
+  border:1px solid #e1e8e8;
+}
+.microQ{
+  padding:9px 0;
+  border-bottom:1px solid #edf1f1;
+}
+.microQ:last-of-type{border-bottom:0}
+.microPrompt{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:7px;
+}
+.microPrompt b{font-size:10px;color:#474444}
+.microPic{
+  min-width:40px;
+  font-size:32px;
+  line-height:1;
+  display:grid;
+  place-items:center;
+}
+.microQ .options{
+  display:flex;
+  gap:7px;
+}
+.microQ .options button{
+  flex:1;
+  min-height:34px;
+  border:1.5px solid #dfe5e5;
+  border-radius:10px;
+  background:#fff;
+  color:#474444;
+  font-size:10px;
+  font-weight:900;
+  cursor:pointer;
+}
+.microQ .options button.selected{border-color:var(--t);background:#eaf5f5;color:#2d7579}
+.microQ.graded .options button.correct{border-color:#3d9b64;background:#eaf8ef;color:#247441}
+.microQ.graded .options button.wrong{border-color:#cf5b55;background:#fff0ef;color:#a53c37}
+.microQ .qfeedback{min-height:13px;margin-top:5px;font-size:8px;color:#707777}
+.microActions{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+.microActions button{
+  height:34px;
+  border-radius:9px;
+  padding:0 14px;
+  font-size:9px;
+  font-weight:900;
+  cursor:pointer;
+}
+.microCheck{flex:1;border:0;background:var(--t);color:#fff}
+.microReset{border:1px solid #dfe4e4;background:#fff;color:#777}
+
+/* Checkpoint pages */
+.checkpointPage .chip{
+  background:#705c8f;
+}
+.checkpointPage .quizNum{
+  background:#705c8f;
+}
+.checkpointPage .scoreBox strong{
+  color:#705c8f;
+}
+
+/* Desktop quiz pages may expand naturally if needed */
+.quizPage{
+  aspect-ratio:auto;
+  min-height:1120px;
+  height:auto;
+  overflow:visible;
+  padding-bottom:76px;
+}
+.quizPage .footer{bottom:18px}
+
+/* Header refinement */
+.actions{
+  flex-wrap:nowrap;
+}
+
+/* Mobile learning layout */
+@media(max-width:760px){
+  .top{
+    padding:7px 8px;
+  }
+  .brand img{
+    width:68px;
+    height:36px;
+  }
+  .brand b{
+    font-size:11px;
+  }
+  .actions{
+    gap:3px;
+  }
+  .masteryCount{
+    min-width:48px;
+    padding:6px 6px;
+    font-size:8px;
+  }
+  #arabicToggle,.actions #full,.actions #prev,.actions #next{
+    width:30px;
+    height:30px;
+  }
+  .count{
+    min-width:34px;
+    font-size:9px;
+  }
+
+  .lesson,
+  .quizPage{
+    min-height:calc(100dvh - 74px) !important;
+    height:auto !important;
+    padding-bottom:24px !important;
+  }
+  .lesson .footer,
+  .quizPage .footer{
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    bottom:auto !important;
+    margin:20px 16px 4px !important;
+    height:46px !important;
+  }
+
+  .letterVoices{
+    right:6%;
+    bottom:8%;
+    gap:5px;
+  }
+  .letterVoices .voiceBtn{
+    width:32px;
+    height:32px;
+  }
+  .word{
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .word .voicePair{
+    width:auto;
+  }
+  .sentenceVoices .voiceBtn{
+    width:30px;
+    height:30px;
+    font-size:10px;
+  }
+  .cardExample{
+    grid-template-columns:22px minmax(0,1fr) auto !important;
+    min-height:48px;
+  }
+  .cardExample p{
+    font-size:11px !important;
+  }
+
+  .microPractice{
+    margin:14px 16px 4px;
+    padding:12px;
+  }
+  .microHead b{font-size:10px}
+  .microHead span{font-size:7.5px}
+  .microPrompt{
+    align-items:flex-start;
+    flex-wrap:wrap;
+  }
+  .microPrompt b{
+    font-size:12px;
+    line-height:1.35;
+  }
+  .microAudio .voiceBtn{
+    width:38px;
+    height:38px;
+    font-size:13px;
+  }
+  .microPic{
+    font-size:46px;
+    min-width:52px;
+  }
+  .microQ .options{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:7px;
+  }
+  .microQ .options.letterOptions{
+    grid-template-columns:repeat(3,1fr);
+  }
+  .microQ .options button{
+    min-height:44px;
+    font-size:13px;
+  }
+  .microQ .qfeedback{
+    font-size:10px;
+    line-height:1.35;
+    margin-top:7px;
+  }
+  .microActions button{
+    height:44px;
+    font-size:12px;
+  }
+
+  .listenVoices{
+    width:100%;
+    margin-bottom:8px;
+  }
+  .listenVoices .voiceBtn{
+    width:48px;
+    height:48px;
+    font-size:15px;
+  }
+  .listenTop{
+    display:block !important;
+  }
+}
