@@ -1,6 +1,6 @@
 const V=DATA.vocab,D=DATA.dictionary,A=DATA.audio,E=DATA.examples;
 let page=1,au=null,btn=null;
-const total=6,$=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+const total=7,$=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
 
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>e.classList.remove('show'),1400)}
 function stop(){if(au){au.pause();try{au.currentTime=0}catch(e){}}if(btn)btn.classList.remove('playing');au=null;btn=null;if('speechSynthesis'in window)speechSynthesis.cancel()}
@@ -34,7 +34,8 @@ function build(L){
   });
 }
 ['A','B','C'].forEach(build);
-$$('[data-audio]').forEach(b=>b.onclick=()=>play(b.dataset.audio,b));
+$('[data-audio]').forEach(b=>b.onclick=()=>play(b.dataset.audio,b));
+$('.listenQ').forEach(b=>b.onclick=()=>play(b.dataset.listen,b));
 
 function selectOption(button){
   const q=button.closest('.quizq');
@@ -80,7 +81,7 @@ function resetQuiz(id){
 }
 $$('.checkQuiz').forEach(b=>b.onclick=()=>gradeQuiz(b.dataset.target));
 $$('.resetQuiz').forEach(b=>b.onclick=()=>resetQuiz(b.dataset.target));
-['1','2'].forEach(id=>{try{const x=JSON.parse(localStorage.getItem('foundation:quiz'+id));if(x&&x.answered)$('#score'+id).textContent=x.score+' / '+x.total}catch(e){}});
+['1','2','3'].forEach(id=>{try{const x=JSON.parse(localStorage.getItem('foundation:quiz'+id));if(x&&x.answered)$('#score'+id).textContent=x.score+' / '+x.total}catch(e){}});
 
 function show(n){
   stop();page=Math.max(1,Math.min(total,n));
