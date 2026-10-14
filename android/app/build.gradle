@@ -1,0 +1,45 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.foundationenglish.studentbook'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.foundationenglish.studentbook'
+        minSdk 24
+        targetSdk 35
+        versionCode 1
+        versionName '1.0.0'
+    }
+
+    buildTypes {
+        release { minifyEnabled false }
+        debug { minifyEnabled false }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    sourceSets {
+        main.assets.srcDirs += ["$buildDir/generated/book-assets"]
+    }
+}
+
+dependencies {
+    implementation 'androidx.webkit:webkit:1.13.0'
+}
+
+// Bundle the proven static student book. No internet is needed for the
+// pages, images, exercises, styling, quizzes, or the Arabic dictionary.
+def prepareBookAssets = tasks.register('prepareBookAssets', Copy) {
+    from(rootProject.projectDir.parentFile) {
+        include 'index.html', 'style.css', 'logo.svg'
+        include 'audio/voice-manifest.json', 'audio/files/**'
+    }
+    into "$buildDir/generated/book-assets/web"
+}
+tasks.named('preBuild').configure { dependsOn(prepareBookAssets) }
