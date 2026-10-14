@@ -1333,14 +1333,41 @@
 const pages=[...document.querySelectorAll(".page")],total=pages.length,$=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 let page=1,audio=null,active=null;
 let mastered=new Set(JSON.parse(localStorage.getItem("foundation:mastered")||"[]"));
+// Voice library v1: self-hosted, validated recordings have priority over legacy URLs.
+// The manifest initially has no paths; unavailable clips continue to use the existing TTS fallback.
+let voiceManifest=null;
+fetch("audio/voice-manifest.json?v=1",{cache:"no-cache"})
+  .then(r=>r.ok?r.json():null)
+  .then(m=>{if(m&&m.schema===1&&m.voice==="en-US-GuyNeural"&&m.letters&&m.words&&m.sentences)voiceManifest=m;})
+  .catch(()=>{voiceManifest=null;});
+function clipPath(kind,text,slow){
+  if(!voiceManifest)return "";
+  let path=kind==="letter"?voiceManifest.letters[text]:kind==="sentence"?voiceManifest.sentences[text]:voiceManifest.words[text]?.[slow?"slow":"normal"];
+  // Only load relative files from our own repository, not arbitrary manifest URLs.
+  return typeof path==="string"&&/^audio\\/files\\/[a-z0-9/_-]+\\.mp3$/i.test(path)?path:"";
+}
 function stop(){if(audio){audio.pause();audio=null}if(active)active.classList.remove("playing");active=null;if("speechSynthesis"in window)speechSynthesis.cancel();}
-function speak(text,b,rate){stop();if(!("speechSynthesis"in window))return;const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=rate||.8;active=b;b.classList.add("playing");u.onend=()=>b.classList.remove("playing");speechSynthesis.speak(u);}
-function playWord(word,url,b,slow){stop();if(url){const a=new Audio(url);a.playbackRate=slow?.72:1;audio=a;active=b;b.classList.add("playing");a.onended=()=>b.classList.remove("playing");a.onerror=()=>speak(word,b,slow?.58:.8);a.play().catch(()=>speak(word,b,slow?.58:.8));}else speak(word,b,slow?.58:(word.length===1?.72:.8));}
+function speak(text,b,rate){
+  stop();if(!("speechSynthesis"in window))return;
+  const u=new SpeechSynthesisUtterance(text);u.lang="en-US";u.rate=rate||.8;active=b;b.classList.add("playing");
+  u.onend=u.onerror=()=>{if(active===b)b.classList.remove("playing");};speechSynthesis.speak(u);
+}
+function recorded(url,b,rate,onFail){
+  stop();const a=new Audio(url);a.preload="none";a.playbackRate=rate;audio=a;active=b;b.classList.add("playing");
+  a.onended=()=>{if(audio===a){audio=null;active=null;b.classList.remove("playing");}};
+  let failed=false;const fail=()=>{if(failed||audio!==a)return;failed=true;stop();onFail();};
+  a.onerror=fail;const started=a.play();if(started&&started.catch)started.catch(fail);
+}
+function playWord(word,url,b,slow,kind="word"){
+  const fallback=()=>url?recorded(url,b,slow?.72:1,()=>speak(word,b,slow?.58:.8)):speak(word,b,slow?.58:(kind==="letter"?.72:.8));
+  const local=clipPath(kind,word,slow);
+  if(local)recorded(local,b,1,fallback);else fallback();
+}
 function updateProgress(){const p=$("#progress");if(p)p.textContent="✓ "+mastered.size+" / 26";$$(".micro").forEach(m=>{const L=m.dataset.micro;if(mastered.has(L)){m.classList.add("mastered");const s=$("#microScore"+L);if(s)s.textContent="2 / 2 ✓";}})}
 function show(n){stop();page=Math.max(1,Math.min(total,n));pages.forEach((p,i)=>p.classList.toggle("active",i===page-1));$("#count").textContent=page+" / "+total;$("#prev").disabled=page===1;$("#next").disabled=page===total;localStorage.setItem("foundation:lastPage",page);history.replaceState(null,"","#"+page);scrollTo({top:0,behavior:"smooth"});}
-$$(".wordPlay,.letterPlay,.listenQ,.microListen").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,b.dataset.url,b,false)));
-$$(".slowWord").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,b.dataset.url,b,true)));
-$$(".examplePlay").forEach(b=>b.addEventListener("click",()=>speak(b.dataset.sentence,b,.78)));
+$(".wordPlay,.letterPlay,.listenQ,.microListen").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,b.dataset.url,b,false,b.classList.contains("letterPlay")?"letter":"word")));
+$(".slowWord").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,b.dataset.url,b,true)));
+$(".examplePlay").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.sentence,"",b,false,"sentence")));
 $$(".dictToggle").forEach(b=>b.addEventListener("click",()=>{const d=b.closest(".dict");d.classList.toggle("hideArabic");b.textContent=d.classList.contains("hideArabic")?"عربي":"عربي ✓";}));
 $$(".microOptions button").forEach(b=>b.addEventListener("click",()=>{const q=b.closest(".microQ"),m=b.closest(".micro"),L=m.dataset.micro; q.querySelectorAll(".microOptions button").forEach(x=>x.classList.remove("correct","wrong")); if(b.dataset.value===q.dataset.answer){b.classList.add("correct");q.dataset.correct="1";q.querySelector(".microFeedback").textContent="✓ Correct";}else{delete q.dataset.correct;b.classList.add("wrong");q.querySelector(".microFeedback").textContent="Try again";}const score=m.querySelectorAll('.microQ[data-correct="1"]').length;$("#microScore"+L).textContent=score+" / 2";if(score===2){mastered.add(L);localStorage.setItem("foundation:mastered",JSON.stringify([...mastered]));updateProgress();}}));
 $$(".options button").forEach(b=>b.addEventListener("click",()=>{const q=b.closest(".quizq");q.querySelectorAll(".options button").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");q.dataset.selected=b.dataset.value;q.classList.remove("graded");q.querySelector(".qfeedback").textContent="";}));
