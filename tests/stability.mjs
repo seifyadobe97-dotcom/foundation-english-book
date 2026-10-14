@@ -28,7 +28,7 @@ test('exact static 45-page sequence and stable branding', () => {
 });
 
 test('review and listening questions all have valid, unique correct answers', () => {
-  const blocks=[...html.matchAll(/<div class="quizq" data-answer="([^"]+)"[\s\S]*?<div class="options">([\s\S]*?)<\/div>/g)];
+  const blocks=[...html.matchAll(/<div class="quizq" data-answer="([^"]+)"[\s\S]*?<div class="options(?: [^"]+)?"[^>]*>([\s\S]*?)<\/div>/g)];
   assert.equal(blocks.length,108);
   const quizIds=[...html.matchAll(/<div class="quizList" data-quiz="([^"]+)"/g)].map(m=>m[1]);
   assert.deepEqual(quizIds,Array.from({length:18},(_,i)=>String(i+1)));
