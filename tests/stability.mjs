@@ -127,7 +127,7 @@ test('main runtime parses and initializes in a simulated DOM; navigation persist
   assert.equal(el('#next').disabled,true);
   assert.equal(pages.filter(p=>p.classList.contains('active')).length,1);
   assert.equal(storage.get('foundation:lastPage'),'108');
-  for(let i=0;i<100;i++)el('#prev').onclick();
+  for(let i=0;i<120;i++)el('#prev').onclick();
   assert.equal(el('#count').textContent,'1 / 108');
   assert.equal(el('#prev').disabled,true);
 });
