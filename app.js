@@ -154,8 +154,8 @@ function buildBook(){
     book.insertAdjacentHTML("beforeend",reviewQuizPage(g,quizId++,bookNo++));
     book.insertAdjacentHTML("beforeend",listeningQuizPage(g,quizId++,bookNo++));
   });
-  $(".page").forEach((p,i)=>p.dataset.page=i+1);
-  total=$(".page").length;
+  document.querySelectorAll(".page").forEach((p,i)=>p.dataset.page=i+1);
+  total=document.querySelectorAll(".page").length;
   ORDER.forEach(buildLessonContent);
 }
 window.addEventListener("error",()=>{const s=document.querySelector("#splash");if(s)s.classList.add("hide")});
