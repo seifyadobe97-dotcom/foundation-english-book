@@ -119,16 +119,16 @@ test('main runtime parses and initializes in a simulated DOM; navigation persist
   el('#next').onclick();
   assert.equal(el('#count').textContent,'3 / 108');
   el('#prev').onclick();
-  assert.equal(el('#count').textContent,'2 / 45');
+  assert.equal(el('#count').textContent,'2 / 108');
   listeners.keydown({key:'ArrowRight'});
-  assert.equal(el('#count').textContent,'3 / 45');
+  assert.equal(el('#count').textContent,'3 / 108');
   for(let i=0;i<120;i++)el('#next').onclick();
   assert.equal(el('#count').textContent,'108 / 108');
   assert.equal(el('#next').disabled,true);
   assert.equal(pages.filter(p=>p.classList.contains('active')).length,1);
   assert.equal(storage.get('foundation:lastPage'),'108');
   for(let i=0;i<100;i++)el('#prev').onclick();
-  assert.equal(el('#count').textContent,'1 / 45');
+  assert.equal(el('#count').textContent,'1 / 108');
   assert.equal(el('#prev').disabled,true);
 });
 
