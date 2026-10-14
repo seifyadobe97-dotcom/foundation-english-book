@@ -1,6 +1,6 @@
 # Foundation English — Android APK (offline book)
 
-This Android shell bundles the exact **45-page stable static Student Book** (`index.html`, `style.css`, `logo.svg` and verified audio manifest/files) into an installable Android package. **All lessons, vocabulary cards, quizzes, Arabic dictionary, images and navigation work without an internet connection.** It does not rebuild pages dynamically.
+This Android shell bundles the exact **118-page stable static Student Book** (`index.html`, `style.css`, `logo.svg` and verified audio manifest/files) into an installable Android package. **All lessons, vocabulary cards, quizzes, Arabic dictionary, images and navigation work without an internet connection.** It does not rebuild pages dynamically.
 
 ## Key technical choices
 
@@ -40,3 +40,17 @@ gradle -p android --no-daemon :app:assembleDebug
 - Building runs structural book tests, builds the Android package and verifies that the APK contains all 45 pages and local book files.
 - The normal GitHub Pages deployment workflow and the stable web branch are unchanged.
 - Offline and audio behaviors require device acceptance testing; Chromium emulation tests of the website do not automatically validate the native Android shell.
+
+## Institute logo — verified from supplied PDF
+
+**Source:** the original user-provided `شعار معهد القدرات.pdf` (single page, vector outlines; Arabic text contains no font dependency).
+
+- **Inside app:** a fully vector, transparent-background export preserving the Arabic text, divider and institute emblem, used as `assets/web/logo.svg`. The original published site's `logo.svg` is intentionally not modified.
+- **Launcher icon:** the original **right-hand Institute emblem** centered on white, with safe margins for rounded Android icon masks. The tiny Arabic writing is deliberately **not** squeezed into the launcher square; it remains intact within the book.
+- **Brand colors:** PDF-derived dark charcoal, turquoise and orange; no recoloring, warped aspect ratio, cropping of letters or substituted logo artwork.
+- **Scaling:** app-only CSS (header/cover/footer); existing web CSS unchanged.
+- **Reproducibility:** compressed base64 vector assets in `android/branding/` are decoded by Gradle without extra image-processing dependencies. Build verification compares SHA-256 against the approved renders:
+  - full book logo SVG: `3e0a54b393563f416862156bd729e8a743eaf0fa6e7595cf922bfd27be9a438c`
+  - launcher Android vector drawable: `45d63216a5a8fdc82d2fd7160bd4f1bf652bccfe7ebc7c33ce291bfb6cdfaf62`.
+
+**Version 1.1.0** is a test/debug-signed APK built from the completed **118-page** book. Existing versions signed with a different debugging certificate cannot be updated in place; uninstalling an earlier debug version can erase locally stored learning progress. Production distribution still requires a persistent release-signing key and physical-device QA.

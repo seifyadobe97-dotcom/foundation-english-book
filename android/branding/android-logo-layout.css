@@ -1,0 +1,30 @@
+/* Android-only logo proportions: preserve the original PDF vector artwork. */
+.coverFoot img {
+  width: 176px;
+  max-width: 42vw;
+  height: 74px;
+  object-fit: contain;
+}
+.footer img {
+  width: 116px;
+  max-width: 25vw;
+  height: 42px;
+  object-fit: contain;
+}
+@media (max-width: 760px) {
+  .top .brand img {
+    width: 82px;
+    height: 43px;
+    object-fit: contain;
+  }
+  .coverFoot img {
+    width: 144px;
+    max-width: 42vw;
+    height: 64px;
+  }
+  .footer img {
+    width: 100px;
+    max-width: 29vw;
+    height: 37px;
+  }
+}

@@ -5,8 +5,8 @@
     <application
         android:label="Foundation English"
         android:theme="@android:style/Theme.Material.Light.NoActionBar"
-        android:icon="@drawable/ic_launcher"
-        android:roundIcon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_institute_logo"
+        android:roundIcon="@drawable/ic_institute_logo"
         android:allowBackup="false"
         android:usesCleartextTraffic="false"
         android:supportsRtl="true">
