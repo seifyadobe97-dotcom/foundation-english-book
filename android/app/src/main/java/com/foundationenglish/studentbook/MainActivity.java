@@ -27,7 +27,7 @@ import java.util.Locale;
 
 public final class MainActivity extends Activity {
     private static final String BASE = "https://appassets.androidplatform.net/assets/web/";
-    private static final String START = BASE + "index.html#1";
+    private static final String START = BASE + "index.html"; // resume last-opened page from localStorage
 
     private WebView book;
     private TextToSpeech nativeTts;
