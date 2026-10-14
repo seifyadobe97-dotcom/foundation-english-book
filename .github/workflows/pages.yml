@@ -1,7 +1,9 @@
-name: Deploy Foundation English to GitHub Pages
+name: Test and deploy Foundation English to GitHub Pages
 
 on:
   push:
+    branches: ["main"]
+  pull_request:
     branches: ["main"]
   workflow_dispatch:
 
@@ -11,11 +13,34 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: foundation-pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  quality:
+    name: Release quality gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout static book
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate structure, answers, audio mappings and navigation
+        run: npm run test:static
+      - name: Install pinned browser-test dependency
+        run: npm install --ignore-scripts --no-package-lock --no-audit --no-fund
+      - name: Install Chromium for actual-browser tests
+        run: npx playwright install --with-deps chromium
+      - name: Test navigation, quizzes and mobile layout in Chromium
+        run: npm run test:browser
+
   deploy:
+    name: Deploy verified static book
+    needs: quality
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
