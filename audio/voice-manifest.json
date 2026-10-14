@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "voice": "en-US-GuyNeural",
+  "locale": "en-US",
+  "letters": {},
+  "words": {},
+  "sentences": {},
+  "notes": "Only verified, existing audio files are registered here; empty mappings intentionally retain current fallback."
+}
