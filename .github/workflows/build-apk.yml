@@ -38,8 +38,11 @@ jobs:
       - name: Install Android SDK platform and build tools
         run: |
           echo "Using preinstalled Android SDK: $ANDROID_HOME"
-          sdkmanager --licenses >/dev/null || true
-          sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
+          MANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort -V | tail -1)
+          test -n "$MANAGER"
+          echo "SDK manager: $MANAGER"
+          yes | "$MANAGER" --licenses >/dev/null || true
+          "$MANAGER" --install "platforms;android-35" "build-tools;35.0.0"
       - name: Set up verified Gradle version
         uses: gradle/actions/setup-gradle@v4
         with:
