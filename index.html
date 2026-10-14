@@ -1365,7 +1365,7 @@ function playWord(word,url,b,slow,kind="word"){
 }
 function updateProgress(){const p=$("#progress");if(p)p.textContent="✓ "+mastered.size+" / 26";$$(".micro").forEach(m=>{const L=m.dataset.micro;if(mastered.has(L)){m.classList.add("mastered");const s=$("#microScore"+L);if(s)s.textContent="2 / 2 ✓";}})}
 function show(n){stop();page=Math.max(1,Math.min(total,n));pages.forEach((p,i)=>p.classList.toggle("active",i===page-1));$("#count").textContent=page+" / "+total;$("#prev").disabled=page===1;$("#next").disabled=page===total;localStorage.setItem("foundation:lastPage",page);history.replaceState(null,"","#"+page);scrollTo({top:0,behavior:"smooth"});}
-$(".wordPlay,.letterPlay,.listenQ,.microListen").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,b.dataset.url,b,false,b.classList.contains("letterPlay")?"letter":"word")));
+$$(".wordPlay,.letterPlay,.listenQ,.microListen").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,b.dataset.url,b,false,b.classList.contains("letterPlay")?"letter":"word")));
 $(".slowWord").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,b.dataset.url,b,true)));
 $(".examplePlay").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.sentence,"",b,false,"sentence")));
 $$(".dictToggle").forEach(b=>b.addEventListener("click",()=>{const d=b.closest(".dict");d.classList.toggle("hideArabic");b.textContent=d.classList.contains("hideArabic")?"عربي":"عربي ✓";}));
