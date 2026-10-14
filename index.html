@@ -2,7 +2,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#479599">
 <title>Foundation English — Interactive Student Book</title><link rel="icon" href="logo.svg" type="image/svg+xml"><link rel="stylesheet" href="style.css?v=14">
 </head><body>
-<header class="top"><div class="brand"><img src="logo.svg" alt="Institute logo"><div><b>Foundation English</b><small>Interactive Student Book • Institute Edition</small></div></div><div class="actions"><span id="net" class="net">●</span><button id="arabicToggle" aria-label="Toggle Arabic dictionary">ع</button><button id="install" aria-label="Install">＋</button><button id="full" aria-label="Full screen">⛶</button><button id="prev" aria-label="Previous page">◀</button><span id="count" class="count">1 / 45</span><button id="next" aria-label="Next page">▶</button></div></header>
+<header class="top"><div class="brand"><img src="logo.svg" alt="Institute logo"><div><b>Foundation English</b><small>Interactive Student Book • Institute Edition</small></div></div><div class="actions"><span id="net" class="net">●</span><button id="arabicToggle" aria-label="Toggle Arabic dictionary">ع</button><button id="install" aria-label="Install">＋</button><button id="full" aria-label="Full screen">⛶</button><span id="progressMini" class="progressMini" title="Letters mastered">✓ 0/26</span><button id="prev" aria-label="Previous page">◀</button><span id="count" class="count">1 / 45</span><button id="next" aria-label="Next page">▶</button></div></header>
 <main id="book"><section class="page cover active" data-page="1">
 <div class="coverTop">FOUNDATION ENGLISH</div><div class="coverMain"><div class="k">INTERACTIVE STUDENT BOOK</div><h1>Letters<br><span>A - Z</span></h1><p>Listen. Learn. Practice.</p><div class="coverLetters"><span>A</span><span>M</span><span>Z</span></div></div>
 <div class="coverFoot"><b>Student Digital Book</b><img src="logo.svg" alt="Institute logo"><span>Interactive Edition</span></div></section><section class="page lesson" data-page="2" data-letter="A">
@@ -1708,11 +1708,55 @@ $$(".wordPlay,.letterPlay,.listenQ").forEach(b=>b.addEventListener("click",()=>p
 $$(".slowPlay").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,b.dataset.url,b,true)));
 $$(".examplePlay").forEach(b=>b.addEventListener("click",()=>speak(b.dataset.sentence,b,.78)));
 $$(".options button").forEach(b=>b.addEventListener("click",()=>{const q=b.closest(".quizq");q.querySelectorAll(".options button").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");q.dataset.selected=b.dataset.value;q.classList.remove("graded");q.querySelector(".qfeedback").textContent="";}));
-function grade(id){const list=document.querySelector('.quizList[data-quiz="'+id+'"]'),qs=[...list.querySelectorAll(".quizq")];let score=0;qs.forEach(q=>{const chosen=q.dataset.selected||"",correct=q.dataset.answer;q.classList.add("graded");q.querySelectorAll(".options button").forEach(b=>{b.classList.remove("correct","wrong");if(b.dataset.value===correct)b.classList.add("correct");if(chosen&&b.dataset.value===chosen&&chosen!==correct)b.classList.add("wrong");});const fb=q.querySelector(".qfeedback");if(chosen===correct){score++;fb.innerHTML="<b>Correct • 1/1</b> — "+q.dataset.explain}else if(!chosen)fb.innerHTML="<b>Not answered • 0/1</b> — Correct answer: "+correct+".";else fb.innerHTML="<b>Try again • 0/1</b> — "+q.dataset.explain;});$("#score"+id).textContent=score+" / "+qs.length;localStorage.setItem("foundation:quiz"+id,JSON.stringify({score,total:qs.length}));}
+function grade(id){const list=document.querySelector('.quizList[data-quiz="'+id+'"]'),qs=[...list.querySelectorAll(".quizq")];let score=0;qs.forEach(q=>{const chosen=q.dataset.selected||"",correct=q.dataset.answer;q.classList.add("graded");q.querySelectorAll(".options button").forEach(b=>{b.classList.remove("correct","wrong");if(b.dataset.value===correct)b.classList.add("correct");if(chosen&&b.dataset.value===chosen&&chosen!==correct)b.classList.add("wrong");});const fb=q.querySelector(".qfeedback");if(chosen===correct){score++;fb.innerHTML="<b>Correct • 1/1</b> — "+q.dataset.explain}else if(!chosen)fb.innerHTML="<b>Not answered • 0/1</b> — Correct answer: "+correct+".";else fb.innerHTML="<b>Try again • 0/1</b> — "+q.dataset.explain;});$("#score"+id).textContent=score+" / "+qs.length;localStorage.setItem("foundation:quiz"+id,JSON.stringify({score,total:qs.length}));updateMastery();}
 function reset(id){const list=document.querySelector('.quizList[data-quiz="'+id+'"]');list.querySelectorAll(".quizq").forEach(q=>{delete q.dataset.selected;q.classList.remove("graded");q.querySelectorAll(".options button").forEach(b=>b.classList.remove("selected","correct","wrong"));q.querySelector(".qfeedback").textContent="";});$("#score"+id).textContent="— / "+list.querySelectorAll(".quizq").length;localStorage.removeItem("foundation:quiz"+id);}
 $$(".checkQuiz").forEach(b=>b.addEventListener("click",()=>grade(b.dataset.target)));$$(".resetQuiz").forEach(b=>b.addEventListener("click",()=>reset(b.dataset.target)));
 function applyArabic(){document.body.classList.toggle("hide-arabic",!arabicVisible);$("#arabicToggle").textContent=arabicVisible?"ع":"EN";$("#arabicToggle").title=arabicVisible?"Hide Arabic dictionary":"Show Arabic dictionary";localStorage.setItem("foundation:arabic",arabicVisible?"on":"off");}
 $("#arabicToggle").onclick=()=>{arabicVisible=!arabicVisible;applyArabic()};applyArabic();
+function loadSavedScores(){
+  $(".quizList").forEach(list=>{
+    const id=list.dataset.quiz;
+    try{
+      const saved=JSON.parse(localStorage.getItem("foundation:quiz"+id));
+      if(saved&&typeof saved.score==="number"){
+        const el=$("#score"+id);
+        if(el)el.textContent=saved.score+" / "+saved.total;
+      }
+    }catch(e){}
+  });
+}
+function updateMastery(){
+  const mastered=new Set();
+  for(let q=1;q<=18;q+=2){
+    try{
+      const review=JSON.parse(localStorage.getItem("foundation:quiz"+q));
+      const listening=JSON.parse(localStorage.getItem("foundation:quiz"+(q+1)));
+      if(review&&listening&&review.total&&listening.total){
+        const ok=(review.score/review.total)>=0.8&&(listening.score/listening.total)>=0.8;
+        if(ok){
+          const groupIndex=(q-1)/2;
+          const start=groupIndex*3;
+          ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"].slice(start,start+3).forEach(L=>mastered.add(L));
+        }
+      }
+    }catch(e){}
+  }
+  const pm=$("#progressMini");
+  if(pm)pm.textContent="✓ "+mastered.size+"/26";
+  $(".lesson").forEach(p=>{
+    const done=mastered.has(p.dataset.letter);
+    p.classList.toggle("mastered",done);
+    let flag=p.querySelector(".masteryFlag");
+    if(done&&!flag){
+      flag=document.createElement("span");
+      flag.className="masteryFlag";
+      flag.textContent="MASTERED ✓";
+      p.querySelector(".head").appendChild(flag);
+    }else if(!done&&flag){flag.remove()}
+  });
+}
+loadSavedScores();
+updateMastery();
 function show(n){stop();page=Math.max(1,Math.min(total,n));pages.forEach((p,i)=>p.classList.toggle("active",i===page-1));$("#count").textContent=page+" / "+total;$("#prev").disabled=page===1;$("#next").disabled=page===total;localStorage.setItem("foundation:lastPage",page);history.replaceState(null,"","#"+page);scrollTo({top:0,behavior:"smooth"});}
 $("#prev").onclick=()=>show(page-1);$("#next").onclick=()=>show(page+1);addEventListener("keydown",e=>{if(e.key==="ArrowRight")show(page+1);if(e.key==="ArrowLeft")show(page-1)});
 $("#full").onclick=async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch(e){}};
