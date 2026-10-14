@@ -65,7 +65,7 @@ test('audio mappings are internally consistent, without claiming assets exist',(
   assert.equal(corpus.expected.total,764);
   assert.equal(manifest.voice,'en-US-GuyNeural');
   assert.ok(manifest.words && manifest.letters && manifest.sentences);
-  const examples=[...html.matchAll(/<p>([\s\S]*?)<\/p><button class="examplePlay" data-sentence="([^"]+)"/g)];
+  const examples=[...html.matchAll(/<div class="cardExample"><span class="exNo">[123]<\/span><p>([\s\S]*?)<\/p><button class="examplePlay" data-sentence="([^"]+)"/g)];
   const decode=s=>s.replace(/<\/?mark>/g,'').replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/&#39;/g,"'");
   assert.equal(examples.length,447);
   for(const x of examples)assert.equal(decode(x[1]),decode(x[2]),'Visible sentence must match pronunciation text');
