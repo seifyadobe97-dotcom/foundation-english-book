@@ -1,0 +1,1317 @@
+{
+  "schema": 1,
+  "source": "index.html (static source of truth)",
+  "locale": "en-US",
+  "targetVoice": "en-US-GuyNeural",
+  "letterNames": [
+    {
+      "letter": "A",
+      "exampleWord": "apple"
+    },
+    {
+      "letter": "B",
+      "exampleWord": "bear"
+    },
+    {
+      "letter": "C",
+      "exampleWord": "cat"
+    },
+    {
+      "letter": "D",
+      "exampleWord": "dog"
+    },
+    {
+      "letter": "E",
+      "exampleWord": "egg"
+    },
+    {
+      "letter": "F",
+      "exampleWord": "fan"
+    },
+    {
+      "letter": "G",
+      "exampleWord": "goat"
+    },
+    {
+      "letter": "H",
+      "exampleWord": "horse"
+    },
+    {
+      "letter": "I",
+      "exampleWord": "ink"
+    },
+    {
+      "letter": "J",
+      "exampleWord": "jam"
+    },
+    {
+      "letter": "K",
+      "exampleWord": "key"
+    },
+    {
+      "letter": "L",
+      "exampleWord": "lake"
+    },
+    {
+      "letter": "M",
+      "exampleWord": "milk"
+    },
+    {
+      "letter": "N",
+      "exampleWord": "nose"
+    },
+    {
+      "letter": "O",
+      "exampleWord": "olive"
+    },
+    {
+      "letter": "P",
+      "exampleWord": "pen"
+    },
+    {
+      "letter": "Q",
+      "exampleWord": "queen"
+    },
+    {
+      "letter": "R",
+      "exampleWord": "rabbit"
+    },
+    {
+      "letter": "S",
+      "exampleWord": "sad"
+    },
+    {
+      "letter": "T",
+      "exampleWord": "tea"
+    },
+    {
+      "letter": "U",
+      "exampleWord": "uncle"
+    },
+    {
+      "letter": "V",
+      "exampleWord": "van"
+    },
+    {
+      "letter": "W",
+      "exampleWord": "water"
+    },
+    {
+      "letter": "X",
+      "exampleWord": "box"
+    },
+    {
+      "letter": "Y",
+      "exampleWord": "yellow"
+    },
+    {
+      "letter": "Z",
+      "exampleWord": "zebra"
+    }
+  ],
+  "wordPlacements": [
+    {
+      "letter": "A",
+      "word": "apple"
+    },
+    {
+      "letter": "A",
+      "word": "ant"
+    },
+    {
+      "letter": "A",
+      "word": "arm"
+    },
+    {
+      "letter": "A",
+      "word": "arrow"
+    },
+    {
+      "letter": "A",
+      "word": "axe"
+    },
+    {
+      "letter": "A",
+      "word": "angry"
+    },
+    {
+      "letter": "B",
+      "word": "bear"
+    },
+    {
+      "letter": "B",
+      "word": "banana"
+    },
+    {
+      "letter": "B",
+      "word": "baby"
+    },
+    {
+      "letter": "B",
+      "word": "book"
+    },
+    {
+      "letter": "B",
+      "word": "bag"
+    },
+    {
+      "letter": "B",
+      "word": "ball"
+    },
+    {
+      "letter": "C",
+      "word": "cat"
+    },
+    {
+      "letter": "C",
+      "word": "car"
+    },
+    {
+      "letter": "C",
+      "word": "camel"
+    },
+    {
+      "letter": "C",
+      "word": "cake"
+    },
+    {
+      "letter": "C",
+      "word": "carrot"
+    },
+    {
+      "letter": "C",
+      "word": "cow"
+    },
+    {
+      "letter": "D",
+      "word": "dog"
+    },
+    {
+      "letter": "D",
+      "word": "door"
+    },
+    {
+      "letter": "D",
+      "word": "doll"
+    },
+    {
+      "letter": "D",
+      "word": "deer"
+    },
+    {
+      "letter": "D",
+      "word": "date"
+    },
+    {
+      "letter": "D",
+      "word": "dress"
+    },
+    {
+      "letter": "E",
+      "word": "egg"
+    },
+    {
+      "letter": "E",
+      "word": "ear"
+    },
+    {
+      "letter": "E",
+      "word": "eye"
+    },
+    {
+      "letter": "E",
+      "word": "elbow"
+    },
+    {
+      "letter": "E",
+      "word": "eat"
+    },
+    {
+      "letter": "E",
+      "word": "exit"
+    },
+    {
+      "letter": "F",
+      "word": "fan"
+    },
+    {
+      "letter": "F",
+      "word": "fig"
+    },
+    {
+      "letter": "F",
+      "word": "feed"
+    },
+    {
+      "letter": "F",
+      "word": "fire"
+    },
+    {
+      "letter": "F",
+      "word": "fox"
+    },
+    {
+      "letter": "F",
+      "word": "farm"
+    },
+    {
+      "letter": "G",
+      "word": "gum"
+    },
+    {
+      "letter": "G",
+      "word": "goat"
+    },
+    {
+      "letter": "G",
+      "word": "goal"
+    },
+    {
+      "letter": "G",
+      "word": "girl"
+    },
+    {
+      "letter": "G",
+      "word": "grass"
+    },
+    {
+      "letter": "G",
+      "word": "gift"
+    },
+    {
+      "letter": "H",
+      "word": "horse"
+    },
+    {
+      "letter": "H",
+      "word": "hat"
+    },
+    {
+      "letter": "H",
+      "word": "hand"
+    },
+    {
+      "letter": "H",
+      "word": "hair"
+    },
+    {
+      "letter": "H",
+      "word": "hello"
+    },
+    {
+      "letter": "H",
+      "word": "happy"
+    },
+    {
+      "letter": "I",
+      "word": "ink"
+    },
+    {
+      "letter": "I",
+      "word": "in"
+    },
+    {
+      "letter": "I",
+      "word": "ice"
+    },
+    {
+      "letter": "I",
+      "word": "ill"
+    },
+    {
+      "letter": "I",
+      "word": "insect"
+    },
+    {
+      "letter": "I",
+      "word": "igloo"
+    },
+    {
+      "letter": "J",
+      "word": "jacket"
+    },
+    {
+      "letter": "J",
+      "word": "juice"
+    },
+    {
+      "letter": "J",
+      "word": "June"
+    },
+    {
+      "letter": "J",
+      "word": "jug"
+    },
+    {
+      "letter": "J",
+      "word": "jam"
+    },
+    {
+      "letter": "J",
+      "word": "jet"
+    },
+    {
+      "letter": "K",
+      "word": "key"
+    },
+    {
+      "letter": "K",
+      "word": "kid"
+    },
+    {
+      "letter": "K",
+      "word": "king"
+    },
+    {
+      "letter": "K",
+      "word": "kite"
+    },
+    {
+      "letter": "K",
+      "word": "kitchen"
+    },
+    {
+      "letter": "K",
+      "word": "kangaroo"
+    },
+    {
+      "letter": "L",
+      "word": "lake"
+    },
+    {
+      "letter": "L",
+      "word": "leg"
+    },
+    {
+      "letter": "L",
+      "word": "lamp"
+    },
+    {
+      "letter": "L",
+      "word": "lemon"
+    },
+    {
+      "letter": "L",
+      "word": "leaf"
+    },
+    {
+      "letter": "L",
+      "word": "lion"
+    },
+    {
+      "letter": "M",
+      "word": "milk"
+    },
+    {
+      "letter": "M",
+      "word": "meat"
+    },
+    {
+      "letter": "M",
+      "word": "money"
+    },
+    {
+      "letter": "M",
+      "word": "monkey"
+    },
+    {
+      "letter": "M",
+      "word": "moon"
+    },
+    {
+      "letter": "M",
+      "word": "mouse"
+    },
+    {
+      "letter": "N",
+      "word": "neck"
+    },
+    {
+      "letter": "N",
+      "word": "nose"
+    },
+    {
+      "letter": "N",
+      "word": "nine"
+    },
+    {
+      "letter": "N",
+      "word": "nice"
+    },
+    {
+      "letter": "N",
+      "word": "nurse"
+    },
+    {
+      "letter": "N",
+      "word": "net"
+    },
+    {
+      "letter": "O",
+      "word": "oil"
+    },
+    {
+      "letter": "O",
+      "word": "olive"
+    },
+    {
+      "letter": "O",
+      "word": "orange"
+    },
+    {
+      "letter": "O",
+      "word": "owl"
+    },
+    {
+      "letter": "O",
+      "word": "office"
+    },
+    {
+      "letter": "O",
+      "word": "open"
+    },
+    {
+      "letter": "P",
+      "word": "pen"
+    },
+    {
+      "letter": "P",
+      "word": "pencil"
+    },
+    {
+      "letter": "P",
+      "word": "pants"
+    },
+    {
+      "letter": "P",
+      "word": "potato"
+    },
+    {
+      "letter": "P",
+      "word": "parrot"
+    },
+    {
+      "letter": "P",
+      "word": "pizza"
+    },
+    {
+      "letter": "Q",
+      "word": "quiet"
+    },
+    {
+      "letter": "Q",
+      "word": "quilt"
+    },
+    {
+      "letter": "Q",
+      "word": "queen"
+    },
+    {
+      "letter": "Q",
+      "word": "question"
+    },
+    {
+      "letter": "Q",
+      "word": "quarter"
+    },
+    {
+      "letter": "Q",
+      "word": "queue"
+    },
+    {
+      "letter": "R",
+      "word": "rabbit"
+    },
+    {
+      "letter": "R",
+      "word": "red"
+    },
+    {
+      "letter": "R",
+      "word": "rice"
+    },
+    {
+      "letter": "R",
+      "word": "robot"
+    },
+    {
+      "letter": "R",
+      "word": "rain"
+    },
+    {
+      "letter": "R",
+      "word": "rose"
+    },
+    {
+      "letter": "S",
+      "word": "sad"
+    },
+    {
+      "letter": "S",
+      "word": "sit"
+    },
+    {
+      "letter": "S",
+      "word": "school"
+    },
+    {
+      "letter": "S",
+      "word": "sky"
+    },
+    {
+      "letter": "S",
+      "word": "soap"
+    },
+    {
+      "letter": "S",
+      "word": "swim"
+    },
+    {
+      "letter": "T",
+      "word": "tea"
+    },
+    {
+      "letter": "T",
+      "word": "tree"
+    },
+    {
+      "letter": "T",
+      "word": "teacher"
+    },
+    {
+      "letter": "T",
+      "word": "teeth"
+    },
+    {
+      "letter": "T",
+      "word": "taxi"
+    },
+    {
+      "letter": "T",
+      "word": "tomato"
+    },
+    {
+      "letter": "U",
+      "word": "uncle"
+    },
+    {
+      "letter": "U",
+      "word": "umbrella"
+    },
+    {
+      "letter": "U",
+      "word": "up"
+    },
+    {
+      "letter": "U",
+      "word": "unlock"
+    },
+    {
+      "letter": "U",
+      "word": "under"
+    },
+    {
+      "letter": "V",
+      "word": "van"
+    },
+    {
+      "letter": "V",
+      "word": "vet"
+    },
+    {
+      "letter": "V",
+      "word": "violin"
+    },
+    {
+      "letter": "V",
+      "word": "vest"
+    },
+    {
+      "letter": "V",
+      "word": "vase"
+    },
+    {
+      "letter": "W",
+      "word": "watch"
+    },
+    {
+      "letter": "W",
+      "word": "water"
+    },
+    {
+      "letter": "W",
+      "word": "whale"
+    },
+    {
+      "letter": "W",
+      "word": "windy"
+    },
+    {
+      "letter": "W",
+      "word": "window"
+    },
+    {
+      "letter": "X",
+      "word": "box"
+    },
+    {
+      "letter": "X",
+      "word": "fox"
+    },
+    {
+      "letter": "X",
+      "word": "fix"
+    },
+    {
+      "letter": "X",
+      "word": "mix"
+    },
+    {
+      "letter": "X",
+      "word": "six"
+    },
+    {
+      "letter": "Y",
+      "word": "yellow"
+    },
+    {
+      "letter": "Y",
+      "word": "yogurt"
+    },
+    {
+      "letter": "Y",
+      "word": "yard"
+    },
+    {
+      "letter": "Y",
+      "word": "yo-yo"
+    },
+    {
+      "letter": "Y",
+      "word": "yacht"
+    },
+    {
+      "letter": "Z",
+      "word": "zoo"
+    },
+    {
+      "letter": "Z",
+      "word": "zebra"
+    },
+    {
+      "letter": "Z",
+      "word": "zipper"
+    },
+    {
+      "letter": "Z",
+      "word": "zero"
+    }
+  ],
+  "vocabulary": [
+    "apple",
+    "ant",
+    "arm",
+    "arrow",
+    "axe",
+    "angry",
+    "bear",
+    "banana",
+    "baby",
+    "book",
+    "bag",
+    "ball",
+    "cat",
+    "car",
+    "camel",
+    "cake",
+    "carrot",
+    "cow",
+    "dog",
+    "door",
+    "doll",
+    "deer",
+    "date",
+    "dress",
+    "egg",
+    "ear",
+    "eye",
+    "elbow",
+    "eat",
+    "exit",
+    "fan",
+    "fig",
+    "feed",
+    "fire",
+    "fox",
+    "farm",
+    "gum",
+    "goat",
+    "goal",
+    "girl",
+    "grass",
+    "gift",
+    "horse",
+    "hat",
+    "hand",
+    "hair",
+    "hello",
+    "happy",
+    "ink",
+    "in",
+    "ice",
+    "ill",
+    "insect",
+    "igloo",
+    "jacket",
+    "juice",
+    "June",
+    "jug",
+    "jam",
+    "jet",
+    "key",
+    "kid",
+    "king",
+    "kite",
+    "kitchen",
+    "kangaroo",
+    "lake",
+    "leg",
+    "lamp",
+    "lemon",
+    "leaf",
+    "lion",
+    "milk",
+    "meat",
+    "money",
+    "monkey",
+    "moon",
+    "mouse",
+    "neck",
+    "nose",
+    "nine",
+    "nice",
+    "nurse",
+    "net",
+    "oil",
+    "olive",
+    "orange",
+    "owl",
+    "office",
+    "open",
+    "pen",
+    "pencil",
+    "pants",
+    "potato",
+    "parrot",
+    "pizza",
+    "quiet",
+    "quilt",
+    "queen",
+    "question",
+    "quarter",
+    "queue",
+    "rabbit",
+    "red",
+    "rice",
+    "robot",
+    "rain",
+    "rose",
+    "sad",
+    "sit",
+    "school",
+    "sky",
+    "soap",
+    "swim",
+    "tea",
+    "tree",
+    "teacher",
+    "teeth",
+    "taxi",
+    "tomato",
+    "uncle",
+    "umbrella",
+    "up",
+    "unlock",
+    "under",
+    "van",
+    "vet",
+    "violin",
+    "vest",
+    "vase",
+    "watch",
+    "water",
+    "whale",
+    "windy",
+    "window",
+    "box",
+    "fix",
+    "mix",
+    "six",
+    "yellow",
+    "yogurt",
+    "yard",
+    "yo-yo",
+    "yacht",
+    "zoo",
+    "zebra",
+    "zipper",
+    "zero"
+  ],
+  "sentences": [
+    "I have an apple.",
+    "The apple is red.",
+    "I eat an apple at lunch.",
+    "An ant is small.",
+    "The ant walks on the ground.",
+    "I see an ant by the door.",
+    "This is my arm.",
+    "I raise my arm.",
+    "My arm is strong.",
+    "I see an arrow.",
+    "The arrow points left.",
+    "Follow the arrow to the door.",
+    "This is an axe.",
+    "An axe cuts wood.",
+    "The axe stays in the shed.",
+    "I feel angry.",
+    "The boy is angry.",
+    "I feel angry when I lose my toy.",
+    "The bear is big.",
+    "A bear lives in the forest.",
+    "I see a bear at the zoo.",
+    "I have a banana.",
+    "The banana is yellow.",
+    "I eat a banana for breakfast.",
+    "The baby is small.",
+    "The baby sleeps in a bed.",
+    "My baby sister smiles at me.",
+    "I have a book.",
+    "The book has pictures.",
+    "I read a book before bed.",
+    "This is my bag.",
+    "My bag holds my books.",
+    "I take my bag to school.",
+    "The ball is round.",
+    "I kick the ball.",
+    "We play with a ball outside.",
+    "The cat is small.",
+    "The cat drinks milk.",
+    "My cat sleeps on the sofa.",
+    "The car is red.",
+    "The car has four wheels.",
+    "We go to school by car.",
+    "A camel is tall.",
+    "The camel walks in the sand.",
+    "I see a camel at the zoo.",
+    "I like cake.",
+    "The cake is sweet.",
+    "We eat cake at a party.",
+    "This carrot is orange.",
+    "A carrot grows in the ground.",
+    "I eat a carrot with lunch.",
+    "The cow is big.",
+    "The cow eats grass.",
+    "We see a cow on the farm.",
+    "The dog is happy.",
+    "A dog can run fast.",
+    "My dog plays with a ball.",
+    "Open the door.",
+    "The door is brown.",
+    "I close the door when I leave.",
+    "This doll is small.",
+    "The doll has a dress.",
+    "My sister plays with her doll.",
+    "A deer can run.",
+    "The deer has long legs.",
+    "We see a deer near the trees.",
+    "I eat a date.",
+    "A date is a sweet fruit.",
+    "I take a date in my lunch box.",
+    "The dress is blue.",
+    "She wears a dress.",
+    "My dress is ready for the party.",
+    "This is an egg.",
+    "An egg has a shell.",
+    "I eat an egg for breakfast.",
+    "This is my ear.",
+    "I hear music with my ear.",
+    "My ear feels cold outside.",
+    "This is my eye.",
+    "I see with my eye.",
+    "I close one eye to wink.",
+    "Bend your elbow.",
+    "My elbow is on the table.",
+    "I wash my elbow after playing.",
+    "I eat rice.",
+    "We eat food when we are hungry.",
+    "I eat with my family.",
+    "This is an exit.",
+    "The exit leads outside.",
+    "We walk to the exit after class.",
+    "I have a fan.",
+    "The fan moves air.",
+    "I use a fan when it is hot.",
+    "A fig is a fruit.",
+    "The fig is soft and sweet.",
+    "I eat a fig after lunch.",
+    "I feed the cat.",
+    "We feed the dog each day.",
+    "Please feed the fish for me.",
+    "The fire is hot.",
+    "A fire gives us heat.",
+    "We stay away from the fire.",
+    "The fox is red.",
+    "A fox has a long tail.",
+    "I see a fox near the trees.",
+    "This is a farm.",
+    "A farm has cows and sheep.",
+    "We visit a farm on Sunday.",
+    "I chew gum.",
+    "The gum is pink.",
+    "I put the gum wrapper in the bin.",
+    "The goat is small.",
+    "A goat eats grass.",
+    "The goat lives on a farm.",
+    "This is the goal.",
+    "The ball goes into the goal.",
+    "We cheer when we score a goal.",
+    "The girl is happy.",
+    "The girl reads a book.",
+    "I play with the girl next door.",
+    "The grass is green.",
+    "We sit on the grass in the park.",
+    "This is a gift.",
+    "A gift is a present.",
+    "I give a gift to my friend.",
+    "The horse is big.",
+    "A horse can run fast.",
+    "We see a horse on the farm.",
+    "I have a hat.",
+    "A hat goes on your head.",
+    "I wear a hat in the sun.",
+    "This is my hand.",
+    "I hold a pen in my hand.",
+    "I wash my hand before eating.",
+    "My hair is black.",
+    "I wash my hair.",
+    "I brush my hair every morning.",
+    "I say hello.",
+    "Hello is a friendly word.",
+    "I say hello to my teacher.",
+    "I am happy.",
+    "The baby looks happy.",
+    "I feel happy when we play.",
+    "The ink is blue.",
+    "A pen has ink inside.",
+    "I get ink on my hand when I write.",
+    "The ball is in the box.",
+    "The cat is in the box.",
+    "I put my books in my bag.",
+    "The ice is cold.",
+    "Ice melts in warm water.",
+    "I put ice in my drink.",
+    "I feel ill.",
+    "The boy is ill today.",
+    "I stay home when I am ill.",
+    "An insect is small.",
+    "An insect has six legs.",
+    "I see an insect on a leaf.",
+    "This is an igloo.",
+    "An igloo is a snow house.",
+    "The igloo has a small door.",
+    "I have a jacket.",
+    "A jacket keeps me warm.",
+    "I wear my jacket when it is cold.",
+    "I like juice.",
+    "The juice is in a cup.",
+    "I drink orange juice at breakfast.",
+    "June is a month.",
+    "June comes after May.",
+    "My birthday is in June.",
+    "This is a jug.",
+    "The jug holds water.",
+    "I pour water from the jug.",
+    "I like jam.",
+    "The jam is sweet.",
+    "I put jam on my bread.",
+    "The jet is fast.",
+    "A jet flies in the sky.",
+    "We see a jet above the airport.",
+    "I have a key.",
+    "A key opens a lock.",
+    "I use my key to open the door.",
+    "The kid is happy.",
+    "A kid is a child.",
+    "The kid runs to the playground.",
+    "The king has a crown.",
+    "A king rules a country.",
+    "The king waves to the people.",
+    "My kite is red.",
+    "A kite flies in the wind.",
+    "I fly my kite in the park.",
+    "This is our kitchen.",
+    "We cook food in the kitchen.",
+    "I help my mom in the kitchen.",
+    "A kangaroo can jump.",
+    "The kangaroo has strong legs.",
+    "We see a kangaroo at the zoo.",
+    "The lake is big.",
+    "Fish swim in the lake.",
+    "We walk by the lake on Sunday.",
+    "This is my leg.",
+    "I move my leg when I walk.",
+    "My leg gets tired after a long walk.",
+    "Turn on the lamp.",
+    "A lamp gives light.",
+    "I read by my lamp at night.",
+    "The lemon is yellow.",
+    "A lemon tastes sour.",
+    "We put lemon in our water.",
+    "The leaf is green.",
+    "A leaf grows on a tree.",
+    "I find a leaf on the ground.",
+    "The lion is big.",
+    "A lion has a loud roar.",
+    "We see a lion at the zoo.",
+    "I drink milk.",
+    "The milk is cold.",
+    "I pour milk on my cereal.",
+    "I eat meat.",
+    "The meat is hot.",
+    "We cook meat for dinner.",
+    "I have some money.",
+    "I keep my money in a bag.",
+    "I save money for a toy.",
+    "The monkey can jump.",
+    "A monkey climbs trees.",
+    "We watch a monkey eat a banana.",
+    "The moon is bright.",
+    "The moon shines at night.",
+    "I look at the moon before bed.",
+    "A mouse is small.",
+    "The mouse runs very fast.",
+    "I see a mouse by the wall.",
+    "This is my neck.",
+    "My neck holds up my head.",
+    "I put a scarf around my neck.",
+    "This is my nose.",
+    "I smell with my nose.",
+    "My nose feels cold in winter.",
+    "I can count to nine.",
+    "Nine means one more than eight.",
+    "I have nine pencils in my box.",
+    "You are nice.",
+    "My friend is nice to me.",
+    "It is nice to help others.",
+    "The nurse is kind.",
+    "A nurse helps sick people.",
+    "The nurse checks my temperature.",
+    "This is a net.",
+    "A net can catch a ball.",
+    "The ball hits the net during the game.",
+    "The oil is hot.",
+    "We use oil to cook food.",
+    "Please add oil to the pan.",
+    "This is an olive.",
+    "An olive is a small fruit.",
+    "I put an olive on my pizza.",
+    "I eat an orange.",
+    "An orange is a round fruit.",
+    "I peel an orange after lunch.",
+    "An owl can fly.",
+    "The owl stays awake at night.",
+    "I hear an owl near the trees.",
+    "This is an office.",
+    "People work at desks in an office.",
+    "My dad works in an office.",
+    "Open the box.",
+    "I open the door with a key.",
+    "We open our books in class.",
+    "I have a pen.",
+    "The pen has blue ink.",
+    "I write my name with a pen.",
+    "My pencil is long.",
+    "A pencil makes gray marks.",
+    "I use a pencil at school.",
+    "My pants are blue.",
+    "Pants cover your legs.",
+    "I put on my pants before school.",
+    "This is a potato.",
+    "A potato grows in the ground.",
+    "We eat a potato with dinner.",
+    "The parrot is green.",
+    "A parrot is a colorful bird.",
+    "We hear a parrot at the zoo.",
+    "I like pizza.",
+    "Pizza has cheese on top.",
+    "We eat pizza with our friends.",
+    "Please be quiet.",
+    "The room is quiet now.",
+    "I stay quiet when my baby sleeps.",
+    "The quilt is soft.",
+    "A quilt keeps me warm.",
+    "I pull the quilt over my feet.",
+    "The queen has a crown.",
+    "A queen lives in a palace.",
+    "The queen smiles at the children.",
+    "I have a question.",
+    "The teacher asks a question.",
+    "I raise my hand to ask a question.",
+    "This is a quarter.",
+    "A quarter is one of four equal parts.",
+    "I eat a quarter of the pizza.",
+    "The queue is long.",
+    "People wait in a queue.",
+    "We stand in a queue for the bus.",
+    "The rabbit can hop.",
+    "A rabbit has long ears.",
+    "We give the rabbit a carrot.",
+    "The ball is red.",
+    "Red is the color of a rose.",
+    "I wear a red shirt today.",
+    "The rice is hot.",
+    "We cook rice for dinner.",
+    "The robot is small.",
+    "A robot can move and talk.",
+    "I play with my toy robot.",
+    "The rain is cold.",
+    "Rain falls from the sky.",
+    "We stay inside when it starts to rain.",
+    "The rose is red.",
+    "A rose is a flower.",
+    "I put a rose in a vase.",
+    "I feel sad.",
+    "The boy is sad today.",
+    "I feel sad when my friend leaves.",
+    "Please sit here.",
+    "We sit on chairs.",
+    "I sit with my friend at lunch.",
+    "I go to school.",
+    "School is where we learn.",
+    "I see my friends at school.",
+    "The sky is blue.",
+    "Clouds move across the sky.",
+    "I look at the sky at night.",
+    "Use some soap.",
+    "Soap helps us wash our hands.",
+    "I use soap before I eat.",
+    "I can swim.",
+    "We swim in a pool.",
+    "I swim with my family on Friday.",
+    "I drink tea.",
+    "The tea is hot.",
+    "We make tea for our guests.",
+    "The tree is tall.",
+    "A tree has leaves and branches.",
+    "I sit under a tree in the park.",
+    "My teacher is kind.",
+    "The teacher helps us learn.",
+    "I say good morning to my teacher.",
+    "My teeth are clean.",
+    "I brush my teeth.",
+    "I show my teeth when I smile.",
+    "The taxi is yellow.",
+    "A taxi takes people to places.",
+    "We take a taxi to the airport.",
+    "The tomato is red.",
+    "A tomato grows on a plant.",
+    "I put a tomato in my salad.",
+    "My uncle is kind.",
+    "My uncle is my parent's brother.",
+    "I visit my uncle on Sunday.",
+    "I have an umbrella.",
+    "An umbrella keeps the rain off.",
+    "I take my umbrella when it rains.",
+    "Look up.",
+    "The bird flies up.",
+    "I put my hand up in class.",
+    "I can unlock it.",
+    "I unlock the door with a key.",
+    "Please unlock the gate for me.",
+    "The ball is under the chair.",
+    "My shoes are under the bed.",
+    "I look under the table for my pen.",
+    "The van is big.",
+    "A van can carry many people.",
+    "We ride in a van to school.",
+    "The vet is kind.",
+    "A vet helps sick animals.",
+    "We take our cat to the vet.",
+    "This is a violin.",
+    "A violin makes music.",
+    "My sister plays the violin.",
+    "My vest is yellow.",
+    "A vest is a piece of clothing.",
+    "He wears a bright vest at work.",
+    "This is a vase.",
+    "A vase holds flowers.",
+    "I put a rose in the vase.",
+    "My watch is new.",
+    "A watch tells the time.",
+    "I look at my watch before class.",
+    "I drink water.",
+    "Water is good when I am thirsty.",
+    "I take a bottle of water to school.",
+    "The whale is big.",
+    "A whale lives in the sea.",
+    "We see a whale from the boat.",
+    "It is windy.",
+    "The trees move on a windy day.",
+    "I wear a jacket when it is windy.",
+    "Open the window.",
+    "A window lets in light.",
+    "I look out of the window at the birds.",
+    "This is a box.",
+    "The box holds my toys.",
+    "I put my shoes in a box.",
+    "I can fix it.",
+    "We fix things that are broken.",
+    "My dad helps me fix my toy.",
+    "I can mix colors.",
+    "Mix means put things together.",
+    "I mix milk and fruit in a bowl.",
+    "I am six.",
+    "Six is one more than five.",
+    "I have six red pencils.",
+    "The sun looks yellow.",
+    "Yellow is a bright color.",
+    "I wear a yellow shirt today.",
+    "I like yogurt.",
+    "Yogurt is soft and creamy.",
+    "I eat yogurt with a spoon.",
+    "This is our yard.",
+    "A yard is the land by a house.",
+    "We play in the yard after school.",
+    "My yo-yo is red.",
+    "A yo-yo goes up and down.",
+    "I play with my yo-yo at home.",
+    "This is a yacht.",
+    "A yacht is a boat.",
+    "We see a yacht on the sea.",
+    "We go to the zoo.",
+    "A zoo has many animals.",
+    "I see lions and zebras at the zoo.",
+    "The zebra is black and white.",
+    "A zebra has stripes.",
+    "We see a zebra at the zoo.",
+    "This is a zipper.",
+    "A zipper closes my jacket.",
+    "I pull up the zipper when it is cold.",
+    "Zero means none.",
+    "I have zero coins.",
+    "The score is zero at the start."
+  ],
+  "expected": {
+    "letterClips": 26,
+    "wordClips": 296,
+    "sentenceClips": 442,
+    "total": 764
+  },
+  "notes": [
+    "Never synthesize isolated IPA phonemes.",
+    "Normal and slow clips must be separately rendered.",
+    "The word fox appears in F and X; its word audio is shared.",
+    "Focus example words are already included in vocabulary and reuse normal word audio.",
+    "Do not upload browser-generated synthetic recordings or unverified URLs."
+  ]
+}
