@@ -158,6 +158,7 @@ function buildBook(){
   total=$(".page").length;
   ORDER.forEach(buildLessonContent);
 }
+window.addEventListener("error",()=>{const s=document.querySelector("#splash");if(s)s.classList.add("hide")});
 buildBook();
 
 function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>e.classList.remove("show"),1400)}
