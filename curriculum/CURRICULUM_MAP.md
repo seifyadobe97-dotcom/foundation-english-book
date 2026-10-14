@@ -1,71 +1,65 @@
-# Foundation English — Complete Reading Path
+# Foundation English — Complete 118-page Interactive Book
 
-## Status
-This is a continuation of the original stable, static, 45-page **A–Z** student book. The original letter lessons (including the `gift` substitution for source-book `gun`) remain in place. All new pages are written directly into `index.html`; there is **no runtime page generation** and no PWA cache reactivation.
+## Source basis and edition notes
+The first 45 A–Z pages and their 26 letter dictionaries are preserved. The user-supplied Institute curriculum provides the original A–Z vocabulary, the short-vowel progression, and the source vocabulary/order of digraph and vowel-team lessons. **The 10 newly inserted short- and long-vowel stories, their comprehension questions, and their Arabic vocabulary glossaries are instructor-created extensions, not reproduced pages from a source book.**
 
-The extended interactive book contains **108 pages**.
+The original page-based static HTML and Arabic `قاموس` → `عربي ✓` show/hide interaction are retained. PWA caching stays disabled.
 
-## Reading order and direct page links
+## Page-by-page curriculum
 
-| Pages | Module | What students learn |
+| Pages | Lessons | Notes |
 | --- | --- | --- |
-| 1–45 | Original A–Z | 26 letter pages and 18 review/listening pages, unchanged in order |
-| 46–49 | A–F / A–L / A–R / A–Z cumulative reviews | Six listening choices per review |
-| 50 | Part Two: reading map | Interactive unit navigation and pronunciation note |
-| 51–55 | Short vowels a, e, i, o, u | Identify and read short-vowel words |
-| 56 | Short vowels checkpoint | Six questions |
-| 57–61 | CVC blending | Point → segment → blend → hear the complete word |
-| 62–71 | Word families | -at, -an, -ap, -et, -en, -ig, -in, -op, -ot, -un |
-| 72 | CVC and families checkpoint | Six questions |
-| 73–78 | Consonant digraphs | sh, ch, th /θ/, th /ð/, wh, ph |
-| 79 | Digraph checkpoint | Six questions |
-| 80–84 | Long vowels | a_e, ee/ea, i_e, o_e, u_e |
-| 85 | Long-vowel checkpoint | Six questions |
-| 86–91 | Vowel-team unit 2 | ee, ea, oa, ow /oʊ/, ai, ay |
-| 92–97 | Vowel-team unit 3 | oi, ow /aʊ/, ou, ar, or, oo /ʊ/ |
-| 98 | Vowel teams / reading checkpoint | Six questions |
-| 99–103 | Sentence reading | Five stepped fluency pages, five read-aloud lines and two checks each |
-| 104–108 | Mini stories | Five short original stories with read-aloud lines and two comprehension questions each |
+| 1–45 | Original A–Z student book | Unchanged 26 letters, 18 review/listening pages |
+| 46–49 | A–F, A–L, A–R, A–Z cumulative reviews | 6 questions each |
+| 50 | Part Two contents | Jump directly to reading units |
+| 51–60 | Short a/e/i/o/u | **Each vowel lesson immediately followed by a five-line story** |
+| 61 | Short Vowels Checkpoint | 6 questions |
+| 62–66 | CVC Blending | a, e, i, o, u |
+| 67–76 | Word Families | -at, -an, -ap, -et, -en, -ig, -in, -op, -ot, -un |
+| 77 | CVC & Word Families Checkpoint | 6 questions |
+| 78–83 | Consonant Digraphs | sh, ch, voiceless th, voiced th, wh, ph |
+| 84 | Digraph Checkpoint | 6 questions |
+| 85–94 | Long a/e/i/o/u | **Each long-vowel lesson immediately followed by a five-line story** |
+| 95 | Long Vowels Checkpoint | 6 questions |
+| 96–101 | Vowel Teams Unit 2 | ee, ea, oa, ow /oʊ/, ai, ay |
+| 102–107 | Vowel Teams Unit 3 | oi, ow /aʊ/, ou, ar, or, oo /ʊ/ |
+| 108 | Vowel Teams Checkpoint | 6 questions |
+| 109–113 | Decodable Sentences | 5 fluency pages with 5 read-aloud sentences each |
+| 114–118 | Original end-of-book Mini Stories | 5 stories, now also offering full-story playback and bilingual glossary |
 
-## Content totals
+## After-each-vowel story links
 
-- **Original A–Z:** 45 static pages; 108 prior review/listening questions; 52 micro questions; 149 word-card placements; 447 example sentences.
-- **Added:** 63 static pages: four cumulative reviews, one reading map, 43 phonics lessons, five checkpoints, five fluency pages and five mini stories.
-- **New phonics checks:** 149 across 53 lesson, reading or story pages.
-- **New checkpoint/review questions:** 9 × 6 = 54. All 162 combined review/listening questions use the existing Check / Try Again interface.
-- **Total interactive questions:** 108 + 52 + 149 + 54 = **363** (not counting vocabulary audio buttons).
-- New phonics practice scores and selected answers save to `localStorage` per lesson; 80% or more qualifies as Mastered.
+| Sound | Lesson page | New story page | Story title |
+| --- | ---: | ---: | --- |
+| Short a | 51 | 52 | Sam's Bag |
+| Short e | 53 | 54 | Meg's Red Pen |
+| Short i | 55 | 56 | Tim and the Pig |
+| Short o | 57 | 58 | Tom and the Hot Pot |
+| Short u | 59 | 60 | The Bug and the Cup |
+| Long a | 85 | 86 | Kate Bakes a Cake |
+| Long e | 87 | 88 | Lee and the Green Tree |
+| Long i | 89 | 90 | Mike and the White Kite |
+| Long o | 91 | 92 | Rose Writes a Note |
+| Long u | 93 | 94 | The Mule and the Cube |
 
-## Which material came from the source?
+## Identical dictionary and practice system
+- Original A–Z dictionaries are preserved exactly.
+- **63 additional Arabic-English glossaries** now appear in every phonics lesson (43), reading page (5), existing story (5), and new vowel story (10).
+- The same `dict`, `dictToggle`, and `hideArabic` behavior lets a student hide/show Arabic. No extra login needed.
+- Every new vowel story has 5 listenable individual sentences and **Listen to the full story / Stop** controls.
+- Every new story has **3 auto-corrected questions** (including a listening/sound discrimination item); existing lesson practice remains.
+- Responses save in browser localStorage using unique IDs (`VSA` through `VSU`, `VLA` through `VLU`). `Mastered` requires at least 80%.
+- Totals: 108 original review/listening questions + 52 letter micro checks + 54 added checkpoints/reviews + 179 phonics/reading/story questions = **393 interactive questions**.
+- Total full-story buttons: **15** (10 new vowel stories + 5 existing end-of-book stories).
 
-The user-supplied Institute source specification explicitly identifies:
-- The A–Z vocabulary list (already implemented).
-- The sequence **Short Vowels → CVC Blending → Word Families → Digraphs → Long Vowels → Decodable Sentences → Mini Stories**. Vowel teams from source digraph units 2 and 3 are included as their own stage after long vowels.
-- Short vowel order: a, e, i, o, u.
-- Consonant digraphs in Unit 1, with its exact four-word lists:
-  - sh: fish, shop, ship, wash
-  - ch: chick, cherry, bench, branch
-  - voiceless th: math, bath, tooth, teeth
-  - voiced th: this, father, mother, brother
-  - wh: wheat, whale, white, wheel
-  - ph: dolphin, elephant, phone, photo
-- Vowel-team examples and order from Units 2 and 3.
+## Audio honesty and phonics safety
+English playback uses the existing recorded-file-first audio engine followed by the available **browser or Android English Text-to-Speech** fallback. Neither the new stories nor the other 442 existing sentence audio files are claimed to have professionally recorded male-US MP3 files. These still require the separate planned audio library. No isolated IPA-phoneme TTS is used. Story reading uses complete natural sentences; common sight words are allowed to build coherent beginner stories.
 
-**Instructor-created extensions:** all teaching explanations for the phonics lessons, non-specified short-vowel/CVC/word-family examples, listening distractors, reading exercises, original five mini stories, and new checkpoint questions. These are not represented as verbatim source-book text.
-
-## Pronunciation/reading safeguards
-
-- The source `read` in `ea` examples is **present-tense** /riːd/, not past-tense /rɛd/.
-- `ow` /oʊ/ as in *snow* must be distinguished from `ow` /aʊ/ as in *cow*.
-- `oo` /ʊ/ in *book/look* is not the long `oo` in *moon*.
-- Long `u` may be /juː/ (*cube*) or /uː/ (*tune* in common US pronunciation).
-- Voiced and voiceless `th` are separate lessons.
-- Segmentation boxes and IPA symbols are visual teaching aids only; **no isolated phonemes are played through ordinary word TTS**.
-- New word and sentence playback falls back to device/Android speech synthesis. **No additional prerecorded MP3 voices have been falsely claimed or created.** The earlier A–Z speech-corpus plan remains separate.
-
-## Verification and distribution
-
-- The stability tests now verify 108 static pages and all 363 existing/new answer slots.
-- Chromium tests cover first/last page, old A–Z, new phonics pages, correction/mastery persistence, new checkpoint scoring, story reading, and Android/iPhone-sized scrolling.
-- GitHub Pages must not deploy unless quality jobs pass.
-- The older debug APK is based on the earlier 45-page book. The Android build workflow has been updated to expect 108 pages, but **APK distribution can wait until the reading book has been accepted**.
+## Files and quality
+- `curriculum/phonics-course.json`: source-informed 43 staged lessons and 5 end-of-book stories.
+- `curriculum/vowel-stories.json`: ten instructor-created vowel stories and their answer keys/glossaries.
+- `curriculum/phonics-glossary.json`: 142 phonics word translations plus reading and old-story glossaries.
+- `index.html`: the authoritative 118 static page objects.
+- `tests/stability.mjs`: question, dictionary, story and legacy content integrity assertions.
+- `tests/browser-smoke.mjs`: desktop/Android-sized/iPhone-sized navigation, story and practice checks.
+- The released Android **debug APK** must be rebuilt from this edition before distributing it; signing and physical-device testing remain separate.
