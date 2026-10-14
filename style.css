@@ -900,3 +900,103 @@ body.hideArabic .dict .en{justify-self:start;font-size:12px}
   .progressMini{min-width:50px;height:30px;font-size:9px;padding:0 6px}
   .masteryFlag{font-size:6.5px;padding:4px 6px}
 }
+
+
+/* ===== V14: pronunciation + mastery + clearer mobile learning flow ===== */
+.progressPill{
+  min-width:68px;height:34px;padding:0 10px;border-radius:10px;
+  display:grid;place-items:center;background:#eef7f7;border:1px solid #d6e8e8;
+  color:var(--t);font-size:10px;font-weight:900;white-space:nowrap
+}
+.letter{position:relative}
+.letterLabel{
+  position:absolute;top:10%;left:50%;transform:translateX(-50%);
+  font-size:7px;letter-spacing:1.4px;color:#8f9696;font-weight:900
+}
+.wordAudio{display:flex;gap:5px;align-items:center}
+.slowWord{
+  width:28px;height:28px;border:1.5px solid #dce6e6;border-radius:50%;
+  background:#f5f9f9;color:#4e6e70;font-size:11px;cursor:pointer
+}
+.slowWord.playing{outline:3px solid #47959925;transform:scale(.96)}
+.dict h3{
+  display:flex;align-items:center;justify-content:space-between;gap:8px
+}
+.dictTitleText{display:block}
+.dictTitleText small{display:block;color:var(--t);font-size:7px;letter-spacing:1.2px;margin-top:2px}
+.dictToggle{
+  border:1px solid #d9e7e7;background:#fff;color:var(--t);
+  border-radius:8px;padding:5px 7px;font-size:8px;font-weight:900;cursor:pointer
+}
+.dict.hideArabic .ar{visibility:hidden}
+.micro{
+  margin:16px 6.2% 72px;padding:13px;
+  border:1px solid #dce8e8;border-radius:16px;background:#f9fcfc
+}
+.micro.mastered{border-color:#8fc8a4;background:#f4fbf6}
+.microHead{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding-bottom:9px;border-bottom:1px solid #e5eded
+}
+.microHead b{display:block;color:var(--t);font-size:10px;letter-spacing:1.2px}
+.microHead span{display:block;margin-top:2px;color:#8a9090;font-size:8px}
+.microHead strong{
+  color:var(--t);background:#fff;border:1px solid #dce8e8;border-radius:10px;
+  min-width:62px;text-align:center;padding:7px 8px;font-size:12px
+}
+.microGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.microQ{
+  border:1px solid #e2e8e8;border-radius:12px;background:#fff;padding:10px
+}
+.microPrompt{
+  min-height:48px;display:flex;align-items:center;gap:9px;margin-bottom:8px
+}
+.microPrompt b{font-size:10px;color:#4a4f4f}
+.microPic{font-size:34px;line-height:1}
+.microListen{
+  min-width:92px;height:38px;border:0;border-radius:10px;background:var(--t);
+  color:#fff;font-weight:900;cursor:pointer
+}
+.microOptions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.microOptions button{
+  min-height:34px;border:1.5px solid #dde5e5;border-radius:9px;background:#fff;
+  color:#454a4a;font-size:9px;font-weight:900;cursor:pointer
+}
+.microOptions button.correct{border-color:#3d9b64;background:#eaf8ef;color:#247441}
+.microOptions button.wrong{border-color:#cf5b55;background:#fff0ef;color:#a53c37}
+.microFeedback{min-height:13px;margin-top:5px;font-size:8px;font-weight:900;color:#737979}
+
+/* Avoid clipping as lesson content grows */
+.lesson.page,.quizPage{
+  aspect-ratio:auto;
+  min-height:1122px;
+  height:auto;
+  overflow:visible;
+  padding-bottom:1px
+}
+.lesson .footer,.quizPage .footer{bottom:18px}
+
+@media(max-width:760px){
+  .progressPill{min-width:54px;height:30px;padding:0 7px;font-size:8px}
+  .actions{gap:3px}
+  .lesson.page,.quizPage{
+    min-height:calc(100dvh - 74px)!important;
+    height:auto!important;
+    overflow:visible!important
+  }
+  .lesson .vocab{grid-template-columns:1fr!important}
+  .wordAudio .play,.slowWord{width:34px;height:34px;font-size:12px}
+  .letterLabel{font-size:6px;top:8%}
+  .dictToggle{font-size:10px;padding:7px 9px}
+  .micro{margin:16px 16px 20px;padding:12px}
+  .microGrid{grid-template-columns:1fr;gap:10px}
+  .microQ{padding:12px}
+  .microPrompt{min-height:54px}
+  .microPrompt b{font-size:12px}
+  .microPic{font-size:48px}
+  .microListen{height:46px;min-width:105px;font-size:12px}
+  .microOptions{grid-template-columns:1fr;gap:7px}
+  .microOptions button{min-height:44px;font-size:12px}
+  .microFeedback{font-size:10px}
+  .lesson .footer,.quizPage .footer{position:relative!important;bottom:auto!important;margin-top:20px!important}
+}
