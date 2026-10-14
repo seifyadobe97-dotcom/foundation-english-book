@@ -1,8 +1,14 @@
 # Foundation English Interactive Book
 
-Interactive A–Z student book for the Institute.
+Interactive Foundation English book for the Institute: original A–Z plus the complete reading continuation.
 
-Current learning model:
+Current learning model (108 static pages):
+- Original A–Z: 45 preserved pages
+- Part Two: short vowels, CVC blending, 10 word families, digraphs, long vowels, vowel teams, decodable sentences, and 5 original mini stories
+- Total: 363 interactive answer slots across original and added exercises
+- Full contents and source provenance: [Reading curriculum map](curriculum/CURRICULUM_MAP.md)
+
+Original letter learning model:
 - Letters A–Z in the source-book sequence
 - Visual focus sound / IPA reference for each letter
 - Reviewed vocabulary visuals, including child-friendly replacement of **gun → gift**
