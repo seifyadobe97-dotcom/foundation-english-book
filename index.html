@@ -1344,7 +1344,7 @@ function clipPath(kind,text,slow){
   if(!voiceManifest)return "";
   let path=kind==="letter"?voiceManifest.letters[text]:kind==="sentence"?voiceManifest.sentences[text]:voiceManifest.words[text]?.[slow?"slow":"normal"];
   // Only load relative files from our own repository, not arbitrary manifest URLs.
-  return typeof path==="string"&&/^audio\\/files\\/[a-z0-9/_-]+\\.mp3$/i.test(path)?path:"";
+  return typeof path==="string"&&path.startsWith("audio/files/")&&path.endsWith(".mp3")&&[...path.slice(12,-4)].every(ch=>"abcdefghijklmnopqrstuvwxyz0123456789_-\/".includes(ch.toLowerCase()))?path:"";
 }
 function stop(){if(audio){audio.pause();audio=null}if(active)active.classList.remove("playing");active=null;if("speechSynthesis"in window)speechSynthesis.cancel();}
 function speak(text,b,rate){
