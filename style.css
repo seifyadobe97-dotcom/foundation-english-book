@@ -1000,3 +1000,105 @@ body.hideArabic .dict .en{justify-self:start;font-size:12px}
   .microFeedback{font-size:10px}
   .lesson .footer,.quizPage .footer{position:relative!important;bottom:auto!important;margin-top:20px!important}
 }
+
+/* ==========================================================
+   FOUNDATION READING PATH: original A–Z pages remain untouched
+   New 63 static phonics, fluency, review and mini-story pages.
+   ========================================================== */
+.phonicsPage{
+  aspect-ratio:auto;min-height:1122px;height:auto;overflow:visible;
+  padding-bottom:26px
+}
+.phonicsPage>.head{height:78px;min-height:78px}
+.phonicsPage>.footer{position:relative;bottom:auto;height:54px;margin-top:26px}
+.phonicsPage .phonicsLesson,
+.phonicsPage .phonicsIntro{margin:25px 7.2% 16px}
+.phonicsEyebrow{display:block;font-size:11px;letter-spacing:1.5px;font-weight:900;color:var(--o);margin-bottom:11px}
+.phonicsLesson h2,.phonicsIntro h2{
+  font-size:clamp(29px,5vw,42px);letter-spacing:-.7px;
+  line-height:1.13;color:var(--c);margin:0 0 16px
+}
+.phonicsLesson h3{font-size:18px;color:var(--t);margin:24px 0 11px}
+.phonicsLead{font-size:16px;line-height:1.7;color:#475358}
+.phonicsArabic{font-size:16px;line-height:1.9;color:#465a5c;background:#eff8f8;
+  border-inline-start:4px solid var(--t);padding:11px 15px;border-radius:10px}
+.phonicsFocus{display:flex;flex-wrap:wrap;gap:11px;margin:15px 0}
+.phonicsFocus span{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:12px;border:1px solid #d7e6e6;background:#f6fbfb;
+font-size:11px;font-weight:900;letter-spacing:.5px;color:#566468}
+.phonicsFocus strong{color:var(--t);font-size:22px;text-transform:none}
+.phonicsWords{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.phonicsWord{display:flex;align-items:center;justify-content:space-between;min-width:0;gap:8px;padding:15px;
+  border-radius:14px;border:1px solid #dfe9e9;background:#fff}
+.phonicsWordText{min-width:0;overflow-wrap:anywhere}
+.phonicsWordText b{display:block;font-size:23px;color:var(--c)}
+.phonicsWordText small{color:var(--o);font-weight:900;letter-spacing:1px;font-size:8px}
+.phonicsWordActions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.phonicsAudio,.phonicsSlow,.phonicsRead,.phonicsListen{
+  min-height:42px;min-width:46px;border:1px solid var(--t);border-radius:11px;
+  padding:9px 12px;background:var(--t);color:#fff;font-size:13px;font-weight:900;cursor:pointer;
+  touch-action:manipulation
+}
+.phonicsSlow{background:#fff;color:var(--t);min-width:76px}
+.phonicsAudio.playing,.phonicsSlow.playing,.phonicsRead.playing,.phonicsListen.playing{
+  outline:3px solid #db784f66;outline-offset:2px
+}
+.phonicsBlend{border:1px solid #ead8cd;background:#fff9f5;border-radius:15px;padding:18px 16px;margin:19px 0}
+.phonicsBlendTitle{display:block;font-size:10px;letter-spacing:1.3px;font-weight:900;color:var(--o)}
+.phonicsSegments{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:12px 0}
+.phonicsSegments span{display:grid;place-items:center;min-width:50px;min-height:52px;border:1.5px solid #b6d4d5;
+  border-radius:11px;background:#fff;font-weight:900;color:var(--t);font-size:26px}
+.phonicsSegments b{font-size:18px;color:var(--o)}
+.phonicsBlend p{line-height:1.7;font-size:14px;margin:4px 0}
+.phonicsPractice{margin:23px 0;background:#f5f8f8;border:1px solid #dbe7e7;border-radius:16px;padding:16px}
+.phonicsPracticeTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #dce7e7;padding-bottom:12px}
+.phonicsPracticeTitle b{color:var(--t);font-size:13px;letter-spacing:1.1px}
+.phonicsPracticeTitle span{font-size:13px;font-weight:900;color:var(--t);background:white;padding:8px 13px;border-radius:9px}
+.phonicsGrid{display:grid;gap:10px;margin-top:13px}
+.phonicsQ{border:1px solid #e0e7e7;border-radius:12px;background:#fff;padding:13px}
+.phonicsQuestion{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:11px}
+.phonicsQuestion span{font-size:14px;font-weight:800;color:#41494b}
+.phonicsOptions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.phonicsOptions button{
+  min-width:0;min-height:45px;border:1.5px solid #d4e0e0;border-radius:9px;
+  color:#474444;background:#fff;font-weight:800;padding:9px;overflow-wrap:anywhere;
+  cursor:pointer;touch-action:manipulation
+}
+.phonicsOptions button.correct{border-color:#3a9b5b;background:#e9f8ef;color:#247441}
+.phonicsOptions button.wrong{border-color:#ca5858;background:#fff0ee;color:#a33a35}
+.phonicsFeedback{font-size:12px;min-height:14px;font-weight:800;color:#637375;margin:7px 0 0}
+.phonicsFootnote{font-size:12px;line-height:1.65;color:#718183;margin:20px 0}
+.phonicsSentenceList,.phonicsStory{display:grid;gap:12px;margin-top:18px}
+.phonicsSentence{display:flex;align-items:center;gap:10px;padding:17px 15px;
+  background:#fff;border:1px solid #dfe8e8;border-radius:13px}
+.phonicsSentence>span{flex:0 0 30px;color:var(--o);font-size:15px;font-weight:900}
+.phonicsSentence p{min-width:0;flex:1;font-size:18px;font-weight:800;color:#474444;line-height:1.55;margin:0}
+.phonicsIntro>p{line-height:1.8;font-size:17px}
+.phonicsIntro ol{display:grid;gap:11px;margin:23px 0;padding-left:27px;color:#424f51;font-size:19px;font-weight:800}
+.phonicsIntro li{padding-left:7px}
+.phonicsHint{background:#fff9f5;border:1px solid #eacdbb;border-radius:14px;padding:16px;margin-top:27px}
+.phonicsHint b{color:var(--o)}
+.phonicsHint p{font-size:14px;line-height:1.7}
+.cumulativePage,.phonicsCheckpoint{min-height:1122px}
+@media(max-width:760px){
+  .phonicsPage{min-height:calc(100dvh - 74px);height:auto!important;overflow:visible!important;padding-bottom:24px}
+  .phonicsPage>.head{height:60px;min-height:60px}
+  .phonicsPage>.footer{position:relative!important;bottom:auto!important;margin-top:25px;height:48px}
+  .phonicsPage .phonicsLesson,.phonicsPage .phonicsIntro{margin:23px 7.5% 12px}
+  .phonicsLesson h2,.phonicsIntro h2{font-size:29px}
+  .phonicsArabic{font-size:14px;padding:12px}
+  .phonicsLead{font-size:14px}
+  .phonicsFocus span{font-size:9px;padding:10px;gap:6px}
+  .phonicsFocus strong{font-size:17px}
+  .phonicsWords{grid-template-columns:1fr}
+  .phonicsWord{padding:13px}
+  .phonicsWordText b{font-size:21px}
+  .phonicsPractice{padding:12px}
+  .phonicsQuestion{font-size:13px}
+  .phonicsOptions{grid-template-columns:1fr}
+  .phonicsOptions button{min-height:46px;font-size:14px}
+  .phonicsSentence{padding:12px;gap:8px}
+  .phonicsSentence p{font-size:15px}
+  .phonicsRead{padding:9px;min-width:44px}
+  .phonicsSegments span{min-width:42px;min-height:46px;font-size:21px}
+  .cumulativePage,.phonicsCheckpoint{min-height:calc(100dvh - 74px)}
+}
