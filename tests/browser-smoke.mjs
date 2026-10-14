@@ -225,7 +225,7 @@ try {
   });
 
   await run('all legacy A–Z and new phonics dictionaries retain Arabic show/hide',async()=>{
-    for(const pageNumber of [2,51,53,61,68,78,85,100,109,114,118]){
+    for(const pageNumber of [2,51,53,62,68,78,85,100,109,114,118]){
       const {page,errors}=await openPage(desktop,'#'+pageNumber);
       const dictionary=page.locator('[data-page="'+pageNumber+'"] .dict');
       assert.equal(await dictionary.count(),1,'Missing bilingual dictionary '+pageNumber);
