@@ -47,21 +47,21 @@ try {
   browser=await chromium.launch({headless:true,args:['--no-sandbox']});
   const desktop=await browser.newContext({viewport:{width:1280,height:850},locale:'en-US'});
   const d=await openPage(desktop);
-  await run('desktop full navigation 1 -> 45 -> 44 and ArrowRight',async()=>{
-    assert.equal(await d.page.locator('#count').innerText(),'1 / 45');
+  await run('desktop full navigation 1 -> 108 -> 107 and ArrowRight',async()=>{
+    assert.equal(await d.page.locator('#count').innerText(),'1 / 108');
     await d.page.locator('#next').click();
-    assert.equal(await d.page.locator('#count').innerText(),'2 / 45');
+    assert.equal(await d.page.locator('#count').innerText(),'2 / 108');
     assert.equal(await d.page.locator('.page.active').count(),1);
     const final=await d.page.evaluate(()=>{
-      for(let i=0;i<43;i++)document.querySelector('#next').click();
+      for(let i=0;i<106;i++)document.querySelector('#next').click();
       return document.querySelector('#count').textContent;
     });
-    assert.equal(final,'45 / 45');
+    assert.equal(final,'108 / 108');
     assert.equal(await d.page.locator('#next').isDisabled(),true);
     await d.page.locator('#prev').click();
-    assert.equal(await d.page.locator('#count').innerText(),'44 / 45');
+    assert.equal(await d.page.locator('#count').innerText(),'107 / 108');
     await d.page.keyboard.press('ArrowRight');
-    assert.equal(await d.page.locator('#count').innerText(),'45 / 45');
+    assert.equal(await d.page.locator('#count').innerText(),'108 / 108');
     assert.equal(await d.page.locator('.page.active').count(),1);
     assert.equal(d.errors.length,0,d.errors.join('\n'));
   });
@@ -118,9 +118,77 @@ try {
     const {page,errors}=await openPage(desktop,'#3');
     await page.evaluate(()=>history.replaceState(null,'',location.pathname));
     await page.reload({waitUntil:'load'});
-    assert.equal(await page.locator('#count').innerText(),'3 / 45');
+    assert.equal(await page.locator('#count').innerText(),'3 / 108');
     assert.equal(errors.length,0,errors.join('\n'));
     await page.close();
+  });
+
+
+  await run('book cover jumps to Part Two contents',async()=>{
+    const {page,errors}=await openPage(desktop,'#1');
+    await page.locator('.phonicsJump').click();
+    assert.equal(await page.locator('#count').innerText(),'50 / 108');
+    await page.locator('[data-page="50"] .phonicsContents [data-page-jump="73"]').click();
+    assert.equal(await page.locator('#count').innerText(),'73 / 108');
+    assert.equal(errors.length,0,errors.join('\n'));
+    await page.close();
+  });
+
+  await run('short vowel word playback, practice corrections and saved mastery',async()=>{
+    const {page,errors}=await openPage(desktop,'#51');
+    const block=page.locator('[data-page="51"] .phonicsPractice');
+    assert.equal(await page.locator('[data-page="51"] .phonicsWord').count(),6);
+    await page.locator('[data-page="51"] .phonicsAudio').first().click();
+    await page.locator('[data-page="51"] .phonicsSlow').first().click();
+    const questions=block.locator('.phonicsQ');
+    assert.equal(await questions.count(),3);
+    const first=questions.nth(0);
+    const answer=await first.getAttribute('data-answer');
+    const wrong=await first.locator('.phonicsOptions button').evaluateAll((buttons,correct)=>buttons.map(x=>x.dataset.value).find(v=>v!==correct),answer);
+    await first.locator('.phonicsOptions button[data-value="'+wrong+'"]').click();
+    assert.match(await first.locator('.phonicsFeedback').innerText(),/Try again/);
+    for(const q of await questions.all()){
+      const correct=await q.getAttribute('data-answer');
+      await q.locator('.phonicsOptions button[data-value="'+correct+'"]').click();
+    }
+    assert.match(await page.locator('#phonicsScoreL1').innerText(),/3 \/ 3 ✓ Mastered/);
+    await page.reload({waitUntil:'load'});
+    assert.match(await page.locator('#phonicsScoreL1').innerText(),/3 \/ 3 ✓ Mastered/);
+    assert.equal(errors.length,0,errors.join('\n'));
+    await page.close();
+  });
+
+  await run('cumulative and vowel-team checkpoints are graded',async()=>{
+    for(const [num,id] of [[46,19],[98,27]]){
+      const {page,errors}=await openPage(desktop,'#'+num);
+      const qs=page.locator('[data-page="'+num+'"] .quizq');
+      assert.equal(await qs.count(),6);
+      for(const q of await qs.all()){
+        const answer=await q.getAttribute('data-answer');
+        await q.locator('.options button[data-value="'+answer+'"]').click();
+      }
+      await page.locator('[data-page="'+num+'"] .checkQuiz').click();
+      assert.equal((await page.locator('#score'+id).innerText()).trim(),'6 / 6');
+      assert.equal(errors.length,0,errors.join('\n'));
+      await page.close();
+    }
+  });
+
+  await run('decodable sentences and final mini-story are readable and answerable',async()=>{
+    for(const [num,id,lines] of [[99,'R1',5],[108,'S5',4]]){
+      const {page,errors}=await openPage(desktop,'#'+num);
+      assert.equal(await page.locator('[data-page="'+num+'"] .phonicsSentence').count(),lines);
+      await page.locator('[data-page="'+num+'"] .phonicsRead').first().click();
+      const qs=page.locator('[data-page="'+num+'"] .phonicsQ');
+      assert.equal(await qs.count(),2);
+      for(const q of await qs.all()){
+        const answer=await q.getAttribute('data-answer');
+        await q.locator('.phonicsOptions button[data-value="'+answer+'"]').click();
+      }
+      assert.match(await page.locator('#phonicsScore'+id).innerText(),/2 \/ 2 ✓ Mastered/);
+      assert.equal(errors.length,0,errors.join('\n'));
+      await page.close();
+    }
   });
 
   await desktop.close();
@@ -134,16 +202,16 @@ try {
     await run(name+' page turning, natural scrolling and no page overflow',async()=>{
       const {page,errors}=await openPage(ctx,'#1');
       await page.locator('#next').tap();
-      assert.equal(await page.locator('#count').innerText(),'2 / 45');
+      assert.equal(await page.locator('#count').innerText(),'2 / 108');
       const info=await page.evaluate(()=>{
         const active=document.querySelector('.page.active');
         return {viewportWidth:innerWidth,scrollWidth:document.documentElement.scrollWidth,scrollHeight:document.documentElement.scrollHeight,pageWidth:active.getBoundingClientRect().width};
       });
       assert.ok(info.scrollWidth<=info.viewportWidth+3,'Horizontal overflow: '+JSON.stringify(info));
       assert.ok(info.scrollHeight>opts.viewport.height,'Letter page must naturally scroll: '+JSON.stringify(info));
-      for(const num of [5,6,29,42,45]){
+      for(const num of [5,6,29,42,45,50,51,56,62,73,80,86,98,99,104,108]){
         await page.goto(base+'#'+num,{waitUntil:'domcontentloaded'});
-        assert.equal(await page.locator('#count').innerText(),num+' / 45');
+        assert.equal(await page.locator('#count').innerText(),num+' / 108');
         assert.equal(await page.locator('.page.active').count(),1);
         const width=await page.evaluate(()=>({window:innerWidth,document:document.documentElement.scrollWidth}));
         assert.ok(width.document<=width.window+3,'Horizontal overflow at page '+num+': '+JSON.stringify(width));
