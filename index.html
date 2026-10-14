@@ -7,7 +7,7 @@
   <title>Foundation English — Interactive Student Book</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
   <div id="splash" class="splash"><img src="logo.svg" alt="Institute logo"></div>
@@ -52,9 +52,435 @@
     </div>
   </div>
 
-  <div id="toast" class="toast">Ready</div>
-  <script>setTimeout(()=>document.getElementById("splash")?.classList.add("hide"),2500);</script>
-  <script src="data.js?v=10"></script>
-  <script src="app.js?v=10"></script>
+  <div id="toast" class="toast">Ready</div>  <script>
+    window.addEventListener("error", function(e){
+      const s=document.getElementById("splash"); if(s) s.classList.add("hide");
+      const t=document.getElementById("toast"); if(t){t.textContent="Loading error — refresh the page";t.classList.add("show");}
+      console.error(e.error||e.message);
+    });
+    setTimeout(()=>document.getElementById("splash")?.classList.add("hide"),2500);
+    if("serviceWorker" in navigator){
+      navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});
+    }
+  </script>
+  <script>window.DATA={
+order:["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
+vocab:{
+A:[["apple","🍎"],["ant","🐜"],["arm","💪"],["arrow","➡️"],["axe","🪓"],["angry","😠"]],
+B:[["bear","🐻"],["banana","🍌"],["baby","👶"],["book","📘"],["bag","🎒"],["ball","⚽"]],
+C:[["cat","🐱"],["car","🚗"],["camel","🐫"],["cake","🎂"],["carrot","🥕"],["cow","🐄"]],
+D:[["dog","🐶"],["door","🚪"],["doll","🪆"],["deer","🦌"],["date","🌴"],["dress","👗"]],
+E:[["egg","🥚"],["ear","👂"],["eye","👁️"],["elbow","💪"],["eat","🍽️"],["exit","🚪"]],
+F:[["fan","🪭"],["fig","🟣"],["feed","🍽️"],["fire","🔥"],["fox","🦊"],["farm","🚜"]],
+G:[["gum","🍬"],["goat","🐐"],["goal","🥅"],["girl","👧"],["grass","🌿"],["gun","🔫"]],
+H:[["horse","🐴"],["hat","🎩"],["hand","✋"],["hair","💇"],["hello","👋"],["happy","😊"]],
+I:[["ink","🖋️"],["in","📥"],["ice","🧊"],["ill","🤒"],["insect","🐞"],["igloo","🛖"]],
+J:[["jacket","🧥"],["juice","🧃"],["June","📅"],["jug","🏺"],["jam","🍓"],["jet","✈️"]],
+K:[["key","🔑"],["kid","🧒"],["king","🤴"],["kite","🪁"],["kitchen","🍳"],["kangaroo","🦘"]],
+L:[["lake","🏞️"],["leg","🦵"],["lamp","💡"],["lemon","🍋"],["leaf","🍃"],["lion","🦁"]],
+M:[["milk","🥛"],["meat","🥩"],["money","💵"],["monkey","🐒"],["moon","🌙"],["mouse","🐭"]],
+N:[["neck","🧣"],["nose","👃"],["nine","9️⃣"],["nice","🙂"],["nurse","🧑‍⚕️"],["net","🥅"]],
+O:[["oil","🛢️"],["olive","🫒"],["orange","🍊"],["owl","🦉"],["office","🏢"],["open","🔓"]],
+P:[["pen","🖊️"],["pencil","✏️"],["pants","👖"],["potato","🥔"],["parrot","🦜"],["pizza","🍕"]],
+Q:[["quiet","🤫"],["quilt","🛏️"],["queen","👑"],["question","❓"],["quarter","¼"],["queue","👥"]],
+R:[["rabbit","🐇"],["red","🔴"],["rice","🍚"],["robot","🤖"],["rain","🌧️"],["rose","🌹"]],
+S:[["sad","😢"],["sit","🪑"],["school","🏫"],["sky","🌤️"],["soap","🧼"],["swim","🏊"]],
+T:[["tea","🍵"],["tree","🌳"],["teacher","🧑‍🏫"],["teeth","🦷"],["taxi","🚕"],["tomato","🍅"]],
+U:[["uncle","👨"],["umbrella","☂️"],["up","⬆️"],["unlock","🔓"],["under","⬇️"]],
+V:[["van","🚐"],["vet","🧑‍⚕️"],["violin","🎻"],["vest","🦺"],["vase","🏺"]],
+W:[["watch","⌚"],["water","💧"],["whale","🐋"],["windy","🌬️"],["window","🪟"]],
+X:[["box","📦"],["fox","🦊"],["fix","🛠️"],["mix","🥣"],["six","6️⃣"]],
+Y:[["yellow","🟡"],["yogurt","🥣"],["yard","🏡"],["yo-yo","🪀"],["yacht","⛵"]],
+Z:[["zoo","🦁"],["zebra","🦓"],["zipper","🧥"],["zero","0️⃣"]]
+},
+dictionary:{
+A:{apple:"تفاحة",ant:"نملة",arm:"ذراع",arrow:"سهم",axe:"فأس",angry:"غاضب"},
+B:{bear:"دب",banana:"موزة",baby:"طفل رضيع",book:"كتاب",bag:"حقيبة",ball:"كرة"},
+C:{cat:"قطة",car:"سيارة",camel:"جمل",cake:"كعكة",carrot:"جزرة",cow:"بقرة"},
+D:{dog:"كلب",door:"باب",doll:"دمية",deer:"غزال",date:"تمرة",dress:"فستان"},
+E:{egg:"بيضة",ear:"أذن",eye:"عين",elbow:"مرفق",eat:"يأكل",exit:"مخرج"},
+F:{fan:"مروحة",fig:"تين",feed:"يُطعم",fire:"نار",fox:"ثعلب",farm:"مزرعة"},
+G:{gum:"علكة",goat:"ماعز",goal:"هدف",girl:"فتاة",grass:"عشب",gun:"مسدس"},
+H:{horse:"حصان",hat:"قبعة",hand:"يد",hair:"شعر",hello:"مرحباً",happy:"سعيد"},
+I:{ink:"حبر",in:"في",ice:"ثلج",ill:"مريض",insect:"حشرة",igloo:"كوخ جليدي"},
+J:{jacket:"سترة",juice:"عصير",June:"يونيو",jug:"إبريق",jam:"مربى",jet:"طائرة نفاثة"},
+K:{key:"مفتاح",kid:"طفل",king:"ملك",kite:"طائرة ورقية",kitchen:"مطبخ",kangaroo:"كنغر"},
+L:{lake:"بحيرة",leg:"ساق",lamp:"مصباح",lemon:"ليمون",leaf:"ورقة شجر",lion:"أسد"},
+M:{milk:"حليب",meat:"لحم",money:"نقود",monkey:"قرد",moon:"قمر",mouse:"فأر"},
+N:{neck:"رقبة",nose:"أنف",nine:"تسعة",nice:"لطيف",nurse:"ممرض/ممرضة",net:"شبكة"},
+O:{oil:"زيت",olive:"زيتونة",orange:"برتقالة",owl:"بومة",office:"مكتب",open:"يفتح"},
+P:{pen:"قلم",pencil:"قلم رصاص",pants:"بنطال",potato:"بطاطس",parrot:"ببغاء",pizza:"بيتزا"},
+Q:{quiet:"هادئ",quilt:"لحاف",queen:"ملكة",question:"سؤال",quarter:"ربع",queue:"طابور"},
+R:{rabbit:"أرنب",red:"أحمر",rice:"أرز",robot:"روبوت",rain:"مطر",rose:"وردة"},
+S:{sad:"حزين",sit:"يجلس",school:"مدرسة",sky:"سماء",soap:"صابون",swim:"يسبح"},
+T:{tea:"شاي",tree:"شجرة",teacher:"معلم/معلمة",teeth:"أسنان",taxi:"سيارة أجرة",tomato:"طماطم"},
+U:{uncle:"عم/خال",umbrella:"مظلة",up:"أعلى",unlock:"يفتح القفل",under:"تحت"},
+V:{van:"شاحنة صغيرة",vet:"طبيب بيطري",violin:"كمان",vest:"سترة",vase:"مزهرية"},
+W:{watch:"ساعة يد",water:"ماء",whale:"حوت",windy:"عاصف",window:"نافذة"},
+X:{box:"صندوق",fox:"ثعلب",fix:"يُصلح",mix:"يخلط",six:"ستة"},
+Y:{yellow:"أصفر",yogurt:"زبادي",yard:"فناء", "yo-yo":"يويو",yacht:"يخت"},
+Z:{zoo:"حديقة حيوان",zebra:"حمار وحشي",zipper:"سحّاب",zero:"صفر"}
+},
+ipa:{
+A:["æ","IPA VOWEL","apple"],B:["b","IPA CONSONANT","bear"],C:["k","IPA CONSONANT","cat"],D:["d","IPA CONSONANT","dog"],
+E:["ɛ","IPA VOWEL","egg"],F:["f","IPA CONSONANT","fan"],G:["g","IPA CONSONANT","goat"],H:["h","IPA CONSONANT","horse"],
+I:["ɪ","IPA VOWEL","ink"],J:["dʒ","IPA CONSONANT","jam"],K:["k","IPA CONSONANT","key"],L:["l","IPA CONSONANT","lake"],
+M:["m","IPA CONSONANT","milk"],N:["n","IPA CONSONANT","nose"],O:["ɑ","IPA VOWEL","olive"],P:["p","IPA CONSONANT","pen"],
+Q:["kw","IPA CONSONANT","queen"],R:["r","IPA CONSONANT","rabbit"],S:["s","IPA CONSONANT","sad"],T:["t","IPA CONSONANT","tea"],
+U:["ʌ","IPA VOWEL","uncle"],V:["v","IPA CONSONANT","van"],W:["w","IPA CONSONANT","water"],X:["ks","IPA CONSONANT","box"],
+Y:["j","IPA CONSONANT","yellow"],Z:["z","IPA CONSONANT","zebra"]
+},
+sentenceOverrides:{
+angry:["I am angry.","The boy is angry.","She looks angry."],
+eat:["I eat an egg.","We eat at home.","I like to eat."],
+feed:["I feed the cat.","We feed the dog.","Please feed the bird."],
+hello:["I say hello.","Hello, my friend.","She says hello."],
+happy:["I am happy.","The baby is happy.","We feel happy."],
+June:["June is a month.","School ends in June.","My birthday is in June."],
+in:["The cat is in the box.","Put it in the bag.","I am in the room."],
+ice:["The ice is cold.","I see ice.","Put ice in the cup."],
+ill:["I am ill.","He feels ill.","The boy is ill."],
+June:["June is a month.","School ends in June.","My birthday is in June."],
+milk:["I drink milk.","The milk is cold.","I like milk."],
+meat:["I eat meat.","The meat is hot.","We cook meat."],
+money:["I have money.","The money is in my bag.","I save money."],
+nine:["I have nine books.","Nine is a number.","I can count to nine."],
+nice:["She is nice.","This is a nice day.","He has a nice smile."],
+oil:["We cook with oil.","The oil is hot.","Put oil in the pan."],
+open:["Open the door.","I open my book.","The shop is open."],
+quiet:["Please be quiet.","The room is quiet.","The baby is quiet."],
+red:["The ball is red.","I like red.","The car is red."],
+rice:["I eat rice.","The rice is hot.","We cook rice."],
+sad:["I am sad.","The boy looks sad.","She feels sad."],
+sit:["I sit on a chair.","Please sit here.","We sit together."],
+sky:["The sky is blue.","Look at the sky.","The sky is clear."],
+soap:["Wash with soap.","The soap is white.","I use soap."],
+swim:["I can swim.","We swim in the pool.","The fish can swim."],
+tea:["I drink tea.","The tea is hot.","We make tea."],
+teeth:["My teeth are clean.","I brush my teeth.","These are my teeth."],
+up:["Look up.","Stand up.","The bird flies up."],
+unlock:["I unlock the door.","Please unlock the box.","He can unlock it."],
+under:["The cat is under the table.","My bag is under the chair.","Look under the bed."],
+water:["I drink water.","The water is cold.","We need water."],
+windy:["It is windy today.","The day is windy.","It feels windy outside."],
+fix:["I can fix it.","He will fix the car.","Please fix the toy."],
+mix:["Mix the milk.","I mix the colors.","We mix the food."],
+six:["I see six cats.","Six is a number.","I have six pens."],
+yellow:["The sun is yellow.","I like yellow.","The ball is yellow."],
+zero:["Zero is a number.","I have zero coins.","The score is zero."]
+},
+audio:{
+A:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/399142f3-c652-43e9-9fa3-a4e6b81da355.mp3",
+B:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/f963c3d0-eeed-4e90-abbc-4dfe3ca47ceb.mp3",
+C:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/665304ef-7361-4323-9e21-54f87bd9c3b8.mp3",
+apple:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/ae951d48-221c-44c9-87e8-8009fed3797a.mp3",
+ant:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/11074344-ae32-4ce6-a1bb-05aa8ed9b3a0.mp3",
+arm:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/72ecbc34-8bbd-4ade-b6b8-3fd2e4a8ed09.mp3",
+arrow:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/aecb4130-3301-4f6f-80b5-dfa482afc670.mp3",
+axe:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/1c06ab6a-61bb-4037-895f-9768417681e8.mp3",
+angry:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7eecbf0c-d148-4b23-957a-944fc9f2caa3.mp3",
+bear:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7070121c-0598-41ef-b634-e8254f05ca09.mp3",
+banana:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/37982d4c-4d9f-44ad-9024-d59f65d32225.mp3",
+baby:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/be901844-083e-421e-8b5a-d1ae4d7332f0.mp3",
+book:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/90243ff6-e10d-4f4a-ad87-1ac644e08403.mp3",
+bag:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/03850cae-6db6-43af-b785-b9401e80c169.mp3",
+ball:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/4d92d608-4004-4e2b-b296-f3eb53ba769f.mp3",
+cat:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/fd9498d6-7a68-4c53-a212-a2cde113b7cf.mp3",
+car:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/4ac68a7b-e570-4744-bbf9-0e027e4a46e0.mp3",
+camel:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/45727543-2117-4a5f-a1f6-2afe29a85a49.mp3",
+cake:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/33406ac4-ab80-4ed1-8c27-c2e19f8be4fc.mp3",
+carrot:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/4203fa57-9155-454f-aea7-554dea5ece80.mp3",
+cow:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/c04df2cd-b241-479f-a590-a91bfe18dbde.mp3"
+}};</script>
+  <script>const DATASET=window.DATA;
+const ORDER=DATASET.order,V=DATASET.vocab,D=DATASET.dictionary,IPA=DATASET.ipa,A=DATASET.audio||{},OV=DATASET.sentenceOverrides||{};
+const $=s=>document.querySelector(s), $=s=>[...document.querySelectorAll(s)];
+let page=1,total=1,au=null,activeBtn=null;
+
+const massWords=new Set(["gum","grass","hair","ink","jam","juice","milk","meat","money","oil","rice","soap","tea","water","yogurt"]);
+const pluralWords=new Set(["pants","teeth"]);
+
+function articleFor(word){return /^[aeiou]/i.test(word)?"an":"a"}
+function makeExamples(word){
+  if(OV[word]) return OV[word];
+  if(pluralWords.has(word)) return ["These are "+word+".","I see "+word+".","The "+word+" are here."];
+  if(massWords.has(word)) return ["This is "+word+".","I like "+word+".","The "+word+" is here."];
+  const a=articleFor(word);
+  return ["This is "+a+" "+word+".","I see "+a+" "+word+".","The "+word+" is here."];
+}
+function highlight(text,word){return text.replace(word,"<mark>"+word+"</mark>")}
+function footer(n){
+  return '<div class="footer"><span class="fl">FOUNDATION ENGLISH</span><img src="logo.svg" alt="Institute logo"><span class="pn">'+String(n).padStart(2,"0")+'</span></div>';
+}
+function lessonTheme(letter){
+  const i=ORDER.indexOf(letter)%3;
+  return i===0?"a":i===1?"b":"c";
+}
+function letterPage(letter,bookNo){
+  const item=IPA[letter],symbol=item[0],type=item[1],example=item[2];
+  return '<section class="page lesson" data-letter="'+letter+'">'+
+    '<div class="head"><span class="chip">LETTERS</span><span class="series">FOUNDATION</span></div>'+
+    '<div class="hero '+lessonTheme(letter)+'">'+
+      '<div class="letter"><strong>'+letter+letter.toLowerCase()+'</strong><button class="play letterPlay" data-letter-audio="'+letter+'" aria-label="Play letter '+letter+'">🔊</button></div>'+
+      '<div class="sound"><label>'+type+'</label><b>/'+symbol+'/</b><span class="badge">'+(type.includes("VOWEL")?"VOWEL":"CONSONANT")+'</span><small>as in <b>'+example+'</b></small></div>'+
+    '</div>'+
+    '<div class="section"><b>VOCABULARY</b><span>Tap 🔊 to hear the word and sentences</span></div>'+
+    '<div class="content"><div id="v'+letter+'" class="vocab"></div><aside id="d'+letter+'" class="dict"></aside></div>'+
+    footer(bookNo)+
+  '</section>';
+}
+function cardHTML(word,emoji){
+  const examples=makeExamples(word);
+  const rows=examples.map((sentence,i)=>
+    '<div class="cardExample"><span class="exNo">'+(i+1)+'</span><p>'+highlight(sentence,word)+'</p><button class="examplePlay" data-sentence="'+encodeURIComponent(sentence)+'" aria-label="Play example sentence">🔊</button></div>'
+  ).join("");
+  return '<div class="card">'+
+    '<div class="emoji">'+emoji+'</div>'+
+    '<div class="word"><span>'+word+'</span><button class="play wordPlay" data-word="'+word+'" aria-label="Play '+word+'">🔊</button></div>'+
+    '<div class="cardExamples">'+rows+'</div>'+
+  '</div>';
+}
+function buildLessonContent(letter){
+  const v=$("#v"+letter),d=$("#d"+letter);
+  v.innerHTML=V[letter].map(([w,e])=>cardHTML(w,e)).join("");
+  d.innerHTML='<h3>قاموس<span>DICTIONARY</span></h3>'+V[letter].map(([w])=>
+    '<div class="de"><span class="ar">'+D[letter][w]+'</span><span class="en">'+w+'</span></div>'
+  ).join("");
+}
+function chunk(arr,size){const out=[];for(let i=0;i<arr.length;i+=size)out.push(arr.slice(i,i+size));return out}
+function wordsForGroup(group){return group.flatMap(L=>V[L].map(([w,e])=>({letter:L,word:w,emoji:e})))}
+function otherWords(pool,answer){
+  const vals=[];for(const x of pool){if(x.word!==answer&&!vals.includes(x.word))vals.push(x.word);if(vals.length===2)break}return vals;
+}
+function rotateChoices(answer,others,seed){
+  const all=[answer,...others].slice(0,3);
+  while(all.length<3)all.push(ORDER[(seed+all.length)%ORDER.length].toLowerCase());
+  const shift=seed%all.length;
+  return all.slice(shift).concat(all.slice(0,shift));
+}
+function wordOptions(choices){return choices.map(v=>'<button data-value="'+v+'">'+v+'</button>').join("")}
+function pictureOptions(choices,pool){
+  return choices.map(v=>{const item=pool.find(x=>x.word===v);return '<button data-value="'+v+'" aria-label="'+v+'">'+(item?item.emoji:v)+'</button>'}).join("");
+}
+function lettersForGroup(group){
+  if(group.length===3)return group;
+  if(group.includes("Y"))return ["X","Y","Z"];
+  return [group[0],group[1]||"Y","Z"];
+}
+function reviewQuizPage(group,quizId,bookNo){
+  const pool=wordsForGroup(group),qs=[];
+  const pictureIndexes=[0,Math.min(6,pool.length-1),Math.min(12,pool.length-1)];
+  pictureIndexes.forEach((idx,i)=>{
+    const item=pool[idx],choices=rotateChoices(item.word,otherWords(pool,item.word),i+1);
+    qs.push({answer:item.word,explain:"The picture shows "+item.word+".",html:
+      '<div class="quizPrompt"><span class="quizPic" aria-label="'+item.word+'">'+item.emoji+'</span><div class="qtop"><b>'+(i+1)+'. Choose the correct word.</b><span>1 point</span></div></div>'+
+      '<div class="options">'+wordOptions(choices)+'</div>'
+    });
+  });
+  group.forEach((L,idx)=>{
+    const item=V[L][Math.min(idx+1,V[L].length-1)],word=item[0];
+    const pos=L==="X"?word.toLowerCase().lastIndexOf("x"):0;
+    const blank=word.slice(0,pos)+"_"+word.slice(pos+1);
+    const letters=lettersForGroup(group);
+    const choices=rotateChoices(L.toLowerCase(),letters.filter(x=>x!==L).map(x=>x.toLowerCase()),idx+2);
+    const qn=qs.length+1;
+    qs.push({answer:L.toLowerCase(),explain:(L==="X"?"The missing letter is X.":word+" begins with "+L+"."),html:
+      '<div class="qtop"><b>'+qn+'. Complete: '+blank+'</b><span>1 point</span></div>'+
+      '<div class="options letterOptions">'+choices.map(x=>'<button data-value="'+x+'">'+x.toUpperCase()+'</button>').join("")+'</div>'
+    });
+  });
+  while(qs.length<6){
+    const item=pool[qs.length%pool.length],L=item.letter,qn=qs.length+1,letters=lettersForGroup(group);
+    const choices=rotateChoices(L.toLowerCase(),letters.filter(x=>x!==L).map(x=>x.toLowerCase()),qs.length);
+    qs.push({answer:L.toLowerCase(),explain:item.word+" uses the target letter "+L+".",html:
+      '<div class="qtop"><b>'+qn+'. Which target letter goes with '+item.word+'?</b><span>1 point</span></div>'+
+      '<div class="options letterOptions">'+choices.map(x=>'<button data-value="'+x+'">'+x.toUpperCase()+'</button>').join("")+'</div>'
+    });
+  }
+  return quizShell(group.join("–")+" Review","Use the pictures, words, and letters you learned.",quizId,qs,bookNo,"ACTIVITIES");
+}
+function listeningQuizPage(group,quizId,bookNo){
+  const pool=wordsForGroup(group),qs=[];
+  const idxs=[0,Math.min(7,pool.length-1),Math.min(13,pool.length-1),Math.min(3,pool.length-1),Math.min(10,pool.length-1),pool.length-1];
+  idxs.forEach((idx,i)=>{
+    const item=pool[idx],qn=i+1;
+    if(i===1||i===4){
+      const choices=rotateChoices(item.word,otherWords(pool,item.word),i+1);
+      qs.push({answer:item.word,explain:"You heard the word "+item.word+".",html:
+        '<div class="listenTop"><button class="listenQ" data-listen="'+item.word+'" aria-label="Play question audio">🔊 <span>Listen</span></button><div class="qtop"><b>'+qn+'. Choose the picture you hear.</b><span>1 point</span></div></div>'+
+        '<div class="options pictureOptions">'+pictureOptions(choices,pool)+'</div>'
+      });
+    }else if(i===2||i===5){
+      const letters=lettersForGroup(group);
+      const choices=rotateChoices(item.letter.toLowerCase(),letters.filter(x=>x!==item.letter).map(x=>x.toLowerCase()),i+2);
+      const wording=item.letter==="X"?"Which target letter is in the word you hear?":"Which letter does the word begin with?";
+      qs.push({answer:item.letter.toLowerCase(),explain:item.word+" uses the target letter "+item.letter+".",html:
+        '<div class="listenTop"><button class="listenQ" data-listen="'+item.word+'" aria-label="Play question audio">🔊 <span>Listen</span></button><div class="qtop"><b>'+qn+'. '+wording+'</b><span>1 point</span></div></div>'+
+        '<div class="options letterOptions">'+choices.map(x=>'<button data-value="'+x+'">'+x.toUpperCase()+'</button>').join("")+'</div>'
+      });
+    }else{
+      const choices=rotateChoices(item.word,otherWords(pool,item.word),i+3);
+      qs.push({answer:item.word,explain:"You heard the word "+item.word+".",html:
+        '<div class="listenTop"><button class="listenQ" data-listen="'+item.word+'" aria-label="Play question audio">🔊 <span>Listen</span></button><div class="qtop"><b>'+qn+'. Choose the word you hear.</b><span>1 point</span></div></div>'+
+        '<div class="options">'+wordOptions(choices)+'</div>'
+      });
+    }
+  });
+  return quizShell(group.join("–")+" Listening","Tap Listen, hear the word, then choose your answer.",quizId,qs,bookNo,"LISTENING");
+}
+function quizShell(title,subtitle,quizId,questions,bookNo,chip){
+  return '<section class="page practice quizPage '+(chip==="LISTENING"?"listeningPage":"")+'">'+
+    '<div class="head"><span class="chip practice">'+chip+'</span><span class="series">FOUNDATION</span></div>'+
+    '<div class="quizHeader"><div><span class="quizNum">'+quizId+'</span><div><h2>'+title+'</h2><p>'+subtitle+'</p></div></div><div class="scoreBox"><small>SCORE</small><strong id="score'+quizId+'">— / '+questions.length+'</strong></div></div>'+
+    '<div class="quizList" data-quiz="'+quizId+'">'+questions.map(q=>
+      '<div class="quizq" data-answer="'+q.answer+'" data-explain="'+q.explain.replace(/"/g,"&quot;")+'">'+q.html+'<div class="qfeedback"></div></div>'
+    ).join("")+'</div>'+
+    '<div class="quizActions"><button class="checkQuiz" data-target="'+quizId+'">Check answers</button><button class="resetQuiz" data-target="'+quizId+'">Try again</button></div>'+
+    footer(bookNo)+
+  '</section>';
+}
+function buildBook(){
+  const book=$("#book");
+  const groups=chunk(ORDER,3);
+  let bookNo=1,quizId=1;
+  groups.forEach(g=>{
+    g.forEach(L=>book.insertAdjacentHTML("beforeend",letterPage(L,bookNo++)));
+    book.insertAdjacentHTML("beforeend",reviewQuizPage(g,quizId++,bookNo++));
+    book.insertAdjacentHTML("beforeend",listeningQuizPage(g,quizId++,bookNo++));
+  });
+  document.querySelectorAll(".page").forEach((p,i)=>p.dataset.page=i+1);
+  total=document.querySelectorAll(".page").length;
+  ORDER.forEach(buildLessonContent);
+}
+window.addEventListener("error",()=>{const s=document.querySelector("#splash");if(s)s.classList.add("hide")});
+buildBook();
+
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("show");clearTimeout(window.tt);window.tt=setTimeout(()=>e.classList.remove("show"),1400)}
+function stop(){
+  if(au){au.pause();try{au.currentTime=0}catch(e){}}
+  if(activeBtn)activeBtn.classList.remove("playing");
+  au=null;activeBtn=null;
+  if("speechSynthesis" in window)speechSynthesis.cancel();
+}
+function speak(text,b,rate=.8){
+  stop();
+  if(!("speechSynthesis" in window)){toast("Audio unavailable");return}
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="en-US";u.rate=rate;u.pitch=1;
+  activeBtn=b;b.classList.add("playing");
+  u.onend=()=>{b.classList.remove("playing");activeBtn=null};
+  u.onerror=()=>{b.classList.remove("playing");activeBtn=null};
+  speechSynthesis.speak(u);
+}
+function playWord(key,b){
+  stop();
+  const url=A[key];
+  if(!url){speak(key,b,key.length===1?.72:.8);return}
+  b.classList.add("playing");activeBtn=b;
+  const u=new Audio(url);au=u;
+  u.onended=()=>{b.classList.remove("playing");au=null;activeBtn=null};
+  u.onerror=()=>speak(key,b,key.length===1?.72:.8);
+  u.play().catch(()=>speak(key,b,key.length===1?.72:.8));
+}
+$(".letterPlay").forEach(b=>b.onclick=()=>playWord(b.dataset.letterAudio,b));
+$(".wordPlay").forEach(b=>b.onclick=()=>playWord(b.dataset.word,b));
+$(".examplePlay").forEach(b=>b.onclick=()=>speak(decodeURIComponent(b.dataset.sentence),b,.78));
+$(".listenQ").forEach(b=>b.onclick=()=>playWord(b.dataset.listen,b));
+
+function selectOption(button){
+  const q=button.closest(".quizq");
+  q.querySelectorAll(".options button").forEach(x=>x.classList.remove("selected"));
+  button.classList.add("selected");
+  q.dataset.selected=button.dataset.value;
+  q.classList.remove("graded");
+  q.querySelector(".qfeedback").textContent="";
+}
+$(".options button").forEach(b=>b.addEventListener("click",()=>selectOption(b)));
+
+function gradeQuiz(id){
+  const list=document.querySelector('.quizList[data-quiz="'+id+'"]');
+  const qs=[...list.querySelectorAll(".quizq")];
+  let score=0;
+  qs.forEach(q=>{
+    const chosen=q.dataset.selected||"",correct=q.dataset.answer;
+    q.classList.add("graded");
+    q.querySelectorAll(".options button").forEach(b=>{
+      b.classList.remove("correct","wrong");
+      if(b.dataset.value===correct)b.classList.add("correct");
+      if(chosen&&b.dataset.value===chosen&&chosen!==correct)b.classList.add("wrong");
+    });
+    const fb=q.querySelector(".qfeedback");
+    if(chosen===correct){score++;fb.innerHTML="<b>Correct • 1/1</b> — "+q.dataset.explain}
+    else if(!chosen){fb.innerHTML="<b>Not answered • 0/1</b> — Correct answer: "+correct+"."}
+    else{fb.innerHTML="<b>Try again • 0/1</b> — "+q.dataset.explain}
+  });
+  $("#score"+id).textContent=score+" / "+qs.length;
+  localStorage.setItem("foundation:quiz"+id,JSON.stringify({score,total:qs.length,answered:true}));
+  toast("Score: "+score+" / "+qs.length);
+}
+function resetQuiz(id){
+  const list=document.querySelector('.quizList[data-quiz="'+id+'"]');
+  list.querySelectorAll(".quizq").forEach(q=>{
+    delete q.dataset.selected;q.classList.remove("graded");
+    q.querySelectorAll(".options button").forEach(b=>b.classList.remove("selected","correct","wrong"));
+    q.querySelector(".qfeedback").textContent="";
+  });
+  $("#score"+id).textContent="— / "+list.querySelectorAll(".quizq").length;
+  localStorage.removeItem("foundation:quiz"+id);
+}
+$(".checkQuiz").forEach(b=>b.onclick=()=>gradeQuiz(b.dataset.target));
+$(".resetQuiz").forEach(b=>b.onclick=()=>resetQuiz(b.dataset.target));
+$(".quizList").forEach(list=>{
+  const id=list.dataset.quiz;
+  try{
+    const saved=JSON.parse(localStorage.getItem("foundation:quiz"+id));
+    if(saved&&saved.answered)$("#score"+id).textContent=saved.score+" / "+saved.total;
+  }catch(e){}
+});
+
+function show(n){
+  stop();page=Math.max(1,Math.min(total,n));
+  $(".page").forEach(p=>p.classList.toggle("active",Number(p.dataset.page)===page));
+  $("#count").textContent=page+" / "+total;
+  $("#prev").disabled=page===1;$("#next").disabled=page===total;
+  localStorage.setItem("foundation:lastPage",page);
+  history.replaceState(null,"","#"+page);
+  scrollTo({top:0,behavior:"smooth"});
+}
+$("#prev").onclick=()=>show(page-1);$("#next").onclick=()=>show(page+1);
+addEventListener("keydown",e=>{if(e.key==="ArrowRight")show(page+1);if(e.key==="ArrowLeft")show(page-1)});
+const hp=Number(location.hash.slice(1)),sp=Number(localStorage.getItem("foundation:lastPage"))||1;
+show(hp||sp);
+
+function net(){const e=$("#net");e.classList.toggle("off",!navigator.onLine);e.title=navigator.onLine?"Online":"Offline"}
+addEventListener("online",net);addEventListener("offline",net);net();
+
+$("#full").onclick=async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch(e){toast("Full screen unavailable")}};
+let installPrompt=null;
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;$("#install").style.background="#e8f7f5"});
+addEventListener("appinstalled",()=>{installPrompt=null;toast("Installed")});
+$("#install").onclick=async()=>{
+  if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;return}
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  $("#helpText").innerHTML=ios?'Tap <b>Share</b> then <b>Add to Home Screen</b>.':'Open the browser menu and choose <b>Install app</b> or <b>Add to Home Screen</b>.';
+  $("#help").hidden=false;
+};
+$("#closeHelp").onclick=()=>$("#help").hidden=true;
+$("#help").onclick=e=>{if(e.target.id==="help")e.currentTarget.hidden=true};
+
+let sx=null,sy=null;
+addEventListener("touchstart",e=>{
+  if(e.target.closest(".options,.cardExample,.quizActions,.listenQ"))return;
+  sx=e.changedTouches[0].clientX;sy=e.changedTouches[0].clientY;
+},{passive:true});
+addEventListener("touchend",e=>{
+  if(sx===null)return;
+  const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+  if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.4)show(dx<0?page+1:page-1);
+  sx=sy=null;
+},{passive:true});
+
+addEventListener("load",()=>setTimeout(()=>$("#splash").classList.add("hide"),350));
+</script>
 </body>
 </html>
