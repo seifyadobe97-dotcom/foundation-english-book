@@ -194,3 +194,195 @@
   .quizPic{font-size:48px;min-height:52px}
   .quizPage .footer{position:absolute;left:5%;right:5%;bottom:1.2%}
 }
+
+
+/* ===== MOBILE FLOW V5: Android-first, no forced page fitting ===== */
+@media(max-width:760px){
+  body{
+    padding:74px 0 24px;
+    background:#f2f4f4;
+  }
+
+  .top{
+    height:64px;
+    padding:7px 10px;
+  }
+  .top .brand{gap:6px}
+  .top img{width:76px;height:40px}
+  .top .brand b{font-size:12px}
+  .top .brand small{display:none}
+  .actions{gap:4px}
+  .actions button{width:32px;height:32px;border-radius:9px}
+  .count{min-width:38px;font-size:10px}
+
+  /* Every page becomes a natural scrolling mobile document */
+  .page,
+  .quizPage{
+    width:100%;
+    max-width:none;
+    aspect-ratio:auto !important;
+    min-height:calc(100dvh - 74px) !important;
+    height:auto !important;
+    overflow:visible !important;
+    border:0;
+    border-radius:0;
+    box-shadow:none;
+    padding-bottom:18px !important;
+  }
+  .page:before,.page:after{display:none}
+  .cover{
+    min-height:calc(100dvh - 74px) !important;
+    overflow:hidden !important;
+  }
+
+  .head{
+    height:auto !important;
+    min-height:50px;
+    margin:0 16px;
+    padding:8px 0;
+  }
+
+  /* Lesson pages: readable cards and natural vertical flow */
+  .lesson .hero{
+    height:auto !important;
+    min-height:138px;
+    margin:14px 16px 10px;
+  }
+  .letter strong{font-size:82px}
+  .sound{height:auto;min-height:94px;margin-right:8%;padding:10px 11px}
+  .lesson .section{margin:12px 16px 8px}
+  .lesson .content{
+    display:block !important;
+    margin:0 16px !important;
+  }
+  .lesson .vocab{
+    display:grid;
+    grid-template-columns:1fr !important;
+    gap:12px;
+  }
+  .lesson .card{
+    min-height:0 !important;
+    height:auto !important;
+    padding:14px 12px 12px;
+    border-radius:16px;
+  }
+  .lesson .emoji{font-size:42px}
+  .lesson .word{font-size:17px;margin:7px 0 10px}
+  .word .play{width:34px;height:34px;font-size:13px}
+  .cardExamples{gap:7px}
+  .cardExample{
+    min-height:44px;
+    grid-template-columns:24px minmax(0,1fr) 36px;
+    gap:8px;
+    padding:7px 8px;
+    border-radius:10px;
+  }
+  .exNo{width:22px;height:22px;font-size:9px}
+  .cardExample p{font-size:12px;line-height:1.35}
+  .examplePlay{width:34px;height:34px;font-size:12px}
+  .lesson .dict{
+    margin-top:14px;
+    padding:12px;
+    height:auto !important;
+  }
+  .dict h3{font-size:17px}
+  .de{padding:8px 3px}
+  .ar{font-size:12px}
+  .en{font-size:11px}
+
+  /* Quiz pages: no compression; let the student scroll comfortably */
+  .quizPage .quizHeader{
+    height:auto !important;
+    margin:16px 16px 12px !important;
+    align-items:flex-start;
+  }
+  .quizHeader h2{font-size:20px}
+  .quizHeader p{font-size:10px;line-height:1.35}
+  .quizNum{width:42px;height:42px;flex:0 0 42px}
+  .scoreBox{min-width:82px;padding:8px}
+  .scoreBox strong{font-size:17px}
+
+  .quizPage .quizList{
+    display:grid !important;
+    height:auto !important;
+    grid-template-rows:none !important;
+    gap:12px !important;
+    margin:0 16px !important;
+  }
+  .quizPage .quizq{
+    min-height:0 !important;
+    height:auto !important;
+    padding:14px 12px !important;
+    border-radius:15px;
+    justify-content:flex-start !important;
+  }
+  .quizPage .qtop{
+    align-items:flex-start;
+    gap:10px;
+  }
+  .quizPage .qtop b{
+    font-size:14px !important;
+    line-height:1.35;
+  }
+  .quizPage .qtop span{
+    font-size:9px !important;
+    padding-top:2px;
+  }
+
+  .quizPrompt{
+    display:block !important;
+    margin-bottom:10px;
+    text-align:center;
+  }
+  .quizPic{
+    font-size:78px !important;
+    min-height:86px !important;
+    margin-bottom:8px;
+  }
+  .quizPrompt .qtop{text-align:left}
+
+  .quizPage .options{
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:8px !important;
+    margin-top:10px !important;
+  }
+  .quizPage .options button{
+    min-height:46px !important;
+    font-size:14px !important;
+    border-radius:11px;
+  }
+  .quizPage .qfeedback{
+    min-height:0 !important;
+    margin-top:8px !important;
+    font-size:11px !important;
+    line-height:1.4;
+  }
+
+  .quizPage .quizActions{
+    height:auto !important;
+    margin:16px 16px 20px !important;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .quizPage .quizActions button{
+    height:46px !important;
+    font-size:13px;
+  }
+
+  /* Footer joins the normal flow on phones */
+  .footer,
+  .quizPage .footer,
+  .lesson .footer{
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    bottom:auto !important;
+    height:46px !important;
+    margin:20px 16px 4px !important;
+  }
+  .footer img{width:78px}
+
+  .coverFoot{bottom:4.5%}
+}
