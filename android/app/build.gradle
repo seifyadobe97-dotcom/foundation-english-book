@@ -42,6 +42,12 @@ def prepareBookAssets = tasks.register('prepareBookAssets', Copy) {
         include 'audio/voice-manifest.json', 'audio/files/**'
     }
     into "$buildDir/generated/book-assets/web"
+    inputs.file("$rootDir/branding/android-logo-layout.css")
+    doLast {
+        // App-only sizing for the full Arabic Institute logo; GitHub Pages CSS is untouched.
+        def stylesheet = file("$buildDir/generated/book-assets/web/style.css")
+        stylesheet.append("\n" + file("$rootDir/branding/android-logo-layout.css").getText('UTF-8') + "\n", 'UTF-8')
+    }
 }
 // Logos are exact scalable vector paths extracted from the user's Institute logo PDF.
 // The original PDF's Arabic lettering has been preserved as outlines, not font text.
