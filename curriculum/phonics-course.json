@@ -1,0 +1,1295 @@
+{
+  "version": 1,
+  "source": "User-provided Foundation English project specification (2026-10-14): seven-stage sequence; the three digraph unit vocab lists are source-preserved. All other example lessons, exercises and short stories are instructor-created extensions.",
+  "disclaimer": "Audio for isolated IPA phonemes is not generated. Phoneme cards are visual segmentation only.",
+  "lessons": [
+    {
+      "unit": "SHORT VOWELS",
+      "title": "Short a",
+      "pattern": "a",
+      "focus": "/æ/",
+      "words": [
+        "cat",
+        "mat",
+        "map",
+        "bag",
+        "fan",
+        "jam"
+      ],
+      "note": "Listen for the short a in cat.",
+      "arabic": "صوت a القصير زي cat. اسمع الكلمة كاملة، ثم اقرأها.",
+      "blend": [
+        "c",
+        "a",
+        "t"
+      ],
+      "mode": "phonics"
+    },
+    {
+      "unit": "SHORT VOWELS",
+      "title": "Short e",
+      "pattern": "e",
+      "focus": "/ɛ/",
+      "words": [
+        "pen",
+        "hen",
+        "bed",
+        "red",
+        "ten",
+        "net"
+      ],
+      "note": "Listen for short e in pen.",
+      "arabic": "صوت e القصير زي pen.",
+      "blend": [
+        "p",
+        "e",
+        "n"
+      ],
+      "mode": "phonics"
+    },
+    {
+      "unit": "SHORT VOWELS",
+      "title": "Short i",
+      "pattern": "i",
+      "focus": "/ɪ/",
+      "words": [
+        "pig",
+        "sit",
+        "pin",
+        "big",
+        "fin",
+        "lip"
+      ],
+      "note": "Listen for short i in pig.",
+      "arabic": "صوت i القصير زي pig.",
+      "blend": [
+        "p",
+        "i",
+        "g"
+      ],
+      "mode": "phonics"
+    },
+    {
+      "unit": "SHORT VOWELS",
+      "title": "Short o",
+      "pattern": "o",
+      "focus": "/ɑ/ (US)",
+      "words": [
+        "hot",
+        "pot",
+        "top",
+        "log",
+        "fox",
+        "box"
+      ],
+      "note": "In American English, short o in hot is commonly /ɑ/.",
+      "arabic": "صوت o القصير في النطق الأمريكي زي hot.",
+      "blend": [
+        "h",
+        "o",
+        "t"
+      ],
+      "mode": "phonics"
+    },
+    {
+      "unit": "SHORT VOWELS",
+      "title": "Short u",
+      "pattern": "u",
+      "focus": "/ʌ/",
+      "words": [
+        "sun",
+        "cup",
+        "bug",
+        "run",
+        "bus",
+        "rug"
+      ],
+      "note": "Listen for short u in sun.",
+      "arabic": "صوت u القصير زي sun.",
+      "blend": [
+        "s",
+        "u",
+        "n"
+      ],
+      "mode": "phonics"
+    },
+    {
+      "unit": "CVC BLENDING",
+      "title": "Blend short a",
+      "pattern": "C–V–C",
+      "focus": "/k/ + /æ/ + /t/",
+      "words": [
+        "cat",
+        "cap",
+        "map",
+        "tap",
+        "bag",
+        "fan"
+      ],
+      "note": "Point to each letter, say the sounds with your teacher, then blend the whole word.",
+      "arabic": "اقرأ أول صوت، ثم صوت الحركة، ثم الصوت الأخير؛ وبعدها انطق الكلمة كاملة.",
+      "blend": [
+        "c",
+        "a",
+        "t"
+      ],
+      "mode": "blending"
+    },
+    {
+      "unit": "CVC BLENDING",
+      "title": "Blend short e",
+      "pattern": "C–V–C",
+      "focus": "/p/ + /ɛ/ + /n/",
+      "words": [
+        "pen",
+        "hen",
+        "ten",
+        "bed",
+        "red",
+        "net"
+      ],
+      "note": "Blend p–e–n to read pen.",
+      "arabic": "ادمج الأصوات الثلاثة من الشمال لليمين، ثم استمع للكلمة.",
+      "blend": [
+        "p",
+        "e",
+        "n"
+      ],
+      "mode": "blending"
+    },
+    {
+      "unit": "CVC BLENDING",
+      "title": "Blend short i",
+      "pattern": "C–V–C",
+      "focus": "/s/ + /ɪ/ + /t/",
+      "words": [
+        "sit",
+        "pin",
+        "pig",
+        "fin",
+        "big",
+        "lip"
+      ],
+      "note": "Blend s–i–t to read sit.",
+      "arabic": "قسّم الكلمة لثلاثة أصوات وبعدين ادمجهم.",
+      "blend": [
+        "s",
+        "i",
+        "t"
+      ],
+      "mode": "blending"
+    },
+    {
+      "unit": "CVC BLENDING",
+      "title": "Blend short o",
+      "pattern": "C–V–C",
+      "focus": "/h/ + /ɑ/ + /t/",
+      "words": [
+        "hot",
+        "pot",
+        "top",
+        "log",
+        "dot",
+        "cot"
+      ],
+      "note": "Blend h–o–t to read hot.",
+      "arabic": "خلي بالك من صوت o القصير في American English.",
+      "blend": [
+        "h",
+        "o",
+        "t"
+      ],
+      "mode": "blending"
+    },
+    {
+      "unit": "CVC BLENDING",
+      "title": "Blend short u",
+      "pattern": "C–V–C",
+      "focus": "/s/ + /ʌ/ + /n/",
+      "words": [
+        "sun",
+        "cup",
+        "bug",
+        "run",
+        "bus",
+        "rug"
+      ],
+      "note": "Blend s–u–n to read sun.",
+      "arabic": "انطق الأصوات بالترتيب، ثم اسمع الكلمة واتبعها.",
+      "blend": [
+        "s",
+        "u",
+        "n"
+      ],
+      "mode": "blending"
+    },
+    {
+      "unit": "WORD FAMILIES",
+      "title": "Family -at",
+      "pattern": "-at",
+      "focus": "rhyming ending",
+      "words": [
+        "cat",
+        "hat",
+        "bat",
+        "rat"
+      ],
+      "note": "Change the first sound: c-at, h-at, b-at, r-at.",
+      "arabic": "الكلمات اللي بتنتهي بنفس الجزء غالبًا ليها نفس القافية. غيّر أول حرف واقرأ الباقي.",
+      "blend": [
+        "c",
+        "a",
+        "t"
+      ],
+      "mode": "family"
+    },
+    {
+      "unit": "WORD FAMILIES",
+      "title": "Family -an",
+      "pattern": "-an",
+      "focus": "rhyming ending",
+      "words": [
+        "fan",
+        "man",
+        "pan",
+        "can"
+      ],
+      "note": "The ending -an stays the same.",
+      "arabic": "الكلمات اللي بتنتهي بنفس الجزء غالبًا ليها نفس القافية. غيّر أول حرف واقرأ الباقي.",
+      "blend": [
+        "f",
+        "a",
+        "n"
+      ],
+      "mode": "family"
+    },
+    {
+      "unit": "WORD FAMILIES",
+      "title": "Family -ap",
+      "pattern": "-ap",
+      "focus": "rhyming ending",
+      "words": [
+        "cap",
+        "map",
+        "tap",
+        "nap"
+      ],
+      "note": "Match the rhyme: cap, map, tap, nap.",
+      "arabic": "الكلمات اللي بتنتهي بنفس الجزء غالبًا ليها نفس القافية. غيّر أول حرف واقرأ الباقي.",
+      "blend": [
+        "c",
+        "a",
+        "p"
+      ],
+      "mode": "family"
+    },
+    {
+      "unit": "WORD FAMILIES",
+      "title": "Family -et",
+      "pattern": "-et",
+      "focus": "rhyming ending",
+      "words": [
+        "pet",
+        "wet",
+        "net",
+        "jet"
+      ],
+      "note": "Keep -et and change the first consonant.",
+      "arabic": "الكلمات اللي بتنتهي بنفس الجزء غالبًا ليها نفس القافية. غيّر أول حرف واقرأ الباقي.",
+      "blend": [
+        "p",
+        "e",
+        "t"
+      ],
+      "mode": "family"
+    },
+    {
+      "unit": "WORD FAMILIES",
+      "title": "Family -en",
+      "pattern": "-en",
+      "focus": "rhyming ending",
+      "words": [
+        "hen",
+        "pen",
+        "ten",
+        "men"
+      ],
+      "note": "Look for the spelling -en.",
+      "arabic": "الكلمات اللي بتنتهي بنفس الجزء غالبًا ليها نفس القافية. غيّر أول حرف واقرأ الباقي.",
+      "blend": [
+        "h",
+        "e",
+        "n"
+      ],
+      "mode": "family"
+    },
+    {
+      "unit": "WORD FAMILIES",
+      "title": "Family -ig",
+      "pattern": "-ig",
+      "focus": "rhyming ending",
+      "words": [
+        "pig",
+        "big",
+        "dig",
+        "wig"
+      ],
+      "note": "All four words share -ig.",
+      "arabic": "الكلمات اللي بتنتهي بنفس الجزء غالبًا ليها نفس القافية. غيّر أول حرف واقرأ الباقي.",
+      "blend": [
+        "p",
+        "i",
+        "g"
+      ],
+      "mode": "family"
+    },
+    {
+      "unit": "WORD FAMILIES",
+      "title": "Family -in",
+      "pattern": "-in",
+      "focus": "rhyming ending",
+      "words": [
+        "pin",
+        "fin",
+        "win",
+        "bin"
+      ],
+      "note": "Say each onset, then -in.",
+      "arabic": "الكلمات اللي بتنتهي بنفس الجزء غالبًا ليها نفس القافية. غيّر أول حرف واقرأ الباقي.",
+      "blend": [
+        "p",
+        "i",
+        "n"
+      ],
+      "mode": "family"
+    },
+    {
+      "unit": "WORD FAMILIES",
+      "title": "Family -op",
+      "pattern": "-op",
+      "focus": "rhyming ending",
+      "words": [
+        "top",
+        "hop",
+        "mop",
+        "pop"
+      ],
+      "note": "The four words rhyme with -op.",
+      "arabic": "الكلمات اللي بتنتهي بنفس الجزء غالبًا ليها نفس القافية. غيّر أول حرف واقرأ الباقي.",
+      "blend": [
+        "t",
+        "o",
+        "p"
+      ],
+      "mode": "family"
+    },
+    {
+      "unit": "WORD FAMILIES",
+      "title": "Family -ot",
+      "pattern": "-ot",
+      "focus": "rhyming ending",
+      "words": [
+        "pot",
+        "hot",
+        "dot",
+        "cot"
+      ],
+      "note": "Keep -ot and blend the first consonant.",
+      "arabic": "الكلمات اللي بتنتهي بنفس الجزء غالبًا ليها نفس القافية. غيّر أول حرف واقرأ الباقي.",
+      "blend": [
+        "p",
+        "o",
+        "t"
+      ],
+      "mode": "family"
+    },
+    {
+      "unit": "WORD FAMILIES",
+      "title": "Family -un",
+      "pattern": "-un",
+      "focus": "rhyming ending",
+      "words": [
+        "sun",
+        "run",
+        "fun",
+        "bun"
+      ],
+      "note": "All four words end in -un.",
+      "arabic": "الكلمات اللي بتنتهي بنفس الجزء غالبًا ليها نفس القافية. غيّر أول حرف واقرأ الباقي.",
+      "blend": [
+        "s",
+        "u",
+        "n"
+      ],
+      "mode": "family"
+    },
+    {
+      "unit": "CONSONANT DIGRAPHS",
+      "title": "sh — /ʃ/",
+      "pattern": "sh",
+      "focus": "/ʃ/",
+      "words": [
+        "fish",
+        "shop",
+        "ship",
+        "wash"
+      ],
+      "note": "Two letters, one consonant sound. Read the full words; the sound symbols are visual only.",
+      "arabic": "الحرفين sh مع بعض غالبًا بيدّوا صوت واحد. استمع للكلمة الكاملة.",
+      "blend": [
+        "sh",
+        "i",
+        "p"
+      ],
+      "mode": "digraph"
+    },
+    {
+      "unit": "CONSONANT DIGRAPHS",
+      "title": "ch — /tʃ/",
+      "pattern": "ch",
+      "focus": "/tʃ/",
+      "words": [
+        "chick",
+        "cherry",
+        "bench",
+        "branch"
+      ],
+      "note": "One sound can be spelled with two letters.",
+      "arabic": "ch حرفين لكن في الكلمات دي صوت واحد.",
+      "blend": [
+        "ch",
+        "i",
+        "ck"
+      ],
+      "mode": "digraph"
+    },
+    {
+      "unit": "CONSONANT DIGRAPHS",
+      "title": "th — quiet /θ/",
+      "pattern": "th",
+      "focus": "/θ/",
+      "words": [
+        "math",
+        "bath",
+        "tooth",
+        "teeth"
+      ],
+      "note": "Voiceless th: no vibration in the throat.",
+      "arabic": "صوت th هنا مهموس زي math، مش نفس صوت this.",
+      "blend": [
+        "m",
+        "a",
+        "th"
+      ],
+      "mode": "digraph"
+    },
+    {
+      "unit": "CONSONANT DIGRAPHS",
+      "title": "th — voiced /ð/",
+      "pattern": "th",
+      "focus": "/ð/",
+      "words": [
+        "this",
+        "father",
+        "mother",
+        "brother"
+      ],
+      "note": "Voiced th: feel the gentle voice vibration.",
+      "arabic": "صوت th هنا مجهور زي this، مختلف عن math.",
+      "blend": [
+        "th",
+        "i",
+        "s"
+      ],
+      "mode": "digraph"
+    },
+    {
+      "unit": "CONSONANT DIGRAPHS",
+      "title": "wh — /w/",
+      "pattern": "wh",
+      "focus": "/w/",
+      "words": [
+        "wheat",
+        "whale",
+        "white",
+        "wheel"
+      ],
+      "note": "In common US pronunciation, wh usually sounds like /w/ in these words.",
+      "arabic": "wh في أغلب النطق الأمريكي للكلمات دي زي w.",
+      "blend": [
+        "wh",
+        "ee",
+        "l"
+      ],
+      "mode": "digraph"
+    },
+    {
+      "unit": "CONSONANT DIGRAPHS",
+      "title": "ph — /f/",
+      "pattern": "ph",
+      "focus": "/f/",
+      "words": [
+        "dolphin",
+        "elephant",
+        "phone",
+        "photo"
+      ],
+      "note": "In these words, ph represents /f/.",
+      "arabic": "الحرفين ph هنا بيتنطقوا زي f.",
+      "blend": [
+        "ph",
+        "o",
+        "ne"
+      ],
+      "mode": "digraph"
+    },
+    {
+      "unit": "LONG VOWELS",
+      "title": "Long a — a_e",
+      "pattern": "a_e",
+      "focus": "/eɪ/",
+      "words": [
+        "cake",
+        "name",
+        "game",
+        "gate"
+      ],
+      "note": "Silent e usually helps the first vowel say its letter name.",
+      "arabic": "الـe الأخيرة هنا ساكتة وبتغيّر صوت a: cap → cape.",
+      "blend": [
+        "c",
+        "a_e",
+        "k"
+      ],
+      "mode": "long"
+    },
+    {
+      "unit": "LONG VOWELS",
+      "title": "Long e — ee / ea",
+      "pattern": "ee / ea",
+      "focus": "/iː/",
+      "words": [
+        "tree",
+        "green",
+        "peel",
+        "tea"
+      ],
+      "note": "ee and ea can spell long e. Compare tree and tea.",
+      "arabic": "الصوت الطويل e هنا موجود في ee وea، زي tree وtea.",
+      "blend": [
+        "t",
+        "r",
+        "ee"
+      ],
+      "mode": "long"
+    },
+    {
+      "unit": "LONG VOWELS",
+      "title": "Long i — i_e",
+      "pattern": "i_e",
+      "focus": "/aɪ/",
+      "words": [
+        "bike",
+        "kite",
+        "time",
+        "five"
+      ],
+      "note": "Compare pin and pine: final e changes the vowel.",
+      "arabic": "الـe الأخيرة بتغيّر صوت i: pin → pine.",
+      "blend": [
+        "b",
+        "i_e",
+        "k"
+      ],
+      "mode": "long"
+    },
+    {
+      "unit": "LONG VOWELS",
+      "title": "Long o — o_e",
+      "pattern": "o_e",
+      "focus": "/oʊ/",
+      "words": [
+        "home",
+        "rope",
+        "nose",
+        "note"
+      ],
+      "note": "Read the long o in home and rope.",
+      "arabic": "o مع e الأخيرة بتدي الصوت الطويل زي home.",
+      "blend": [
+        "h",
+        "o_e",
+        "m"
+      ],
+      "mode": "long"
+    },
+    {
+      "unit": "LONG VOWELS",
+      "title": "Long u — u_e",
+      "pattern": "u_e",
+      "focus": "/juː/ or /uː/",
+      "words": [
+        "cube",
+        "mule",
+        "cute",
+        "tune"
+      ],
+      "note": "Long u can sound /juː/ in cube or /uː/ in US tune.",
+      "arabic": "الصوت الطويل u ممكن يبدأ بصوت y خفيف، زي cube؛ وtune أمريكيًا غالبًا /uː/.",
+      "blend": [
+        "c",
+        "u_e",
+        "b"
+      ],
+      "mode": "long"
+    },
+    {
+      "unit": "VOWEL TEAMS — UNIT 2",
+      "title": "ee",
+      "pattern": "ee",
+      "focus": "/iː/",
+      "words": [
+        "peel",
+        "deer",
+        "tree",
+        "green"
+      ],
+      "note": "Long e spelled ee.",
+      "arabic": "اتعلم شكل ee مع الصوت الطويل e.",
+      "blend": [
+        "p",
+        "ee",
+        "l"
+      ],
+      "mode": "team"
+    },
+    {
+      "unit": "VOWEL TEAMS — UNIT 2",
+      "title": "ea",
+      "pattern": "ea",
+      "focus": "/iː/ (these words)",
+      "words": [
+        "read",
+        "tea",
+        "seal",
+        "beach"
+      ],
+      "note": "Here read means present-tense read /riːd/; the past-tense form sounds /rɛd/.",
+      "arabic": "read هنا بالمضارع /riːd/، لكن الماضي /rɛd/.",
+      "blend": [
+        "t",
+        "ea"
+      ],
+      "mode": "team"
+    },
+    {
+      "unit": "VOWEL TEAMS — UNIT 2",
+      "title": "oa",
+      "pattern": "oa",
+      "focus": "/oʊ/",
+      "words": [
+        "goat",
+        "coat",
+        "boat",
+        "soap"
+      ],
+      "note": "oa often spells long o.",
+      "arabic": "oa هنا بتنطق long o.",
+      "blend": [
+        "g",
+        "oa",
+        "t"
+      ],
+      "mode": "team"
+    },
+    {
+      "unit": "VOWEL TEAMS — UNIT 2",
+      "title": "ow — long o",
+      "pattern": "ow",
+      "focus": "/oʊ/",
+      "words": [
+        "snow",
+        "yellow",
+        "window",
+        "bowl"
+      ],
+      "note": "Here ow sounds long o, not the sound in cow.",
+      "arabic": "ow هنا زي snow، غير ow في cow.",
+      "blend": [
+        "sn",
+        "ow"
+      ],
+      "mode": "team"
+    },
+    {
+      "unit": "VOWEL TEAMS — UNIT 2",
+      "title": "ai",
+      "pattern": "ai",
+      "focus": "/eɪ/",
+      "words": [
+        "train",
+        "rain",
+        "nail",
+        "tail"
+      ],
+      "note": "ai often spells long a in the middle of a word.",
+      "arabic": "ai في الكلمات دي بتدي long a.",
+      "blend": [
+        "r",
+        "ai",
+        "n"
+      ],
+      "mode": "team"
+    },
+    {
+      "unit": "VOWEL TEAMS — UNIT 2",
+      "title": "ay",
+      "pattern": "ay",
+      "focus": "/eɪ/",
+      "words": [
+        "play",
+        "clay",
+        "pray",
+        "gray"
+      ],
+      "note": "ay often spells long a at the end of a word.",
+      "arabic": "ay كتير بتظهر في آخر الكلمة زي play.",
+      "blend": [
+        "pl",
+        "ay"
+      ],
+      "mode": "team"
+    },
+    {
+      "unit": "VOWEL TEAMS — UNIT 3",
+      "title": "oi",
+      "pattern": "oi",
+      "focus": "/ɔɪ/",
+      "words": [
+        "coin",
+        "soil",
+        "boil",
+        "oil"
+      ],
+      "note": "Read the oi sound in coin.",
+      "arabic": "نفس الصوت في coin وoil.",
+      "blend": [
+        "c",
+        "oi",
+        "n"
+      ],
+      "mode": "team"
+    },
+    {
+      "unit": "VOWEL TEAMS — UNIT 3",
+      "title": "ow — as in cow",
+      "pattern": "ow",
+      "focus": "/aʊ/",
+      "words": [
+        "owl",
+        "cow",
+        "brown",
+        "crown"
+      ],
+      "note": "This ow sounds different from snow.",
+      "arabic": "ow هنا زي cow، مش زي snow.",
+      "blend": [
+        "c",
+        "ow"
+      ],
+      "mode": "team"
+    },
+    {
+      "unit": "VOWEL TEAMS — UNIT 3",
+      "title": "ou",
+      "pattern": "ou",
+      "focus": "/aʊ/",
+      "words": [
+        "mouse",
+        "cloud",
+        "blouse",
+        "count"
+      ],
+      "note": "ou sounds /aʊ/ in these words.",
+      "arabic": "صوت ou هنا زي mouse.",
+      "blend": [
+        "m",
+        "ou",
+        "se"
+      ],
+      "mode": "team"
+    },
+    {
+      "unit": "VOWEL TEAMS — UNIT 3",
+      "title": "ar",
+      "pattern": "ar",
+      "focus": "/ɑɹ/ (US)",
+      "words": [
+        "park",
+        "arm",
+        "star",
+        "farm"
+      ],
+      "note": "American r is pronounced in these words.",
+      "arabic": "ar في النطق الأمريكي فيها r واضحة.",
+      "blend": [
+        "st",
+        "ar"
+      ],
+      "mode": "team"
+    },
+    {
+      "unit": "VOWEL TEAMS — UNIT 3",
+      "title": "or",
+      "pattern": "or",
+      "focus": "/ɔɹ/ (US)",
+      "words": [
+        "store",
+        "corn",
+        "horse",
+        "fork"
+      ],
+      "note": "Practice the American r in or.",
+      "arabic": "or في الكلمات دي صوتها فيه r واضحة.",
+      "blend": [
+        "f",
+        "or",
+        "k"
+      ],
+      "mode": "team"
+    },
+    {
+      "unit": "VOWEL TEAMS — UNIT 3",
+      "title": "oo — short",
+      "pattern": "oo",
+      "focus": "/ʊ/",
+      "words": [
+        "look",
+        "cook",
+        "book",
+        "hook"
+      ],
+      "note": "This oo is /ʊ/, not long /uː/ as in moon.",
+      "arabic": "oo هنا صوتها قصير زي book؛ مش نفس oo في moon.",
+      "blend": [
+        "b",
+        "oo",
+        "k"
+      ],
+      "mode": "team"
+    }
+  ],
+  "readings": [
+    {
+      "title": "Read short-vowel sentences",
+      "unit": "DECODABLE SENTENCES",
+      "note": "Read the short words first. Common sight words include a, the, is.",
+      "lines": [
+        "A cat is on a mat.",
+        "The pen is red.",
+        "A pig can sit.",
+        "The dog is hot.",
+        "The sun is up."
+      ],
+      "target": "cat",
+      "arabic": "اقرأ الكلمات القصيرة الأول. كلمات مثل the وis هنتعرف عليها بالنظر."
+    },
+    {
+      "title": "Read CVC sentences",
+      "unit": "DECODABLE SENTENCES",
+      "note": "Point, blend, then read the whole sentence.",
+      "lines": [
+        "Sam can tap.",
+        "Ben has a red pen.",
+        "The lid is on the pot.",
+        "A fox can hop.",
+        "A bug is on the rug."
+      ],
+      "target": "pen",
+      "arabic": "قسّم الكلمة لو احتجت، وبعدها اقرأ الجملة كاملة."
+    },
+    {
+      "title": "Read digraph sentences",
+      "unit": "DECODABLE SENTENCES",
+      "note": "Spot sh, ch, th, wh and ph before you read.",
+      "lines": [
+        "The fish is in the shop.",
+        "The chick is on the bench.",
+        "This is my mother.",
+        "The whale is big.",
+        "I have a photo."
+      ],
+      "target": "fish",
+      "arabic": "حدد الـDigraph الأول ثم اقرأ الكلمة كلها."
+    },
+    {
+      "title": "Read long-vowel sentences",
+      "unit": "DECODABLE SENTENCES",
+      "note": "Look for final silent e and common vowel teams.",
+      "lines": [
+        "We bake a cake.",
+        "I can ride a bike.",
+        "Rose is at home.",
+        "The mule is cute.",
+        "I see a green tree."
+      ],
+      "target": "cake",
+      "arabic": "لاحظ الـSilent e والـVowel Teams أثناء القراءة."
+    },
+    {
+      "title": "Read vowel-team sentences",
+      "unit": "DECODABLE SENTENCES",
+      "note": "Compare vowel-team sounds as you read.",
+      "lines": [
+        "The green tree is tall.",
+        "The goat is on the road.",
+        "Snow is on the window.",
+        "A mouse is in the house.",
+        "A brown cow is in the field."
+      ],
+      "target": "snow",
+      "arabic": "اسمع الفرق بين ow في snow وow في cow."
+    }
+  ],
+  "stories": [
+    {
+      "title": "Sam and the Cat",
+      "unit": "MINI STORIES",
+      "level": "Short vowels",
+      "lines": [
+        "Sam has a cat.",
+        "The cat sat on a mat.",
+        "Sam can pat the cat.",
+        "The cat is happy."
+      ],
+      "questions": [
+        {
+          "prompt": "Who has a cat?",
+          "options": [
+            "Sam",
+            "Ben",
+            "Kate"
+          ],
+          "answer": "Sam"
+        },
+        {
+          "prompt": "Where did the cat sit?",
+          "options": [
+            "On a mat",
+            "On a ship",
+            "On a bike"
+          ],
+          "answer": "On a mat"
+        }
+      ]
+    },
+    {
+      "title": "Ben and the Red Hen",
+      "unit": "MINI STORIES",
+      "level": "CVC words",
+      "lines": [
+        "Ben has a red hen.",
+        "The hen is in a pen.",
+        "Ben can see the hen.",
+        "Ben gives the hen food."
+      ],
+      "questions": [
+        {
+          "prompt": "What color is the hen?",
+          "options": [
+            "Red",
+            "Blue",
+            "Green"
+          ],
+          "answer": "Red"
+        },
+        {
+          "prompt": "Where is the hen?",
+          "options": [
+            "In a pen",
+            "In a car",
+            "On a ship"
+          ],
+          "answer": "In a pen"
+        }
+      ]
+    },
+    {
+      "title": "The Fish and the Shop",
+      "unit": "MINI STORIES",
+      "level": "Consonant digraphs",
+      "lines": [
+        "A shop has a big fish tank.",
+        "The fish is in the tank.",
+        "A child sees the fish.",
+        "The child smiles."
+      ],
+      "questions": [
+        {
+          "prompt": "What is in the tank?",
+          "options": [
+            "A fish",
+            "A whale",
+            "A hen"
+          ],
+          "answer": "A fish"
+        },
+        {
+          "prompt": "Where is the fish tank?",
+          "options": [
+            "In a shop",
+            "On a farm",
+            "On a ship"
+          ],
+          "answer": "In a shop"
+        }
+      ]
+    },
+    {
+      "title": "Kate and the Bike",
+      "unit": "MINI STORIES",
+      "level": "Long vowels",
+      "lines": [
+        "Kate has a new bike.",
+        "The bike is blue.",
+        "Kate rides home.",
+        "She puts the bike by the gate."
+      ],
+      "questions": [
+        {
+          "prompt": "What does Kate have?",
+          "options": [
+            "A bike",
+            "A kite",
+            "A boat"
+          ],
+          "answer": "A bike"
+        },
+        {
+          "prompt": "Where does Kate ride?",
+          "options": [
+            "Home",
+            "To the zoo",
+            "To the shop"
+          ],
+          "answer": "Home"
+        }
+      ]
+    },
+    {
+      "title": "A Snow Day",
+      "unit": "MINI STORIES",
+      "level": "Vowel teams",
+      "lines": [
+        "Snow falls by the green tree.",
+        "A boy looks out the window.",
+        "He puts on his coat.",
+        "He goes out to play in the snow."
+      ],
+      "questions": [
+        {
+          "prompt": "What falls by the tree?",
+          "options": [
+            "Snow",
+            "Rain",
+            "Leaves"
+          ],
+          "answer": "Snow"
+        },
+        {
+          "prompt": "What does the boy put on?",
+          "options": [
+            "A coat",
+            "A hat",
+            "A vest"
+          ],
+          "answer": "A coat"
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "title": "Cumulative A–F",
+      "unit": "A–Z CUMULATIVE REVIEW",
+      "words": [
+        "apple",
+        "bear",
+        "cat",
+        "dog",
+        "egg",
+        "fox"
+      ],
+      "wrong": [
+        "ant",
+        "ball",
+        "camel",
+        "door",
+        "ear",
+        "fan"
+      ]
+    },
+    {
+      "title": "Cumulative A–L",
+      "unit": "A–Z CUMULATIVE REVIEW",
+      "words": [
+        "gift",
+        "hat",
+        "igloo",
+        "jug",
+        "kite",
+        "lamp"
+      ],
+      "wrong": [
+        "goat",
+        "hand",
+        "ice",
+        "jam",
+        "key",
+        "lion"
+      ]
+    },
+    {
+      "title": "Cumulative A–R",
+      "unit": "A–Z CUMULATIVE REVIEW",
+      "words": [
+        "moon",
+        "nose",
+        "owl",
+        "pencil",
+        "queen",
+        "rabbit"
+      ],
+      "wrong": [
+        "mouse",
+        "net",
+        "olive",
+        "pen",
+        "quiet",
+        "rain"
+      ]
+    },
+    {
+      "title": "Cumulative A–Z",
+      "unit": "A–Z CUMULATIVE REVIEW",
+      "words": [
+        "sun",
+        "tree",
+        "umbrella",
+        "violin",
+        "whale",
+        "zipper"
+      ],
+      "wrong": [
+        "soap",
+        "taxi",
+        "under",
+        "van",
+        "window",
+        "zebra"
+      ]
+    }
+  ],
+  "checkpoints": [
+    {
+      "title": "Short Vowels Checkpoint",
+      "unit": "PHONICS CHECKPOINT",
+      "words": [
+        "cat",
+        "pen",
+        "pig",
+        "hot",
+        "sun",
+        "mat"
+      ],
+      "wrong": [
+        "cut",
+        "pin",
+        "peg",
+        "hat",
+        "son",
+        "met"
+      ]
+    },
+    {
+      "title": "CVC & Families Checkpoint",
+      "unit": "PHONICS CHECKPOINT",
+      "words": [
+        "cat",
+        "hen",
+        "big",
+        "cap",
+        "sun",
+        "hop"
+      ],
+      "wrong": [
+        "cot",
+        "hat",
+        "bag",
+        "cup",
+        "sin",
+        "hip"
+      ]
+    },
+    {
+      "title": "Digraphs Checkpoint",
+      "unit": "PHONICS CHECKPOINT",
+      "words": [
+        "ship",
+        "chick",
+        "math",
+        "this",
+        "whale",
+        "phone"
+      ],
+      "wrong": [
+        "shop",
+        "cherry",
+        "bath",
+        "that",
+        "white",
+        "photo"
+      ]
+    },
+    {
+      "title": "Long Vowels Checkpoint",
+      "unit": "PHONICS CHECKPOINT",
+      "words": [
+        "cake",
+        "tree",
+        "bike",
+        "home",
+        "cube",
+        "name"
+      ],
+      "wrong": [
+        "cap",
+        "tea",
+        "kite",
+        "nose",
+        "mule",
+        "game"
+      ]
+    },
+    {
+      "title": "Vowel Teams & Reading Checkpoint",
+      "unit": "PHONICS CHECKPOINT",
+      "words": [
+        "coin",
+        "cow",
+        "mouse",
+        "park",
+        "fork",
+        "book"
+      ],
+      "wrong": [
+        "oil",
+        "snow",
+        "cloud",
+        "arm",
+        "horse",
+        "moon"
+      ]
+    }
+  ]
+}

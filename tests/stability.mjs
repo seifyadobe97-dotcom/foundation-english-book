@@ -11,11 +11,12 @@ const count = expression => [...html.matchAll(expression)].length;
 const inline = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 const pageList = [...html.matchAll(/<section class="page ([^"]+)"[^>]*data-page="(\d+)"(?:[^>]*)>/g)];
 
-test('exact static 45-page sequence and stable branding', () => {
-  assert.equal(pageList.length, 45);
-  assert.deepEqual(pageList.map(x => Number(x[2])), Array.from({length:45}, (_,i) => i+1));
+test('exact static 108-page sequence, original 45-page A–Z preserved, and stable branding', () => {
+  assert.equal(pageList.length, 108);
+  assert.deepEqual(pageList.map(x => Number(x[2])), Array.from({length:108}, (_,i) => i+1));
   assert.equal(pageList.filter(x=>x[1].includes('lesson')).length, 26);
-  assert.equal(pageList.filter(x=>x[1].includes('quizPage')).length, 18);
+  assert.equal(pageList.filter(x=>x[1].includes('quizPage')).length, 27);
+  assert.equal(pageList.filter(x=>x[1].includes('phonicsPage')).length,54);
   assert.equal(pageList.filter(x=>x[1].includes('cover')).length, 1);
   assert.equal(count(/data-letter="[A-Z]"/g),26);
   assert.equal(count(/class="emoji" aria-label="/g),149);
@@ -29,17 +30,17 @@ test('exact static 45-page sequence and stable branding', () => {
 
 test('review and listening questions all have valid, unique correct answers', () => {
   const blocks=[...html.matchAll(/<div class="quizq" data-answer="([^"]+)"[\s\S]*?<div class="options(?: [^"]+)?"[^>]*>([\s\S]*?)<\/div>/g)];
-  assert.equal(blocks.length,108);
+  assert.equal(blocks.length,162);
   const quizIds=[...html.matchAll(/<div class="quizList" data-quiz="([^"]+)"/g)].map(m=>m[1]);
-  assert.deepEqual(quizIds,Array.from({length:18},(_,i)=>String(i+1)));
+  assert.deepEqual(quizIds,Array.from({length:27},(_,i)=>String(i+1)));
   for(const [i,q] of blocks.entries()){
     const choices=[...q[2].matchAll(/<button data-value="([^"]+)"/g)].map(m=>m[1]);
     assert.ok(choices.length>=2,'Question '+(i+1)+' must have at least two choices');
     assert.equal(new Set(choices).size,choices.length,'Duplicate choices in question '+(i+1));
     assert.equal(choices.filter(x=>x===q[1]).length,1,'Exactly one correct answer in question '+(i+1));
   }
-  assert.equal(count(/class="checkQuiz"/g),18);
-  assert.equal(count(/class="resetQuiz"/g),18);
+  assert.equal(count(/class="checkQuiz"/g),27);
+  assert.equal(count(/class="resetQuiz"/g),27);
 });
 
 test('every quick check is soundly answerable',()=>{
@@ -90,7 +91,7 @@ test('main runtime parses and initializes in a simulated DOM; navigation persist
     };
     nodeMap.set(id,value);return value;
   }
-  const pages=Array.from({length:45},(_,i)=>el('page'+i));
+  const pages=Array.from({length:108},(_,i)=>el('page'+i));
   const context={
     document:{
       querySelector:s=>el(s),
@@ -112,21 +113,54 @@ test('main runtime parses and initializes in a simulated DOM; navigation persist
   };
   const sandbox=vm.createContext(context);
   new vm.Script(inline).runInContext(sandbox);
-  assert.equal(el('#count').textContent,'1 / 45');
+  assert.equal(el('#count').textContent,'1 / 108');
   el('#next').onclick();
-  assert.equal(el('#count').textContent,'2 / 45');
+  assert.equal(el('#count').textContent,'2 / 108');
   el('#next').onclick();
-  assert.equal(el('#count').textContent,'3 / 45');
+  assert.equal(el('#count').textContent,'3 / 108');
   el('#prev').onclick();
-  assert.equal(el('#count').textContent,'2 / 45');
+  assert.equal(el('#count').textContent,'2 / 108');
   listeners.keydown({key:'ArrowRight'});
-  assert.equal(el('#count').textContent,'3 / 45');
-  for(let i=0;i<100;i++)el('#next').onclick();
-  assert.equal(el('#count').textContent,'45 / 45');
+  assert.equal(el('#count').textContent,'3 / 108');
+  for(let i=0;i<120;i++)el('#next').onclick();
+  assert.equal(el('#count').textContent,'108 / 108');
   assert.equal(el('#next').disabled,true);
   assert.equal(pages.filter(p=>p.classList.contains('active')).length,1);
-  assert.equal(storage.get('foundation:lastPage'),'45');
-  for(let i=0;i<100;i++)el('#prev').onclick();
-  assert.equal(el('#count').textContent,'1 / 45');
+  assert.equal(storage.get('foundation:lastPage'),'108');
+  for(let i=0;i<120;i++)el('#prev').onclick();
+  assert.equal(el('#count').textContent,'1 / 108');
   assert.equal(el('#prev').disabled,true);
+});
+
+test('phonics curriculum pages, sound-symbol safety and practice answer integrity',()=>{
+  const plan=JSON.parse(readFileSync(new URL('../curriculum/phonics-course.json',import.meta.url),'utf8'));
+  assert.equal(plan.lessons.length,43);
+  assert.equal(plan.readings.length,5);
+  assert.equal(plan.stories.length,5);
+  assert.equal(plan.reviews.length,4);
+  assert.equal(plan.checkpoints.length,5);
+  assert.equal(count(/data-module="/g),63);
+  assert.equal(count(/class="phonicsQ"/g),149);
+  assert.equal(count(/class="phonicsPractice"/g),53);
+  assert.equal(count(/class="phonicsContents"/g),1);
+  assert.equal(count(/data-page-jump=/g),10);
+  const blocks=[...html.matchAll(/<div class="phonicsQ" data-answer="([^"]+)"[\s\S]*?<div class="phonicsOptions">([\s\S]*?)<\/div>/g)];
+  assert.equal(blocks.length,149);
+  for(const [i,q] of blocks.entries()){
+    const opts=[...q[2].matchAll(/<button data-value="([^"]+)"/g)].map(m=>m[1]);
+    assert.equal(opts.length,3,'Three choices required: '+i);
+    assert.equal(new Set(opts).size,3,'Duplicate phonics choice: '+i);
+    assert.equal(opts.filter(x=>x===q[1]).length,1,'Unanswerable phonics exercise: '+i);
+  }
+  assert.ok(!html.includes('class="phonemeAudio"'),'no synthetic isolated phoneme buttons');
+  for(const unit of ['SHORT VOWELS','CVC BLENDING','WORD FAMILIES','CONSONANT DIGRAPHS','LONG VOWELS','VOWEL TEAMS — UNIT 2','VOWEL TEAMS — UNIT 3']){
+    assert.ok(html.includes('data-module="'+unit+'"'),'Missing unit '+unit);
+  }
+  const sourceWords=[['sh','fish,shop,ship,wash'],['ch','chick,cherry,bench,branch'],
+    ['th','math,bath,tooth,teeth'],['th','this,father,mother,brother'],
+    ['wh','wheat,whale,white,wheel'],['ph','dolphin,elephant,phone,photo']];
+  for(const [i,entry] of plan.lessons.filter(x=>x.unit==='CONSONANT DIGRAPHS').entries()){
+    assert.equal(entry.pattern,sourceWords[i][0]);
+    assert.equal(entry.words.join(','),sourceWords[i][1]);
+  }
 });
