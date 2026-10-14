@@ -11,12 +11,12 @@ const count = expression => [...html.matchAll(expression)].length;
 const inline = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 const pageList = [...html.matchAll(/<section class="page ([^"]+)"[^>]*data-page="(\d+)"(?:[^>]*)>/g)];
 
-test('exact static 108-page sequence, original 45-page A–Z preserved, and stable branding', () => {
-  assert.equal(pageList.length, 108);
-  assert.deepEqual(pageList.map(x => Number(x[2])), Array.from({length:108}, (_,i) => i+1));
+test('exact static 118-page sequence, original 45-page A–Z preserved, and stable branding', () => {
+  assert.equal(pageList.length, 118);
+  assert.deepEqual(pageList.map(x => Number(x[2])), Array.from({length:118}, (_,i) => i+1));
   assert.equal(pageList.filter(x=>x[1].includes('lesson')).length, 26);
   assert.equal(pageList.filter(x=>x[1].includes('quizPage')).length, 27);
-  assert.equal(pageList.filter(x=>x[1].includes('phonicsPage')).length,54);
+  assert.equal(pageList.filter(x=>x[1].includes('phonicsPage')).length,64);
   assert.equal(pageList.filter(x=>x[1].includes('cover')).length, 1);
   assert.equal(count(/data-letter="[A-Z]"/g),26);
   assert.equal(count(/class="emoji" aria-label="/g),149);
@@ -91,7 +91,7 @@ test('main runtime parses and initializes in a simulated DOM; navigation persist
     };
     nodeMap.set(id,value);return value;
   }
-  const pages=Array.from({length:108},(_,i)=>el('page'+i));
+  const pages=Array.from({length:118},(_,i)=>el('page'+i));
   const context={
     document:{
       querySelector:s=>el(s),
@@ -113,22 +113,22 @@ test('main runtime parses and initializes in a simulated DOM; navigation persist
   };
   const sandbox=vm.createContext(context);
   new vm.Script(inline).runInContext(sandbox);
-  assert.equal(el('#count').textContent,'1 / 108');
+  assert.equal(el('#count').textContent,'1 / 118');
   el('#next').onclick();
-  assert.equal(el('#count').textContent,'2 / 108');
+  assert.equal(el('#count').textContent,'2 / 118');
   el('#next').onclick();
-  assert.equal(el('#count').textContent,'3 / 108');
+  assert.equal(el('#count').textContent,'3 / 118');
   el('#prev').onclick();
-  assert.equal(el('#count').textContent,'2 / 108');
+  assert.equal(el('#count').textContent,'2 / 118');
   listeners.keydown({key:'ArrowRight'});
-  assert.equal(el('#count').textContent,'3 / 108');
+  assert.equal(el('#count').textContent,'3 / 118');
   for(let i=0;i<120;i++)el('#next').onclick();
-  assert.equal(el('#count').textContent,'108 / 108');
+  assert.equal(el('#count').textContent,'118 / 118');
   assert.equal(el('#next').disabled,true);
   assert.equal(pages.filter(p=>p.classList.contains('active')).length,1);
-  assert.equal(storage.get('foundation:lastPage'),'108');
+  assert.equal(storage.get('foundation:lastPage'),'118');
   for(let i=0;i<120;i++)el('#prev').onclick();
-  assert.equal(el('#count').textContent,'1 / 108');
+  assert.equal(el('#count').textContent,'1 / 118');
   assert.equal(el('#prev').disabled,true);
 });
 
@@ -139,13 +139,13 @@ test('phonics curriculum pages, sound-symbol safety and practice answer integrit
   assert.equal(plan.stories.length,5);
   assert.equal(plan.reviews.length,4);
   assert.equal(plan.checkpoints.length,5);
-  assert.equal(count(/data-module="/g),63);
-  assert.equal(count(/class="phonicsQ"/g),149);
-  assert.equal(count(/class="phonicsPractice"/g),53);
+  assert.equal(count(/data-module="/g),73);
+  assert.equal(count(/class="phonicsQ"/g),179);
+  assert.equal(count(/class="phonicsPractice"/g),63);
   assert.equal(count(/class="phonicsContents"/g),1);
   assert.equal(count(/data-page-jump=/g),10);
   const blocks=[...html.matchAll(/<div class="phonicsQ" data-answer="([^"]+)"[\s\S]*?<div class="phonicsOptions">([\s\S]*?)<\/div>/g)];
-  assert.equal(blocks.length,149);
+  assert.equal(blocks.length,179);
   for(const [i,q] of blocks.entries()){
     const opts=[...q[2].matchAll(/<button data-value="([^"]+)"/g)].map(m=>m[1]);
     assert.equal(opts.length,3,'Three choices required: '+i);
@@ -163,4 +163,36 @@ test('phonics curriculum pages, sound-symbol safety and practice answer integrit
     assert.equal(entry.pattern,sourceWords[i][0]);
     assert.equal(entry.words.join(','),sourceWords[i][1]);
   }
+});
+
+test('ten interleaved vowel stories have whole-story audio, Arabic toggles and 30 valid checks',()=>{
+ const stories=JSON.parse(readFileSync(new URL('../curriculum/vowel-stories.json',import.meta.url),'utf8')).stories;
+ const gloss=JSON.parse(readFileSync(new URL('../curriculum/phonics-glossary.json',import.meta.url),'utf8'));
+ assert.equal(stories.length,10);
+ assert.equal(Object.keys(gloss.wordTranslations).length,142);
+ assert.equal(count(/class="dict phonicsDictionary"/g),63);
+ assert.equal(count(/class="storyListenAll"/g),15);
+ assert.equal(count(/class="storyStop"/g),15);
+ assert.equal(count(/class="page phonicsPage vowelStoryPage"/g),10);
+ assert.equal(count(/class="dictToggle"/g),89); // 26 letter pages plus 63 phonics/reading/story dictionaries
+ for(const entry of stories){
+  assert.equal(entry.lines.length,5);
+  assert.equal(entry.questions.length,3);
+  assert.ok(Object.values(entry.glossary).every(x=>Boolean(x)));
+  const code=(entry.kind==='short'?'VS':'VL')+entry.vowel.toUpperCase();
+  const block=html.match(new RegExp('<section class="page phonicsPage vowelStoryPage"[^>]*data-story-id="'+code+'"([\\s\\S]*?)(?=<section class="page |</main>)'))?.[1];
+  assert.ok(block,'No story page '+code);
+  assert.equal((block.match(/class="phonicsSentence"/g)||[]).length,5,'five sentences '+code);
+  assert.equal((block.match(/class="phonicsQ"/g)||[]).length,3,'three assessments '+code);
+  assert.ok(block.includes('class="dictToggle"'),'dictionary toggle '+code);
+  assert.ok(block.includes('class="storyListenAll"'),'complete story listening '+code);
+  const full=block.match(/class="storyListenAll"[^>]*data-word="([^"]+)"/)?.[1];
+  assert.ok(full && full.length>60 && full.includes(entry.lines[0]),'full text audio '+code);
+ }
+ const spots=[[51,52,'Short a'],[53,54,'Short e'],[55,56,'Short i'],[57,58,'Short o'],[59,60,'Short u'],
+ [85,86,'Long a'],[87,88,'Long e'],[89,90,'Long i'],[91,92,'Long o'],[93,94,'Long u']];
+ for(const [lesson,story,title] of spots){
+  assert.ok(html.includes('data-page="'+lesson+'" data-module="'+(title.startsWith('Short')?'SHORT VOWELS':'LONG VOWELS')+'"'),'vowel lesson '+title);
+  assert.ok(html.includes('data-page="'+story+'" data-module="'+(title.startsWith('Short')?'SHORT VOWEL STORY':'LONG VOWEL STORY')+'"'),'vowel story follows '+title);
+ }
 });
