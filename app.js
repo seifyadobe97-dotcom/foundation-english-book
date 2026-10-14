@@ -147,16 +147,15 @@ function quizShell(title,subtitle,quizId,questions,bookNo,chip){
 }
 function buildBook(){
   const book=$("#book");
-  let bookNo=1;
-  ORDER.forEach(L=>book.insertAdjacentHTML("beforeend",letterPage(L,bookNo++)));
   const groups=chunk(ORDER,3);
-  let quizId=1;
+  let bookNo=1,quizId=1;
   groups.forEach(g=>{
+    g.forEach(L=>book.insertAdjacentHTML("beforeend",letterPage(L,bookNo++)));
     book.insertAdjacentHTML("beforeend",reviewQuizPage(g,quizId++,bookNo++));
     book.insertAdjacentHTML("beforeend",listeningQuizPage(g,quizId++,bookNo++));
   });
-  $$(".page").forEach((p,i)=>p.dataset.page=i+1);
-  total=$$(".page").length;
+  $(".page").forEach((p,i)=>p.dataset.page=i+1);
+  total=$(".page").length;
   ORDER.forEach(buildLessonContent);
 }
 buildBook();
