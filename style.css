@@ -795,3 +795,73 @@ body.hideArabic .dict .en{justify-self:start;font-size:12px}
     display:block !important;
   }
 }
+
+
+/* ===== UPGRADE V14: clearer visuals, focus sounds, slow audio, Arabic toggle ===== */
+.word{
+  width:100%;
+  justify-content:center;
+}
+.wordAudioGroup{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+}
+.slowPlay{
+  width:28px;
+  height:28px;
+  border:1px solid #dce7e7;
+  border-radius:50%;
+  background:#fff7ef;
+  color:#7a5a43;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  font-size:11px;
+  box-shadow:0 3px 8px rgba(71,68,68,.08);
+}
+.slowPlay:hover{border-color:#e2b49c;background:#fff1e6}
+.slowPlay.playing{outline:3px solid rgba(219,120,79,.18);transform:scale(.96)}
+.sound{
+  align-content:center;
+}
+.sound label{
+  color:var(--t);
+  font-weight:900;
+}
+.soundNote{
+  grid-column:1/-1;
+  margin-top:4px;
+  padding-top:5px;
+  border-top:1px solid #edf0f0;
+  font-size:7.3px;
+  line-height:1.25;
+  color:#737979;
+  font-weight:700;
+}
+.badge{white-space:nowrap}
+
+/* Arabic dictionary visibility */
+.hide-arabic .dict{display:none!important}
+.hide-arabic .lesson .content{grid-template-columns:1fr!important}
+#arabicToggle{
+  font-family:Arial,sans-serif;
+  font-size:13px;
+  font-weight:900;
+}
+.emoji{
+  min-height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  letter-spacing:1px;
+}
+
+@media(max-width:760px){
+  .wordAudioGroup{gap:7px}
+  .slowPlay{width:34px;height:34px;font-size:13px}
+  .soundNote{font-size:8px;line-height:1.35}
+  .emoji{min-height:48px}
+  #arabicToggle{font-size:12px}
+}
