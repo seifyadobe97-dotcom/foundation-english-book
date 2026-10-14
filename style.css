@@ -1102,3 +1102,19 @@ font-size:11px;font-weight:900;letter-spacing:.5px;color:#566468}
   .phonicsSegments span{min-width:42px;min-height:46px;font-size:21px}
   .cumulativePage,.phonicsCheckpoint{min-height:calc(100dvh - 74px)}
 }
+
+/* Quick access to the reading continuation without changing A–Z page order */
+.phonicsJump{display:inline-block;margin-top:19px;border:1px solid #f8d8c0;border-radius:11px;
+  background:var(--o);color:#fff;font-size:13px;font-weight:900;
+  min-height:45px;padding:10px 14px;cursor:pointer}
+.phonicsContents{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0 24px}
+.phonicsContents button{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:51px;
+border:1px solid #d3e3e3;border-radius:12px;background:#f5fbfb;color:var(--c);
+padding:10px 12px;font-size:13px;text-align:left;font-weight:800;cursor:pointer}
+.phonicsContents button b{white-space:nowrap;color:var(--t);font-size:11px}
+.phonicsPractice.mastered{border-color:#8cca9e}
+@media(max-width:760px){
+ .phonicsContents{grid-template-columns:1fr}
+ .phonicsContents button{min-height:50px}
+ .phonicsJump{font-size:10px;min-height:44px}
+}
