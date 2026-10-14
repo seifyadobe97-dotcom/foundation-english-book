@@ -1,0 +1,536 @@
+{
+  "version": 1,
+  "authorship": "Instructor-created original decodable-adjacent stories, not verbatim source book.",
+  "scope": "five short vowels a/e/i/o/u and five long vowels a/e/i/o/u",
+  "audioPolicy": "English sentences and full stories use existing speech playback; no new recorded MP3 files or isolated IPA audio.",
+  "stories": [
+    {
+      "kind": "short",
+      "vowel": "a",
+      "after": "Short a",
+      "title": "Sam and the Cat",
+      "illustration": "🐈",
+      "lines": [
+        "Sam has a bag.",
+        "A map is in the bag.",
+        "Sam can tap the bag.",
+        "A cat sits by Sam.",
+        "Sam pats the cat."
+      ],
+      "glossary": {
+        "Sam": "سام (اسم)",
+        "bag": "حقيبة",
+        "map": "خريطة",
+        "tap": "يطرق برفق",
+        "cat": "قطة",
+        "pats": "يربت على"
+      },
+      "questions": [
+        {
+          "prompt": "What is in Sam's bag?",
+          "options": [
+            "A map",
+            "A pen",
+            "A kite"
+          ],
+          "answer": "A map"
+        },
+        {
+          "prompt": "Who sits by Sam?",
+          "options": [
+            "A cat",
+            "A hen",
+            "A dog"
+          ],
+          "answer": "A cat"
+        },
+        {
+          "prompt": "Listen and choose the short a word.",
+          "listen": "bag",
+          "options": [
+            "bag",
+            "bed",
+            "big"
+          ],
+          "answer": "bag"
+        }
+      ]
+    },
+    {
+      "kind": "short",
+      "vowel": "e",
+      "after": "Short e",
+      "title": "Meg's Red Pen",
+      "illustration": "🖊️",
+      "lines": [
+        "Meg has a red pen.",
+        "The pen is on a bed.",
+        "Meg sees the pen.",
+        "She gets the red pen.",
+        "Meg puts it in her bag."
+      ],
+      "glossary": {
+        "Meg": "ميج (اسم)",
+        "red": "أحمر",
+        "pen": "قلم",
+        "bed": "سرير",
+        "sees": "ترى",
+        "gets": "تأخذ",
+        "bag": "حقيبة"
+      },
+      "questions": [
+        {
+          "prompt": "What color is Meg's pen?",
+          "options": [
+            "Red",
+            "Blue",
+            "Green"
+          ],
+          "answer": "Red"
+        },
+        {
+          "prompt": "Where is the pen at first?",
+          "options": [
+            "On a bed",
+            "In a cup",
+            "On a tree"
+          ],
+          "answer": "On a bed"
+        },
+        {
+          "prompt": "Listen and choose the short e word.",
+          "listen": "pen",
+          "options": [
+            "pin",
+            "pan",
+            "pen"
+          ],
+          "answer": "pen"
+        }
+      ]
+    },
+    {
+      "kind": "short",
+      "vowel": "i",
+      "after": "Short i",
+      "title": "Tim and the Pig",
+      "illustration": "🐖",
+      "lines": [
+        "Tim sees a big pig.",
+        "The pig is in a pen.",
+        "Tim sits by the pen.",
+        "The pig digs in the mud.",
+        "Tim can see the pig."
+      ],
+      "glossary": {
+        "Tim": "تيم (اسم)",
+        "big": "كبير",
+        "pig": "خنزير",
+        "pen": "حظيرة صغيرة",
+        "sits": "يجلس",
+        "digs": "يحفر",
+        "mud": "طين"
+      },
+      "questions": [
+        {
+          "prompt": "What animal does Tim see?",
+          "options": [
+            "A pig",
+            "A cat",
+            "A hen"
+          ],
+          "answer": "A pig"
+        },
+        {
+          "prompt": "Where does the pig dig?",
+          "options": [
+            "In the mud",
+            "In the sea",
+            "On a tree"
+          ],
+          "answer": "In the mud"
+        },
+        {
+          "prompt": "Listen and choose the short i word.",
+          "listen": "pig",
+          "options": [
+            "peg",
+            "pig",
+            "pug"
+          ],
+          "answer": "pig"
+        }
+      ]
+    },
+    {
+      "kind": "short",
+      "vowel": "o",
+      "after": "Short o",
+      "title": "Tom and the Hot Pot",
+      "illustration": "🍲",
+      "lines": [
+        "Tom has a pot.",
+        "The pot is hot.",
+        "Tom puts it on a mat.",
+        "A dog is by the pot.",
+        "Tom tells the dog to sit."
+      ],
+      "glossary": {
+        "Tom": "توم (اسم)",
+        "pot": "قِدر",
+        "hot": "ساخن",
+        "mat": "حصيرة",
+        "dog": "كلب",
+        "sit": "يجلس"
+      },
+      "questions": [
+        {
+          "prompt": "What does Tom have?",
+          "options": [
+            "A pot",
+            "A book",
+            "A bike"
+          ],
+          "answer": "A pot"
+        },
+        {
+          "prompt": "Is the pot hot?",
+          "options": [
+            "Yes",
+            "No",
+            "It is cold"
+          ],
+          "answer": "Yes"
+        },
+        {
+          "prompt": "Listen and choose the short o word.",
+          "listen": "pot",
+          "options": [
+            "pat",
+            "pet",
+            "pot"
+          ],
+          "answer": "pot"
+        }
+      ]
+    },
+    {
+      "kind": "short",
+      "vowel": "u",
+      "after": "Short u",
+      "title": "The Bug and the Cup",
+      "illustration": "🐞",
+      "lines": [
+        "A bug sits on a rug.",
+        "The sun is up.",
+        "The bug runs to a cup.",
+        "The cup is on the rug.",
+        "The bug sits in the cup."
+      ],
+      "glossary": {
+        "bug": "حشرة",
+        "rug": "سجادة صغيرة",
+        "sun": "شمس",
+        "runs": "يجري",
+        "cup": "كوب",
+        "sits": "يجلس"
+      },
+      "questions": [
+        {
+          "prompt": "Where is the cup?",
+          "options": [
+            "On the rug",
+            "On a tree",
+            "In a bag"
+          ],
+          "answer": "On the rug"
+        },
+        {
+          "prompt": "Where is the bug at the end?",
+          "options": [
+            "In the cup",
+            "On the sun",
+            "In the box"
+          ],
+          "answer": "In the cup"
+        },
+        {
+          "prompt": "Listen and choose the short u word.",
+          "listen": "cup",
+          "options": [
+            "cap",
+            "cup",
+            "cop"
+          ],
+          "answer": "cup"
+        }
+      ]
+    },
+    {
+      "kind": "long",
+      "vowel": "a",
+      "after": "Long a — a_e",
+      "title": "Kate Bakes a Cake",
+      "illustration": "🎂",
+      "lines": [
+        "Kate bakes a cake.",
+        "She puts the cake on a plate.",
+        "Jake comes to the gate.",
+        "Kate gives Jake a slice.",
+        "Jake says, Thank you!"
+      ],
+      "glossary": {
+        "Kate": "كيت (اسم)",
+        "bakes": "تخبز",
+        "cake": "كعكة",
+        "plate": "طبق",
+        "Jake": "جيك (اسم)",
+        "gate": "بوابة",
+        "slice": "قطعة"
+      },
+      "questions": [
+        {
+          "prompt": "What does Kate bake?",
+          "options": [
+            "A cake",
+            "A pie",
+            "A bun"
+          ],
+          "answer": "A cake"
+        },
+        {
+          "prompt": "Who comes to the gate?",
+          "options": [
+            "Jake",
+            "Mike",
+            "Sam"
+          ],
+          "answer": "Jake"
+        },
+        {
+          "prompt": "Listen and choose the long a word.",
+          "listen": "cake",
+          "options": [
+            "cake",
+            "cat",
+            "cup"
+          ],
+          "answer": "cake"
+        }
+      ]
+    },
+    {
+      "kind": "long",
+      "vowel": "e",
+      "after": "Long e — ee / ea",
+      "title": "Lee and the Green Tree",
+      "illustration": "🌳",
+      "lines": [
+        "Lee sees a green tree.",
+        "A bee is by the tree.",
+        "Lee can see the bee.",
+        "The bee flies to a leaf.",
+        "Lee smiles at the tree."
+      ],
+      "glossary": {
+        "Lee": "لي (اسم)",
+        "green": "أخضر",
+        "tree": "شجرة",
+        "bee": "نحلة",
+        "flies": "تطير",
+        "leaf": "ورقة شجر",
+        "smiles": "يبتسم"
+      },
+      "questions": [
+        {
+          "prompt": "What is by the tree?",
+          "options": [
+            "A bee",
+            "A pig",
+            "A dog"
+          ],
+          "answer": "A bee"
+        },
+        {
+          "prompt": "What color is the tree?",
+          "options": [
+            "Green",
+            "Red",
+            "Blue"
+          ],
+          "answer": "Green"
+        },
+        {
+          "prompt": "Listen and choose the long e word.",
+          "listen": "tree",
+          "options": [
+            "tree",
+            "try",
+            "tray"
+          ],
+          "answer": "tree"
+        }
+      ]
+    },
+    {
+      "kind": "long",
+      "vowel": "i",
+      "after": "Long i — i_e",
+      "title": "Mike and the White Kite",
+      "illustration": "🪁",
+      "lines": [
+        "Mike has a kite.",
+        "The kite is white.",
+        "Mike runs with the kite.",
+        "The kite flies high.",
+        "Mike smiles."
+      ],
+      "glossary": {
+        "Mike": "مايك (اسم)",
+        "kite": "طائرة ورقية",
+        "white": "أبيض",
+        "runs": "يجري",
+        "flies": "تطير",
+        "high": "عاليًا",
+        "smiles": "يبتسم"
+      },
+      "questions": [
+        {
+          "prompt": "What does Mike have?",
+          "options": [
+            "A kite",
+            "A bike",
+            "A cake"
+          ],
+          "answer": "A kite"
+        },
+        {
+          "prompt": "What color is the kite?",
+          "options": [
+            "White",
+            "Green",
+            "Red"
+          ],
+          "answer": "White"
+        },
+        {
+          "prompt": "Listen and choose the long i word.",
+          "listen": "kite",
+          "options": [
+            "kit",
+            "kite",
+            "cat"
+          ],
+          "answer": "kite"
+        }
+      ]
+    },
+    {
+      "kind": "long",
+      "vowel": "o",
+      "after": "Long o — o_e",
+      "title": "Rose Writes a Note",
+      "illustration": "📝",
+      "lines": [
+        "Rose is at home.",
+        "She writes a note.",
+        "The note is for Joe.",
+        "Joe reads the note.",
+        "Joe smiles at Rose."
+      ],
+      "glossary": {
+        "Rose": "روز (اسم)",
+        "home": "منزل",
+        "writes": "تكتب",
+        "note": "رسالة قصيرة",
+        "Joe": "جو (اسم)",
+        "reads": "يقرأ",
+        "smiles": "يبتسم"
+      },
+      "questions": [
+        {
+          "prompt": "What does Rose write?",
+          "options": [
+            "A note",
+            "A book",
+            "A map"
+          ],
+          "answer": "A note"
+        },
+        {
+          "prompt": "Who reads the note?",
+          "options": [
+            "Joe",
+            "Kate",
+            "Sam"
+          ],
+          "answer": "Joe"
+        },
+        {
+          "prompt": "Listen and choose the long o word.",
+          "listen": "home",
+          "options": [
+            "hum",
+            "home",
+            "ham"
+          ],
+          "answer": "home"
+        }
+      ]
+    },
+    {
+      "kind": "long",
+      "vowel": "u",
+      "after": "Long u — u_e",
+      "title": "The Mule and the Cube",
+      "illustration": "🫏",
+      "lines": [
+        "A cute mule is by a cube.",
+        "The cube is blue.",
+        "A boy plays a tune.",
+        "The mule moves to the tune.",
+        "The boy and the mule smile."
+      ],
+      "glossary": {
+        "cute": "لطيف",
+        "mule": "بغل",
+        "cube": "مكعب",
+        "blue": "أزرق",
+        "boy": "ولد",
+        "tune": "لحن",
+        "moves": "يتحرك",
+        "smile": "يبتسمان"
+      },
+      "questions": [
+        {
+          "prompt": "What is by the mule?",
+          "options": [
+            "A cube",
+            "A bike",
+            "A tree"
+          ],
+          "answer": "A cube"
+        },
+        {
+          "prompt": "What color is the cube?",
+          "options": [
+            "Blue",
+            "Yellow",
+            "Red"
+          ],
+          "answer": "Blue"
+        },
+        {
+          "prompt": "Listen and choose the long u word.",
+          "listen": "cube",
+          "options": [
+            "cub",
+            "cube",
+            "cap"
+          ],
+          "answer": "cube"
+        }
+      ]
+    }
+  ]
+}
