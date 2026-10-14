@@ -1367,13 +1367,13 @@ function updateProgress(){const p=$("#progress");if(p)p.textContent="✓ "+maste
 function show(n){stop();page=Math.max(1,Math.min(total,n));pages.forEach((p,i)=>p.classList.toggle("active",i===page-1));$("#count").textContent=page+" / "+total;$("#prev").disabled=page===1;$("#next").disabled=page===total;localStorage.setItem("foundation:lastPage",page);history.replaceState(null,"","#"+page);scrollTo({top:0,behavior:"smooth"});}
 $$(".wordPlay,.letterPlay,.listenQ,.microListen").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,b.dataset.url,b,false,b.classList.contains("letterPlay")?"letter":"word")));
 $$(".slowWord").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,b.dataset.url,b,true)));
-$(".examplePlay").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.sentence,"",b,false,"sentence")));
+$$(".examplePlay").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.sentence,"",b,false,"sentence")));
 // Reading-course buttons reuse the same legacy-audio fallback, without synthesizing isolated phonemes.
-$(".phonicsAudio,.phonicsListen").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,"",b,false,"word")));
-$(".phonicsSlow").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,"",b,true,"word")));
-$(".phonicsRead").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,"",b,false,"sentence")));
+$$(".phonicsAudio,.phonicsListen").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,"",b,false,"word")));
+$$(".phonicsSlow").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,"",b,true,"word")));
+$$(".phonicsRead").forEach(b=>b.addEventListener("click",()=>playWord(b.dataset.word,"",b,false,"sentence")));
 // Reading-course practice: 80% mastery, per-question corrections, saved to this device.
-$(".phonicsOptions button").forEach(button=>button.addEventListener("click",()=>{
+$$(".phonicsOptions button").forEach(button=>button.addEventListener("click",()=>{
  const q=button.closest(".phonicsQ"),group=button.closest(".phonicsPractice"),id=group.dataset.phonics;
  q.querySelectorAll(".phonicsOptions button").forEach(x=>x.classList.remove("correct","wrong"));
  const right=button.dataset.value===q.dataset.answer;
@@ -1385,7 +1385,7 @@ $(".phonicsOptions button").forEach(button=>button.addEventListener("click",()=>
  group.classList.toggle("mastered",passed);
  localStorage.setItem("foundation:phonics:"+id,JSON.stringify(all.map(x=>x.dataset.selected||"")));
 }));
-$(".phonicsPractice").forEach(group=>{
+$$(".phonicsPractice").forEach(group=>{
  const id=group.dataset.phonics,answers=JSON.parse(localStorage.getItem("foundation:phonics:"+id)||"[]");
  const all=[...group.querySelectorAll(".phonicsQ")];
  all.forEach((q,i)=>{const b=[...q.querySelectorAll(".phonicsOptions button")].find(x=>x.dataset.value===answers[i]);if(!b)return;
@@ -1396,7 +1396,7 @@ $(".phonicsPractice").forEach(group=>{
  $("#phonicsScore"+id).textContent=score+" / "+all.length+(passed?" ✓ Mastered":"");
  group.classList.toggle("mastered",passed);
 });
-$("[data-page-jump]").forEach(b=>b.addEventListener("click",()=>show(Number(b.dataset.pageJump))));
+$$("[data-page-jump]").forEach(b=>b.addEventListener("click",()=>show(Number(b.dataset.pageJump))));
 
 $$(".dictToggle").forEach(b=>b.addEventListener("click",()=>{const d=b.closest(".dict");d.classList.toggle("hideArabic");b.textContent=d.classList.contains("hideArabic")?"عربي":"عربي ✓";}));
 $$(".microOptions button").forEach(b=>b.addEventListener("click",()=>{const q=b.closest(".microQ"),m=b.closest(".micro"),L=m.dataset.micro; q.querySelectorAll(".microOptions button").forEach(x=>x.classList.remove("correct","wrong")); if(b.dataset.value===q.dataset.answer){b.classList.add("correct");q.dataset.correct="1";q.querySelector(".microFeedback").textContent="✓ Correct";}else{delete q.dataset.correct;b.classList.add("wrong");q.querySelector(".microFeedback").textContent="Try again";}const score=m.querySelectorAll('.microQ[data-correct="1"]').length;$("#microScore"+L).textContent=score+" / 2";if(score===2){mastered.add(L);localStorage.setItem("foundation:mastered",JSON.stringify([...mastered]));updateProgress();}}));
