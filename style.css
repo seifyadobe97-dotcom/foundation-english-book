@@ -1118,3 +1118,41 @@ padding:10px 12px;font-size:13px;text-align:left;font-weight:800;cursor:pointer}
  .phonicsContents button{min-height:50px}
  .phonicsJump{font-size:10px;min-height:44px}
 }
+
+/* Vowel-by-vowel stories and the original bilingual dictionary presentation */
+.phonicsDictionary{display:block;margin:22px 0 18px;padding:17px 18px;direction:rtl;
+  background:#fcfdfd;border:1px solid #dce7e7;border-radius:15px}
+.phonicsDictionary h3{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  color:var(--c);font-size:19px;margin:0 0 12px;border-bottom:2px solid #47959922;padding-bottom:11px}
+.phonicsDictionary .dictTitleText{font-size:19px;color:var(--c)}
+.phonicsDictionary .dictTitleText small{display:block;color:var(--t);font-size:9px;letter-spacing:1.2px;margin-top:3px}
+.phonicsDictionary .dictToggle{font-size:12px;min-height:40px;padding:8px 12px}
+.phonicsDictGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 22px}
+.phonicsDictionary .de{padding:11px 4px;min-width:0;align-items:center;gap:12px}
+.phonicsDictionary .ar{font-size:15px;line-height:1.5;overflow-wrap:anywhere}
+.phonicsDictionary .en{font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.phonicsDictionary.hideArabic .ar{visibility:hidden}
+.vowelStoryHeading{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.vowelStoryHeading>div{min-width:0}
+.vowelStoryIllustration{display:grid;place-items:center;flex-shrink:0;width:96px;height:96px;
+  font-size:64px;background:linear-gradient(145deg,#eef8f8,#fff5ed);border-radius:20px;border:1px solid #dce9e9}
+.storyPlayer{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+.storyListenAll,.storyStop{min-height:48px;padding:11px 16px;border-radius:12px;font-size:14px;
+  font-weight:900;cursor:pointer;touch-action:manipulation}
+.storyListenAll{border:1px solid var(--t);background:var(--t);color:#fff}
+.storyStop{border:1px solid #d9e3e3;background:#fff;color:var(--c)}
+.storyListenAll.playing{outline:3px solid #db784f77;outline-offset:2px}
+.vowelStoryPage .phonicsSentence{background:#fff}
+@media(max-width:760px){
+  .phonicsDictionary{padding:14px 12px;margin:20px 0}
+  .phonicsDictGrid{grid-template-columns:1fr}
+  .phonicsDictionary h3{font-size:17px}
+  .phonicsDictionary .de{padding:10px 3px}
+  .phonicsDictionary .ar{font-size:14px}
+  .phonicsDictionary .en{font-size:13px}
+  .vowelStoryIllustration{width:72px;height:72px;font-size:43px;border-radius:15px}
+  .vowelStoryHeading{gap:10px}
+  .vowelStoryHeading h2{font-size:25px}
+  .storyPlayer{display:grid;grid-template-columns:1fr auto;gap:8px}
+  .storyListenAll,.storyStop{min-height:46px;font-size:12px;padding:10px}
+}
