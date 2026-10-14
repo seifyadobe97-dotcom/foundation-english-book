@@ -1,140 +1,1237 @@
 window.DATA={
-order:["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
-vocab:{
-A:[["apple","🍎"],["ant","🐜"],["arm","💪"],["arrow","➡️"],["axe","🪓"],["angry","😠"]],
-B:[["bear","🐻"],["banana","🍌"],["baby","👶"],["book","📖"],["bag","🎒"],["ball","⚽"]],
-C:[["cat","🐱"],["car","🚗"],["camel","🐫"],["cake","🎂"],["carrot","🥕"],["cow","🐄"]],
-D:[["dog","🐶"],["door","🚪"],["doll","🪆"],["deer","🦌"],["date","🌴🟤"],["dress","👗"]],
-E:[["egg","🥚"],["ear","👂"],["eye","👁️"],["elbow","🦾"],["eat","🍽️"],["exit","🚪➡️"]],
-F:[["fan","🪭"],["fig","🟣🌿"],["feed","🥣🐶"],["fire","🔥"],["fox","🦊"],["farm","🚜"]],
-G:[["gum","🫧🍬"],["goat","🐐"],["goal","⚽🥅"],["girl","👧"],["grass","🌱🌱"],["gun","🔫"]],
-H:[["horse","🐴"],["hat","🎩"],["hand","✋"],["hair","💇"],["hello","👋"],["happy","😊"]],
-I:[["ink","🖋️"],["in","📥"],["ice","🧊"],["ill","🤒"],["insect","🐞"],["igloo","🧊🏠"]],
-J:[["jacket","🧥"],["juice","🧃"],["June","📅"],["jug","🏺"],["jam","🍓🫙"],["jet","✈️"]],
-K:[["key","🔑"],["kid","🧒"],["king","🤴"],["kite","🪁"],["kitchen","🍳"],["kangaroo","🦘"]],
-L:[["lake","🏞️"],["leg","🦵"],["lamp","💡"],["lemon","🍋"],["leaf","🍃"],["lion","🦁"]],
-M:[["milk","🥛"],["meat","🥩"],["money","💵"],["monkey","🐒"],["moon","🌙"],["mouse","🐭"]],
-N:[["neck","🧣🙂"],["nose","👃"],["nine","9️⃣"],["nice","🙂"],["nurse","🧑‍⚕️"],["net","🥅"]],
-O:[["oil","🫗"],["olive","🫒"],["orange","🍊"],["owl","🦉"],["office","🖥️🏢"],["open","🚪"]],
-P:[["pen","🖊️"],["pencil","✏️"],["pants","👖"],["potato","🥔"],["parrot","🦜"],["pizza","🍕"]],
-Q:[["quiet","🤫"],["quilt","🛏️"],["queen","👑"],["question","❓"],["quarter","🪙¼"],["queue","🚶🚶🚶"]],
-R:[["rabbit","🐇"],["red","🔴"],["rice","🍚"],["robot","🤖"],["rain","🌧️"],["rose","🌹"]],
-S:[["sad","😢"],["sit","🪑"],["school","🏫"],["sky","🌤️"],["soap","🧼"],["swim","🏊"]],
-T:[["tea","🍵"],["tree","🌳"],["teacher","🧑‍🏫"],["teeth","🦷"],["taxi","🚕"],["tomato","🍅"]],
-U:[["uncle","👨"],["umbrella","☂️"],["up","⬆️"],["unlock","🔓"],["under","⬇️🪑"]],
-V:[["van","🚐"],["vet","🐶🩺"],["violin","🎻"],["vest","🦺"],["vase","🏺🌷"]],
-W:[["watch","⌚"],["water","💧"],["whale","🐋"],["windy","🌬️"],["window","🪟"]],
-X:[["box","📦"],["fox","🦊"],["fix","🔧"],["mix","🥣🥄"],["six","6️⃣"]],
-Y:[["yellow","🟡"],["yogurt","🥣"],["yard","🏡🌿"],["yo-yo","🪀"],["yacht","⛵"]],
-Z:[["zoo","🦁🦓"],["zebra","🦓"],["zipper","🧥↕️"],["zero","0️⃣"]]
-},
-dictionary:{
-A:{apple:"تفاحة",ant:"نملة",arm:"ذراع",arrow:"سهم",axe:"فأس",angry:"غاضب"},
-B:{bear:"دب",banana:"موزة",baby:"طفل رضيع",book:"كتاب",bag:"حقيبة",ball:"كرة"},
-C:{cat:"قطة",car:"سيارة",camel:"جمل",cake:"كعكة",carrot:"جزرة",cow:"بقرة"},
-D:{dog:"كلب",door:"باب",doll:"دمية",deer:"غزال",date:"تمرة",dress:"فستان"},
-E:{egg:"بيضة",ear:"أذن",eye:"عين",elbow:"مرفق",eat:"يأكل",exit:"مخرج"},
-F:{fan:"مروحة",fig:"تين",feed:"يُطعم",fire:"نار",fox:"ثعلب",farm:"مزرعة"},
-G:{gum:"علكة",goat:"ماعز",goal:"هدف",girl:"فتاة",grass:"عشب",gun:"مسدس"},
-H:{horse:"حصان",hat:"قبعة",hand:"يد",hair:"شعر",hello:"مرحباً",happy:"سعيد"},
-I:{ink:"حبر",in:"في",ice:"ثلج",ill:"مريض",insect:"حشرة",igloo:"كوخ جليدي"},
-J:{jacket:"سترة",juice:"عصير",June:"يونيو",jug:"إبريق",jam:"مربى",jet:"طائرة نفاثة"},
-K:{key:"مفتاح",kid:"طفل",king:"ملك",kite:"طائرة ورقية",kitchen:"مطبخ",kangaroo:"كنغر"},
-L:{lake:"بحيرة",leg:"ساق",lamp:"مصباح",lemon:"ليمون",leaf:"ورقة شجر",lion:"أسد"},
-M:{milk:"حليب",meat:"لحم",money:"نقود",monkey:"قرد",moon:"قمر",mouse:"فأر"},
-N:{neck:"رقبة",nose:"أنف",nine:"تسعة",nice:"لطيف",nurse:"ممرض/ممرضة",net:"شبكة"},
-O:{oil:"زيت",olive:"زيتونة",orange:"برتقالة",owl:"بومة",office:"مكتب",open:"يفتح"},
-P:{pen:"قلم",pencil:"قلم رصاص",pants:"بنطال",potato:"بطاطس",parrot:"ببغاء",pizza:"بيتزا"},
-Q:{quiet:"هادئ",quilt:"لحاف",queen:"ملكة",question:"سؤال",quarter:"ربع",queue:"طابور"},
-R:{rabbit:"أرنب",red:"أحمر",rice:"أرز",robot:"روبوت",rain:"مطر",rose:"وردة"},
-S:{sad:"حزين",sit:"يجلس",school:"مدرسة",sky:"سماء",soap:"صابون",swim:"يسبح"},
-T:{tea:"شاي",tree:"شجرة",teacher:"معلم/معلمة",teeth:"أسنان",taxi:"سيارة أجرة",tomato:"طماطم"},
-U:{uncle:"عم/خال",umbrella:"مظلة",up:"أعلى",unlock:"يفتح القفل",under:"تحت"},
-V:{van:"شاحنة صغيرة",vet:"طبيب بيطري",violin:"كمان",vest:"سترة",vase:"مزهرية"},
-W:{watch:"ساعة يد",water:"ماء",whale:"حوت",windy:"عاصف",window:"نافذة"},
-X:{box:"صندوق",fox:"ثعلب",fix:"يُصلح",mix:"يخلط",six:"ستة"},
-Y:{yellow:"أصفر",yogurt:"زبادي",yard:"فناء", "yo-yo":"يويو",yacht:"يخت"},
-Z:{zoo:"حديقة حيوان",zebra:"حمار وحشي",zipper:"سحّاب",zero:"صفر"}
-},
-ipa:{
-A:["æ","IPA VOWEL","apple"],B:["b","IPA CONSONANT","bear"],C:["k","IPA CONSONANT","cat"],D:["d","IPA CONSONANT","dog"],
-E:["ɛ","IPA VOWEL","egg"],F:["f","IPA CONSONANT","fan"],G:["g","IPA CONSONANT","goat"],H:["h","IPA CONSONANT","horse"],
-I:["ɪ","IPA VOWEL","ink"],J:["dʒ","IPA CONSONANT","jam"],K:["k","IPA CONSONANT","key"],L:["l","IPA CONSONANT","lake"],
-M:["m","IPA CONSONANT","milk"],N:["n","IPA CONSONANT","nose"],O:["ɑ","IPA VOWEL","olive"],P:["p","IPA CONSONANT","pen"],
-Q:["kw","IPA SOUND CLUSTER","queen"],R:["ɹ","IPA CONSONANT","rabbit"],S:["s","IPA CONSONANT","sad"],T:["t","IPA CONSONANT","tea"],
-U:["ʌ","IPA VOWEL","uncle"],V:["v","IPA CONSONANT","van"],W:["w","IPA CONSONANT","water"],X:["ks","IPA SOUND CLUSTER","box"],
-Y:["j","IPA CONSONANT","yellow"],Z:["z","IPA CONSONANT","zebra"]
-},
-soundNotes:{
-A:"Focus sound /æ/ as in apple.",
-C:"Focus sound /k/ as in cat. C can have other sounds later.",
-E:"Focus sound /ɛ/ as in egg.",
-G:"Focus sound /g/ as in goat. G can have other sounds later.",
-I:"Focus sound /ɪ/ as in ink.",
-O:"Focus sound /ɑ/ as in olive.",
-Q:"Q is commonly taught as /kw/ in words such as queen.",
-U:"Focus sound /ʌ/ as in uncle.",
-X:"X commonly represents /ks/ in words such as box and six.",
-Y:"Here Y is the consonant sound /j/ as in yellow."
-},
-sentenceOverrides:{
-angry:["I am angry.","The boy is angry.","She looks angry."],
-eat:["I eat an egg.","We eat at home.","I like to eat."],
-feed:["I feed the cat.","We feed the dog.","Please feed the bird."],
-hello:["I say hello.","Hello, my friend.","She says hello."],
-happy:["I am happy.","The baby is happy.","We feel happy."],
-in:["The cat is in the box.","Put it in the bag.","I am in the room."],
-ice:["The ice is cold.","I see ice.","Put ice in the cup."],
-ill:["I am ill.","He feels ill.","The boy is ill."],
-June:["June is a month.","School ends in June.","My birthday is in June."],
-milk:["I drink milk.","The milk is cold.","I like milk."],
-meat:["I eat meat.","The meat is hot.","We cook meat."],
-money:["I have money.","The money is in my bag.","I save money."],
-nine:["I have nine books.","Nine is a number.","I can count to nine."],
-nice:["She is nice.","This is a nice day.","He has a nice smile."],
-oil:["We cook with oil.","The oil is hot.","Put oil in the pan."],
-open:["Open the door.","I open my book.","The shop is open."],
-quiet:["Please be quiet.","The room is quiet.","The baby is quiet."],
-red:["The ball is red.","I like red.","The car is red."],
-rice:["I eat rice.","The rice is hot.","We cook rice."],
-sad:["I am sad.","The boy looks sad.","She feels sad."],
-sit:["I sit on a chair.","Please sit here.","We sit together."],
-sky:["The sky is blue.","Look at the sky.","The sky is clear."],
-soap:["Wash with soap.","The soap is white.","I use soap."],
-swim:["I can swim.","We swim in the pool.","The fish can swim."],
-tea:["I drink tea.","The tea is hot.","We make tea."],
-teeth:["My teeth are clean.","I brush my teeth.","These are my teeth."],
-up:["Look up.","Stand up.","The bird flies up."],
-unlock:["I unlock the door.","Please unlock the box.","He can unlock it."],
-under:["The cat is under the table.","My bag is under the chair.","Look under the bed."],
-water:["I drink water.","The water is cold.","We need water."],
-windy:["It is windy today.","The day is windy.","It feels windy outside."],
-fix:["I can fix it.","He will fix the car.","Please fix the toy."],
-mix:["Mix the milk.","I mix the colors.","We mix the food."],
-six:["I see six cats.","Six is a number.","I have six pens."],
-yellow:["The sun is yellow.","I like yellow.","The ball is yellow."],
-zero:["Zero is a number.","I have zero coins.","The score is zero."]
-},
-audio:{
-A:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/399142f3-c652-43e9-9fa3-a4e6b81da355.mp3",
-B:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/f963c3d0-eeed-4e90-abbc-4dfe3ca47ceb.mp3",
-C:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/665304ef-7361-4323-9e21-54f87bd9c3b8.mp3",
-apple:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/ae951d48-221c-44c9-87e8-8009fed3797a.mp3",
-ant:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/11074344-ae32-4ce6-a1bb-05aa8ed9b3a0.mp3",
-arm:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/72ecbc34-8bbd-4ade-b6b8-3fd2e4a8ed09.mp3",
-arrow:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/aecb4130-3301-4f6f-80b5-dfa482afc670.mp3",
-axe:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/1c06ab6a-61bb-4037-895f-9768417681e8.mp3",
-angry:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7eecbf0c-d148-4b23-957a-944fc9f2caa3.mp3",
-bear:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7070121c-0598-41ef-b634-e8254f05ca09.mp3",
-banana:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/37982d4c-4d9f-44ad-9024-d59f65d32225.mp3",
-baby:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/be901844-083e-421e-8b5a-d1ae4d7332f0.mp3",
-book:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/90243ff6-e10d-4f4a-ad87-1ac644e08403.mp3",
-bag:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/03850cae-6db6-43af-b785-b9401e80c169.mp3",
-ball:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/4d92d608-4004-4e2b-b296-f3eb53ba769f.mp3",
-cat:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/fd9498d6-7a68-4c53-a212-a2cde113b7cf.mp3",
-car:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/4ac68a7b-e570-4744-bbf9-0e027e4a46e0.mp3",
-camel:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/45727543-2117-4a5f-a1f6-2afe29a85a49.mp3",
-cake:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/33406ac4-ab80-4ed1-8c27-c2e19f8be4fc.mp3",
-carrot:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/4203fa57-9155-454f-aea7-554dea5ece80.mp3",
-cow:"https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/c04df2cd-b241-479f-a590-a91bfe18dbde.mp3"
-}};
+  "order": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z"
+  ],
+  "vocab": {
+    "A": [
+      [
+        "apple",
+        "🍎"
+      ],
+      [
+        "ant",
+        "🐜"
+      ],
+      [
+        "arm",
+        "💪"
+      ],
+      [
+        "arrow",
+        "➡️"
+      ],
+      [
+        "axe",
+        "🪓"
+      ],
+      [
+        "angry",
+        "😠"
+      ]
+    ],
+    "B": [
+      [
+        "bear",
+        "🐻"
+      ],
+      [
+        "banana",
+        "🍌"
+      ],
+      [
+        "baby",
+        "👶"
+      ],
+      [
+        "book",
+        "📖"
+      ],
+      [
+        "bag",
+        "🎒"
+      ],
+      [
+        "ball",
+        "⚽"
+      ]
+    ],
+    "C": [
+      [
+        "cat",
+        "🐱"
+      ],
+      [
+        "car",
+        "🚗"
+      ],
+      [
+        "camel",
+        "🐫"
+      ],
+      [
+        "cake",
+        "🎂"
+      ],
+      [
+        "carrot",
+        "🥕"
+      ],
+      [
+        "cow",
+        "🐄"
+      ]
+    ],
+    "D": [
+      [
+        "dog",
+        "🐶"
+      ],
+      [
+        "door",
+        "🚪"
+      ],
+      [
+        "doll",
+        "🪆"
+      ],
+      [
+        "deer",
+        "🦌"
+      ],
+      [
+        "date",
+        "🌴🟤"
+      ],
+      [
+        "dress",
+        "👗"
+      ]
+    ],
+    "E": [
+      [
+        "egg",
+        "🥚"
+      ],
+      [
+        "ear",
+        "👂"
+      ],
+      [
+        "eye",
+        "👁️"
+      ],
+      [
+        "elbow",
+        "🦾"
+      ],
+      [
+        "eat",
+        "🍽️"
+      ],
+      [
+        "exit",
+        "🚪➡️"
+      ]
+    ],
+    "F": [
+      [
+        "fan",
+        "🪭"
+      ],
+      [
+        "fig",
+        "🟣🍃"
+      ],
+      [
+        "feed",
+        "🐶🥣"
+      ],
+      [
+        "fire",
+        "🔥"
+      ],
+      [
+        "fox",
+        "🦊"
+      ],
+      [
+        "farm",
+        "🚜"
+      ]
+    ],
+    "G": [
+      [
+        "gum",
+        "🫧🍬"
+      ],
+      [
+        "goat",
+        "🐐"
+      ],
+      [
+        "goal",
+        "⚽🥅"
+      ],
+      [
+        "girl",
+        "👧"
+      ],
+      [
+        "grass",
+        "🌱🌱"
+      ],
+      [
+        "gift",
+        "🎁"
+      ]
+    ],
+    "H": [
+      [
+        "horse",
+        "🐴"
+      ],
+      [
+        "hat",
+        "🎩"
+      ],
+      [
+        "hand",
+        "✋"
+      ],
+      [
+        "hair",
+        "👩‍🦱"
+      ],
+      [
+        "hello",
+        "👋"
+      ],
+      [
+        "happy",
+        "😊"
+      ]
+    ],
+    "I": [
+      [
+        "ink",
+        "🖋️"
+      ],
+      [
+        "in",
+        "📥"
+      ],
+      [
+        "ice",
+        "🧊"
+      ],
+      [
+        "ill",
+        "🤒"
+      ],
+      [
+        "insect",
+        "🐞"
+      ],
+      [
+        "igloo",
+        "🧊🏠"
+      ]
+    ],
+    "J": [
+      [
+        "jacket",
+        "🧥"
+      ],
+      [
+        "juice",
+        "🧃"
+      ],
+      [
+        "June",
+        "📅"
+      ],
+      [
+        "jug",
+        "🏺"
+      ],
+      [
+        "jam",
+        "🍓🫙"
+      ],
+      [
+        "jet",
+        "✈️"
+      ]
+    ],
+    "K": [
+      [
+        "key",
+        "🔑"
+      ],
+      [
+        "kid",
+        "🧒"
+      ],
+      [
+        "king",
+        "🤴"
+      ],
+      [
+        "kite",
+        "🪁"
+      ],
+      [
+        "kitchen",
+        "🍳"
+      ],
+      [
+        "kangaroo",
+        "🦘"
+      ]
+    ],
+    "L": [
+      [
+        "lake",
+        "🏞️"
+      ],
+      [
+        "leg",
+        "🦵"
+      ],
+      [
+        "lamp",
+        "💡"
+      ],
+      [
+        "lemon",
+        "🍋"
+      ],
+      [
+        "leaf",
+        "🍃"
+      ],
+      [
+        "lion",
+        "🦁"
+      ]
+    ],
+    "M": [
+      [
+        "milk",
+        "🥛"
+      ],
+      [
+        "meat",
+        "🥩"
+      ],
+      [
+        "money",
+        "💵"
+      ],
+      [
+        "monkey",
+        "🐒"
+      ],
+      [
+        "moon",
+        "🌙"
+      ],
+      [
+        "mouse",
+        "🐭"
+      ]
+    ],
+    "N": [
+      [
+        "neck",
+        "👤🧣"
+      ],
+      [
+        "nose",
+        "👃"
+      ],
+      [
+        "nine",
+        "9️⃣"
+      ],
+      [
+        "nice",
+        "🙂"
+      ],
+      [
+        "nurse",
+        "🧑‍⚕️"
+      ],
+      [
+        "net",
+        "🥅"
+      ]
+    ],
+    "O": [
+      [
+        "oil",
+        "🫒🫗"
+      ],
+      [
+        "olive",
+        "🫒"
+      ],
+      [
+        "orange",
+        "🍊"
+      ],
+      [
+        "owl",
+        "🦉"
+      ],
+      [
+        "office",
+        "🖥️🏢"
+      ],
+      [
+        "open",
+        "🚪"
+      ]
+    ],
+    "P": [
+      [
+        "pen",
+        "🖊️"
+      ],
+      [
+        "pencil",
+        "✏️"
+      ],
+      [
+        "pants",
+        "👖"
+      ],
+      [
+        "potato",
+        "🥔"
+      ],
+      [
+        "parrot",
+        "🦜"
+      ],
+      [
+        "pizza",
+        "🍕"
+      ]
+    ],
+    "Q": [
+      [
+        "quiet",
+        "🤫"
+      ],
+      [
+        "quilt",
+        "🛏️"
+      ],
+      [
+        "queen",
+        "👑"
+      ],
+      [
+        "question",
+        "❓"
+      ],
+      [
+        "quarter",
+        "🪙¼"
+      ],
+      [
+        "queue",
+        "🚶‍♀️🚶‍♂️"
+      ]
+    ],
+    "R": [
+      [
+        "rabbit",
+        "🐇"
+      ],
+      [
+        "red",
+        "🔴"
+      ],
+      [
+        "rice",
+        "🍚"
+      ],
+      [
+        "robot",
+        "🤖"
+      ],
+      [
+        "rain",
+        "🌧️"
+      ],
+      [
+        "rose",
+        "🌹"
+      ]
+    ],
+    "S": [
+      [
+        "sad",
+        "😢"
+      ],
+      [
+        "sit",
+        "🪑"
+      ],
+      [
+        "school",
+        "🏫"
+      ],
+      [
+        "sky",
+        "🌤️"
+      ],
+      [
+        "soap",
+        "🧼"
+      ],
+      [
+        "swim",
+        "🏊"
+      ]
+    ],
+    "T": [
+      [
+        "tea",
+        "🍵"
+      ],
+      [
+        "tree",
+        "🌳"
+      ],
+      [
+        "teacher",
+        "🧑‍🏫"
+      ],
+      [
+        "teeth",
+        "🦷🦷"
+      ],
+      [
+        "taxi",
+        "🚕"
+      ],
+      [
+        "tomato",
+        "🍅"
+      ]
+    ],
+    "U": [
+      [
+        "uncle",
+        "👨"
+      ],
+      [
+        "umbrella",
+        "☂️"
+      ],
+      [
+        "up",
+        "⬆️"
+      ],
+      [
+        "unlock",
+        "🔓"
+      ],
+      [
+        "under",
+        "⬇️🪑"
+      ]
+    ],
+    "V": [
+      [
+        "van",
+        "🚐"
+      ],
+      [
+        "vet",
+        "🐶🩺"
+      ],
+      [
+        "violin",
+        "🎻"
+      ],
+      [
+        "vest",
+        "🦺"
+      ],
+      [
+        "vase",
+        "🏺🌷"
+      ]
+    ],
+    "W": [
+      [
+        "watch",
+        "⌚"
+      ],
+      [
+        "water",
+        "💧"
+      ],
+      [
+        "whale",
+        "🐋"
+      ],
+      [
+        "windy",
+        "🌬️"
+      ],
+      [
+        "window",
+        "🪟"
+      ]
+    ],
+    "X": [
+      [
+        "box",
+        "📦"
+      ],
+      [
+        "fox",
+        "🦊"
+      ],
+      [
+        "fix",
+        "🔧"
+      ],
+      [
+        "mix",
+        "🥣🥄"
+      ],
+      [
+        "six",
+        "6️⃣"
+      ]
+    ],
+    "Y": [
+      [
+        "yellow",
+        "🟡"
+      ],
+      [
+        "yogurt",
+        "🥣"
+      ],
+      [
+        "yard",
+        "🏡🌿"
+      ],
+      [
+        "yo-yo",
+        "🪀"
+      ],
+      [
+        "yacht",
+        "⛵"
+      ]
+    ],
+    "Z": [
+      [
+        "zoo",
+        "🦁🦓"
+      ],
+      [
+        "zebra",
+        "🦓"
+      ],
+      [
+        "zipper",
+        "🧥↕️"
+      ],
+      [
+        "zero",
+        "0️⃣"
+      ]
+    ]
+  },
+  "dictionary": {
+    "A": {
+      "apple": "تفاحة",
+      "ant": "نملة",
+      "arm": "ذراع",
+      "arrow": "سهم",
+      "axe": "فأس",
+      "angry": "غاضب"
+    },
+    "B": {
+      "bear": "دب",
+      "banana": "موزة",
+      "baby": "طفل رضيع",
+      "book": "كتاب",
+      "bag": "حقيبة",
+      "ball": "كرة"
+    },
+    "C": {
+      "cat": "قطة",
+      "car": "سيارة",
+      "camel": "جمل",
+      "cake": "كعكة",
+      "carrot": "جزرة",
+      "cow": "بقرة"
+    },
+    "D": {
+      "dog": "كلب",
+      "door": "باب",
+      "doll": "دمية",
+      "deer": "غزال",
+      "date": "تمرة",
+      "dress": "فستان"
+    },
+    "E": {
+      "egg": "بيضة",
+      "ear": "أذن",
+      "eye": "عين",
+      "elbow": "مرفق",
+      "eat": "يأكل",
+      "exit": "مخرج"
+    },
+    "F": {
+      "fan": "مروحة",
+      "fig": "تين",
+      "feed": "يُطعم",
+      "fire": "نار",
+      "fox": "ثعلب",
+      "farm": "مزرعة"
+    },
+    "G": {
+      "gum": "علكة",
+      "goat": "ماعز",
+      "goal": "هدف",
+      "girl": "فتاة",
+      "grass": "عشب",
+      "gift": "هدية"
+    },
+    "H": {
+      "horse": "حصان",
+      "hat": "قبعة",
+      "hand": "يد",
+      "hair": "شعر",
+      "hello": "مرحباً",
+      "happy": "سعيد"
+    },
+    "I": {
+      "ink": "حبر",
+      "in": "في",
+      "ice": "ثلج",
+      "ill": "مريض",
+      "insect": "حشرة",
+      "igloo": "كوخ جليدي"
+    },
+    "J": {
+      "jacket": "سترة",
+      "juice": "عصير",
+      "June": "يونيو",
+      "jug": "إبريق",
+      "jam": "مربى",
+      "jet": "طائرة نفاثة"
+    },
+    "K": {
+      "key": "مفتاح",
+      "kid": "طفل",
+      "king": "ملك",
+      "kite": "طائرة ورقية",
+      "kitchen": "مطبخ",
+      "kangaroo": "كنغر"
+    },
+    "L": {
+      "lake": "بحيرة",
+      "leg": "ساق",
+      "lamp": "مصباح",
+      "lemon": "ليمون",
+      "leaf": "ورقة شجر",
+      "lion": "أسد"
+    },
+    "M": {
+      "milk": "حليب",
+      "meat": "لحم",
+      "money": "نقود",
+      "monkey": "قرد",
+      "moon": "قمر",
+      "mouse": "فأر"
+    },
+    "N": {
+      "neck": "رقبة",
+      "nose": "أنف",
+      "nine": "تسعة",
+      "nice": "لطيف",
+      "nurse": "ممرض/ممرضة",
+      "net": "شبكة"
+    },
+    "O": {
+      "oil": "زيت",
+      "olive": "زيتونة",
+      "orange": "برتقالة",
+      "owl": "بومة",
+      "office": "مكتب",
+      "open": "يفتح"
+    },
+    "P": {
+      "pen": "قلم",
+      "pencil": "قلم رصاص",
+      "pants": "بنطال",
+      "potato": "بطاطس",
+      "parrot": "ببغاء",
+      "pizza": "بيتزا"
+    },
+    "Q": {
+      "quiet": "هادئ",
+      "quilt": "لحاف",
+      "queen": "ملكة",
+      "question": "سؤال",
+      "quarter": "ربع",
+      "queue": "طابور"
+    },
+    "R": {
+      "rabbit": "أرنب",
+      "red": "أحمر",
+      "rice": "أرز",
+      "robot": "روبوت",
+      "rain": "مطر",
+      "rose": "وردة"
+    },
+    "S": {
+      "sad": "حزين",
+      "sit": "يجلس",
+      "school": "مدرسة",
+      "sky": "سماء",
+      "soap": "صابون",
+      "swim": "يسبح"
+    },
+    "T": {
+      "tea": "شاي",
+      "tree": "شجرة",
+      "teacher": "معلم/معلمة",
+      "teeth": "أسنان",
+      "taxi": "سيارة أجرة",
+      "tomato": "طماطم"
+    },
+    "U": {
+      "uncle": "عم/خال",
+      "umbrella": "مظلة",
+      "up": "أعلى",
+      "unlock": "يفتح القفل",
+      "under": "تحت"
+    },
+    "V": {
+      "van": "شاحنة صغيرة",
+      "vet": "طبيب بيطري",
+      "violin": "كمان",
+      "vest": "سترة",
+      "vase": "مزهرية"
+    },
+    "W": {
+      "watch": "ساعة يد",
+      "water": "ماء",
+      "whale": "حوت",
+      "windy": "عاصف",
+      "window": "نافذة"
+    },
+    "X": {
+      "box": "صندوق",
+      "fox": "ثعلب",
+      "fix": "يُصلح",
+      "mix": "يخلط",
+      "six": "ستة"
+    },
+    "Y": {
+      "yellow": "أصفر",
+      "yogurt": "زبادي",
+      "yard": "فناء",
+      "yo-yo": "يويو",
+      "yacht": "يخت"
+    },
+    "Z": {
+      "zoo": "حديقة حيوان",
+      "zebra": "حمار وحشي",
+      "zipper": "سحّاب",
+      "zero": "صفر"
+    }
+  },
+  "ipa": {
+    "A": [
+      "æ",
+      "FOCUS SOUND",
+      "apple"
+    ],
+    "B": [
+      "b",
+      "FOCUS SOUND",
+      "bear"
+    ],
+    "C": [
+      "k",
+      "FOCUS SOUND",
+      "cat"
+    ],
+    "D": [
+      "d",
+      "FOCUS SOUND",
+      "dog"
+    ],
+    "E": [
+      "ɛ",
+      "FOCUS SOUND",
+      "egg"
+    ],
+    "F": [
+      "f",
+      "FOCUS SOUND",
+      "fan"
+    ],
+    "G": [
+      "g",
+      "FOCUS SOUND",
+      "goat"
+    ],
+    "H": [
+      "h",
+      "FOCUS SOUND",
+      "horse"
+    ],
+    "I": [
+      "ɪ",
+      "FOCUS SOUND",
+      "ink"
+    ],
+    "J": [
+      "dʒ",
+      "FOCUS SOUND",
+      "jam"
+    ],
+    "K": [
+      "k",
+      "FOCUS SOUND",
+      "key"
+    ],
+    "L": [
+      "l",
+      "FOCUS SOUND",
+      "lake"
+    ],
+    "M": [
+      "m",
+      "FOCUS SOUND",
+      "milk"
+    ],
+    "N": [
+      "n",
+      "FOCUS SOUND",
+      "nose"
+    ],
+    "O": [
+      "ɑ",
+      "FOCUS SOUND",
+      "olive"
+    ],
+    "P": [
+      "p",
+      "FOCUS SOUND",
+      "pen"
+    ],
+    "Q": [
+      "kw",
+      "FOCUS SOUND",
+      "queen"
+    ],
+    "R": [
+      "ɹ",
+      "FOCUS SOUND",
+      "rabbit"
+    ],
+    "S": [
+      "s",
+      "FOCUS SOUND",
+      "sad"
+    ],
+    "T": [
+      "t",
+      "FOCUS SOUND",
+      "tea"
+    ],
+    "U": [
+      "ʌ",
+      "FOCUS SOUND",
+      "uncle"
+    ],
+    "V": [
+      "v",
+      "FOCUS SOUND",
+      "van"
+    ],
+    "W": [
+      "w",
+      "FOCUS SOUND",
+      "water"
+    ],
+    "X": [
+      "ks",
+      "FOCUS SOUND",
+      "box"
+    ],
+    "Y": [
+      "j",
+      "FOCUS SOUND",
+      "yellow"
+    ],
+    "Z": [
+      "z",
+      "FOCUS SOUND",
+      "zebra"
+    ]
+  },
+  "soundNotes": {
+    "A": "Focus sound /æ/ as in apple.",
+    "C": "Focus sound /k/ as in cat. C can have other sounds later.",
+    "E": "Focus sound /ɛ/ as in egg.",
+    "G": "Focus sound /g/ as in goat. G can have other sounds later.",
+    "I": "Focus sound /ɪ/ as in ink.",
+    "O": "Focus sound /ɑ/ as in olive.",
+    "Q": "Q is commonly taught as /kw/ in words such as queen.",
+    "U": "Focus sound /ʌ/ as in uncle.",
+    "X": "X commonly represents /ks/ in words such as box and six.",
+    "Y": "Here Y is the consonant sound /j/ as in yellow."
+  },
+  "sentenceOverrides": {
+    "angry": [
+      "I am angry.",
+      "The boy is angry.",
+      "She looks angry."
+    ],
+    "eat": [
+      "I eat an egg.",
+      "We eat at home.",
+      "I like to eat."
+    ],
+    "feed": [
+      "I feed the cat.",
+      "We feed the dog.",
+      "Please feed the bird."
+    ],
+    "hello": [
+      "I say hello.",
+      "Hello, my friend.",
+      "She says hello."
+    ],
+    "happy": [
+      "I am happy.",
+      "The baby is happy.",
+      "We feel happy."
+    ],
+    "in": [
+      "The cat is in the box.",
+      "Put it in the bag.",
+      "I am in the room."
+    ],
+    "ice": [
+      "The ice is cold.",
+      "I see ice.",
+      "Put ice in the cup."
+    ],
+    "ill": [
+      "I am ill.",
+      "He feels ill.",
+      "The boy is ill."
+    ],
+    "June": [
+      "June is a month.",
+      "School ends in June.",
+      "My birthday is in June."
+    ],
+    "milk": [
+      "I drink milk.",
+      "The milk is cold.",
+      "I like milk."
+    ],
+    "meat": [
+      "I eat meat.",
+      "The meat is hot.",
+      "We cook meat."
+    ],
+    "money": [
+      "I have money.",
+      "The money is in my bag.",
+      "I save money."
+    ],
+    "nine": [
+      "I have nine books.",
+      "Nine is a number.",
+      "I can count to nine."
+    ],
+    "nice": [
+      "She is nice.",
+      "This is a nice day.",
+      "He has a nice smile."
+    ],
+    "oil": [
+      "We cook with oil.",
+      "The oil is hot.",
+      "Put oil in the pan."
+    ],
+    "open": [
+      "Open the door.",
+      "I open my book.",
+      "The shop is open."
+    ],
+    "quiet": [
+      "Please be quiet.",
+      "The room is quiet.",
+      "The baby is quiet."
+    ],
+    "red": [
+      "The ball is red.",
+      "I like red.",
+      "The car is red."
+    ],
+    "rice": [
+      "I eat rice.",
+      "The rice is hot.",
+      "We cook rice."
+    ],
+    "sad": [
+      "I am sad.",
+      "The boy looks sad.",
+      "She feels sad."
+    ],
+    "sit": [
+      "I sit on a chair.",
+      "Please sit here.",
+      "We sit together."
+    ],
+    "sky": [
+      "The sky is blue.",
+      "Look at the sky.",
+      "The sky is clear."
+    ],
+    "soap": [
+      "Wash with soap.",
+      "The soap is white.",
+      "I use soap."
+    ],
+    "swim": [
+      "I can swim.",
+      "We swim in the pool.",
+      "The fish can swim."
+    ],
+    "tea": [
+      "I drink tea.",
+      "The tea is hot.",
+      "We make tea."
+    ],
+    "teeth": [
+      "My teeth are clean.",
+      "I brush my teeth.",
+      "These are my teeth."
+    ],
+    "up": [
+      "Look up.",
+      "Stand up.",
+      "The bird flies up."
+    ],
+    "unlock": [
+      "I unlock the door.",
+      "Please unlock the box.",
+      "He can unlock it."
+    ],
+    "under": [
+      "The cat is under the table.",
+      "My bag is under the chair.",
+      "Look under the bed."
+    ],
+    "water": [
+      "I drink water.",
+      "The water is cold.",
+      "We need water."
+    ],
+    "windy": [
+      "It is windy today.",
+      "The day is windy.",
+      "It feels windy outside."
+    ],
+    "fix": [
+      "I can fix it.",
+      "He will fix the car.",
+      "Please fix the toy."
+    ],
+    "mix": [
+      "Mix the milk.",
+      "I mix the colors.",
+      "We mix the food."
+    ],
+    "six": [
+      "I see six cats.",
+      "Six is a number.",
+      "I have six pens."
+    ],
+    "yellow": [
+      "The sun is yellow.",
+      "I like yellow.",
+      "The ball is yellow."
+    ],
+    "zero": [
+      "Zero is a number.",
+      "I have zero coins.",
+      "The score is zero."
+    ],
+    "gift": [
+      "This is a gift.",
+      "I have a gift.",
+      "The gift is for you."
+    ]
+  },
+  "audio": {
+    "A": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/399142f3-c652-43e9-9fa3-a4e6b81da355.mp3",
+    "B": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/f963c3d0-eeed-4e90-abbc-4dfe3ca47ceb.mp3",
+    "C": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/665304ef-7361-4323-9e21-54f87bd9c3b8.mp3",
+    "apple": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/ae951d48-221c-44c9-87e8-8009fed3797a.mp3",
+    "ant": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/11074344-ae32-4ce6-a1bb-05aa8ed9b3a0.mp3",
+    "arm": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/72ecbc34-8bbd-4ade-b6b8-3fd2e4a8ed09.mp3",
+    "arrow": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/aecb4130-3301-4f6f-80b5-dfa482afc670.mp3",
+    "axe": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/1c06ab6a-61bb-4037-895f-9768417681e8.mp3",
+    "angry": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7eecbf0c-d148-4b23-957a-944fc9f2caa3.mp3",
+    "bear": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7070121c-0598-41ef-b634-e8254f05ca09.mp3",
+    "banana": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/37982d4c-4d9f-44ad-9024-d59f65d32225.mp3",
+    "baby": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/be901844-083e-421e-8b5a-d1ae4d7332f0.mp3",
+    "book": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/90243ff6-e10d-4f4a-ad87-1ac644e08403.mp3",
+    "bag": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/03850cae-6db6-43af-b785-b9401e80c169.mp3",
+    "ball": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/4d92d608-4004-4e2b-b296-f3eb53ba769f.mp3",
+    "cat": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/fd9498d6-7a68-4c53-a212-a2cde113b7cf.mp3",
+    "car": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/4ac68a7b-e570-4744-bbf9-0e027e4a46e0.mp3",
+    "camel": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/45727543-2117-4a5f-a1f6-2afe29a85a49.mp3",
+    "cake": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/33406ac4-ab80-4ed1-8c27-c2e19f8be4fc.mp3",
+    "carrot": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/4203fa57-9155-454f-aea7-554dea5ece80.mp3",
+    "cow": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/c04df2cd-b241-479f-a590-a91bfe18dbde.mp3"
+  }
+};
