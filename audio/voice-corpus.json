@@ -1313,5 +1313,2242 @@
     "The word fox appears in F and X; its word audio is shared.",
     "Focus example words are already included in vocabulary and reuse normal word audio.",
     "Do not upload browser-generated synthetic recordings or unverified URLs."
+  ],
+  "sentencePlacements": [
+    {
+      "letter": "A",
+      "word": "apple",
+      "sentence": "I have an apple."
+    },
+    {
+      "letter": "A",
+      "word": "apple",
+      "sentence": "The apple is red."
+    },
+    {
+      "letter": "A",
+      "word": "apple",
+      "sentence": "I eat an apple at lunch."
+    },
+    {
+      "letter": "A",
+      "word": "ant",
+      "sentence": "An ant is small."
+    },
+    {
+      "letter": "A",
+      "word": "ant",
+      "sentence": "The ant walks on the ground."
+    },
+    {
+      "letter": "A",
+      "word": "ant",
+      "sentence": "I see an ant by the door."
+    },
+    {
+      "letter": "A",
+      "word": "arm",
+      "sentence": "This is my arm."
+    },
+    {
+      "letter": "A",
+      "word": "arm",
+      "sentence": "I raise my arm."
+    },
+    {
+      "letter": "A",
+      "word": "arm",
+      "sentence": "My arm is strong."
+    },
+    {
+      "letter": "A",
+      "word": "arrow",
+      "sentence": "I see an arrow."
+    },
+    {
+      "letter": "A",
+      "word": "arrow",
+      "sentence": "The arrow points left."
+    },
+    {
+      "letter": "A",
+      "word": "arrow",
+      "sentence": "Follow the arrow to the door."
+    },
+    {
+      "letter": "A",
+      "word": "axe",
+      "sentence": "This is an axe."
+    },
+    {
+      "letter": "A",
+      "word": "axe",
+      "sentence": "An axe cuts wood."
+    },
+    {
+      "letter": "A",
+      "word": "axe",
+      "sentence": "The axe stays in the shed."
+    },
+    {
+      "letter": "A",
+      "word": "angry",
+      "sentence": "I feel angry."
+    },
+    {
+      "letter": "A",
+      "word": "angry",
+      "sentence": "The boy is angry."
+    },
+    {
+      "letter": "A",
+      "word": "angry",
+      "sentence": "I feel angry when I lose my toy."
+    },
+    {
+      "letter": "B",
+      "word": "bear",
+      "sentence": "The bear is big."
+    },
+    {
+      "letter": "B",
+      "word": "bear",
+      "sentence": "A bear lives in the forest."
+    },
+    {
+      "letter": "B",
+      "word": "bear",
+      "sentence": "I see a bear at the zoo."
+    },
+    {
+      "letter": "B",
+      "word": "banana",
+      "sentence": "I have a banana."
+    },
+    {
+      "letter": "B",
+      "word": "banana",
+      "sentence": "The banana is yellow."
+    },
+    {
+      "letter": "B",
+      "word": "banana",
+      "sentence": "I eat a banana for breakfast."
+    },
+    {
+      "letter": "B",
+      "word": "baby",
+      "sentence": "The baby is small."
+    },
+    {
+      "letter": "B",
+      "word": "baby",
+      "sentence": "The baby sleeps in a bed."
+    },
+    {
+      "letter": "B",
+      "word": "baby",
+      "sentence": "My baby sister smiles at me."
+    },
+    {
+      "letter": "B",
+      "word": "book",
+      "sentence": "I have a book."
+    },
+    {
+      "letter": "B",
+      "word": "book",
+      "sentence": "The book has pictures."
+    },
+    {
+      "letter": "B",
+      "word": "book",
+      "sentence": "I read a book before bed."
+    },
+    {
+      "letter": "B",
+      "word": "bag",
+      "sentence": "This is my bag."
+    },
+    {
+      "letter": "B",
+      "word": "bag",
+      "sentence": "My bag holds my books."
+    },
+    {
+      "letter": "B",
+      "word": "bag",
+      "sentence": "I take my bag to school."
+    },
+    {
+      "letter": "B",
+      "word": "ball",
+      "sentence": "The ball is round."
+    },
+    {
+      "letter": "B",
+      "word": "ball",
+      "sentence": "I kick the ball."
+    },
+    {
+      "letter": "B",
+      "word": "ball",
+      "sentence": "We play with a ball outside."
+    },
+    {
+      "letter": "C",
+      "word": "cat",
+      "sentence": "The cat is small."
+    },
+    {
+      "letter": "C",
+      "word": "cat",
+      "sentence": "The cat drinks milk."
+    },
+    {
+      "letter": "C",
+      "word": "cat",
+      "sentence": "My cat sleeps on the sofa."
+    },
+    {
+      "letter": "C",
+      "word": "car",
+      "sentence": "The car is red."
+    },
+    {
+      "letter": "C",
+      "word": "car",
+      "sentence": "The car has four wheels."
+    },
+    {
+      "letter": "C",
+      "word": "car",
+      "sentence": "We go to school by car."
+    },
+    {
+      "letter": "C",
+      "word": "camel",
+      "sentence": "A camel is tall."
+    },
+    {
+      "letter": "C",
+      "word": "camel",
+      "sentence": "The camel walks in the sand."
+    },
+    {
+      "letter": "C",
+      "word": "camel",
+      "sentence": "I see a camel at the zoo."
+    },
+    {
+      "letter": "C",
+      "word": "cake",
+      "sentence": "I like cake."
+    },
+    {
+      "letter": "C",
+      "word": "cake",
+      "sentence": "The cake is sweet."
+    },
+    {
+      "letter": "C",
+      "word": "cake",
+      "sentence": "We eat cake at a party."
+    },
+    {
+      "letter": "C",
+      "word": "carrot",
+      "sentence": "This carrot is orange."
+    },
+    {
+      "letter": "C",
+      "word": "carrot",
+      "sentence": "A carrot grows in the ground."
+    },
+    {
+      "letter": "C",
+      "word": "carrot",
+      "sentence": "I eat a carrot with lunch."
+    },
+    {
+      "letter": "C",
+      "word": "cow",
+      "sentence": "The cow is big."
+    },
+    {
+      "letter": "C",
+      "word": "cow",
+      "sentence": "The cow eats grass."
+    },
+    {
+      "letter": "C",
+      "word": "cow",
+      "sentence": "We see a cow on the farm."
+    },
+    {
+      "letter": "D",
+      "word": "dog",
+      "sentence": "The dog is happy."
+    },
+    {
+      "letter": "D",
+      "word": "dog",
+      "sentence": "A dog can run fast."
+    },
+    {
+      "letter": "D",
+      "word": "dog",
+      "sentence": "My dog plays with a ball."
+    },
+    {
+      "letter": "D",
+      "word": "door",
+      "sentence": "Open the door."
+    },
+    {
+      "letter": "D",
+      "word": "door",
+      "sentence": "The door is brown."
+    },
+    {
+      "letter": "D",
+      "word": "door",
+      "sentence": "I close the door when I leave."
+    },
+    {
+      "letter": "D",
+      "word": "doll",
+      "sentence": "This doll is small."
+    },
+    {
+      "letter": "D",
+      "word": "doll",
+      "sentence": "The doll has a dress."
+    },
+    {
+      "letter": "D",
+      "word": "doll",
+      "sentence": "My sister plays with her doll."
+    },
+    {
+      "letter": "D",
+      "word": "deer",
+      "sentence": "A deer can run."
+    },
+    {
+      "letter": "D",
+      "word": "deer",
+      "sentence": "The deer has long legs."
+    },
+    {
+      "letter": "D",
+      "word": "deer",
+      "sentence": "We see a deer near the trees."
+    },
+    {
+      "letter": "D",
+      "word": "date",
+      "sentence": "I eat a date."
+    },
+    {
+      "letter": "D",
+      "word": "date",
+      "sentence": "A date is a sweet fruit."
+    },
+    {
+      "letter": "D",
+      "word": "date",
+      "sentence": "I take a date in my lunch box."
+    },
+    {
+      "letter": "D",
+      "word": "dress",
+      "sentence": "The dress is blue."
+    },
+    {
+      "letter": "D",
+      "word": "dress",
+      "sentence": "She wears a dress."
+    },
+    {
+      "letter": "D",
+      "word": "dress",
+      "sentence": "My dress is ready for the party."
+    },
+    {
+      "letter": "E",
+      "word": "egg",
+      "sentence": "This is an egg."
+    },
+    {
+      "letter": "E",
+      "word": "egg",
+      "sentence": "An egg has a shell."
+    },
+    {
+      "letter": "E",
+      "word": "egg",
+      "sentence": "I eat an egg for breakfast."
+    },
+    {
+      "letter": "E",
+      "word": "ear",
+      "sentence": "This is my ear."
+    },
+    {
+      "letter": "E",
+      "word": "ear",
+      "sentence": "I hear music with my ear."
+    },
+    {
+      "letter": "E",
+      "word": "ear",
+      "sentence": "My ear feels cold outside."
+    },
+    {
+      "letter": "E",
+      "word": "eye",
+      "sentence": "This is my eye."
+    },
+    {
+      "letter": "E",
+      "word": "eye",
+      "sentence": "I see with my eye."
+    },
+    {
+      "letter": "E",
+      "word": "eye",
+      "sentence": "I close one eye to wink."
+    },
+    {
+      "letter": "E",
+      "word": "elbow",
+      "sentence": "Bend your elbow."
+    },
+    {
+      "letter": "E",
+      "word": "elbow",
+      "sentence": "My elbow is on the table."
+    },
+    {
+      "letter": "E",
+      "word": "elbow",
+      "sentence": "I wash my elbow after playing."
+    },
+    {
+      "letter": "E",
+      "word": "eat",
+      "sentence": "I eat rice."
+    },
+    {
+      "letter": "E",
+      "word": "eat",
+      "sentence": "We eat food when we are hungry."
+    },
+    {
+      "letter": "E",
+      "word": "eat",
+      "sentence": "I eat with my family."
+    },
+    {
+      "letter": "E",
+      "word": "exit",
+      "sentence": "This is an exit."
+    },
+    {
+      "letter": "E",
+      "word": "exit",
+      "sentence": "The exit leads outside."
+    },
+    {
+      "letter": "E",
+      "word": "exit",
+      "sentence": "We walk to the exit after class."
+    },
+    {
+      "letter": "F",
+      "word": "fan",
+      "sentence": "I have a fan."
+    },
+    {
+      "letter": "F",
+      "word": "fan",
+      "sentence": "The fan moves air."
+    },
+    {
+      "letter": "F",
+      "word": "fan",
+      "sentence": "I use a fan when it is hot."
+    },
+    {
+      "letter": "F",
+      "word": "fig",
+      "sentence": "A fig is a fruit."
+    },
+    {
+      "letter": "F",
+      "word": "fig",
+      "sentence": "The fig is soft and sweet."
+    },
+    {
+      "letter": "F",
+      "word": "fig",
+      "sentence": "I eat a fig after lunch."
+    },
+    {
+      "letter": "F",
+      "word": "feed",
+      "sentence": "I feed the cat."
+    },
+    {
+      "letter": "F",
+      "word": "feed",
+      "sentence": "We feed the dog each day."
+    },
+    {
+      "letter": "F",
+      "word": "feed",
+      "sentence": "Please feed the fish for me."
+    },
+    {
+      "letter": "F",
+      "word": "fire",
+      "sentence": "The fire is hot."
+    },
+    {
+      "letter": "F",
+      "word": "fire",
+      "sentence": "A fire gives us heat."
+    },
+    {
+      "letter": "F",
+      "word": "fire",
+      "sentence": "We stay away from the fire."
+    },
+    {
+      "letter": "F",
+      "word": "fox",
+      "sentence": "The fox is red."
+    },
+    {
+      "letter": "F",
+      "word": "fox",
+      "sentence": "A fox has a long tail."
+    },
+    {
+      "letter": "F",
+      "word": "fox",
+      "sentence": "I see a fox near the trees."
+    },
+    {
+      "letter": "F",
+      "word": "farm",
+      "sentence": "This is a farm."
+    },
+    {
+      "letter": "F",
+      "word": "farm",
+      "sentence": "A farm has cows and sheep."
+    },
+    {
+      "letter": "F",
+      "word": "farm",
+      "sentence": "We visit a farm on Sunday."
+    },
+    {
+      "letter": "G",
+      "word": "gum",
+      "sentence": "I chew gum."
+    },
+    {
+      "letter": "G",
+      "word": "gum",
+      "sentence": "The gum is pink."
+    },
+    {
+      "letter": "G",
+      "word": "gum",
+      "sentence": "I put the gum wrapper in the bin."
+    },
+    {
+      "letter": "G",
+      "word": "goat",
+      "sentence": "The goat is small."
+    },
+    {
+      "letter": "G",
+      "word": "goat",
+      "sentence": "A goat eats grass."
+    },
+    {
+      "letter": "G",
+      "word": "goat",
+      "sentence": "The goat lives on a farm."
+    },
+    {
+      "letter": "G",
+      "word": "goal",
+      "sentence": "This is the goal."
+    },
+    {
+      "letter": "G",
+      "word": "goal",
+      "sentence": "The ball goes into the goal."
+    },
+    {
+      "letter": "G",
+      "word": "goal",
+      "sentence": "We cheer when we score a goal."
+    },
+    {
+      "letter": "G",
+      "word": "girl",
+      "sentence": "The girl is happy."
+    },
+    {
+      "letter": "G",
+      "word": "girl",
+      "sentence": "The girl reads a book."
+    },
+    {
+      "letter": "G",
+      "word": "girl",
+      "sentence": "I play with the girl next door."
+    },
+    {
+      "letter": "G",
+      "word": "grass",
+      "sentence": "The grass is green."
+    },
+    {
+      "letter": "G",
+      "word": "grass",
+      "sentence": "The cow eats grass."
+    },
+    {
+      "letter": "G",
+      "word": "grass",
+      "sentence": "We sit on the grass in the park."
+    },
+    {
+      "letter": "G",
+      "word": "gift",
+      "sentence": "This is a gift."
+    },
+    {
+      "letter": "G",
+      "word": "gift",
+      "sentence": "A gift is a present."
+    },
+    {
+      "letter": "G",
+      "word": "gift",
+      "sentence": "I give a gift to my friend."
+    },
+    {
+      "letter": "H",
+      "word": "horse",
+      "sentence": "The horse is big."
+    },
+    {
+      "letter": "H",
+      "word": "horse",
+      "sentence": "A horse can run fast."
+    },
+    {
+      "letter": "H",
+      "word": "horse",
+      "sentence": "We see a horse on the farm."
+    },
+    {
+      "letter": "H",
+      "word": "hat",
+      "sentence": "I have a hat."
+    },
+    {
+      "letter": "H",
+      "word": "hat",
+      "sentence": "A hat goes on your head."
+    },
+    {
+      "letter": "H",
+      "word": "hat",
+      "sentence": "I wear a hat in the sun."
+    },
+    {
+      "letter": "H",
+      "word": "hand",
+      "sentence": "This is my hand."
+    },
+    {
+      "letter": "H",
+      "word": "hand",
+      "sentence": "I hold a pen in my hand."
+    },
+    {
+      "letter": "H",
+      "word": "hand",
+      "sentence": "I wash my hand before eating."
+    },
+    {
+      "letter": "H",
+      "word": "hair",
+      "sentence": "My hair is black."
+    },
+    {
+      "letter": "H",
+      "word": "hair",
+      "sentence": "I wash my hair."
+    },
+    {
+      "letter": "H",
+      "word": "hair",
+      "sentence": "I brush my hair every morning."
+    },
+    {
+      "letter": "H",
+      "word": "hello",
+      "sentence": "I say hello."
+    },
+    {
+      "letter": "H",
+      "word": "hello",
+      "sentence": "Hello is a friendly word."
+    },
+    {
+      "letter": "H",
+      "word": "hello",
+      "sentence": "I say hello to my teacher."
+    },
+    {
+      "letter": "H",
+      "word": "happy",
+      "sentence": "I am happy."
+    },
+    {
+      "letter": "H",
+      "word": "happy",
+      "sentence": "The baby looks happy."
+    },
+    {
+      "letter": "H",
+      "word": "happy",
+      "sentence": "I feel happy when we play."
+    },
+    {
+      "letter": "I",
+      "word": "ink",
+      "sentence": "The ink is blue."
+    },
+    {
+      "letter": "I",
+      "word": "ink",
+      "sentence": "A pen has ink inside."
+    },
+    {
+      "letter": "I",
+      "word": "ink",
+      "sentence": "I get ink on my hand when I write."
+    },
+    {
+      "letter": "I",
+      "word": "in",
+      "sentence": "The ball is in the box."
+    },
+    {
+      "letter": "I",
+      "word": "in",
+      "sentence": "The cat is in the box."
+    },
+    {
+      "letter": "I",
+      "word": "in",
+      "sentence": "I put my books in my bag."
+    },
+    {
+      "letter": "I",
+      "word": "ice",
+      "sentence": "The ice is cold."
+    },
+    {
+      "letter": "I",
+      "word": "ice",
+      "sentence": "Ice melts in warm water."
+    },
+    {
+      "letter": "I",
+      "word": "ice",
+      "sentence": "I put ice in my drink."
+    },
+    {
+      "letter": "I",
+      "word": "ill",
+      "sentence": "I feel ill."
+    },
+    {
+      "letter": "I",
+      "word": "ill",
+      "sentence": "The boy is ill today."
+    },
+    {
+      "letter": "I",
+      "word": "ill",
+      "sentence": "I stay home when I am ill."
+    },
+    {
+      "letter": "I",
+      "word": "insect",
+      "sentence": "An insect is small."
+    },
+    {
+      "letter": "I",
+      "word": "insect",
+      "sentence": "An insect has six legs."
+    },
+    {
+      "letter": "I",
+      "word": "insect",
+      "sentence": "I see an insect on a leaf."
+    },
+    {
+      "letter": "I",
+      "word": "igloo",
+      "sentence": "This is an igloo."
+    },
+    {
+      "letter": "I",
+      "word": "igloo",
+      "sentence": "An igloo is a snow house."
+    },
+    {
+      "letter": "I",
+      "word": "igloo",
+      "sentence": "The igloo has a small door."
+    },
+    {
+      "letter": "J",
+      "word": "jacket",
+      "sentence": "I have a jacket."
+    },
+    {
+      "letter": "J",
+      "word": "jacket",
+      "sentence": "A jacket keeps me warm."
+    },
+    {
+      "letter": "J",
+      "word": "jacket",
+      "sentence": "I wear my jacket when it is cold."
+    },
+    {
+      "letter": "J",
+      "word": "juice",
+      "sentence": "I like juice."
+    },
+    {
+      "letter": "J",
+      "word": "juice",
+      "sentence": "The juice is in a cup."
+    },
+    {
+      "letter": "J",
+      "word": "juice",
+      "sentence": "I drink orange juice at breakfast."
+    },
+    {
+      "letter": "J",
+      "word": "June",
+      "sentence": "June is a month."
+    },
+    {
+      "letter": "J",
+      "word": "June",
+      "sentence": "June comes after May."
+    },
+    {
+      "letter": "J",
+      "word": "June",
+      "sentence": "My birthday is in June."
+    },
+    {
+      "letter": "J",
+      "word": "jug",
+      "sentence": "This is a jug."
+    },
+    {
+      "letter": "J",
+      "word": "jug",
+      "sentence": "The jug holds water."
+    },
+    {
+      "letter": "J",
+      "word": "jug",
+      "sentence": "I pour water from the jug."
+    },
+    {
+      "letter": "J",
+      "word": "jam",
+      "sentence": "I like jam."
+    },
+    {
+      "letter": "J",
+      "word": "jam",
+      "sentence": "The jam is sweet."
+    },
+    {
+      "letter": "J",
+      "word": "jam",
+      "sentence": "I put jam on my bread."
+    },
+    {
+      "letter": "J",
+      "word": "jet",
+      "sentence": "The jet is fast."
+    },
+    {
+      "letter": "J",
+      "word": "jet",
+      "sentence": "A jet flies in the sky."
+    },
+    {
+      "letter": "J",
+      "word": "jet",
+      "sentence": "We see a jet above the airport."
+    },
+    {
+      "letter": "K",
+      "word": "key",
+      "sentence": "I have a key."
+    },
+    {
+      "letter": "K",
+      "word": "key",
+      "sentence": "A key opens a lock."
+    },
+    {
+      "letter": "K",
+      "word": "key",
+      "sentence": "I use my key to open the door."
+    },
+    {
+      "letter": "K",
+      "word": "kid",
+      "sentence": "The kid is happy."
+    },
+    {
+      "letter": "K",
+      "word": "kid",
+      "sentence": "A kid is a child."
+    },
+    {
+      "letter": "K",
+      "word": "kid",
+      "sentence": "The kid runs to the playground."
+    },
+    {
+      "letter": "K",
+      "word": "king",
+      "sentence": "The king has a crown."
+    },
+    {
+      "letter": "K",
+      "word": "king",
+      "sentence": "A king rules a country."
+    },
+    {
+      "letter": "K",
+      "word": "king",
+      "sentence": "The king waves to the people."
+    },
+    {
+      "letter": "K",
+      "word": "kite",
+      "sentence": "My kite is red."
+    },
+    {
+      "letter": "K",
+      "word": "kite",
+      "sentence": "A kite flies in the wind."
+    },
+    {
+      "letter": "K",
+      "word": "kite",
+      "sentence": "I fly my kite in the park."
+    },
+    {
+      "letter": "K",
+      "word": "kitchen",
+      "sentence": "This is our kitchen."
+    },
+    {
+      "letter": "K",
+      "word": "kitchen",
+      "sentence": "We cook food in the kitchen."
+    },
+    {
+      "letter": "K",
+      "word": "kitchen",
+      "sentence": "I help my mom in the kitchen."
+    },
+    {
+      "letter": "K",
+      "word": "kangaroo",
+      "sentence": "A kangaroo can jump."
+    },
+    {
+      "letter": "K",
+      "word": "kangaroo",
+      "sentence": "The kangaroo has strong legs."
+    },
+    {
+      "letter": "K",
+      "word": "kangaroo",
+      "sentence": "We see a kangaroo at the zoo."
+    },
+    {
+      "letter": "L",
+      "word": "lake",
+      "sentence": "The lake is big."
+    },
+    {
+      "letter": "L",
+      "word": "lake",
+      "sentence": "Fish swim in the lake."
+    },
+    {
+      "letter": "L",
+      "word": "lake",
+      "sentence": "We walk by the lake on Sunday."
+    },
+    {
+      "letter": "L",
+      "word": "leg",
+      "sentence": "This is my leg."
+    },
+    {
+      "letter": "L",
+      "word": "leg",
+      "sentence": "I move my leg when I walk."
+    },
+    {
+      "letter": "L",
+      "word": "leg",
+      "sentence": "My leg gets tired after a long walk."
+    },
+    {
+      "letter": "L",
+      "word": "lamp",
+      "sentence": "Turn on the lamp."
+    },
+    {
+      "letter": "L",
+      "word": "lamp",
+      "sentence": "A lamp gives light."
+    },
+    {
+      "letter": "L",
+      "word": "lamp",
+      "sentence": "I read by my lamp at night."
+    },
+    {
+      "letter": "L",
+      "word": "lemon",
+      "sentence": "The lemon is yellow."
+    },
+    {
+      "letter": "L",
+      "word": "lemon",
+      "sentence": "A lemon tastes sour."
+    },
+    {
+      "letter": "L",
+      "word": "lemon",
+      "sentence": "We put lemon in our water."
+    },
+    {
+      "letter": "L",
+      "word": "leaf",
+      "sentence": "The leaf is green."
+    },
+    {
+      "letter": "L",
+      "word": "leaf",
+      "sentence": "A leaf grows on a tree."
+    },
+    {
+      "letter": "L",
+      "word": "leaf",
+      "sentence": "I find a leaf on the ground."
+    },
+    {
+      "letter": "L",
+      "word": "lion",
+      "sentence": "The lion is big."
+    },
+    {
+      "letter": "L",
+      "word": "lion",
+      "sentence": "A lion has a loud roar."
+    },
+    {
+      "letter": "L",
+      "word": "lion",
+      "sentence": "We see a lion at the zoo."
+    },
+    {
+      "letter": "M",
+      "word": "milk",
+      "sentence": "I drink milk."
+    },
+    {
+      "letter": "M",
+      "word": "milk",
+      "sentence": "The milk is cold."
+    },
+    {
+      "letter": "M",
+      "word": "milk",
+      "sentence": "I pour milk on my cereal."
+    },
+    {
+      "letter": "M",
+      "word": "meat",
+      "sentence": "I eat meat."
+    },
+    {
+      "letter": "M",
+      "word": "meat",
+      "sentence": "The meat is hot."
+    },
+    {
+      "letter": "M",
+      "word": "meat",
+      "sentence": "We cook meat for dinner."
+    },
+    {
+      "letter": "M",
+      "word": "money",
+      "sentence": "I have some money."
+    },
+    {
+      "letter": "M",
+      "word": "money",
+      "sentence": "I keep my money in a bag."
+    },
+    {
+      "letter": "M",
+      "word": "money",
+      "sentence": "I save money for a toy."
+    },
+    {
+      "letter": "M",
+      "word": "monkey",
+      "sentence": "The monkey can jump."
+    },
+    {
+      "letter": "M",
+      "word": "monkey",
+      "sentence": "A monkey climbs trees."
+    },
+    {
+      "letter": "M",
+      "word": "monkey",
+      "sentence": "We watch a monkey eat a banana."
+    },
+    {
+      "letter": "M",
+      "word": "moon",
+      "sentence": "The moon is bright."
+    },
+    {
+      "letter": "M",
+      "word": "moon",
+      "sentence": "The moon shines at night."
+    },
+    {
+      "letter": "M",
+      "word": "moon",
+      "sentence": "I look at the moon before bed."
+    },
+    {
+      "letter": "M",
+      "word": "mouse",
+      "sentence": "A mouse is small."
+    },
+    {
+      "letter": "M",
+      "word": "mouse",
+      "sentence": "The mouse runs very fast."
+    },
+    {
+      "letter": "M",
+      "word": "mouse",
+      "sentence": "I see a mouse by the wall."
+    },
+    {
+      "letter": "N",
+      "word": "neck",
+      "sentence": "This is my neck."
+    },
+    {
+      "letter": "N",
+      "word": "neck",
+      "sentence": "My neck holds up my head."
+    },
+    {
+      "letter": "N",
+      "word": "neck",
+      "sentence": "I put a scarf around my neck."
+    },
+    {
+      "letter": "N",
+      "word": "nose",
+      "sentence": "This is my nose."
+    },
+    {
+      "letter": "N",
+      "word": "nose",
+      "sentence": "I smell with my nose."
+    },
+    {
+      "letter": "N",
+      "word": "nose",
+      "sentence": "My nose feels cold in winter."
+    },
+    {
+      "letter": "N",
+      "word": "nine",
+      "sentence": "I can count to nine."
+    },
+    {
+      "letter": "N",
+      "word": "nine",
+      "sentence": "Nine means one more than eight."
+    },
+    {
+      "letter": "N",
+      "word": "nine",
+      "sentence": "I have nine pencils in my box."
+    },
+    {
+      "letter": "N",
+      "word": "nice",
+      "sentence": "You are nice."
+    },
+    {
+      "letter": "N",
+      "word": "nice",
+      "sentence": "My friend is nice to me."
+    },
+    {
+      "letter": "N",
+      "word": "nice",
+      "sentence": "It is nice to help others."
+    },
+    {
+      "letter": "N",
+      "word": "nurse",
+      "sentence": "The nurse is kind."
+    },
+    {
+      "letter": "N",
+      "word": "nurse",
+      "sentence": "A nurse helps sick people."
+    },
+    {
+      "letter": "N",
+      "word": "nurse",
+      "sentence": "The nurse checks my temperature."
+    },
+    {
+      "letter": "N",
+      "word": "net",
+      "sentence": "This is a net."
+    },
+    {
+      "letter": "N",
+      "word": "net",
+      "sentence": "A net can catch a ball."
+    },
+    {
+      "letter": "N",
+      "word": "net",
+      "sentence": "The ball hits the net during the game."
+    },
+    {
+      "letter": "O",
+      "word": "oil",
+      "sentence": "The oil is hot."
+    },
+    {
+      "letter": "O",
+      "word": "oil",
+      "sentence": "We use oil to cook food."
+    },
+    {
+      "letter": "O",
+      "word": "oil",
+      "sentence": "Please add oil to the pan."
+    },
+    {
+      "letter": "O",
+      "word": "olive",
+      "sentence": "This is an olive."
+    },
+    {
+      "letter": "O",
+      "word": "olive",
+      "sentence": "An olive is a small fruit."
+    },
+    {
+      "letter": "O",
+      "word": "olive",
+      "sentence": "I put an olive on my pizza."
+    },
+    {
+      "letter": "O",
+      "word": "orange",
+      "sentence": "I eat an orange."
+    },
+    {
+      "letter": "O",
+      "word": "orange",
+      "sentence": "An orange is a round fruit."
+    },
+    {
+      "letter": "O",
+      "word": "orange",
+      "sentence": "I peel an orange after lunch."
+    },
+    {
+      "letter": "O",
+      "word": "owl",
+      "sentence": "An owl can fly."
+    },
+    {
+      "letter": "O",
+      "word": "owl",
+      "sentence": "The owl stays awake at night."
+    },
+    {
+      "letter": "O",
+      "word": "owl",
+      "sentence": "I hear an owl near the trees."
+    },
+    {
+      "letter": "O",
+      "word": "office",
+      "sentence": "This is an office."
+    },
+    {
+      "letter": "O",
+      "word": "office",
+      "sentence": "People work at desks in an office."
+    },
+    {
+      "letter": "O",
+      "word": "office",
+      "sentence": "My dad works in an office."
+    },
+    {
+      "letter": "O",
+      "word": "open",
+      "sentence": "Open the box."
+    },
+    {
+      "letter": "O",
+      "word": "open",
+      "sentence": "I open the door with a key."
+    },
+    {
+      "letter": "O",
+      "word": "open",
+      "sentence": "We open our books in class."
+    },
+    {
+      "letter": "P",
+      "word": "pen",
+      "sentence": "I have a pen."
+    },
+    {
+      "letter": "P",
+      "word": "pen",
+      "sentence": "The pen has blue ink."
+    },
+    {
+      "letter": "P",
+      "word": "pen",
+      "sentence": "I write my name with a pen."
+    },
+    {
+      "letter": "P",
+      "word": "pencil",
+      "sentence": "My pencil is long."
+    },
+    {
+      "letter": "P",
+      "word": "pencil",
+      "sentence": "A pencil makes gray marks."
+    },
+    {
+      "letter": "P",
+      "word": "pencil",
+      "sentence": "I use a pencil at school."
+    },
+    {
+      "letter": "P",
+      "word": "pants",
+      "sentence": "My pants are blue."
+    },
+    {
+      "letter": "P",
+      "word": "pants",
+      "sentence": "Pants cover your legs."
+    },
+    {
+      "letter": "P",
+      "word": "pants",
+      "sentence": "I put on my pants before school."
+    },
+    {
+      "letter": "P",
+      "word": "potato",
+      "sentence": "This is a potato."
+    },
+    {
+      "letter": "P",
+      "word": "potato",
+      "sentence": "A potato grows in the ground."
+    },
+    {
+      "letter": "P",
+      "word": "potato",
+      "sentence": "We eat a potato with dinner."
+    },
+    {
+      "letter": "P",
+      "word": "parrot",
+      "sentence": "The parrot is green."
+    },
+    {
+      "letter": "P",
+      "word": "parrot",
+      "sentence": "A parrot is a colorful bird."
+    },
+    {
+      "letter": "P",
+      "word": "parrot",
+      "sentence": "We hear a parrot at the zoo."
+    },
+    {
+      "letter": "P",
+      "word": "pizza",
+      "sentence": "I like pizza."
+    },
+    {
+      "letter": "P",
+      "word": "pizza",
+      "sentence": "Pizza has cheese on top."
+    },
+    {
+      "letter": "P",
+      "word": "pizza",
+      "sentence": "We eat pizza with our friends."
+    },
+    {
+      "letter": "Q",
+      "word": "quiet",
+      "sentence": "Please be quiet."
+    },
+    {
+      "letter": "Q",
+      "word": "quiet",
+      "sentence": "The room is quiet now."
+    },
+    {
+      "letter": "Q",
+      "word": "quiet",
+      "sentence": "I stay quiet when my baby sleeps."
+    },
+    {
+      "letter": "Q",
+      "word": "quilt",
+      "sentence": "The quilt is soft."
+    },
+    {
+      "letter": "Q",
+      "word": "quilt",
+      "sentence": "A quilt keeps me warm."
+    },
+    {
+      "letter": "Q",
+      "word": "quilt",
+      "sentence": "I pull the quilt over my feet."
+    },
+    {
+      "letter": "Q",
+      "word": "queen",
+      "sentence": "The queen has a crown."
+    },
+    {
+      "letter": "Q",
+      "word": "queen",
+      "sentence": "A queen lives in a palace."
+    },
+    {
+      "letter": "Q",
+      "word": "queen",
+      "sentence": "The queen smiles at the children."
+    },
+    {
+      "letter": "Q",
+      "word": "question",
+      "sentence": "I have a question."
+    },
+    {
+      "letter": "Q",
+      "word": "question",
+      "sentence": "The teacher asks a question."
+    },
+    {
+      "letter": "Q",
+      "word": "question",
+      "sentence": "I raise my hand to ask a question."
+    },
+    {
+      "letter": "Q",
+      "word": "quarter",
+      "sentence": "This is a quarter."
+    },
+    {
+      "letter": "Q",
+      "word": "quarter",
+      "sentence": "A quarter is one of four equal parts."
+    },
+    {
+      "letter": "Q",
+      "word": "quarter",
+      "sentence": "I eat a quarter of the pizza."
+    },
+    {
+      "letter": "Q",
+      "word": "queue",
+      "sentence": "The queue is long."
+    },
+    {
+      "letter": "Q",
+      "word": "queue",
+      "sentence": "People wait in a queue."
+    },
+    {
+      "letter": "Q",
+      "word": "queue",
+      "sentence": "We stand in a queue for the bus."
+    },
+    {
+      "letter": "R",
+      "word": "rabbit",
+      "sentence": "The rabbit can hop."
+    },
+    {
+      "letter": "R",
+      "word": "rabbit",
+      "sentence": "A rabbit has long ears."
+    },
+    {
+      "letter": "R",
+      "word": "rabbit",
+      "sentence": "We give the rabbit a carrot."
+    },
+    {
+      "letter": "R",
+      "word": "red",
+      "sentence": "The ball is red."
+    },
+    {
+      "letter": "R",
+      "word": "red",
+      "sentence": "Red is the color of a rose."
+    },
+    {
+      "letter": "R",
+      "word": "red",
+      "sentence": "I wear a red shirt today."
+    },
+    {
+      "letter": "R",
+      "word": "rice",
+      "sentence": "I eat rice."
+    },
+    {
+      "letter": "R",
+      "word": "rice",
+      "sentence": "The rice is hot."
+    },
+    {
+      "letter": "R",
+      "word": "rice",
+      "sentence": "We cook rice for dinner."
+    },
+    {
+      "letter": "R",
+      "word": "robot",
+      "sentence": "The robot is small."
+    },
+    {
+      "letter": "R",
+      "word": "robot",
+      "sentence": "A robot can move and talk."
+    },
+    {
+      "letter": "R",
+      "word": "robot",
+      "sentence": "I play with my toy robot."
+    },
+    {
+      "letter": "R",
+      "word": "rain",
+      "sentence": "The rain is cold."
+    },
+    {
+      "letter": "R",
+      "word": "rain",
+      "sentence": "Rain falls from the sky."
+    },
+    {
+      "letter": "R",
+      "word": "rain",
+      "sentence": "We stay inside when it starts to rain."
+    },
+    {
+      "letter": "R",
+      "word": "rose",
+      "sentence": "The rose is red."
+    },
+    {
+      "letter": "R",
+      "word": "rose",
+      "sentence": "A rose is a flower."
+    },
+    {
+      "letter": "R",
+      "word": "rose",
+      "sentence": "I put a rose in a vase."
+    },
+    {
+      "letter": "S",
+      "word": "sad",
+      "sentence": "I feel sad."
+    },
+    {
+      "letter": "S",
+      "word": "sad",
+      "sentence": "The boy is sad today."
+    },
+    {
+      "letter": "S",
+      "word": "sad",
+      "sentence": "I feel sad when my friend leaves."
+    },
+    {
+      "letter": "S",
+      "word": "sit",
+      "sentence": "Please sit here."
+    },
+    {
+      "letter": "S",
+      "word": "sit",
+      "sentence": "We sit on chairs."
+    },
+    {
+      "letter": "S",
+      "word": "sit",
+      "sentence": "I sit with my friend at lunch."
+    },
+    {
+      "letter": "S",
+      "word": "school",
+      "sentence": "I go to school."
+    },
+    {
+      "letter": "S",
+      "word": "school",
+      "sentence": "School is where we learn."
+    },
+    {
+      "letter": "S",
+      "word": "school",
+      "sentence": "I see my friends at school."
+    },
+    {
+      "letter": "S",
+      "word": "sky",
+      "sentence": "The sky is blue."
+    },
+    {
+      "letter": "S",
+      "word": "sky",
+      "sentence": "Clouds move across the sky."
+    },
+    {
+      "letter": "S",
+      "word": "sky",
+      "sentence": "I look at the sky at night."
+    },
+    {
+      "letter": "S",
+      "word": "soap",
+      "sentence": "Use some soap."
+    },
+    {
+      "letter": "S",
+      "word": "soap",
+      "sentence": "Soap helps us wash our hands."
+    },
+    {
+      "letter": "S",
+      "word": "soap",
+      "sentence": "I use soap before I eat."
+    },
+    {
+      "letter": "S",
+      "word": "swim",
+      "sentence": "I can swim."
+    },
+    {
+      "letter": "S",
+      "word": "swim",
+      "sentence": "We swim in a pool."
+    },
+    {
+      "letter": "S",
+      "word": "swim",
+      "sentence": "I swim with my family on Friday."
+    },
+    {
+      "letter": "T",
+      "word": "tea",
+      "sentence": "I drink tea."
+    },
+    {
+      "letter": "T",
+      "word": "tea",
+      "sentence": "The tea is hot."
+    },
+    {
+      "letter": "T",
+      "word": "tea",
+      "sentence": "We make tea for our guests."
+    },
+    {
+      "letter": "T",
+      "word": "tree",
+      "sentence": "The tree is tall."
+    },
+    {
+      "letter": "T",
+      "word": "tree",
+      "sentence": "A tree has leaves and branches."
+    },
+    {
+      "letter": "T",
+      "word": "tree",
+      "sentence": "I sit under a tree in the park."
+    },
+    {
+      "letter": "T",
+      "word": "teacher",
+      "sentence": "My teacher is kind."
+    },
+    {
+      "letter": "T",
+      "word": "teacher",
+      "sentence": "The teacher helps us learn."
+    },
+    {
+      "letter": "T",
+      "word": "teacher",
+      "sentence": "I say good morning to my teacher."
+    },
+    {
+      "letter": "T",
+      "word": "teeth",
+      "sentence": "My teeth are clean."
+    },
+    {
+      "letter": "T",
+      "word": "teeth",
+      "sentence": "I brush my teeth."
+    },
+    {
+      "letter": "T",
+      "word": "teeth",
+      "sentence": "I show my teeth when I smile."
+    },
+    {
+      "letter": "T",
+      "word": "taxi",
+      "sentence": "The taxi is yellow."
+    },
+    {
+      "letter": "T",
+      "word": "taxi",
+      "sentence": "A taxi takes people to places."
+    },
+    {
+      "letter": "T",
+      "word": "taxi",
+      "sentence": "We take a taxi to the airport."
+    },
+    {
+      "letter": "T",
+      "word": "tomato",
+      "sentence": "The tomato is red."
+    },
+    {
+      "letter": "T",
+      "word": "tomato",
+      "sentence": "A tomato grows on a plant."
+    },
+    {
+      "letter": "T",
+      "word": "tomato",
+      "sentence": "I put a tomato in my salad."
+    },
+    {
+      "letter": "U",
+      "word": "uncle",
+      "sentence": "My uncle is kind."
+    },
+    {
+      "letter": "U",
+      "word": "uncle",
+      "sentence": "My uncle is my parent's brother."
+    },
+    {
+      "letter": "U",
+      "word": "uncle",
+      "sentence": "I visit my uncle on Sunday."
+    },
+    {
+      "letter": "U",
+      "word": "umbrella",
+      "sentence": "I have an umbrella."
+    },
+    {
+      "letter": "U",
+      "word": "umbrella",
+      "sentence": "An umbrella keeps the rain off."
+    },
+    {
+      "letter": "U",
+      "word": "umbrella",
+      "sentence": "I take my umbrella when it rains."
+    },
+    {
+      "letter": "U",
+      "word": "up",
+      "sentence": "Look up."
+    },
+    {
+      "letter": "U",
+      "word": "up",
+      "sentence": "The bird flies up."
+    },
+    {
+      "letter": "U",
+      "word": "up",
+      "sentence": "I put my hand up in class."
+    },
+    {
+      "letter": "U",
+      "word": "unlock",
+      "sentence": "I can unlock it."
+    },
+    {
+      "letter": "U",
+      "word": "unlock",
+      "sentence": "I unlock the door with a key."
+    },
+    {
+      "letter": "U",
+      "word": "unlock",
+      "sentence": "Please unlock the gate for me."
+    },
+    {
+      "letter": "U",
+      "word": "under",
+      "sentence": "The ball is under the chair."
+    },
+    {
+      "letter": "U",
+      "word": "under",
+      "sentence": "My shoes are under the bed."
+    },
+    {
+      "letter": "U",
+      "word": "under",
+      "sentence": "I look under the table for my pen."
+    },
+    {
+      "letter": "V",
+      "word": "van",
+      "sentence": "The van is big."
+    },
+    {
+      "letter": "V",
+      "word": "van",
+      "sentence": "A van can carry many people."
+    },
+    {
+      "letter": "V",
+      "word": "van",
+      "sentence": "We ride in a van to school."
+    },
+    {
+      "letter": "V",
+      "word": "vet",
+      "sentence": "The vet is kind."
+    },
+    {
+      "letter": "V",
+      "word": "vet",
+      "sentence": "A vet helps sick animals."
+    },
+    {
+      "letter": "V",
+      "word": "vet",
+      "sentence": "We take our cat to the vet."
+    },
+    {
+      "letter": "V",
+      "word": "violin",
+      "sentence": "This is a violin."
+    },
+    {
+      "letter": "V",
+      "word": "violin",
+      "sentence": "A violin makes music."
+    },
+    {
+      "letter": "V",
+      "word": "violin",
+      "sentence": "My sister plays the violin."
+    },
+    {
+      "letter": "V",
+      "word": "vest",
+      "sentence": "My vest is yellow."
+    },
+    {
+      "letter": "V",
+      "word": "vest",
+      "sentence": "A vest is a piece of clothing."
+    },
+    {
+      "letter": "V",
+      "word": "vest",
+      "sentence": "He wears a bright vest at work."
+    },
+    {
+      "letter": "V",
+      "word": "vase",
+      "sentence": "This is a vase."
+    },
+    {
+      "letter": "V",
+      "word": "vase",
+      "sentence": "A vase holds flowers."
+    },
+    {
+      "letter": "V",
+      "word": "vase",
+      "sentence": "I put a rose in the vase."
+    },
+    {
+      "letter": "W",
+      "word": "watch",
+      "sentence": "My watch is new."
+    },
+    {
+      "letter": "W",
+      "word": "watch",
+      "sentence": "A watch tells the time."
+    },
+    {
+      "letter": "W",
+      "word": "watch",
+      "sentence": "I look at my watch before class."
+    },
+    {
+      "letter": "W",
+      "word": "water",
+      "sentence": "I drink water."
+    },
+    {
+      "letter": "W",
+      "word": "water",
+      "sentence": "Water is good when I am thirsty."
+    },
+    {
+      "letter": "W",
+      "word": "water",
+      "sentence": "I take a bottle of water to school."
+    },
+    {
+      "letter": "W",
+      "word": "whale",
+      "sentence": "The whale is big."
+    },
+    {
+      "letter": "W",
+      "word": "whale",
+      "sentence": "A whale lives in the sea."
+    },
+    {
+      "letter": "W",
+      "word": "whale",
+      "sentence": "We see a whale from the boat."
+    },
+    {
+      "letter": "W",
+      "word": "windy",
+      "sentence": "It is windy."
+    },
+    {
+      "letter": "W",
+      "word": "windy",
+      "sentence": "The trees move on a windy day."
+    },
+    {
+      "letter": "W",
+      "word": "windy",
+      "sentence": "I wear a jacket when it is windy."
+    },
+    {
+      "letter": "W",
+      "word": "window",
+      "sentence": "Open the window."
+    },
+    {
+      "letter": "W",
+      "word": "window",
+      "sentence": "A window lets in light."
+    },
+    {
+      "letter": "W",
+      "word": "window",
+      "sentence": "I look out of the window at the birds."
+    },
+    {
+      "letter": "X",
+      "word": "box",
+      "sentence": "This is a box."
+    },
+    {
+      "letter": "X",
+      "word": "box",
+      "sentence": "The box holds my toys."
+    },
+    {
+      "letter": "X",
+      "word": "box",
+      "sentence": "I put my shoes in a box."
+    },
+    {
+      "letter": "X",
+      "word": "fox",
+      "sentence": "The fox is red."
+    },
+    {
+      "letter": "X",
+      "word": "fox",
+      "sentence": "A fox has a long tail."
+    },
+    {
+      "letter": "X",
+      "word": "fox",
+      "sentence": "I see a fox near the trees."
+    },
+    {
+      "letter": "X",
+      "word": "fix",
+      "sentence": "I can fix it."
+    },
+    {
+      "letter": "X",
+      "word": "fix",
+      "sentence": "We fix things that are broken."
+    },
+    {
+      "letter": "X",
+      "word": "fix",
+      "sentence": "My dad helps me fix my toy."
+    },
+    {
+      "letter": "X",
+      "word": "mix",
+      "sentence": "I can mix colors."
+    },
+    {
+      "letter": "X",
+      "word": "mix",
+      "sentence": "Mix means put things together."
+    },
+    {
+      "letter": "X",
+      "word": "mix",
+      "sentence": "I mix milk and fruit in a bowl."
+    },
+    {
+      "letter": "X",
+      "word": "six",
+      "sentence": "I am six."
+    },
+    {
+      "letter": "X",
+      "word": "six",
+      "sentence": "Six is one more than five."
+    },
+    {
+      "letter": "X",
+      "word": "six",
+      "sentence": "I have six red pencils."
+    },
+    {
+      "letter": "Y",
+      "word": "yellow",
+      "sentence": "The sun looks yellow."
+    },
+    {
+      "letter": "Y",
+      "word": "yellow",
+      "sentence": "Yellow is a bright color."
+    },
+    {
+      "letter": "Y",
+      "word": "yellow",
+      "sentence": "I wear a yellow shirt today."
+    },
+    {
+      "letter": "Y",
+      "word": "yogurt",
+      "sentence": "I like yogurt."
+    },
+    {
+      "letter": "Y",
+      "word": "yogurt",
+      "sentence": "Yogurt is soft and creamy."
+    },
+    {
+      "letter": "Y",
+      "word": "yogurt",
+      "sentence": "I eat yogurt with a spoon."
+    },
+    {
+      "letter": "Y",
+      "word": "yard",
+      "sentence": "This is our yard."
+    },
+    {
+      "letter": "Y",
+      "word": "yard",
+      "sentence": "A yard is the land by a house."
+    },
+    {
+      "letter": "Y",
+      "word": "yard",
+      "sentence": "We play in the yard after school."
+    },
+    {
+      "letter": "Y",
+      "word": "yo-yo",
+      "sentence": "My yo-yo is red."
+    },
+    {
+      "letter": "Y",
+      "word": "yo-yo",
+      "sentence": "A yo-yo goes up and down."
+    },
+    {
+      "letter": "Y",
+      "word": "yo-yo",
+      "sentence": "I play with my yo-yo at home."
+    },
+    {
+      "letter": "Y",
+      "word": "yacht",
+      "sentence": "This is a yacht."
+    },
+    {
+      "letter": "Y",
+      "word": "yacht",
+      "sentence": "A yacht is a boat."
+    },
+    {
+      "letter": "Y",
+      "word": "yacht",
+      "sentence": "We see a yacht on the sea."
+    },
+    {
+      "letter": "Z",
+      "word": "zoo",
+      "sentence": "We go to the zoo."
+    },
+    {
+      "letter": "Z",
+      "word": "zoo",
+      "sentence": "A zoo has many animals."
+    },
+    {
+      "letter": "Z",
+      "word": "zoo",
+      "sentence": "I see lions and zebras at the zoo."
+    },
+    {
+      "letter": "Z",
+      "word": "zebra",
+      "sentence": "The zebra is black and white."
+    },
+    {
+      "letter": "Z",
+      "word": "zebra",
+      "sentence": "A zebra has stripes."
+    },
+    {
+      "letter": "Z",
+      "word": "zebra",
+      "sentence": "We see a zebra at the zoo."
+    },
+    {
+      "letter": "Z",
+      "word": "zipper",
+      "sentence": "This is a zipper."
+    },
+    {
+      "letter": "Z",
+      "word": "zipper",
+      "sentence": "A zipper closes my jacket."
+    },
+    {
+      "letter": "Z",
+      "word": "zipper",
+      "sentence": "I pull up the zipper when it is cold."
+    },
+    {
+      "letter": "Z",
+      "word": "zero",
+      "sentence": "Zero means none."
+    },
+    {
+      "letter": "Z",
+      "word": "zero",
+      "sentence": "I have zero coins."
+    },
+    {
+      "letter": "Z",
+      "word": "zero",
+      "sentence": "The score is zero at the start."
+    }
   ]
 }
