@@ -240,7 +240,8 @@ try {
 
 
   await run('all 33 new sound stories: immediate placement, audio, bilingual dictionary and graded mastery',async()=>{
-    const newStories=[...html.matchAll(/<section class="page phonicsPage soundStoryPage" data-page="(\d+)"[^>]*data-story-id="(SP\d{2})"[^>]*>/g)]
+    const sourceHtml=await readFile(path.join(root,'index.html'),'utf8');
+    const newStories=[...sourceHtml.matchAll(/<section class="page phonicsPage soundStoryPage" data-page="(\d+)"[^>]*data-story-id="(SP\d{2})"[^>]*>/g)]
       .map(x=>({page:+x[1],id:x[2]}));
     assert.equal(newStories.length,33);
     const {page,errors}=await openPage(desktop,'#63');
