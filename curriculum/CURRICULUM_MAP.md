@@ -1,65 +1,88 @@
-# Foundation English — Complete 118-page Interactive Book
+# Foundation English — 151-page complete sound-reading edition
 
-## Source basis and edition notes
-The first 45 A–Z pages and their 26 letter dictionaries are preserved. The user-supplied Institute curriculum provides the original A–Z vocabulary, the short-vowel progression, and the source vocabulary/order of digraph and vowel-team lessons. **The 10 newly inserted short- and long-vowel stories, their comprehension questions, and their Arabic vocabulary glossaries are instructor-created extensions, not reproduced pages from a source book.**
+## Provenance and teaching approach
+The original 45 A–Z pages and Institute lesson order remain in place. The Institute source specification defines the phonics sequence and specific digraph/vowel-team word lists. **All 33 new non-vowel pattern stories are instructor-written**, inspired by that sequence, not claimed to be literal reproductions of an unavailable original story book. The 10 short/long vowel stories and 5 end-of-book stories remain.
 
-The original page-based static HTML and Arabic `قاموس` → `عربي ✓` show/hide interaction are retained. PWA caching stays disabled.
+After **every one of the 43 phonics/pattern lessons**, the following page is now a five-sentence illustrated mini story. There is a Listen to the Full Story button (using available English voice), line-by-line audio, a Show/Hide Arabic glossary, and 3 corrected questions whose answers persist in localStorage at >=80% mastery. Non-focus sight words are used sparingly to make coherent stories.
 
-## Page-by-page curriculum
+## Page map
 
-| Pages | Lessons | Notes |
-| --- | --- | --- |
-| 1–45 | Original A–Z student book | Unchanged 26 letters, 18 review/listening pages |
-| 46–49 | A–F, A–L, A–R, A–Z cumulative reviews | 6 questions each |
-| 50 | Part Two contents | Jump directly to reading units |
-| 51–60 | Short a/e/i/o/u | **Each vowel lesson immediately followed by a five-line story** |
-| 61 | Short Vowels Checkpoint | 6 questions |
-| 62–66 | CVC Blending | a, e, i, o, u |
-| 67–76 | Word Families | -at, -an, -ap, -et, -en, -ig, -in, -op, -ot, -un |
-| 77 | CVC & Word Families Checkpoint | 6 questions |
-| 78–83 | Consonant Digraphs | sh, ch, voiceless th, voiced th, wh, ph |
-| 84 | Digraph Checkpoint | 6 questions |
-| 85–94 | Long a/e/i/o/u | **Each long-vowel lesson immediately followed by a five-line story** |
-| 95 | Long Vowels Checkpoint | 6 questions |
-| 96–101 | Vowel Teams Unit 2 | ee, ea, oa, ow /oʊ/, ai, ay |
-| 102–107 | Vowel Teams Unit 3 | oi, ow /aʊ/, ou, ar, or, oo /ʊ/ |
-| 108 | Vowel Teams Checkpoint | 6 questions |
-| 109–113 | Decodable Sentences | 5 fluency pages with 5 read-aloud sentences each |
-| 114–118 | Original end-of-book Mini Stories | 5 stories, now also offering full-story playback and bilingual glossary |
+- **1–45**: Preserved A–Z letter vocabulary, original audio, IPA, dictionaries and original assessments.
+- **46–49**: Cumulative A–F, A–L, A–R, A–Z reviews.
+- **50**: Interactive reading-path contents.
+- **51–60**: SHORT VOWELS — 5 lessons with a story directly after each.
+- **62–71**: CVC BLENDING — 5 lessons with a story directly after each.
+- **72–91**: WORD FAMILIES — 10 lessons with a story directly after each.
+- **93–104**: CONSONANT DIGRAPHS — 6 lessons with a story directly after each.
+- **106–115**: LONG VOWELS — 5 lessons with a story directly after each.
+- **117–128**: VOWEL TEAMS — UNIT 2 — 6 lessons with a story directly after each.
+- **129–140**: VOWEL TEAMS — UNIT 3 — 6 lessons with a story directly after each.
+- **61, 92, 105, 116, 141**: Stage checkpoints (six graded questions each).
+- **142–146**: Five decodable-sentence/reading fluency pages.
+- **147–151**: Five existing end-of-book mini stories (whole-story and line audio, bilingual dictionary, comprehension checks).
 
-## After-each-vowel story links
+## Exact story placement
 
-| Sound | Lesson page | New story page | Story title |
-| --- | ---: | ---: | --- |
-| Short a | 51 | 52 | Sam's Bag |
-| Short e | 53 | 54 | Meg's Red Pen |
+| Skill / sound | Lesson page | Immediately following story page | Story title |
+|---|---:|---:|---|
+| Short a | 51 | 52 | Sam&#39;s Bag |
+| Short e | 53 | 54 | Meg&#39;s Red Pen |
 | Short i | 55 | 56 | Tim and the Pig |
 | Short o | 57 | 58 | Tom and the Hot Pot |
 | Short u | 59 | 60 | The Bug and the Cup |
-| Long a | 85 | 86 | Kate Bakes a Cake |
-| Long e | 87 | 88 | Lee and the Green Tree |
-| Long i | 89 | 90 | Mike and the White Kite |
-| Long o | 91 | 92 | Rose Writes a Note |
-| Long u | 93 | 94 | The Mule and the Cube |
+| Blend short a | 62 | 63 | Dan and the Map |
+| Blend short e | 64 | 65 | Ben&#39;s Red Pen |
+| Blend short i | 66 | 67 | Kim and the Pig |
+| Blend short o | 68 | 69 | Dot on the Pot |
+| Blend short u | 70 | 71 | Gus and the Bug |
+| Family -at | 72 | 73 | The Cat and the Hat |
+| Family -an | 74 | 75 | Dan and the Pan |
+| Family -ap | 76 | 77 | A Nap for the Pup |
+| Family -et | 78 | 79 | A Wet Pet |
+| Family -en | 80 | 81 | Ben and Ten Hens |
+| Family -ig | 82 | 83 | The Big Wig |
+| Family -in | 84 | 85 | Finn and the Pin |
+| Family -op | 86 | 87 | Hop to the Top |
+| Family -ot | 88 | 89 | A Dot on the Pot |
+| Family -un | 90 | 91 | A Fun Run |
+| sh — /ʃ/ | 93 | 94 | The Fish Shop |
+| ch — /tʃ/ | 95 | 96 | The Chick and the Cherry |
+| th — quiet /θ/ | 97 | 98 | Beth Brushes Her Teeth |
+| th — voiced /ð/ | 99 | 100 | This Is My Family |
+| wh — /w/ | 101 | 102 | The White Whale |
+| ph — /f/ | 103 | 104 | A Photo of a Dolphin |
+| Long a — a_e | 106 | 107 | Kate Bakes a Cake |
+| Long e — ee / ea | 108 | 109 | Lee and the Green Tree |
+| Long i — i_e | 110 | 111 | Mike and the White Kite |
+| Long o — o_e | 112 | 113 | Rose Writes a Note |
+| Long u — u_e | 114 | 115 | The Mule and the Cube |
+| ee | 117 | 118 | A Deer by the Green Tree |
+| ea | 119 | 120 | Tea at the Beach |
+| oa | 121 | 122 | The Goat and the Boat |
+| ow — long o | 123 | 124 | Snow by the Window |
+| ai | 125 | 126 | Rain on the Train |
+| ay | 127 | 128 | A Day to Play |
+| oi | 129 | 130 | The Lost Coin |
+| ow — as in cow | 131 | 132 | The Brown Cow and the Owl |
+| ou | 133 | 134 | The Mouse and the Clouds |
+| ar | 135 | 136 | A Star over the Farm |
+| or | 137 | 138 | The Horse and the Corn |
+| oo — short | 139 | 140 | Look at the Book |
 
-## Identical dictionary and practice system
-- Original A–Z dictionaries are preserved exactly.
-- **63 additional Arabic-English glossaries** now appear in every phonics lesson (43), reading page (5), existing story (5), and new vowel story (10).
-- The same `dict`, `dictToggle`, and `hideArabic` behavior lets a student hide/show Arabic. No extra login needed.
-- Every new vowel story has 5 listenable individual sentences and **Listen to the full story / Stop** controls.
-- Every new story has **3 auto-corrected questions** (including a listening/sound discrimination item); existing lesson practice remains.
-- Responses save in browser localStorage using unique IDs (`VSA` through `VSU`, `VLA` through `VLU`). `Mastered` requires at least 80%.
-- Totals: 108 original review/listening questions + 52 letter micro checks + 54 added checkpoints/reviews + 179 phonics/reading/story questions = **393 interactive questions**.
-- Total full-story buttons: **15** (10 new vowel stories + 5 existing end-of-book stories).
+## Verified book totals
 
-## Audio honesty and phonics safety
-English playback uses the existing recorded-file-first audio engine followed by the available **browser or Android English Text-to-Speech** fallback. Neither the new stories nor the other 442 existing sentence audio files are claimed to have professionally recorded male-US MP3 files. These still require the separate planned audio library. No isolated IPA-phoneme TTS is used. Story reading uses complete natural sentences; common sight words are allowed to build coherent beginner stories.
+- **151 static pages**: original 118 pages plus 33 new stories.
+- **43 immediately-following phonics stories**: 10 original short/long vowel stories plus 33 additional stories.
+- **5 end-of-book mini stories** retained. **48** whole-story listen buttons in total.
+- **96 additional bilingual glossaries** on phonics, reading and story pages; **26** original letter dictionaries still present.
+- **492 corrected answer slots**: 162 review/listening, 52 letter Quick Checks, 278 phonics/fluency/story Quick Checks.
+- **165 new per-sentence playback buttons**, plus 33 whole-story buttons.
+- Original A–Z word/sentence corpus and the source digraph word lists are unchanged.
 
-## Files and quality
-- `curriculum/phonics-course.json`: source-informed 43 staged lessons and 5 end-of-book stories.
-- `curriculum/vowel-stories.json`: ten instructor-created vowel stories and their answer keys/glossaries.
-- `curriculum/phonics-glossary.json`: 142 phonics word translations plus reading and old-story glossaries.
-- `index.html`: the authoritative 118 static page objects.
-- `tests/stability.mjs`: question, dictionary, story and legacy content integrity assertions.
-- `tests/browser-smoke.mjs`: desktop/Android-sized/iPhone-sized navigation, story and practice checks.
-- The released Android **debug APK** must be rebuilt from this edition before distributing it; signing and physical-device testing remain separate.
+## Audio and version limits
+
+The recording pipeline for a single professionally recorded American male voice is still not filled with MP3 assets. The stories are playable through the existing speech engine/browser or Android fallback, not new studio recordings. Isolated IPA symbol pronunciation is not synthesized.
+
+Students' phonics mastery is saved under unique story IDs `SP01`–`SP33`. A one-time page-number migration maps earlier 108/118-page last-read positions into this 151-page edition. Old share links that encode numeric page fragments may shift because lessons now have interleaved stories; students should use the in-book contents navigation.
+
+Tests cover source integrity and story placement for all 43 lessons, all glossary buttons, all story playback and saved mastery, as well as full-page and Android/iPhone-sized viewport navigation. The offline debug APK, if rebuilt, uses the existing PDF-derived Institute logo and is not production-signed.
