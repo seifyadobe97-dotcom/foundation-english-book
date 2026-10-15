@@ -3,7 +3,7 @@
 ## Provenance and teaching approach
 The original 45 A–Z pages and Institute lesson order remain in place. The Institute source specification defines the phonics sequence and specific digraph/vowel-team word lists. **All 33 new non-vowel pattern stories are instructor-written**, inspired by that sequence, not claimed to be literal reproductions of an unavailable original story book. The 10 short/long vowel stories and 5 end-of-book stories remain.
 
-After **every one of the 43 phonics/pattern lessons**, the following page is a five-sentence illustrated mini story. The enforced learning order is **Focus Sound → Word Group (normal/slow audio) → Arabic Vocabulary Dictionary → Story (whole/line audio) → Word & Listening Check (3 questions) → Story Comprehension Check (3 questions)**. The next story is accessible from a direct button at the end of each word dictionary. All 6 existing questions per lesson/story pair retain their original IDs and localStorage mastery (80% threshold). Non-focus sight words are used sparingly to make coherent stories.
+After **every one of the 43 phonics/pattern lessons**, the following page is a five-sentence illustrated mini story. The enforced learning order is **Focus Sound → Word Group (normal/slow audio) → Arabic Vocabulary Dictionary → Word & Listening Quick Check (3 questions) → Story (whole/line audio) → Story Comprehension Check (3 questions)**. The next story is accessible from a direct button after the lesson Quick Check. All 6 existing questions per lesson/story pair retain their original IDs and localStorage mastery (80% threshold). Non-focus sight words are used sparingly to make coherent stories.
 
 ## Page map
 
@@ -90,10 +90,14 @@ Tests cover source integrity and story placement for all 43 lessons, all glossar
 ## Verified strict-order implementation (October 15, 2026)
 
 - Exactly **43** sound/pattern lessons, each immediately followed by **its own story page** in exactly the source-ordered lesson progression (see table above).
-- Every sound page is ordered: **FOCUS SOUND → Read & Listen vocabulary group → the same words, in the same order, in the bilingual Arabic dictionary → Read the story button**. There is no quiz interrupting the dictionary-to-story transition.
-- Each immediately following story page is ordered: **full-story/line-by-line listening → five written story sentences → story dictionary → 3 word-and-listening questions → 3 story comprehension/listening questions**. All 258 original sound/story question slots (43 × 6) are preserved; no keys, answer choices or saved-mastery identifiers changed.
+- Every sound page is ordered: **FOCUS SOUND → Read & Listen vocabulary group → the same words, in the same order, in the bilingual Arabic dictionary → 3-question Word & Listening Quick Check → Read the story button**.
+- Each immediately following story page is ordered: **full-story/line-by-line listening → five written story sentences → story dictionary → 3 story comprehension/listening questions**. Each preceding lesson holds its own 3 word-and-listening questions. All 258 original sound/story question slots (43 × 6) are preserved; no keys, answer choices or saved-mastery identifiers changed.
 - Stage checkpoints remain at pages **61, 92, 105, 116, 141**, between complete sound/story pairs, never between a sound and its story.
 - Initial A–Z learning remains in its original source-aligned 45-page order. **A–Z pages do not have dedicated after-each-letter stories**; that would be a separate curriculum expansion, not part of this strict order patch.
 - All 5 reading fluency pages and 5 original end-of-book mini-stories remain after the sound lessons and the last checkpoint.
 - Original source-book complete story text was not included in the supplied project reference; this is a source-*sequence*-aligned instructor-created reading curriculum, not a claim of word-for-word reproduction.
 - Automated structural checks validate exact lesson vocabulary against dictionary entries, page adjacency, both retained practice blocks, the 43 direct story links and all 151 sequential page numbers. Chromium browser checks verify touch/mobile navigation, playback buttons and stored marks.
+
+## Final order-audit correction (October 15, 2026)
+
+The word/listening Quick Check is on the **lesson page after its dictionary**, followed by the direct story navigation button. The immediately following story has its own dictionary and **three** graded story questions. The former arrangement placing both checks after the story was replaced without changing question IDs, answer keys, saved-mastery keys, the 151-page map, logo or layout. Lesson blend playback now matches the visible segmented example; split silent-e patterns display the actual letter order, with the last **e** labeled silent. This remains an instructor-created reading curriculum, with browser/device TTS fallback where no original audio file is available.
