@@ -211,6 +211,7 @@ test('all 43 phonics pattern lessons are followed immediately by 43 answerable s
  const sections=[...html.matchAll(/<section class="page ([^"]+)" data-page="(\d+)"([^>]*)>([\s\S]*?)(?=<section class="page |<\/main>)/g)];
  assert.equal(sections.length,151);
  const ids=new Set();
+ const escapeHtml=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
  for(const entry of extra){
    assert.equal(entry.lines.length,5,entry.title);
    assert.equal(entry.questions.length,3,entry.title);
@@ -225,14 +226,14 @@ test('all 43 phonics pattern lessons are followed immediately by 43 answerable s
    assert.ok(id&&!ids.has(id),'Missing or duplicate story ID '+entry.title);
    ids.add(id);
    const body=next[4];
-   assert.ok(body.includes('<h2>'+entry.title+'</h2>'),'Story title mismatch '+entry.title);
+   assert.ok(body.includes('<h2>'+escapeHtml(entry.title)+'</h2>'),'Story title mismatch '+entry.title);
    assert.equal((body.match(/class="phonicsSentence"/g)||[]).length,5,entry.title+' sentence lines');
    assert.equal((body.match(/class="phonicsRead"/g)||[]).length,5,entry.title+' sentence audio');
    assert.equal((body.match(/class="phonicsQ"/g)||[]).length,3,entry.title+' practice questions');
    assert.ok(body.includes('class="storyListenAll"')&&body.includes('class="storyStop"'),entry.title+' playback controls');
    assert.ok(body.includes('class="dictToggle"'),entry.title+' dictionary toggle');
    assert.ok(body.includes('data-phonics="'+id+'"'),entry.title+' saved mastery ID');
-   for(const sentence of entry.lines)assert.ok(body.includes('<p>'+sentence+'</p>'),entry.title+' missing source sentence: '+sentence);
+   for(const sentence of entry.lines)assert.ok(body.includes('<p>'+escapeHtml(sentence)+'</p>'),entry.title+' missing source sentence: '+sentence);
    for(const q of entry.questions){
       assert.ok(q.options.includes(q.answer),entry.title+' invalid answer');
    }
