@@ -136,10 +136,14 @@ try {
 
   await run('short vowel word playback, practice corrections and saved mastery',async()=>{
     const {page,errors}=await openPage(desktop,'#51');
-    const block=page.locator('[data-page="51"] .phonicsPractice');
-    assert.equal(await page.locator('[data-page="51"] .phonicsWord').count(),6);
-    await page.locator('[data-page="51"] .phonicsAudio').first().click();
-    await page.locator('[data-page="51"] .phonicsSlow').first().click();
+    const lesson=page.locator('[data-page="51"]');
+    assert.equal(await lesson.locator('.phonicsPractice').count(),0);
+    assert.equal(await lesson.locator('.phonicsWord').count(),6);
+    await lesson.locator('.phonicsAudio').first().click();
+    await lesson.locator('.phonicsSlow').first().click();
+    await lesson.locator('.nextStoryCta button').click();
+    assert.equal(await page.locator('#count').innerText(),'52 / 151');
+    const block=page.locator('[data-page="52"] .phonicsPractice[data-phonics="L1"]');
     const questions=block.locator('.phonicsQ');
     assert.equal(await questions.count(),3);
     const first=questions.nth(0);
@@ -200,7 +204,7 @@ try {
       const {page,errors}=await openPage(desktop,'#'+num);
       const section=page.locator('[data-page="'+num+'"]');
       assert.equal(await section.locator('.phonicsSentence').count(),5);
-      assert.equal(await section.locator('.phonicsQ').count(),3);
+      assert.equal(await section.locator('.phonicsQ').count(),6);
       await section.locator('.storyListenAll').click();
       await section.locator('.storyStop').click();
       await section.locator('.phonicsRead').first().click();
@@ -210,7 +214,7 @@ try {
       assert.match(await dict.getAttribute('class'),/hideArabic/);
       await dict.locator('.dictToggle').click();
       assert.doesNotMatch(await dict.getAttribute('class'),/hideArabic/);
-      for(const q of await section.locator('.phonicsQ').all()){
+      for(const q of await section.locator('.phonicsPractice[data-phonics="'+id+'"] .phonicsQ').all()){
         const answer=await q.getAttribute('data-answer');
         await q.locator('.phonicsOptions button[data-value="'+answer+'"]').click();
       }
@@ -249,7 +253,7 @@ try {
       await page.goto(base+'#'+entry.page,{waitUntil:'load'});
       const story=page.locator('[data-story-id="'+entry.id+'"]');
       assert.equal(await story.locator('.phonicsSentence').count(),5,'Story '+entry.id);
-      assert.equal(await story.locator('.phonicsQ').count(),3,'Story '+entry.id);
+      assert.equal(await story.locator('.phonicsQ').count(),6,'Story '+entry.id);
       await story.locator('.storyListenAll').click();
       await story.locator('.storyStop').click();
       await story.locator('.phonicsRead').first().click();
@@ -259,7 +263,7 @@ try {
       assert.match(await dict.getAttribute('class'),/hideArabic/);
       await dict.locator('.dictToggle').click();
       assert.doesNotMatch(await dict.getAttribute('class'),/hideArabic/);
-      for(const q of await story.locator('.phonicsQ').all()){
+      for(const q of await story.locator('.phonicsPractice[data-phonics="'+entry.id+'"] .phonicsQ').all()){
         const right=await q.getAttribute('data-answer');
         await q.locator('.phonicsOptions button[data-value="'+right+'"]').click();
       }
@@ -270,6 +274,41 @@ try {
     assert.match(await page.locator('#phonicsScore'+last.id).innerText(),/3 \/ 3 ✓ Mastered/);
     assert.equal(errors.length,0,errors.join('\n'));
     await page.close();
+  });
+
+ 
+  await run('word checks move after the story without losing prior answers, for representative phonics groups',async()=>{
+    const sample=[
+      {lesson:62,story:63,mastery:'L6'},
+      {lesson:72,story:73,mastery:'L11'},
+      {lesson:93,story:94,mastery:'L21'},
+      {lesson:106,story:107,mastery:'L27'},
+      {lesson:117,story:118,mastery:'L32'}
+    ];
+    for(const x of sample){
+      const {page,errors}=await openPage(desktop,'#'+x.lesson);
+      const lesson=page.locator('[data-page="'+x.lesson+'"]');
+      assert.equal(await lesson.locator('.phonicsPractice').count(),0);
+      assert.equal(await lesson.locator('.phonicsWords').count(),1);
+      assert.equal(await lesson.locator('.dict').count(),1);
+      await lesson.locator('.nextStoryCta button').click();
+      assert.equal(await page.locator('#count').innerText(),x.story+' / 151');
+      const story=page.locator('[data-page="'+x.story+'"]');
+      const groups=story.locator('.phonicsPractice');
+      assert.equal(await groups.count(),2);
+      assert.equal(await groups.nth(0).getAttribute('data-phonics'),x.mastery);
+      const wordQuiz=groups.nth(0).locator('.phonicsQ');
+      assert.equal(await wordQuiz.count(),3);
+      for(const q of await wordQuiz.all()){
+        const answer=await q.getAttribute('data-answer');
+        await q.locator('.phonicsOptions button[data-value="'+answer+'"]').click();
+      }
+      assert.match(await page.locator('#phonicsScore'+x.mastery).innerText(),/3 \/ 3 ✓ Mastered/);
+      await page.reload({waitUntil:'load'});
+      assert.match(await page.locator('#phonicsScore'+x.mastery).innerText(),/3 \/ 3 ✓ Mastered/);
+      assert.equal(errors.length,0,errors.join('\n'));
+      await page.close();
+    }
   });
 
   await desktop.close();

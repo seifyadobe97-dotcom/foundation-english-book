@@ -143,7 +143,7 @@ test('phonics curriculum pages, sound-symbol safety and practice answer integrit
   assert.equal(count(/class="phonicsQ"/g),278);
   assert.equal(count(/class="phonicsPractice"/g),96);
   assert.equal(count(/class="phonicsContents"/g),1);
-  assert.equal(count(/data-page-jump=/g),10);
+  assert.equal(count(/data-page-jump=/g),53); // contents (10) + direct lesson-to-story buttons (43)
   const blocks=[...html.matchAll(/<div class="phonicsQ" data-answer="([^"]+)"[\s\S]*?<div class="phonicsOptions">([\s\S]*?)<\/div>/g)];
   assert.equal(blocks.length,278);
   for(const [i,q] of blocks.entries()){
@@ -183,7 +183,7 @@ test('ten interleaved vowel stories have whole-story audio, Arabic toggles and 3
   const block=html.match(new RegExp('<section class="page phonicsPage vowelStoryPage"[^>]*data-story-id="'+code+'"([\\s\\S]*?)(?=<section class="page |</main>)'))?.[1];
   assert.ok(block,'No story page '+code);
   assert.equal((block.match(/class="phonicsSentence"/g)||[]).length,5,'five sentences '+code);
-  assert.equal((block.match(/class="phonicsQ"/g)||[]).length,3,'three assessments '+code);
+  assert.equal((block.match(/class="phonicsQ"/g)||[]).length,6,'both three-question checks '+code);
   assert.ok(block.includes('class="dictToggle"'),'dictionary toggle '+code);
   assert.ok(block.includes('class="storyListenAll"'),'complete story listening '+code);
   const full=block.match(/class="storyListenAll"[^>]*data-word="([^"]+)"/)?.[1];
@@ -229,7 +229,7 @@ test('all 43 phonics pattern lessons are followed immediately by 43 answerable s
    assert.ok(body.includes('<h2>'+escapeHtml(entry.title)+'</h2>'),'Story title mismatch '+entry.title);
    assert.equal((body.match(/class="phonicsSentence"/g)||[]).length,5,entry.title+' sentence lines');
    assert.equal((body.match(/class="phonicsRead"/g)||[]).length,5,entry.title+' sentence audio');
-   assert.equal((body.match(/class="phonicsQ"/g)||[]).length,3,entry.title+' practice questions');
+   assert.equal((body.match(/class="phonicsQ"/g)||[]).length,6,entry.title+' word-and-story practice questions');
    assert.ok(body.includes('class="storyListenAll"')&&body.includes('class="storyStop"'),entry.title+' playback controls');
    assert.ok(body.includes('class="dictToggle"'),entry.title+' dictionary toggle');
    assert.ok(body.includes('data-phonics="'+id+'"'),entry.title+' saved mastery ID');
@@ -240,4 +240,39 @@ test('all 43 phonics pattern lessons are followed immediately by 43 answerable s
  }
  assert.equal(ids.size,33);
  assert.deepEqual(extra.map(x=>x.after),lessons.filter(x=>!['SHORT VOWELS','LONG VOWELS'].includes(x.unit)).map(x=>x.title));
+});
+
+
+test('strict teaching order for all 43 sound lessons: sound → exact words → exact Arabic glossary → story → word check → story check',()=>{
+ const plan=JSON.parse(readFileSync(new URL('../curriculum/phonics-course.json',import.meta.url),'utf8'));
+ const sections=[...html.matchAll(/<section class="page ([^"]+)" data-page="(\d+)"([^>]*)>([\s\S]*?)(?=<section class="page |<\/main>)/g)].map(m=>({cls:m[1],page:Number(m[2]),attrs:m[3],body:m[4]}));
+ assert.equal(sections.length,151);
+ const unescape=s=>s.replaceAll('&amp;','&').replaceAll('&#39;',"'").replaceAll('&quot;','"');
+ for(const [i,item] of plan.lessons.entries()){
+  const expectedTitle=item.title;
+  const lesson=sections.find(s=>s.attrs.includes('data-module="'+item.unit+'"') && s.body.includes('<h2>'+expectedTitle+'</h2>'));
+  assert.ok(lesson,'Missing lesson '+expectedTitle);
+  const story=sections[lesson.page];
+  assert.ok(story&&/(soundStoryPage|vowelStoryPage)/.test(story.cls),'Story must directly follow '+expectedTitle);
+  const wordText=[...lesson.body.matchAll(/<div class="phonicsWordText"><b>([^<]+)<\/b>/g)].map(m=>unescape(m[1]));
+  const glossary=[...lesson.body.matchAll(/<div class="de"><span class="ar">([^<]+)<\/span><span class="en">([^<]+)<\/span><\/div>/g)].map(m=>({ar:unescape(m[1]),en:unescape(m[2])}));
+  assert.deepEqual(wordText,item.words,'Vocabulary word order changed in '+expectedTitle);
+  assert.deepEqual(glossary.map(x=>x.en),item.words,'Arabic glossary must match exact word order '+expectedTitle);
+  assert.ok(glossary.every(x=>x.ar.trim().length>0),'Empty Arabic translation '+expectedTitle);
+  const steps=['class="phonicsFocus"','class="phonicsWords"','class="dict phonicsDictionary"','class="nextStoryCta"'];
+  const offsets=steps.map(q=>lesson.body.indexOf(q));
+  assert.ok(offsets.every((n,i)=>n>=0&&(i===0||n>offsets[i-1])),'Wrong sound/words/dictionary/story CTA order '+expectedTitle);
+  assert.equal((lesson.body.match(/class="phonicsPractice"/g)||[]).length,0,'Do not interrupt dictionary→story with quizzes '+expectedTitle);
+  assert.ok(lesson.body.includes('data-page-jump="'+story.page+'"'),'Wrong next-story jump '+expectedTitle);
+  const storySteps=['class="storyListenAll"','class="phonicsStory"','class="dict phonicsDictionary"','data-phonics="L'+(i+1)+'"'];
+  const storyOffsets=storySteps.map(q=>story.body.indexOf(q));
+  assert.ok(storyOffsets.every((n,j)=>n>=0&&(j===0||n>storyOffsets[j-1])),'Wrong story/listening/dictionary/word exercise order '+expectedTitle);
+  const practiceParts=[...story.body.matchAll(/<div class="phonicsPractice" data-phonics="([^"]+)"/g)];
+  assert.equal(practiceParts.length,2,'Word and story checks must both be after the story '+expectedTitle);
+  assert.equal(practiceParts[0][1],'L'+(i+1),'First practice must be lesson words '+expectedTitle);
+  assert.ok(practiceParts[1][1]!=='L'+(i+1),'Second practice must be story comprehension '+expectedTitle);
+  assert.ok(story.body.indexOf('1 · WORDS &amp; LISTENING')<story.body.indexOf('2 · STORY COMPREHENSION'),'Label order '+expectedTitle);
+  assert.equal((story.body.match(/class="phonicsQ"/g)||[]).length,6,'All original 6 questions must be preserved '+expectedTitle);
+  assert.equal((story.body.match(/class="phonicsSentence"/g)||[]).length,5,'Five story lines required '+expectedTitle);
+ }
 });
