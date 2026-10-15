@@ -3,7 +3,7 @@
 ## Provenance and teaching approach
 The original 45 A–Z pages and Institute lesson order remain in place. The Institute source specification defines the phonics sequence and specific digraph/vowel-team word lists. **All 33 new non-vowel pattern stories are instructor-written**, inspired by that sequence, not claimed to be literal reproductions of an unavailable original story book. The 10 short/long vowel stories and 5 end-of-book stories remain.
 
-After **every one of the 43 phonics/pattern lessons**, the following page is now a five-sentence illustrated mini story. There is a Listen to the Full Story button (using available English voice), line-by-line audio, a Show/Hide Arabic glossary, and 3 corrected questions whose answers persist in localStorage at >=80% mastery. Non-focus sight words are used sparingly to make coherent stories.
+After **every one of the 43 phonics/pattern lessons**, the following page is a five-sentence illustrated mini story. The enforced learning order is **Focus Sound → Word Group (normal/slow audio) → Arabic Vocabulary Dictionary → Story (whole/line audio) → Word & Listening Check (3 questions) → Story Comprehension Check (3 questions)**. The next story is accessible from a direct button at the end of each word dictionary. All 6 existing questions per lesson/story pair retain their original IDs and localStorage mastery (80% threshold). Non-focus sight words are used sparingly to make coherent stories.
 
 ## Page map
 
@@ -86,3 +86,14 @@ The recording pipeline for a single professionally recorded American male voice 
 Students' phonics mastery is saved under unique story IDs `SP01`–`SP33`. A one-time page-number migration maps earlier 108/118-page last-read positions into this 151-page edition. Old share links that encode numeric page fragments may shift because lessons now have interleaved stories; students should use the in-book contents navigation.
 
 Tests cover source integrity and story placement for all 43 lessons, all glossary buttons, all story playback and saved mastery, as well as full-page and Android/iPhone-sized viewport navigation. The offline debug APK, if rebuilt, uses the existing PDF-derived Institute logo and is not production-signed.
+
+## Verified strict-order implementation (October 15, 2026)
+
+- Exactly **43** sound/pattern lessons, each immediately followed by **its own story page** in exactly the source-ordered lesson progression (see table above).
+- Every sound page is ordered: **FOCUS SOUND → Read & Listen vocabulary group → the same words, in the same order, in the bilingual Arabic dictionary → Read the story button**. There is no quiz interrupting the dictionary-to-story transition.
+- Each immediately following story page is ordered: **full-story/line-by-line listening → five written story sentences → story dictionary → 3 word-and-listening questions → 3 story comprehension/listening questions**. All 258 original sound/story question slots (43 × 6) are preserved; no keys, answer choices or saved-mastery identifiers changed.
+- Stage checkpoints remain at pages **61, 92, 105, 116, 141**, between complete sound/story pairs, never between a sound and its story.
+- Initial A–Z learning remains in its original source-aligned 45-page order. **A–Z pages do not have dedicated after-each-letter stories**; that would be a separate curriculum expansion, not part of this strict order patch.
+- All 5 reading fluency pages and 5 original end-of-book mini-stories remain after the sound lessons and the last checkpoint.
+- Original source-book complete story text was not included in the supplied project reference; this is a source-*sequence*-aligned instructor-created reading curriculum, not a claim of word-for-word reproduction.
+- Automated structural checks validate exact lesson vocabulary against dictionary entries, page adjacency, both retained practice blocks, the 43 direct story links and all 151 sequential page numbers. Chromium browser checks verify touch/mobile navigation, playback buttons and stored marks.
