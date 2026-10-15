@@ -1156,3 +1156,24 @@ padding:10px 12px;font-size:13px;text-align:left;font-weight:800;cursor:pointer}
   .storyPlayer{display:grid;grid-template-columns:1fr auto;gap:8px}
   .storyListenAll,.storyStop{min-height:46px;font-size:12px;padding:10px}
 }
+
+/* Mandatory teaching sequence:
+   focus sound → vocabulary → Arabic dictionary → story → word check → story check */
+.nextStoryCta{display:flex;align-items:center;justify-content:space-between;gap:16px;
+ margin:22px 0;padding:16px;border:1px solid #c9dddd;background:#f2fafa;border-radius:15px}
+.nextStoryCta p{display:flex;flex-direction:column;gap:5px;margin:0;min-width:0}
+.nextStoryCta b{color:var(--t);font-size:16px}
+.nextStoryCta span{color:#546267;font-size:13px;line-height:1.6}
+.nextStoryCta button{flex-shrink:0;min-height:46px;padding:11px 17px;cursor:pointer;
+ border:none;border-radius:11px;background:var(--t);color:#fff;font-weight:900}
+.vowelStoryPage .phonicsPractice,
+.soundStoryPage .phonicsPractice{margin-top:19px}
+.vowelStoryPage .phonicsPracticeTitle b,
+.soundStoryPage .phonicsPracticeTitle b{font-size:12px;letter-spacing:.5px}
+@media(max-width:760px){
+ .nextStoryCta{display:flex;flex-direction:column;align-items:stretch;padding:13px;gap:12px}
+ .nextStoryCta button{width:100%;min-height:46px}
+ .nextStoryCta b{font-size:15px}
+ .vowelStoryPage .phonicsPractice,
+ .soundStoryPage .phonicsPractice{padding:12px;overflow:visible}
+}
