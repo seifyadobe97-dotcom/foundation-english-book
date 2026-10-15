@@ -183,7 +183,7 @@ test('ten interleaved vowel stories have whole-story audio, Arabic toggles and 3
   const block=html.match(new RegExp('<section class="page phonicsPage vowelStoryPage"[^>]*data-story-id="'+code+'"([\\s\\S]*?)(?=<section class="page |</main>)'))?.[1];
   assert.ok(block,'No story page '+code);
   assert.equal((block.match(/class="phonicsSentence"/g)||[]).length,5,'five sentences '+code);
-  assert.equal((block.match(/class="phonicsQ"/g)||[]).length,3,'three assessments '+code);
+  assert.equal((block.match(/class="phonicsQ"/g)||[]).length,6,'both three-question checks '+code);
   assert.ok(block.includes('class="dictToggle"'),'dictionary toggle '+code);
   assert.ok(block.includes('class="storyListenAll"'),'complete story listening '+code);
   const full=block.match(/class="storyListenAll"[^>]*data-word="([^"]+)"/)?.[1];
@@ -229,7 +229,7 @@ test('all 43 phonics pattern lessons are followed immediately by 43 answerable s
    assert.ok(body.includes('<h2>'+escapeHtml(entry.title)+'</h2>'),'Story title mismatch '+entry.title);
    assert.equal((body.match(/class="phonicsSentence"/g)||[]).length,5,entry.title+' sentence lines');
    assert.equal((body.match(/class="phonicsRead"/g)||[]).length,5,entry.title+' sentence audio');
-   assert.equal((body.match(/class="phonicsQ"/g)||[]).length,3,entry.title+' practice questions');
+   assert.equal((body.match(/class="phonicsQ"/g)||[]).length,6,entry.title+' word-and-story practice questions');
    assert.ok(body.includes('class="storyListenAll"')&&body.includes('class="storyStop"'),entry.title+' playback controls');
    assert.ok(body.includes('class="dictToggle"'),entry.title+' dictionary toggle');
    assert.ok(body.includes('data-phonics="'+id+'"'),entry.title+' saved mastery ID');
