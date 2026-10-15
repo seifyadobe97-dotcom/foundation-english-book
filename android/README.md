@@ -1,6 +1,6 @@
 # Foundation English — Android APK (offline book)
 
-This Android shell bundles the exact **118-page stable static Student Book** (`index.html`, `style.css`, `logo.svg` and verified audio manifest/files) into an installable Android package. **All lessons, vocabulary cards, quizzes, Arabic dictionary, images and navigation work without an internet connection.** It does not rebuild pages dynamically.
+This Android shell bundles the exact **151-page stable static Student Book** (`index.html`, `style.css`, `logo.svg` and verified audio manifest/files) into an installable Android package. **All lessons, vocabulary cards, quizzes, Arabic dictionary, images and navigation work without an internet connection.** It does not rebuild pages dynamically.
 
 ## Key technical choices
 
@@ -53,4 +53,8 @@ gradle -p android --no-daemon :app:assembleDebug
   - full book logo SVG: `3e0a54b393563f416862156bd729e8a743eaf0fa6e7595cf922bfd27be9a438c`
   - launcher Android vector drawable: `45d63216a5a8fdc82d2fd7160bd4f1bf652bccfe7ebc7c33ce291bfb6cdfaf62`.
 
-**Version 1.1.0** is a test/debug-signed APK built from the completed **118-page** book. Existing versions signed with a different debugging certificate cannot be updated in place; uninstalling an earlier debug version can erase locally stored learning progress. Production distribution still requires a persistent release-signing key and physical-device QA.
+**Version 1.2.0** is a test/debug-signed APK built from the completed **151-page** book. Existing versions signed with a different debugging certificate cannot be updated in place; uninstalling an earlier debug version can erase locally stored learning progress. Production distribution still requires a persistent release-signing key and physical-device QA.
+
+
+## Complete story-after-each-sound edition (v1.2.0)
+The APK includes 151 static pages: 43 phonics-pattern stories directly following their lessons (including 10 earlier vowel stories), five end-of-book stories, 48 Listen to Full Story buttons, 96 bilingual post-alphabet dictionaries and 492 graded answer slots. The source PDF Institute emblem used for the launcher and full book logo remains byte-for-byte verified in the build. New story voice uses device TTS fallback, not newly recorded MP3 clips.
