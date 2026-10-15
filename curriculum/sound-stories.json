@@ -1,0 +1,1636 @@
+{
+  "version": 1,
+  "authorship": "Original instructor-created short reading stories inspired by the source curriculum sound/pattern lesson order, not copied verbatim from the source book.",
+  "scope": "Remaining 33 non-short-vowel/non-long-vowel lessons: five CVC blending, ten word families, six consonant digraphs, twelve vowel-team units.",
+  "audio": "Whole-story and per-sentence browser/Android English TTS fallback; not new professionally recorded mp3s.",
+  "stories": [
+    {
+      "after": "Blend short a",
+      "title": "Dan and the Map",
+      "emoji": "🗺️",
+      "lines": [
+        "Dan has a map.",
+        "The map is in a bag.",
+        "Dan taps the bag.",
+        "A cat sits on a mat.",
+        "Dan pats the cat."
+      ],
+      "glossary": {
+        "Dan": "دان (اسم)",
+        "map": "خريطة",
+        "bag": "حقيبة",
+        "taps": "ينقر",
+        "cat": "قطة",
+        "mat": "حصيرة",
+        "pats": "يربت"
+      },
+      "questions": [
+        {
+          "prompt": "What is in Dan's bag?",
+          "answer": "A map",
+          "options": [
+            "A map",
+            "A pen",
+            "A book"
+          ]
+        },
+        {
+          "prompt": "What sits on the mat?",
+          "answer": "A cat",
+          "options": [
+            "A cat",
+            "A fox",
+            "A hen"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "map",
+          "options": [
+            "map"
+          ]
+        }
+      ],
+      "listen": "map"
+    },
+    {
+      "after": "Blend short e",
+      "title": "Ben's Red Pen",
+      "emoji": "🖊️",
+      "lines": [
+        "Ben has a red pen.",
+        "He puts the pen on a bed.",
+        "The pen falls in a net.",
+        "Ben gets the pen.",
+        "He puts it in his bag."
+      ],
+      "glossary": {
+        "Ben": "بن (اسم)",
+        "red": "أحمر",
+        "pen": "قلم",
+        "bed": "سرير",
+        "falls": "يسقط",
+        "net": "شبكة",
+        "bag": "حقيبة"
+      },
+      "questions": [
+        {
+          "prompt": "What color is Ben's pen?",
+          "answer": "Red",
+          "options": [
+            "Red",
+            "Green",
+            "Blue"
+          ]
+        },
+        {
+          "prompt": "Where does the pen fall?",
+          "answer": "In a net",
+          "options": [
+            "In a net",
+            "In a cup",
+            "In a pot"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "pen",
+          "options": [
+            "pen"
+          ]
+        }
+      ],
+      "listen": "pen"
+    },
+    {
+      "after": "Blend short i",
+      "title": "Kim and the Pig",
+      "emoji": "🐷",
+      "lines": [
+        "Kim sees a big pig.",
+        "The pig sits in a pen.",
+        "Kim has a pin.",
+        "She puts the pin in a bag.",
+        "The pig digs in the mud."
+      ],
+      "glossary": {
+        "Kim": "كيم (اسم)",
+        "big": "كبير",
+        "pig": "خنزير",
+        "sits": "يجلس",
+        "pen": "حظيرة",
+        "pin": "دبوس",
+        "digs": "يحفر",
+        "mud": "طين"
+      },
+      "questions": [
+        {
+          "prompt": "What does Kim see?",
+          "answer": "A pig",
+          "options": [
+            "A pig",
+            "A dog",
+            "A fox"
+          ]
+        },
+        {
+          "prompt": "Where is the pin?",
+          "answer": "In a bag",
+          "options": [
+            "In a bag",
+            "On a rug",
+            "In a pot"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "pig",
+          "options": [
+            "pig"
+          ]
+        }
+      ],
+      "listen": "pig"
+    },
+    {
+      "after": "Blend short o",
+      "title": "Dot on the Pot",
+      "emoji": "🍲",
+      "lines": [
+        "Tom has a pot.",
+        "A red dot is on the pot.",
+        "The pot is hot.",
+        "Tom puts the pot on a mat.",
+        "Tom lets the pot cool."
+      ],
+      "glossary": {
+        "Tom": "توم (اسم)",
+        "pot": "قدر",
+        "dot": "نقطة",
+        "red": "أحمر",
+        "hot": "ساخن",
+        "mat": "حصيرة",
+        "cool": "يبرد"
+      },
+      "questions": [
+        {
+          "prompt": "What is on the pot?",
+          "answer": "A red dot",
+          "options": [
+            "A red dot",
+            "A blue star",
+            "A yellow sun"
+          ]
+        },
+        {
+          "prompt": "Is the pot hot at first?",
+          "answer": "Yes",
+          "options": [
+            "Yes",
+            "No",
+            "It is cold"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "pot",
+          "options": [
+            "pot"
+          ]
+        }
+      ],
+      "listen": "pot"
+    },
+    {
+      "after": "Blend short u",
+      "title": "Gus and the Bug",
+      "emoji": "🐞",
+      "lines": [
+        "Gus has a cup.",
+        "A bug sits by the cup.",
+        "Gus puts the cup on a rug.",
+        "The bug runs under the rug.",
+        "Gus looks for the bug."
+      ],
+      "glossary": {
+        "Gus": "جاس (اسم)",
+        "cup": "كوب",
+        "bug": "حشرة",
+        "rug": "سجادة صغيرة",
+        "runs": "يجري",
+        "under": "تحت",
+        "looks": "يبحث"
+      },
+      "questions": [
+        {
+          "prompt": "What does Gus have?",
+          "answer": "A cup",
+          "options": [
+            "A cup",
+            "A hat",
+            "A kite"
+          ]
+        },
+        {
+          "prompt": "Where does the bug run?",
+          "answer": "Under the rug",
+          "options": [
+            "Under the rug",
+            "Into the cup",
+            "Up a tree"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "bug",
+          "options": [
+            "bug"
+          ]
+        }
+      ],
+      "listen": "bug"
+    },
+    {
+      "after": "Family -at",
+      "title": "The Cat and the Hat",
+      "emoji": "🎩",
+      "lines": [
+        "A cat sits on a mat.",
+        "A hat is by the cat.",
+        "A boy puts on the hat.",
+        "The cat bats at the hat.",
+        "The boy laughs."
+      ],
+      "glossary": {
+        "cat": "قطة",
+        "mat": "حصيرة",
+        "hat": "قبعة",
+        "boy": "ولد",
+        "bats at": "يضرب برفق",
+        "laughs": "يضحك"
+      },
+      "questions": [
+        {
+          "prompt": "Where does the cat sit?",
+          "answer": "On a mat",
+          "options": [
+            "On a mat",
+            "On a bus",
+            "On a chair"
+          ]
+        },
+        {
+          "prompt": "What does the boy put on?",
+          "answer": "A hat",
+          "options": [
+            "A hat",
+            "A coat",
+            "A cap"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "hat",
+          "options": [
+            "hat"
+          ]
+        }
+      ],
+      "listen": "hat"
+    },
+    {
+      "after": "Family -an",
+      "title": "Dan and the Pan",
+      "emoji": "🍳",
+      "lines": [
+        "Dan has a pan.",
+        "The pan is on a mat.",
+        "A man sees the pan.",
+        "The man puts a bun in the pan.",
+        "Dan smiles."
+      ],
+      "glossary": {
+        "Dan": "دان (اسم)",
+        "pan": "مقلاة",
+        "mat": "حصيرة",
+        "man": "رجل",
+        "bun": "خبزة صغيرة",
+        "smiles": "يبتسم"
+      },
+      "questions": [
+        {
+          "prompt": "What does Dan have?",
+          "answer": "A pan",
+          "options": [
+            "A pan",
+            "A pen",
+            "A pin"
+          ]
+        },
+        {
+          "prompt": "What is put in the pan?",
+          "answer": "A bun",
+          "options": [
+            "A bun",
+            "A map",
+            "A toy"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "pan",
+          "options": [
+            "pan"
+          ]
+        }
+      ],
+      "listen": "pan"
+    },
+    {
+      "after": "Family -ap",
+      "title": "A Nap for the Pup",
+      "emoji": "🐶",
+      "lines": [
+        "A pup is on a mat.",
+        "The pup needs a nap.",
+        "A boy taps the mat.",
+        "The pup closes its eyes.",
+        "The pup takes a nap."
+      ],
+      "glossary": {
+        "pup": "جرو",
+        "mat": "حصيرة",
+        "needs": "يحتاج",
+        "nap": "غفوة",
+        "taps": "ينقر",
+        "closes": "يُغمض",
+        "eyes": "عينان"
+      },
+      "questions": [
+        {
+          "prompt": "Who needs a nap?",
+          "answer": "A pup",
+          "options": [
+            "A pup",
+            "A hen",
+            "A fish"
+          ]
+        },
+        {
+          "prompt": "What does the pup close?",
+          "answer": "Its eyes",
+          "options": [
+            "Its eyes",
+            "Its book",
+            "Its bag"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "nap",
+          "options": [
+            "nap"
+          ]
+        }
+      ],
+      "listen": "nap"
+    },
+    {
+      "after": "Family -et",
+      "title": "A Wet Pet",
+      "emoji": "🐕",
+      "lines": [
+        "A pet dog is wet.",
+        "It runs to a net.",
+        "The net is wet too.",
+        "A girl gets a towel.",
+        "She dries her pet."
+      ],
+      "glossary": {
+        "pet": "حيوان أليف",
+        "dog": "كلب",
+        "wet": "مبلل",
+        "runs": "يجري",
+        "net": "شبكة",
+        "girl": "بنت",
+        "towel": "منشفة",
+        "dries": "تجفف"
+      },
+      "questions": [
+        {
+          "prompt": "How does the dog feel?",
+          "answer": "Wet",
+          "options": [
+            "Wet",
+            "Hot",
+            "Hungry"
+          ]
+        },
+        {
+          "prompt": "What does the girl get?",
+          "answer": "A towel",
+          "options": [
+            "A towel",
+            "A pan",
+            "A kite"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "wet",
+          "options": [
+            "wet"
+          ]
+        }
+      ],
+      "listen": "wet"
+    },
+    {
+      "after": "Family -en",
+      "title": "Ben and Ten Hens",
+      "emoji": "🐔",
+      "lines": [
+        "Ben sees a hen.",
+        "The hen is in a pen.",
+        "Ben sees more hens.",
+        "He counts ten hens.",
+        "Ben shuts the pen."
+      ],
+      "glossary": {
+        "Ben": "بن (اسم)",
+        "hen": "دجاجة",
+        "hens": "دجاجات",
+        "pen": "حظيرة",
+        "counts": "يعد",
+        "ten": "عشرة",
+        "shuts": "يغلق"
+      },
+      "questions": [
+        {
+          "prompt": "Where is the first hen?",
+          "answer": "In a pen",
+          "options": [
+            "In a pen",
+            "On a bike",
+            "On a ship"
+          ]
+        },
+        {
+          "prompt": "How many hens does Ben count?",
+          "answer": "Ten",
+          "options": [
+            "Ten",
+            "Two",
+            "Five"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "hen",
+          "options": [
+            "hen"
+          ]
+        }
+      ],
+      "listen": "hen"
+    },
+    {
+      "after": "Family -ig",
+      "title": "The Big Wig",
+      "emoji": "🎭",
+      "lines": [
+        "A pig finds a wig.",
+        "The wig is big.",
+        "The pig puts on the wig.",
+        "A hen sees the pig.",
+        "The hen laughs."
+      ],
+      "glossary": {
+        "pig": "خنزير",
+        "finds": "يجد",
+        "wig": "شعر مستعار",
+        "big": "كبير",
+        "puts on": "يرتدي",
+        "hen": "دجاجة",
+        "laughs": "تضحك"
+      },
+      "questions": [
+        {
+          "prompt": "What does the pig find?",
+          "answer": "A wig",
+          "options": [
+            "A wig",
+            "A bag",
+            "A map"
+          ]
+        },
+        {
+          "prompt": "Who laughs at the pig?",
+          "answer": "A hen",
+          "options": [
+            "A hen",
+            "A fish",
+            "A dog"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "wig",
+          "options": [
+            "wig"
+          ]
+        }
+      ],
+      "listen": "wig"
+    },
+    {
+      "after": "Family -in",
+      "title": "Finn and the Pin",
+      "emoji": "📌",
+      "lines": [
+        "Finn has a pin.",
+        "The pin falls in a bin.",
+        "Finn looks in the bin.",
+        "He finds the pin.",
+        "Finn puts it in a box."
+      ],
+      "glossary": {
+        "Finn": "فين (اسم)",
+        "pin": "دبوس",
+        "falls": "يسقط",
+        "bin": "سلة",
+        "looks": "ينظر",
+        "finds": "يجد",
+        "box": "صندوق"
+      },
+      "questions": [
+        {
+          "prompt": "What falls in the bin?",
+          "answer": "A pin",
+          "options": [
+            "A pin",
+            "A hat",
+            "A book"
+          ]
+        },
+        {
+          "prompt": "Where does Finn put the pin?",
+          "answer": "In a box",
+          "options": [
+            "In a box",
+            "In a cup",
+            "In a pot"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "pin",
+          "options": [
+            "pin"
+          ]
+        }
+      ],
+      "listen": "pin"
+    },
+    {
+      "after": "Family -op",
+      "title": "Hop to the Top",
+      "emoji": "🐸",
+      "lines": [
+        "A frog can hop.",
+        "It hops by a mop.",
+        "It sees a big box.",
+        "It hops on top of the box.",
+        "The frog stops to rest."
+      ],
+      "glossary": {
+        "frog": "ضفدع",
+        "hop": "يقفز",
+        "mop": "ممسحة",
+        "box": "صندوق",
+        "top": "أعلى",
+        "stops": "يتوقف",
+        "rest": "يرتاح"
+      },
+      "questions": [
+        {
+          "prompt": "What can the frog do?",
+          "answer": "Hop",
+          "options": [
+            "Hop",
+            "Fly",
+            "Swim"
+          ]
+        },
+        {
+          "prompt": "Where does the frog stop?",
+          "answer": "On the box",
+          "options": [
+            "On the box",
+            "In a cup",
+            "Under a bed"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "hop",
+          "options": [
+            "hop"
+          ]
+        }
+      ],
+      "listen": "hop"
+    },
+    {
+      "after": "Family -ot",
+      "title": "A Dot on the Pot",
+      "emoji": "🔴",
+      "lines": [
+        "A girl has a pot.",
+        "There is a red dot on it.",
+        "The pot is not hot.",
+        "She puts the pot on a mat.",
+        "The red dot is easy to spot."
+      ],
+      "glossary": {
+        "girl": "بنت",
+        "pot": "قدر",
+        "red": "أحمر",
+        "dot": "نقطة",
+        "hot": "ساخن",
+        "mat": "حصيرة",
+        "spot": "يرى / يلاحظ"
+      },
+      "questions": [
+        {
+          "prompt": "What is on the pot?",
+          "answer": "A red dot",
+          "options": [
+            "A red dot",
+            "A green line",
+            "A blue star"
+          ]
+        },
+        {
+          "prompt": "Is the pot hot?",
+          "answer": "No",
+          "options": [
+            "No",
+            "Yes",
+            "It is on fire"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "dot",
+          "options": [
+            "dot"
+          ]
+        }
+      ],
+      "listen": "dot"
+    },
+    {
+      "after": "Family -un",
+      "title": "A Fun Run",
+      "emoji": "☀️",
+      "lines": [
+        "The sun is up.",
+        "Ben and Dan run.",
+        "They run to a tree.",
+        "They stop for a bun.",
+        "The run is fun."
+      ],
+      "glossary": {
+        "sun": "شمس",
+        "Ben": "بن (اسم)",
+        "Dan": "دان (اسم)",
+        "run": "يجريان",
+        "tree": "شجرة",
+        "stop": "يتوقفان",
+        "bun": "خبزة صغيرة",
+        "fun": "ممتع"
+      },
+      "questions": [
+        {
+          "prompt": "When do Ben and Dan run?",
+          "answer": "When the sun is up",
+          "options": [
+            "When the sun is up",
+            "At night",
+            "In the rain"
+          ]
+        },
+        {
+          "prompt": "What do they eat?",
+          "answer": "A bun",
+          "options": [
+            "A bun",
+            "A cake",
+            "An egg"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "sun",
+          "options": [
+            "sun"
+          ]
+        }
+      ],
+      "listen": "sun"
+    },
+    {
+      "after": "sh — /ʃ/",
+      "title": "The Fish Shop",
+      "emoji": "🐟",
+      "lines": [
+        "A boy goes to a fish shop.",
+        "He sees a big fish.",
+        "The fish swims in a tank.",
+        "The boy points to the fish.",
+        "The shop owner smiles."
+      ],
+      "glossary": {
+        "boy": "ولد",
+        "fish": "سمكة",
+        "shop": "متجر",
+        "swims": "تسبح",
+        "tank": "حوض",
+        "points": "يشير",
+        "owner": "صاحب المحل"
+      },
+      "questions": [
+        {
+          "prompt": "Where does the boy go?",
+          "answer": "To a fish shop",
+          "options": [
+            "To a fish shop",
+            "To a park",
+            "To a farm"
+          ]
+        },
+        {
+          "prompt": "Where does the fish swim?",
+          "answer": "In a tank",
+          "options": [
+            "In a tank",
+            "In a cup",
+            "In a bag"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "fish",
+          "options": [
+            "fish"
+          ]
+        }
+      ],
+      "listen": "fish"
+    },
+    {
+      "after": "ch — /tʃ/",
+      "title": "The Chick and the Cherry",
+      "emoji": "🐣",
+      "lines": [
+        "A chick sits by a bench.",
+        "A cherry is on the bench.",
+        "A child picks up the cherry.",
+        "The chick chirps.",
+        "The child gives the chick some food."
+      ],
+      "glossary": {
+        "chick": "كتكوت",
+        "bench": "مقعد",
+        "cherry": "ثمرة كرز",
+        "child": "طفل",
+        "picks up": "يلتقط",
+        "chirps": "يزقزق",
+        "food": "طعام"
+      },
+      "questions": [
+        {
+          "prompt": "What sits by the bench?",
+          "answer": "A chick",
+          "options": [
+            "A chick",
+            "A cat",
+            "A pig"
+          ]
+        },
+        {
+          "prompt": "What is on the bench?",
+          "answer": "A cherry",
+          "options": [
+            "A cherry",
+            "A phone",
+            "A book"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "chick",
+          "options": [
+            "chick"
+          ]
+        }
+      ],
+      "listen": "chick"
+    },
+    {
+      "after": "th — quiet /θ/",
+      "title": "Beth Brushes Her Teeth",
+      "emoji": "🪥",
+      "lines": [
+        "Beth has a new tooth.",
+        "She brushes her teeth.",
+        "Beth has a math book.",
+        "She puts it by the bath.",
+        "Beth smiles with clean teeth."
+      ],
+      "glossary": {
+        "Beth": "بيث (اسم)",
+        "tooth": "سن",
+        "brushes": "تنظف بالفرشاة",
+        "teeth": "أسنان",
+        "math": "رياضيات",
+        "book": "كتاب",
+        "bath": "حوض استحمام",
+        "clean": "نظيفة"
+      },
+      "questions": [
+        {
+          "prompt": "What does Beth brush?",
+          "answer": "Her teeth",
+          "options": [
+            "Her teeth",
+            "Her hair",
+            "Her shoes"
+          ]
+        },
+        {
+          "prompt": "What book does Beth have?",
+          "answer": "A math book",
+          "options": [
+            "A math book",
+            "A storybook",
+            "A cook book"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "tooth",
+          "options": [
+            "tooth"
+          ]
+        }
+      ],
+      "listen": "tooth"
+    },
+    {
+      "after": "th — voiced /ð/",
+      "title": "This Is My Family",
+      "emoji": "👨‍👩‍👦",
+      "lines": [
+        "This is my mother.",
+        "This is my father.",
+        "This is my brother.",
+        "My brother has a ball.",
+        "We play with the ball."
+      ],
+      "glossary": {
+        "this": "هذا",
+        "mother": "أم",
+        "father": "أب",
+        "brother": "أخ",
+        "ball": "كرة",
+        "play": "نلعب"
+      },
+      "questions": [
+        {
+          "prompt": "Who has a ball?",
+          "answer": "My brother",
+          "options": [
+            "My brother",
+            "My father",
+            "My mother"
+          ]
+        },
+        {
+          "prompt": "Who plays with the ball?",
+          "answer": "The family",
+          "options": [
+            "The family",
+            "A fish",
+            "A teacher"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "this",
+          "options": [
+            "this"
+          ]
+        }
+      ],
+      "listen": "this"
+    },
+    {
+      "after": "wh — /w/",
+      "title": "The White Whale",
+      "emoji": "🐋",
+      "lines": [
+        "A whale swims by a ship.",
+        "The whale is white.",
+        "A boy sees the whale.",
+        "He looks out of the ship's window.",
+        "The whale swims away."
+      ],
+      "glossary": {
+        "whale": "حوت",
+        "swims": "يسبح",
+        "ship": "سفينة",
+        "white": "أبيض",
+        "boy": "ولد",
+        "window": "نافذة",
+        "away": "بعيدًا"
+      },
+      "questions": [
+        {
+          "prompt": "What color is the whale?",
+          "answer": "White",
+          "options": [
+            "White",
+            "Green",
+            "Red"
+          ]
+        },
+        {
+          "prompt": "Where is the boy?",
+          "answer": "On a ship",
+          "options": [
+            "On a ship",
+            "In a car",
+            "At home"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "whale",
+          "options": [
+            "whale"
+          ]
+        }
+      ],
+      "listen": "whale"
+    },
+    {
+      "after": "ph — /f/",
+      "title": "A Photo of a Dolphin",
+      "emoji": "📷",
+      "lines": [
+        "Phil has a phone.",
+        "He sees a dolphin at the zoo.",
+        "Phil takes a photo.",
+        "An elephant is nearby.",
+        "Phil takes one more photo."
+      ],
+      "glossary": {
+        "Phil": "فيل (اسم)",
+        "phone": "هاتف",
+        "dolphin": "دولفين",
+        "zoo": "حديقة حيوان",
+        "photo": "صورة",
+        "elephant": "فيل",
+        "nearby": "بالقرب"
+      },
+      "questions": [
+        {
+          "prompt": "What does Phil use for a photo?",
+          "answer": "A phone",
+          "options": [
+            "A phone",
+            "A pen",
+            "A map"
+          ]
+        },
+        {
+          "prompt": "What other animal is nearby?",
+          "answer": "An elephant",
+          "options": [
+            "An elephant",
+            "A horse",
+            "A fox"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "phone",
+          "options": [
+            "phone"
+          ]
+        }
+      ],
+      "listen": "phone"
+    },
+    {
+      "after": "ee",
+      "title": "A Deer by the Green Tree",
+      "emoji": "🦌",
+      "lines": [
+        "A deer is by a tree.",
+        "The tree is green.",
+        "The deer sees a bee.",
+        "The bee lands on a leaf.",
+        "The deer walks away."
+      ],
+      "glossary": {
+        "deer": "غزال",
+        "tree": "شجرة",
+        "green": "أخضر",
+        "bee": "نحلة",
+        "lands": "تهبط",
+        "leaf": "ورقة شجر",
+        "walks": "يمشي"
+      },
+      "questions": [
+        {
+          "prompt": "What animal is by the tree?",
+          "answer": "A deer",
+          "options": [
+            "A deer",
+            "A goat",
+            "A pig"
+          ]
+        },
+        {
+          "prompt": "What color is the tree?",
+          "answer": "Green",
+          "options": [
+            "Green",
+            "Red",
+            "Blue"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "deer",
+          "options": [
+            "deer"
+          ]
+        }
+      ],
+      "listen": "deer"
+    },
+    {
+      "after": "ea",
+      "title": "Tea at the Beach",
+      "emoji": "🏖️",
+      "lines": [
+        "We go to the beach.",
+        "I have a cup of tea.",
+        "A seal rests on a rock.",
+        "We watch the seal.",
+        "Then we read a book."
+      ],
+      "glossary": {
+        "beach": "شاطئ",
+        "tea": "شاي",
+        "cup": "كوب",
+        "seal": "فقمة",
+        "rests": "تستريح",
+        "rock": "صخرة",
+        "watch": "نشاهد",
+        "read": "نقرأ (مضارع)"
+      },
+      "questions": [
+        {
+          "prompt": "What do we drink?",
+          "answer": "Tea",
+          "options": [
+            "Tea",
+            "Milk",
+            "Juice"
+          ]
+        },
+        {
+          "prompt": "What animal rests on a rock?",
+          "answer": "A seal",
+          "options": [
+            "A seal",
+            "A deer",
+            "A whale"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "tea",
+          "options": [
+            "tea"
+          ]
+        }
+      ],
+      "listen": "tea"
+    },
+    {
+      "after": "oa",
+      "title": "The Goat and the Boat",
+      "emoji": "⛵",
+      "lines": [
+        "A goat sees a boat.",
+        "The boat is by a road.",
+        "A boy has a warm coat.",
+        "He puts the coat in the boat.",
+        "The goat looks at the boy."
+      ],
+      "glossary": {
+        "goat": "ماعز",
+        "boat": "قارب",
+        "road": "طريق",
+        "boy": "ولد",
+        "coat": "معطف",
+        "warm": "دافئ",
+        "looks": "ينظر"
+      },
+      "questions": [
+        {
+          "prompt": "What does the goat see?",
+          "answer": "A boat",
+          "options": [
+            "A boat",
+            "A train",
+            "A bike"
+          ]
+        },
+        {
+          "prompt": "What does the boy put in the boat?",
+          "answer": "A coat",
+          "options": [
+            "A coat",
+            "A book",
+            "A hat"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "boat",
+          "options": [
+            "boat"
+          ]
+        }
+      ],
+      "listen": "boat"
+    },
+    {
+      "after": "ow — long o",
+      "title": "Snow by the Window",
+      "emoji": "❄️",
+      "lines": [
+        "Snow falls on the ground.",
+        "A girl looks out a window.",
+        "She sees a yellow bowl.",
+        "The bowl is full of snow.",
+        "The girl smiles."
+      ],
+      "glossary": {
+        "snow": "ثلج",
+        "falls": "يتساقط",
+        "ground": "أرض",
+        "girl": "بنت",
+        "window": "نافذة",
+        "yellow": "أصفر",
+        "bowl": "وعاء",
+        "full of": "ممتلئ بـ"
+      },
+      "questions": [
+        {
+          "prompt": "What falls outside?",
+          "answer": "Snow",
+          "options": [
+            "Snow",
+            "Rain",
+            "Leaves"
+          ]
+        },
+        {
+          "prompt": "What color is the bowl?",
+          "answer": "Yellow",
+          "options": [
+            "Yellow",
+            "Red",
+            "Blue"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "snow",
+          "options": [
+            "snow"
+          ]
+        }
+      ],
+      "listen": "snow"
+    },
+    {
+      "after": "ai",
+      "title": "Rain on the Train",
+      "emoji": "🚆",
+      "lines": [
+        "Rain falls on a train.",
+        "A girl waits by the train.",
+        "She sees a dog wag its tail.",
+        "The girl gets on the train.",
+        "The train goes away."
+      ],
+      "glossary": {
+        "rain": "مطر",
+        "train": "قطار",
+        "girl": "بنت",
+        "waits": "تنتظر",
+        "dog": "كلب",
+        "tail": "ذيل",
+        "gets on": "تصعد",
+        "away": "بعيدًا"
+      },
+      "questions": [
+        {
+          "prompt": "Where does the rain fall?",
+          "answer": "On a train",
+          "options": [
+            "On a train",
+            "On a boat",
+            "On a tree"
+          ]
+        },
+        {
+          "prompt": "What does the dog wag?",
+          "answer": "Its tail",
+          "options": [
+            "Its tail",
+            "Its ear",
+            "Its leg"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "rain",
+          "options": [
+            "rain"
+          ]
+        }
+      ],
+      "listen": "rain"
+    },
+    {
+      "after": "ay",
+      "title": "A Day to Play",
+      "emoji": "🧩",
+      "lines": [
+        "It is a gray day.",
+        "Kay has some clay.",
+        "She wants to play.",
+        "Kay makes a small cup.",
+        "She puts the clay away."
+      ],
+      "glossary": {
+        "gray": "رمادي",
+        "day": "يوم",
+        "Kay": "كاي (اسم)",
+        "clay": "صلصال",
+        "play": "يلعب",
+        "makes": "يصنع",
+        "cup": "كوب",
+        "away": "بعيدًا"
+      },
+      "questions": [
+        {
+          "prompt": "What does Kay have?",
+          "answer": "Clay",
+          "options": [
+            "Clay",
+            "Sand",
+            "Paint"
+          ]
+        },
+        {
+          "prompt": "What does Kay make?",
+          "answer": "A cup",
+          "options": [
+            "A cup",
+            "A boat",
+            "A hat"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "clay",
+          "options": [
+            "clay"
+          ]
+        }
+      ],
+      "listen": "clay"
+    },
+    {
+      "after": "oi",
+      "title": "The Lost Coin",
+      "emoji": "🪙",
+      "lines": [
+        "A boy finds a coin.",
+        "The coin is in the soil.",
+        "He wipes the coin.",
+        "He puts it in his bag.",
+        "He shows it to his dad."
+      ],
+      "glossary": {
+        "boy": "ولد",
+        "finds": "يجد",
+        "coin": "عملة معدنية",
+        "soil": "تربة",
+        "wipes": "يمسح",
+        "bag": "حقيبة",
+        "shows": "يُري",
+        "dad": "أب"
+      },
+      "questions": [
+        {
+          "prompt": "Where is the coin?",
+          "answer": "In the soil",
+          "options": [
+            "In the soil",
+            "On the bed",
+            "In the sea"
+          ]
+        },
+        {
+          "prompt": "Who sees the coin at the end?",
+          "answer": "The boy's dad",
+          "options": [
+            "The boy's dad",
+            "The teacher",
+            "A girl"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "coin",
+          "options": [
+            "coin"
+          ]
+        }
+      ],
+      "listen": "coin"
+    },
+    {
+      "after": "ow — as in cow",
+      "title": "The Brown Cow and the Owl",
+      "emoji": "🐄",
+      "lines": [
+        "A brown cow is in a field.",
+        "An owl sits in a tree.",
+        "The cow looks at the owl.",
+        "The owl calls from the tree.",
+        "The cow walks away."
+      ],
+      "glossary": {
+        "brown": "بني",
+        "cow": "بقرة",
+        "field": "حقل",
+        "owl": "بومة",
+        "tree": "شجرة",
+        "looks": "تنظر",
+        "calls": "تصدر صوتًا",
+        "walks": "تمشي"
+      },
+      "questions": [
+        {
+          "prompt": "Where is the cow?",
+          "answer": "In a field",
+          "options": [
+            "In a field",
+            "On a ship",
+            "In a shop"
+          ]
+        },
+        {
+          "prompt": "What sits in the tree?",
+          "answer": "An owl",
+          "options": [
+            "An owl",
+            "A hen",
+            "A chick"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "cow",
+          "options": [
+            "cow"
+          ]
+        }
+      ],
+      "listen": "cow"
+    },
+    {
+      "after": "ou",
+      "title": "The Mouse and the Clouds",
+      "emoji": "🐁",
+      "lines": [
+        "A mouse runs out of a house.",
+        "It sees a big cloud.",
+        "Then it sees two more clouds.",
+        "The mouse runs back home.",
+        "Rain starts to fall."
+      ],
+      "glossary": {
+        "mouse": "فأر",
+        "runs": "يجري",
+        "house": "منزل",
+        "cloud": "سحابة",
+        "clouds": "سحب",
+        "home": "المنزل",
+        "rain": "مطر",
+        "fall": "يتساقط"
+      },
+      "questions": [
+        {
+          "prompt": "What does the mouse see?",
+          "answer": "Clouds",
+          "options": [
+            "Clouds",
+            "Stars",
+            "Boats"
+          ]
+        },
+        {
+          "prompt": "Where does the mouse run at the end?",
+          "answer": "Back home",
+          "options": [
+            "Back home",
+            "To a ship",
+            "To a school"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "mouse",
+          "options": [
+            "mouse"
+          ]
+        }
+      ],
+      "listen": "mouse"
+    },
+    {
+      "after": "ar",
+      "title": "A Star over the Farm",
+      "emoji": "⭐",
+      "lines": [
+        "A star shines over a farm.",
+        "A boy stands by a barn.",
+        "He points his arm at the star.",
+        "The farm is quiet.",
+        "The star shines all night."
+      ],
+      "glossary": {
+        "star": "نجمة",
+        "shines": "تلمع",
+        "farm": "مزرعة",
+        "boy": "ولد",
+        "barn": "حظيرة",
+        "points": "يشير",
+        "arm": "ذراع",
+        "quiet": "هادئة",
+        "night": "ليل"
+      },
+      "questions": [
+        {
+          "prompt": "What shines over the farm?",
+          "answer": "A star",
+          "options": [
+            "A star",
+            "The sun",
+            "A lamp"
+          ]
+        },
+        {
+          "prompt": "What does the boy point at the star?",
+          "answer": "His arm",
+          "options": [
+            "His arm",
+            "His foot",
+            "His hat"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "star",
+          "options": [
+            "star"
+          ]
+        }
+      ],
+      "listen": "star"
+    },
+    {
+      "after": "or",
+      "title": "The Horse and the Corn",
+      "emoji": "🐴",
+      "lines": [
+        "A horse sees some corn.",
+        "The corn is in a bag.",
+        "A boy brings the bag to the horse.",
+        "The horse eats some corn.",
+        "The boy smiles."
+      ],
+      "glossary": {
+        "horse": "حصان",
+        "corn": "ذرة",
+        "bag": "حقيبة",
+        "boy": "ولد",
+        "brings": "يحضر",
+        "eats": "يأكل",
+        "smiles": "يبتسم"
+      },
+      "questions": [
+        {
+          "prompt": "What does the horse eat?",
+          "answer": "Corn",
+          "options": [
+            "Corn",
+            "Fish",
+            "Cake"
+          ]
+        },
+        {
+          "prompt": "Who brings the bag?",
+          "answer": "A boy",
+          "options": [
+            "A boy",
+            "A girl",
+            "A teacher"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "horse",
+          "options": [
+            "horse"
+          ]
+        }
+      ],
+      "listen": "horse"
+    },
+    {
+      "after": "oo — short",
+      "title": "Look at the Book",
+      "emoji": "📖",
+      "lines": [
+        "Luke has a book.",
+        "He sits in a kitchen.",
+        "He looks at a picture.",
+        "The book shows a cook.",
+        "Luke smiles at the book."
+      ],
+      "glossary": {
+        "Luke": "لوك (اسم)",
+        "book": "كتاب",
+        "kitchen": "مطبخ",
+        "looks": "ينظر",
+        "picture": "صورة",
+        "shows": "يعرض",
+        "cook": "طباخ",
+        "smiles": "يبتسم"
+      },
+      "questions": [
+        {
+          "prompt": "What does Luke have?",
+          "answer": "A book",
+          "options": [
+            "A book",
+            "A boat",
+            "A phone"
+          ]
+        },
+        {
+          "prompt": "Who is in the picture?",
+          "answer": "A cook",
+          "options": [
+            "A cook",
+            "A doctor",
+            "A farmer"
+          ]
+        },
+        {
+          "prompt": "Listen. Which word did you hear?",
+          "answer": "book",
+          "options": [
+            "book"
+          ]
+        }
+      ],
+      "listen": "book"
+    }
+  ]
+}
