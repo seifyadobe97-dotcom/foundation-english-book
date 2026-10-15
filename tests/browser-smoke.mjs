@@ -127,7 +127,7 @@ try {
   await run('book cover jumps to Part Two contents',async()=>{
     const {page,errors}=await openPage(desktop,'#1');
     await page.locator('.phonicsJump').click();
-    assert.equal(await page.locator('#count').innerText(),'50 / 118');
+    assert.equal(await page.locator('#count').innerText(),'50 / 151');
     await page.locator('[data-page="50"] .phonicsContents [data-page-jump="93"]').click();
     assert.equal(await page.locator('#count').innerText(),'93 / 151');
     assert.equal(errors.length,0,errors.join('\n'));
