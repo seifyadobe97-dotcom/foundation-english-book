@@ -122,12 +122,12 @@ test('main runtime parses and initializes in a simulated DOM; navigation persist
   assert.equal(el('#count').textContent,'2 / 151');
   listeners.keydown({key:'ArrowRight'});
   assert.equal(el('#count').textContent,'3 / 151');
-  for(let i=0;i<120;i++)el('#next').onclick();
+  for(let i=0;i<160;i++)el('#next').onclick();
   assert.equal(el('#count').textContent,'151 / 151');
   assert.equal(el('#next').disabled,true);
   assert.equal(pages.filter(p=>p.classList.contains('active')).length,1);
   assert.equal(storage.get('foundation:lastPage'),'151');
-  for(let i=0;i<120;i++)el('#prev').onclick();
+  for(let i=0;i<160;i++)el('#prev').onclick();
   assert.equal(el('#count').textContent,'1 / 151');
   assert.equal(el('#prev').disabled,true);
 });
