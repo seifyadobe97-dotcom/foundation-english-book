@@ -6,7 +6,7 @@ Current learning model (151 static pages):
 - Original A–Z: 45 preserved pages
 - Part Two: short vowels, CVC blending, 10 word families, digraphs, long vowels, vowel teams, decodable sentences, and 5 original mini stories
 - Total: 492 interactive answer slots across original and added exercises
-- Forty-three five-line stories now follow every short vowel, CVC, word family, consonant digraph, long vowel and vowel-team lesson immediately, with whole-story audio, Arabic dictionaries and 3 exercises each\n- Full contents and source provenance: [Reading curriculum map](curriculum/CURRICULUM_MAP.md)
+- Forty-three five-line stories now follow every short vowel, CVC, word family, consonant digraph, long vowel and vowel-team lesson immediately. Teaching sequence: sound → words → bilingual dictionary → story listening → 3 word questions → 3 story questions.\n- Full contents and source provenance: [Reading curriculum map](curriculum/CURRICULUM_MAP.md)
 
 Original letter learning model:
 - Letters A–Z in the source-book sequence
