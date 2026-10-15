@@ -11,12 +11,12 @@ const count = expression => [...html.matchAll(expression)].length;
 const inline = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
 const pageList = [...html.matchAll(/<section class="page ([^"]+)"[^>]*data-page="(\d+)"(?:[^>]*)>/g)];
 
-test('exact static 118-page sequence, original 45-page A–Z preserved, and stable branding', () => {
-  assert.equal(pageList.length, 118);
-  assert.deepEqual(pageList.map(x => Number(x[2])), Array.from({length:118}, (_,i) => i+1));
+test('exact static 151-page sequence, original 45-page A–Z preserved, and stable branding', () => {
+  assert.equal(pageList.length, 151);
+  assert.deepEqual(pageList.map(x => Number(x[2])), Array.from({length:151}, (_,i) => i+1));
   assert.equal(pageList.filter(x=>x[1].includes('lesson')).length, 26);
   assert.equal(pageList.filter(x=>x[1].includes('quizPage')).length, 27);
-  assert.equal(pageList.filter(x=>x[1].includes('phonicsPage')).length,64);
+  assert.equal(pageList.filter(x=>x[1].includes('phonicsPage')).length,97);
   assert.equal(pageList.filter(x=>x[1].includes('cover')).length, 1);
   assert.equal(count(/data-letter="[A-Z]"/g),26);
   assert.equal(count(/class="emoji" aria-label="/g),149);
@@ -91,7 +91,7 @@ test('main runtime parses and initializes in a simulated DOM; navigation persist
     };
     nodeMap.set(id,value);return value;
   }
-  const pages=Array.from({length:118},(_,i)=>el('page'+i));
+  const pages=Array.from({length:151},(_,i)=>el('page'+i));
   const context={
     document:{
       querySelector:s=>el(s),
@@ -113,22 +113,22 @@ test('main runtime parses and initializes in a simulated DOM; navigation persist
   };
   const sandbox=vm.createContext(context);
   new vm.Script(inline).runInContext(sandbox);
-  assert.equal(el('#count').textContent,'1 / 118');
+  assert.equal(el('#count').textContent,'1 / 151');
   el('#next').onclick();
-  assert.equal(el('#count').textContent,'2 / 118');
+  assert.equal(el('#count').textContent,'2 / 151');
   el('#next').onclick();
-  assert.equal(el('#count').textContent,'3 / 118');
+  assert.equal(el('#count').textContent,'3 / 151');
   el('#prev').onclick();
-  assert.equal(el('#count').textContent,'2 / 118');
+  assert.equal(el('#count').textContent,'2 / 151');
   listeners.keydown({key:'ArrowRight'});
-  assert.equal(el('#count').textContent,'3 / 118');
+  assert.equal(el('#count').textContent,'3 / 151');
   for(let i=0;i<120;i++)el('#next').onclick();
-  assert.equal(el('#count').textContent,'118 / 118');
+  assert.equal(el('#count').textContent,'151 / 151');
   assert.equal(el('#next').disabled,true);
   assert.equal(pages.filter(p=>p.classList.contains('active')).length,1);
-  assert.equal(storage.get('foundation:lastPage'),'118');
+  assert.equal(storage.get('foundation:lastPage'),'151');
   for(let i=0;i<120;i++)el('#prev').onclick();
-  assert.equal(el('#count').textContent,'1 / 118');
+  assert.equal(el('#count').textContent,'1 / 151');
   assert.equal(el('#prev').disabled,true);
 });
 
@@ -139,13 +139,13 @@ test('phonics curriculum pages, sound-symbol safety and practice answer integrit
   assert.equal(plan.stories.length,5);
   assert.equal(plan.reviews.length,4);
   assert.equal(plan.checkpoints.length,5);
-  assert.equal(count(/data-module="/g),73);
-  assert.equal(count(/class="phonicsQ"/g),179);
-  assert.equal(count(/class="phonicsPractice"/g),63);
+  assert.equal(count(/data-module="/g),106);
+  assert.equal(count(/class="phonicsQ"/g),278);
+  assert.equal(count(/class="phonicsPractice"/g),96);
   assert.equal(count(/class="phonicsContents"/g),1);
   assert.equal(count(/data-page-jump=/g),10);
   const blocks=[...html.matchAll(/<div class="phonicsQ" data-answer="([^"]+)"[\s\S]*?<div class="phonicsOptions">([\s\S]*?)<\/div>/g)];
-  assert.equal(blocks.length,179);
+  assert.equal(blocks.length,278);
   for(const [i,q] of blocks.entries()){
     const opts=[...q[2].matchAll(/<button data-value="([^"]+)"/g)].map(m=>m[1]);
     assert.equal(opts.length,3,'Three choices required: '+i);
@@ -170,11 +170,11 @@ test('ten interleaved vowel stories have whole-story audio, Arabic toggles and 3
  const gloss=JSON.parse(readFileSync(new URL('../curriculum/phonics-glossary.json',import.meta.url),'utf8'));
  assert.equal(stories.length,10);
  assert.equal(Object.keys(gloss.wordTranslations).length,142);
- assert.equal(count(/class="dict phonicsDictionary"/g),63);
- assert.equal(count(/class="storyListenAll"/g),15);
- assert.equal(count(/class="storyStop"/g),15);
+ assert.equal(count(/class="dict phonicsDictionary"/g),96);
+ assert.equal(count(/class="storyListenAll"/g),48);
+ assert.equal(count(/class="storyStop"/g),48);
  assert.equal(count(/class="page phonicsPage vowelStoryPage"/g),10);
- assert.equal(count(/class="dictToggle"/g),89); // 26 letter pages plus 63 phonics/reading/story dictionaries
+ assert.equal(count(/class="dictToggle"/g),122); // 26 letter pages plus 63 phonics/reading/story dictionaries
  for(const entry of stories){
   assert.equal(entry.lines.length,5);
   assert.equal(entry.questions.length,3);
@@ -190,9 +190,53 @@ test('ten interleaved vowel stories have whole-story audio, Arabic toggles and 3
   assert.ok(full && full.length>60 && full.includes(entry.lines[0]),'full text audio '+code);
  }
  const spots=[[51,52,'Short a'],[53,54,'Short e'],[55,56,'Short i'],[57,58,'Short o'],[59,60,'Short u'],
- [85,86,'Long a'],[87,88,'Long e'],[89,90,'Long i'],[91,92,'Long o'],[93,94,'Long u']];
+ [106,107,'Long a'],[108,109,'Long e'],[110,111,'Long i'],[112,113,'Long o'],[114,115,'Long u']];
  for(const [lesson,story,title] of spots){
   assert.ok(html.includes('data-page="'+lesson+'" data-module="'+(title.startsWith('Short')?'SHORT VOWELS':'LONG VOWELS')+'"'),'vowel lesson '+title);
   assert.ok(html.includes('data-page="'+story+'" data-module="'+(title.startsWith('Short')?'SHORT VOWEL STORY':'LONG VOWEL STORY')+'"'),'vowel story follows '+title);
  }
+});
+
+test('all 43 phonics pattern lessons are followed immediately by 43 answerable short stories',()=>{
+ const old=JSON.parse(readFileSync(new URL('../curriculum/vowel-stories.json',import.meta.url),'utf8')).stories;
+ const extra=JSON.parse(readFileSync(new URL('../curriculum/sound-stories.json',import.meta.url),'utf8')).stories;
+ const lessons=JSON.parse(readFileSync(new URL('../curriculum/phonics-course.json',import.meta.url),'utf8')).lessons;
+ assert.equal(old.length,10);
+ assert.equal(extra.length,33);
+ assert.equal(lessons.length,43);
+ assert.equal(count(/class="page phonicsPage soundStoryPage"/g),33);
+ assert.equal(count(/class="storyListenAll"/g),48);
+ assert.equal(count(/class="dict phonicsDictionary"/g),96);
+ assert.equal(count(/class="phonicsQ"/g),278);
+ const sections=[...html.matchAll(/<section class="page ([^"]+)" data-page="(\d+)"([^>]*)>([\s\S]*?)(?=<section class="page |<\/main>)/g)];
+ assert.equal(sections.length,151);
+ const ids=new Set();
+ for(const entry of extra){
+   assert.equal(entry.lines.length,5,entry.title);
+   assert.equal(entry.questions.length,3,entry.title);
+   assert.ok(Object.keys(entry.glossary).length>=5,entry.title+' missing focused Arabic dictionary');
+   assert.ok(Object.values(entry.glossary).every(x=>x.trim()),entry.title+' empty Arabic glossary value');
+   const targetIndex=sections.findIndex(m=>m[4].includes('<h2>'+entry.after+'</h2>'));
+   assert.ok(targetIndex>=0,'Missing phonics lesson '+entry.after);
+   const next=sections[targetIndex+1];
+   assert.ok(next && next[1].includes('soundStoryPage'),'Story not immediately after '+entry.after);
+   assert.ok(next[3].includes('data-after-lesson="'+entry.after+'"'),'Wrong story sequencing '+entry.after);
+   const id=next[3].match(/data-story-id="(SP\d{2})"/)?.[1];
+   assert.ok(id&&!ids.has(id),'Missing or duplicate story ID '+entry.title);
+   ids.add(id);
+   const body=next[4];
+   assert.ok(body.includes('<h2>'+entry.title+'</h2>'),'Story title mismatch '+entry.title);
+   assert.equal((body.match(/class="phonicsSentence"/g)||[]).length,5,entry.title+' sentence lines');
+   assert.equal((body.match(/class="phonicsRead"/g)||[]).length,5,entry.title+' sentence audio');
+   assert.equal((body.match(/class="phonicsQ"/g)||[]).length,3,entry.title+' practice questions');
+   assert.ok(body.includes('class="storyListenAll"')&&body.includes('class="storyStop"'),entry.title+' playback controls');
+   assert.ok(body.includes('class="dictToggle"'),entry.title+' dictionary toggle');
+   assert.ok(body.includes('data-phonics="'+id+'"'),entry.title+' saved mastery ID');
+   for(const sentence of entry.lines)assert.ok(body.includes('<p>'+sentence+'</p>'),entry.title+' missing source sentence: '+sentence);
+   for(const q of entry.questions){
+      assert.ok(q.options.includes(q.answer),entry.title+' invalid answer');
+   }
+ }
+ assert.equal(ids.size,33);
+ assert.deepEqual(extra.map(x=>x.after),lessons.filter(x=>!['SHORT VOWELS','LONG VOWELS'].includes(x.unit)).map(x=>x.title));
 });
