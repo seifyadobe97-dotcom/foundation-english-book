@@ -235,6 +235,8 @@ test('all 43 phonics pattern lessons are followed immediately by 43 answerable s
    assert.ok(body.includes('data-phonics="'+id+'"'),entry.title+' saved mastery ID');
    for(const sentence of entry.lines)assert.ok(body.includes('<p>'+escapeHtml(sentence)+'</p>'),entry.title+' missing source sentence: '+sentence);
    for(const q of entry.questions){
+      assert.equal(q.options.length,3,entry.title+' source question must contain three choices');
+      assert.equal(new Set(q.options).size,3,entry.title+' duplicate source question choices');
       assert.ok(q.options.includes(q.answer),entry.title+' invalid answer');
    }
  }
