@@ -54,7 +54,7 @@ async function cloudApi(route,opts={}){
  if(!response.ok)throw Error(result.error||"تعذر إكمال العملية.");
  return result;
 }
-const stepWhatsappContactNumber = ""; // Fill with institute WhatsApp number in international digits only.
+const stepWhatsappContactNumber = "966544149974"; // Institute WhatsApp number, international digits without plus sign.
 function whatsAppContactHtml(){
  const digits=stepWhatsappContactNumber.replace(/\D/g,"");
  if(!/^[1-9][0-9]{7,14}$/.test(digits))return "";
