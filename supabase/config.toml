@@ -1,0 +1,6 @@
+# Supabase Edge Functions for the STEP pilot
+[functions.username-login]
+verify_jwt = false
+
+[functions.step-course]
+verify_jwt = true
