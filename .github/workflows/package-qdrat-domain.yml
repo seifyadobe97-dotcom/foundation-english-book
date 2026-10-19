@@ -1,0 +1,74 @@
+name: Build QDRAT Domain Upload ZIP
+
+on:
+  push:
+    branches: ["delivery/qdrat-domain-20261019"]
+    paths: [".github/workflows/package-qdrat-domain.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    name: Validate and package unchanged static student book
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test source integrity before packaging
+        run: npm run test:static
+      - name: Create website deployment ZIP and full source backup
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p staging/audio dist
+          cp index.html style.css logo.svg manifest.webmanifest staging/
+          cp audio/voice-manifest.json staging/audio/
+          if [ -d audio/files ]; then cp -a audio/files staging/audio/files; fi
+
+          # All 151 static pages are already in index.html: never rebuild via JS.
+          test "$(grep -o 'class="page ' staging/index.html | wc -l)" -eq 151
+          test "$(grep -o 'class="phonicsQ"' staging/index.html | wc -l)" -eq 278
+          test "$(grep -o 'class="storyListenAll"' staging/index.html | wc -l)" -eq 48
+          test -s staging/style.css
+          test -s staging/logo.svg
+          test -s staging/audio/voice-manifest.json
+          ! grep -q 'src="app.js"' staging/index.html
+          ! grep -q 'src="data.js"' staging/index.html
+
+          (cd staging && zip -q -9 -X -r ../dist/Foundation-English-151-Pages-QDRAT-WEBSITE-2026-10-19.zip .)
+          git archive --format=zip --output=dist/Foundation-English-FULL-SOURCE-2026-10-19.zip HEAD
+
+          unzip -tq dist/Foundation-English-151-Pages-QDRAT-WEBSITE-2026-10-19.zip
+          unzip -tq dist/Foundation-English-FULL-SOURCE-2026-10-19.zip
+          test "$(unzip -p dist/Foundation-English-151-Pages-QDRAT-WEBSITE-2026-10-19.zip index.html | grep -o 'class="page ' | wc -l)" -eq 151
+          echo "Website package:"
+          unzip -Z1 dist/Foundation-English-151-Pages-QDRAT-WEBSITE-2026-10-19.zip
+          echo "SHA256:"
+          sha256sum dist/*.zip
+      - name: Upload permanent reusable release copies to Actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: Foundation-English-QDRAT-Website-2026-10-19
+          path: dist/Foundation-English-151-Pages-QDRAT-WEBSITE-2026-10-19.zip
+          if-no-files-found: error
+          retention-days: 90
+      - name: Upload complete source backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: Foundation-English-QDRAT-Source-Backup-2026-10-19
+          path: dist/Foundation-English-FULL-SOURCE-2026-10-19.zip
+          if-no-files-found: error
+          retention-days: 90
+      - name: Keep direct-download ZIP files on isolated delivery branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f dist/*.zip
+          git commit -m "Add validated QDRAT deployment ZIP and full source backup"
+          git push origin HEAD:delivery/qdrat-domain-20261019
