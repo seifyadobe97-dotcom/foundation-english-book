@@ -38,7 +38,7 @@ function en(s){return `<span class="eng" dir="ltr">${escapeHtml(s)}</span>`;}
 function toast(message){const t=document.createElement('div');t.className='toast';t.textContent=message;document.body.append(t);setTimeout(()=>t.remove(),4200);}
 async function api(route,opts={}){return cloudApi(route,opts);}
 function brand(){return `<div class="brand"><span class="brand-crest">Q</span><div><div class="brand-name">QUDRAT</div><div class="brand-sub">TRAINING INSTITUTE</div></div></div>`;}
-function header(loggedIn){return `<header class="site-header">${brand()}${loggedIn?`<div class="student-badge"><div class="avatar">${escapeHtml(state.username?.[0]||'S').toUpperCase()}</div><span class="header-tag">أهلًا بيك</span><button id="logout" class="btn btn-outline btn-small" type="button">مسح التقدم</button></div>`:'<div class="header-tag">STEP GRAMMAR · STUDENT EDITION</div>'}</header>`;}
+function header(loggedIn){return `<header class="site-header">${brand()}${loggedIn?`<div class="student-badge"><div class="avatar">${escapeHtml(state.username?.[0]||'S').toUpperCase()}</div><span class="header-tag">أهلًا بيك</span><button id="logout" class="btn btn-outline btn-small" type="button">تسجيل الخروج</button></div>`:'<div class="header-tag">STEP GRAMMAR · STUDENT EDITION</div>'}</header>`;}
 
 const config=window.STEP_SUPABASE_CONFIG;
 const cloudClient=window.supabase.createClient(config.url,config.anonKey);
