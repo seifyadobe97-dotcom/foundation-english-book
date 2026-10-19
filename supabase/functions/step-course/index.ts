@@ -18,7 +18,7 @@ const reply=(origin:string,status:number,body:unknown)=>new Response(JSON.string
  "Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type",Vary:"Origin"}
 });
 const serializeQ=(id:string)=>({id,text:questions[id].text,options:questions[id].options});
-function randomIds(){const ids=Object.keys(questions);for(let i=ids.length-1;i>0;i--{const bytes=new Uint32Array(1);crypto.getRandomValues(bytes);const j=bytes[0]%(i+1);[ids[i],ids[j]]=[ids[j],ids[i]];}return ids.slice(0,defaultExamCount);}
+function randomIds(){const ids=Object.keys(questions);for(let i=ids.length-1;i>0;i--){const bytes=new Uint32Array(1);crypto.getRandomValues(bytes);const j=bytes[0]%(i+1);[ids[i],ids[j]]=[ids[j],ids[i]];}return ids.slice(0,defaultExamCount);}
 function sectionStatus(attempts:{part_index:number;correct_count:number;passed:boolean}[]){
  const a=lesson.sections.map((s,i)=>{const list=attempts.filter(r=>r.part_index===i);
  return {index:i,id:s.id,title:s.title,titleAr:s.titleAr,tag:s.tag,short:s.short,duration:s.duration,questionCount:s.questionIds.length,
