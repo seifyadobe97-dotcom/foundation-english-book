@@ -16,9 +16,22 @@
       "title_ar": "الاستخدام",
       "title_en": "Usage",
       "source_page": 1,
-      "intro_ar": "يُستخدم للتعبير عن العادات والحقائق والأعمال المنتظمة.",
+      "intro_ar": "يشرح الكتاب استخدام المضارع البسيط للعادات والحقائق والأعمال المتكررة.",
       "rules": [],
-      "examples": [],
+      "examples": [
+        {
+          "en": "Donkeys carry things every day.",
+          "tag": "Habit / Job"
+        },
+        {
+          "en": "Water buffaloes pull ploughs.",
+          "tag": "Job"
+        },
+        {
+          "en": "A falcon hunts small animals.",
+          "tag": "Fact"
+        }
+      ],
       "keywords": []
     },
     {
@@ -26,9 +39,43 @@
       "title_ar": "التكوين",
       "title_en": "Formation",
       "source_page": 1,
-      "intro_ar": "يتحدد شكل الفعل حسب الفاعل.",
-      "rules": [],
-      "examples": [],
+      "intro_ar": "مع الجمع والضمائر I / We / You / They نستخدم المصدر. ومع He / She / It نضيف إلى الفعل s أو es أو ies.",
+      "rules": [
+        {
+          "label_ar": "الفاعل غير المفرد الغائب",
+          "formula": "I / We / You / They + infinitive"
+        },
+        {
+          "label_ar": "الفاعل المفرد الغائب",
+          "formula": "He / She / It + infinitive + s / es / ies"
+        },
+        {
+          "label_ar": "معظم الأفعال",
+          "formula": "verb + s"
+        },
+        {
+          "label_ar": "نهايات o / x / z / ss / sh / ch",
+          "formula": "verb + es"
+        },
+        {
+          "label_ar": "حرف ساكن قبل y",
+          "formula": "consonant + y → ies"
+        }
+      ],
+      "examples": [
+        {
+          "en": "Eslam drinks coffee every morning.",
+          "tag": "s"
+        },
+        {
+          "en": "She brushes her teeth every day.",
+          "tag": "es"
+        },
+        {
+          "en": "He studies English every day.",
+          "tag": "ies"
+        }
+      ],
       "keywords": []
     },
     {
@@ -36,9 +83,27 @@
       "title_ar": "النفي",
       "title_en": "Negative",
       "source_page": 1,
-      "intro_ar": "النفي باستخدام don't أو doesn't.",
-      "rules": [],
-      "examples": [],
+      "intro_ar": "في النفي نستخدم don't أو doesn't، وبعدهما الفعل في المصدر بدون s.",
+      "rules": [
+        {
+          "label_ar": "I / We / You / They",
+          "formula": "subject + don't + infinitive"
+        },
+        {
+          "label_ar": "He / She / It",
+          "formula": "subject + doesn't + infinitive"
+        }
+      ],
+      "examples": [
+        {
+          "en": "Falcons don't hunt at night.",
+          "tag": "don't"
+        },
+        {
+          "en": "A pigeon doesn't carry letters in most places today.",
+          "tag": "doesn't"
+        }
+      ],
       "keywords": []
     },
     {
@@ -46,9 +111,43 @@
       "title_ar": "السؤال",
       "title_en": "Question",
       "source_page": 2,
-      "intro_ar": "أسئلة Do وDoes وأدوات الاستفهام.",
-      "rules": [],
-      "examples": [],
+      "intro_ar": "يفرق الكتاب بين أسئلة نعم/لا وأسئلة أدوات الاستفهام.",
+      "rules": [
+        {
+          "label_ar": "Yes / No مع I / We / You / They",
+          "formula": "Do + subject + infinitive ... ?"
+        },
+        {
+          "label_ar": "Yes / No مع He / She / It",
+          "formula": "Does + subject + infinitive ... ?"
+        },
+        {
+          "label_ar": "الإجابة المثبتة",
+          "formula": "Yes, + subject + do / does."
+        },
+        {
+          "label_ar": "الإجابة المنفية",
+          "formula": "No, + subject + don't / doesn't."
+        },
+        {
+          "label_ar": "سؤال بأداة استفهام",
+          "formula": "Wh-word + do / does + subject + infinitive ... ?"
+        }
+      ],
+      "examples": [
+        {
+          "en": "A: Do you go to the park? B: Yes, I do.",
+          "tag": "Yes / No"
+        },
+        {
+          "en": "A: Does he live in Cairo? B: No, he doesn't.",
+          "tag": "Yes / No"
+        },
+        {
+          "en": "A: Where does she live? B: She lives in Benha.",
+          "tag": "Wh-question"
+        }
+      ],
       "keywords": []
     },
     {
@@ -56,10 +155,31 @@
       "title_ar": "الكلمات الدالة",
       "title_en": "Key Words",
       "source_page": 2,
-      "intro_ar": "الكلمات الدالة على المضارع البسيط.",
+      "intro_ar": "الكلمات الدالة المذكورة في نهاية شرح المضارع البسيط.",
       "rules": [],
       "examples": [],
-      "keywords": []
+      "keywords": [
+        {
+          "en": "always",
+          "ar": "دائمًا"
+        },
+        {
+          "en": "usually",
+          "ar": "عادةً"
+        },
+        {
+          "en": "often",
+          "ar": "غالبًا"
+        },
+        {
+          "en": "sometimes",
+          "ar": "أحيانًا"
+        },
+        {
+          "en": "never",
+          "ar": "أبدًا"
+        }
+      ]
     }
   ]
 }
