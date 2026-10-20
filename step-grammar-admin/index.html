@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#152f3d">
+<title>لوحة إدارة STEP | معهد القدرات للتدريب</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#162e3c;--ink:#283b44;--muted:#71818a;--bg:#f6f7f5;--line:#dfe7e4;--teal:#25746a;--teal-bg:#e9f5ef;--gold:#c79b61;--red:#ab4b4b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.8 Cairo,Tahoma,sans-serif}button,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}a{color:inherit;text-decoration:none}.ltr{font-family:"DM Sans",Arial,sans-serif;direction:ltr;unicode-bidi:isolate;display:inline-block}.shell{max-width:1280px;margin:0 auto;padding:30px clamp(16px,4vw,50px) 75px}
+.top{background:#fff;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:19px clamp(16px,4vw,65px);border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:13px}.logo{width:43px;height:43px;display:grid;place-items:center;border-radius:12px;background:var(--navy);border:1px solid var(--gold);color:var(--gold);font:800 20px "DM Sans"}.brand-name{font:800 15px/1.2 "DM Sans";letter-spacing:.1em;color:var(--navy)}.brand-sub{font-size:11px;color:var(--muted)}.nav-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.nav-actions a{font-size:13px;color:var(--teal);font-weight:800}.btn{border:0;border-radius:10px;padding:11px 19px;min-height:43px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-main{color:#fff;background:var(--navy)}.btn-main:hover{background:#244b5c}.btn-outline{background:white;border:1px solid #cddbd7;color:var(--navy)}.btn-small{min-height:34px;padding:5px 12px;font-size:12px}.btn-danger{color:#9a4242;background:#fff3f3;border:1px solid #f3d5d5}.btn-good{color:#17694e;background:#e8f5ef;border:1px solid #c4e1d4}
+.eyebrow{font:800 11px "DM Sans";color:#bc9163;letter-spacing:.16em;text-transform:uppercase}.page-title{font-size:clamp(26px,3.6vw,38px);line-height:1.4;margin:6px 0 8px}.intro{color:var(--muted);margin:0 0 28px}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:25px;box-shadow:0 12px 45px #152f3d08}.auth-layout{display:grid;place-items:center;min-height:60vh}.login{width:min(100%,470px);padding:36px}.login h1{font-size:26px;margin:9px 0}.login p{font-size:14px;color:var(--muted)}.field{margin-top:18px}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:6px}.field input{width:100%;border:1px solid #d7e0df;padding:12px 15px;border-radius:9px;background:#fcfcfb;direction:ltr;text-align:left;outline:none}.field input:focus{border-color:var(--teal)}.login .btn-main{width:100%;margin-top:24px}.help{font-size:13px;color:var(--muted);margin-top:18px}.notice{padding:14px 17px;margin:16px 0;border-radius:10px;color:#87572f;background:#fff7e9;border:1px solid #f0dfc5}.notice.error{background:#fff1f1;color:#a44848;border-color:#f1d4d4}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:23px}.stat{background:#fff;border:1px solid var(--line);border-radius:13px;padding:20px}.stat strong{display:block;font:800 clamp(26px,3vw,34px) "DM Sans";color:var(--navy)}.stat span{font-size:13px;color:var(--muted)}
+.table-panel{background:white;border:1px solid var(--line);border-radius:16px;overflow:hidden}.table-top{padding:21px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.table-top h2{margin:0;font-size:20px}.table-top p{margin:0;color:var(--muted);font-size:13px}.search{display:flex;gap:9px;flex-wrap:wrap}.search input{width:min(300px,75vw);padding:8px 13px;border:1px solid #d3dddb;border-radius:9px;background:#fafcfb;direction:rtl;text-align:right}
+.table-scroll{width:100%;overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:900px}th,td{text-align:right;padding:13px 15px;border-top:1px solid #edf0ee;vertical-align:middle}th{background:#f7f9f8;color:#65777c;font-size:12px;white-space:nowrap}td{font-size:13px}td.name{font-weight:800;color:var(--navy)}.contact{display:block;font-size:12px;color:var(--muted)}.contact a{color:var(--teal);font-weight:700}.tag{font-size:12px;font-weight:800;padding:4px 9px;border-radius:99px;white-space:nowrap;display:inline-block}.tag.active{background:var(--teal-bg);color:#1b7454}.tag.inactive{background:#fff0ef;color:#9e4a47}.progress{width:80px;height:7px;background:#e9efec;border-radius:7px;overflow:hidden;margin-top:4px}.progress div{height:100%;background:var(--teal)}.actions{display:flex;gap:7px;flex-wrap:wrap}.bottom{padding:14px 21px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);gap:10px}.bottom span{font-size:12px;color:var(--muted)}.footer{text-align:center;margin-top:35px;color:#8c9c9d;font:600 11px "DM Sans"}
+[hidden]{display:none!important}
+@media(max-width:650px){.top{padding:12px 15px}.brand-name{font-size:12px}.brand-sub{font-size:10px}.shell{padding:25px 14px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{padding:13px}.table-top{padding:16px}.login{padding:23px}.nav-actions a{display:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><div class="logo">Q</div><div><div class="brand-name">QUDRAT</div><div class="brand-sub">TRAINING INSTITUTE • STEP ADMIN</div></div></div><div class="nav-actions"><a href="../step-grammar-account-preview/" target="_blank" rel="noopener">صفحة الطلاب ↗</a><button id="logout" class="btn btn-outline btn-small" hidden>تسجيل الخروج</button></div></header>
+<div id="root"><main class="shell"><p>جاري التحقق من صلاحية الدخول…</p></main></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+const SUPABASE_URL="https://funltjxavowlnnfibhpl.supabase.co";
+const ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const db=window.supabase.createClient(SUPABASE_URL,ANON_KEY);
+const root=document.getElementById("root");
+const logoutButton=document.getElementById("logout");
+const ui={page:1,search:"",total:0,role:null,rows:[]};
+const escapeHtml=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const niceDate=s=>s?new Date(s).toLocaleDateString("ar-SA",{year:"numeric",month:"short",day:"numeric"}):"—";
+const digits=s=>String(s||"").replace(/\D/g,"");
+function errorMessage(e){return e&&e.message?e.message:"تعذر إكمال العملية"}
+async function api(path,opts={}){
+ const result=await db.auth.getSession();
+ const session=result.data.session;
+ if(!session)throw Error("يرجى تسجيل الدخول أولًا");
+ const response=await fetch(SUPABASE_URL+"/functions/v1/step-admin"+path,{
+  method:opts.method||"GET",headers:{"Content-Type":"application/json","apikey":ANON_KEY,"Authorization":"Bearer "+session.access_token},
+  body:opts.body
+ });
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw Error(data.error||"تعذر الاتصال بخدمة الأدمن");
+ return data;
+}
+function showLogin(msg=""){
+ logoutButton.hidden=true;
+ root.innerHTML='<div class="auth-layout shell"><form id="login-form" class="panel login"><div class="eyebrow">SECURE ADMIN ACCESS</div><h1>لوحة إدارة طلاب STEP</h1><p>سجّل دخولك بالحساب اللي مُنحت له صلاحية الأدمن. إنشاء حساب طالب لوحده لا يمنح صلاحيات الإدارة.</p>'+(msg?'<div class="notice error">'+escapeHtml(msg)+'</div>':'')+'<div class="field"><label for="username">اسم المستخدم</label><input id="username" autocomplete="username" required minlength="3" dir="ltr"></div><div class="field"><label for="password">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required minlength="10" dir="ltr"></div><button id="login" class="btn btn-main" type="submit">تسجيل الدخول للوحة</button><p class="help">البيانات محفوظة في Supabase، ومفيش تفاصيل طلاب بتظهر إلا للحسابات الإدارية المعتمدة.</p></form></div>';
+ document.getElementById("login-form").onsubmit=async e=>{
+  e.preventDefault();const b=document.getElementById("login");b.disabled=true;b.textContent="جاري التحقق…";
+  try{
+   const username=document.getElementById("username").value.trim().toLowerCase();
+   const password=document.getElementById("password").value;
+   const r=await fetch(SUPABASE_URL+"/functions/v1/username-login",{
+    method:"POST",headers:{"Content-Type":"application/json","apikey":ANON_KEY},
+    body:JSON.stringify({username,password})
+   });
+   const data=await r.json().catch(()=>({}));
+   if(!r.ok)throw Error(data.error||"فشل تسجيل الدخول");
+   const session=await db.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token});
+   if(session.error)throw session.error;
+   await checkAdmin();
+  }catch(error){showLogin(errorMessage(error));}
+ };
+}
+async function checkAdmin(){
+ try{
+  const info=await api("/me");ui.role=info.role;logoutButton.hidden=false;await loadStudents();
+ }catch(error){
+  const accessDenied=errorMessage(error).includes("غير مخوّل");
+  if(accessDenied){
+   root.innerHTML='<main class="shell"><div class="panel" style="max-width:650px;margin:55px auto"><div class="eyebrow">ACCESS RESTRICTED</div><h1>الحساب ده مش أدمن</h1><div class="notice">الحساب شغال كطالب، لكن محتاج تفعيله من إدارة المعهد علشان تفتح لوحة التحكم.</div><p>ممكن تخرج وتسجّل دخول بحساب الأدمن بعد تفعيله.</p><button id="denied-logout" class="btn btn-outline">تسجيل الخروج</button></div></main>';
+   logoutButton.hidden=false;document.getElementById("denied-logout").onclick=logout;
+  }else showLogin(errorMessage(error));
+ }
+}
+function rowHtml(s){
+ const pct=Math.min(100,Math.max(0,Number(s.parts_passed)*100/6));
+ const label=s.active?"مفعّل":"موقوف";
+ const phone=String(s.phone||"");
+ const wa=digits(phone);
+ const phoneHtml=wa.length>=8&&wa.length<=15?'<a href="https://wa.me/'+wa+'" target="_blank" rel="noopener noreferrer" class="ltr">'+escapeHtml(phone)+' ↗</a>':'<span class="ltr">'+escapeHtml(phone||"—")+'</span>';
+ const btn=ui.role==="owner"?(s.active?'<button class="btn btn-danger btn-small" data-status="0" data-id="'+escapeHtml(s.user_id)+'">إيقاف</button>':'<button class="btn btn-good btn-small" data-status="1" data-id="'+escapeHtml(s.user_id)+'">تفعيل</button>'):"—";
+ return '<tr><td class="name"><span class="ltr">'+escapeHtml(s.username)+'</span></td><td><span class="contact ltr">'+escapeHtml(s.email||"—")+'</span></td><td>'+phoneHtml+'</td><td><strong class="ltr">'+Number(s.parts_passed)+'/6</strong><div class="progress"><div style="width:'+pct+'%"></div></div></td><td>'+(s.exam_best==null?"—":'<strong class="ltr">'+Number(s.exam_best)+'%</strong>')+'</td><td><span class="tag '+(s.active?"active":"inactive")+'">'+label+'</span></td><td>'+niceDate(s.last_activity||s.created_at)+'</td><td><div class="actions">'+btn+'</div></td></tr>';
+}
+function dashboard(){
+ logoutButton.hidden=false;
+ const total=ui.total,students=ui.rows;
+ const active=students.filter(s=>s.active).length;
+ const completed=students.filter(s=>s.parts_passed>=6).length;
+ const exams=students.filter(s=>s.exam_best!=null).length;
+ const pages=Math.max(1,Math.ceil(total/25));
+ root.innerHTML='<main class="shell"><div class="eyebrow">STUDENT MANAGEMENT</div><h1 class="page-title">لوحة إدارة طلاب STEP</h1><p class="intro">دليل الطلاب وبيانات التواصل ونتائج المضارع البسيط. الصلاحية: <strong>'+(ui.role==="owner"?"مدير المعهد":"متابعة فقط")+'</strong></p><section class="stats"><div class="stat"><strong>'+total+'</strong><span>إجمالي الطلاب المطابقين للبحث</span></div><div class="stat"><strong>'+active+'</strong><span>حسابات مفعّلة بالصفحة</span></div><div class="stat"><strong>'+completed+'</strong><span>مكملين الأجزاء الستة بالصفحة</span></div><div class="stat"><strong>'+exams+'</strong><span>أدّوا الاختبار بالصفحة</span></div></section><section class="table-panel"><div class="table-top"><div><h2>قائمة الطلاب</h2><p>ابحث باسم المستخدم أو الإيميل أو رقم الموبايل</p></div><form id="search-form" class="search"><input id="q" aria-label="البحث في الطلاب" placeholder="بحث عن طالب…" value="'+escapeHtml(ui.search)+'"><button class="btn btn-main" type="submit">بحث</button></form></div><div class="table-scroll"><table><thead><tr><th>اسم المستخدم</th><th>البريد الإلكتروني</th><th>رقم الموبايل</th><th>تقدم الدرس</th><th>أفضل اختبار</th><th>الحالة</th><th>آخر نشاط</th><th>الإجراء</th></tr></thead><tbody>'+(students.length?students.map(rowHtml).join(""):'<tr><td colspan="8" style="text-align:center;padding:35px;color:#75868d">مفيش طلاب مطابقين للبحث</td></tr>')+'</tbody></table></div><div class="bottom"><span>صفحة '+ui.page+' من '+pages+' — '+total+' طالب</span><div class="actions"><button id="prev" class="btn btn-outline btn-small" '+(ui.page<=1?"disabled":"")+'>السابق</button><button id="next" class="btn btn-outline btn-small" '+(ui.page>=pages?"disabled":"")+'>التالي</button></div></div></section><div class="footer">QUDRAT TRAINING INSTITUTE · PRIVATE STEP MANAGEMENT</div></main>';
+ document.getElementById("search-form").onsubmit=e=>{e.preventDefault();ui.search=document.getElementById("q").value.trim();ui.page=1;loadStudents();};
+ document.getElementById("prev").onclick=()=>{ui.page--;loadStudents();};
+ document.getElementById("next").onclick=()=>{ui.page++;loadStudents();};
+ document.querySelectorAll("[data-status]").forEach(button=>button.onclick=async()=>{
+  const id=button.dataset.id,active=button.dataset.status==="1";
+  const student=ui.rows.find(s=>s.user_id===id);
+  if(!student)return;
+  if(!confirm((active?"تفعيل":"إيقاف")+' حساب '+student.username+'؟'))return;
+  button.disabled=true;
+  try{
+   await api("/student-status",{method:"POST",body:JSON.stringify({user_id:id,active})});
+   await loadStudents();
+  }catch(error){alert(errorMessage(error));button.disabled=false;}
+ });
+}
+async function loadStudents(){
+ root.innerHTML='<main class="shell"><p>جاري تحميل بيانات الطلاب…</p></main>';
+ try{
+  const result=await api("/students?page="+ui.page+"&q="+encodeURIComponent(ui.search));
+  ui.rows=result.students||[];ui.total=result.total||0;ui.role=result.role;
+  dashboard();
+ }catch(error){
+  root.innerHTML='<main class="shell"><div class="panel"><div class="notice error">'+escapeHtml(errorMessage(error))+'</div><button id="try-again" class="btn btn-outline">إعادة المحاولة</button></div></main>';
+  document.getElementById("try-again").onclick=loadStudents;
+ }
+}
+async function logout(){await db.auth.signOut();ui.role=null;ui.rows=[];showLogin();}
+logoutButton.onclick=logout;
+async function init(){try{const {data:{session}}=await db.auth.getSession();if(session)await checkAdmin();else showLogin();}catch(e){showLogin("تعذر الاتصال بالخدمة")}}
+init();
+</script>
+</body>
+</html>
