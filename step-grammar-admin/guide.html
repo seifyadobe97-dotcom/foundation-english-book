@@ -1,0 +1,212 @@
+<!doctype html><html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#162f3f">
+<title>محرر شرح المؤشر | QUDRAT STEP</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#162f3f;--teal:#287c71;--line:#dce9e3;--muted:#6a8086;--gold:#c9a36d}
+*{box-sizing:border-box}body{margin:0;background:#f6f8f6;color:#243e46;font:14px/1.9 Cairo,Tahoma,sans-serif}
+a,button,input,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:wait}
+a{color:var(--teal);font-weight:800;text-decoration:none}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+header{background:#fff;border-bottom:1px solid var(--line);padding:14px max(18px,calc((100vw - 1180px)/2));display:flex;justify-content:space-between;align-items:center;gap:14px}
+.logo{font:800 17px "DM Sans";letter-spacing:.11em;color:var(--navy)}.logo small{display:block;font:600 11px Cairo;color:var(--muted);letter-spacing:0}
+nav{display:flex;gap:11px;flex-wrap:wrap}main{max-width:1170px;margin:auto;padding:27px 18px 80px}
+.eyebrow{font:800 12px "DM Sans";color:var(--teal);letter-spacing:.14em}
+h1{margin:4px 0 8px;color:var(--navy);font-size:clamp(24px,4vw,35px)}h2{font-size:21px;color:var(--navy);margin:0 0 10px}
+p{color:var(--muted);margin:5px 0 15px}.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:23px;margin:16px 0;box-shadow:0 15px 40px #122d2b06}
+.topstatus{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.badge{padding:4px 12px;border-radius:100px;background:#eaf5ef;color:#176e57;font-size:12px;font-weight:800}
+.badge.draft{background:#fff2d9;color:#9f7237}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{margin:10px 0}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:5px}
+.field input,.field textarea{width:100%;background:#fcfdfc;border:1px solid #d5e4de;border-radius:9px;padding:10px 12px;resize:vertical}
+.field textarea{min-height:100px}.ltr{direction:ltr;text-align:left;font-family:"DM Sans",Arial,sans-serif}
+.tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.btn{background:var(--navy);border:1px solid var(--navy);border-radius:9px;padding:9px 15px;color:#fff;font-weight:800;min-height:40px}
+.btn.alt{background:#fff;border-color:#d5e3dd;color:var(--navy)}.btn.good{background:#18725a;border-color:#18725a}
+.btn.danger{background:#fff3f2;border-color:#ebcecc;color:#974b4b}.btn.tiny{min-height:33px;padding:5px 10px;font-size:12px}
+.modules{display:grid;gap:13px}.module-edit{background:white;border:1px solid var(--line);border-radius:13px;overflow:hidden}
+.module-edit[open]{border-color:#b8d5c7}.module-edit summary{padding:17px;cursor:pointer;font-weight:800;color:var(--navy);background:#fbfcfb}
+.module-edit summary small{color:var(--teal);margin-left:9px;font:800 12px "DM Sans"}.module-content{padding:18px 22px}
+.lineitem{border:1px solid #e8efeb;border-radius:11px;background:#fbfdfb;padding:13px;margin:10px 0}
+.lineitem .fields{gap:10px}.lineitem .field{margin:3px 0}.lineitem .tools{justify-content:flex-end}
+.sectionname{font-weight:800;color:var(--teal);font-size:13px;margin:20px 0 8px}
+.note{background:#f0f6f2;padding:13px;border-radius:10px;color:#506f66;font-size:12px}
+.preview{background:white;border:1px solid var(--line);border-radius:14px;padding:25px;margin:16px 0}
+.preview h3{font-size:19px;color:var(--navy)}.preview .formula{background:#eaf5f0;padding:8px 13px;border-radius:8px;font:700 15px "DM Sans";direction:ltr;text-align:left;color:#1f6056;margin:8px 0;overflow-wrap:anywhere}
+.preview .example{border-right:3px solid var(--gold);padding:9px 14px;margin:9px 0;background:#fffaf1;direction:ltr;text-align:left;font:600 14px "DM Sans"}
+.preview .word{background:#ecf7f1;padding:7px 10px;border-radius:8px;display:inline-flex;gap:7px;margin:4px;font-weight:700}
+.preview small{font:600 11px "DM Sans";color:var(--muted)}
+.editor-action{position:sticky;bottom:0;background:#ffffffee;border:1px solid var(--line);border-radius:13px;padding:12px;display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap;backdrop-filter:blur(8px)}
+.error{color:#a44949;background:#fff0ef;padding:12px;border-radius:9px}
+[hidden]{display:none!important}
+@media(max-width:700px){.fields{grid-template-columns:1fr}.panel{padding:16px}.module-content{padding:13px}header{padding:12px 15px}nav a{font-size:12px}.editor-action{position:static}}
+</style></head><body>
+<header><div class="logo">QUDRAT<small>STEP · SOURCE-BASED LESSON EDITOR</small></div><nav><a href="./">لوحة الأدمن</a><a href="curriculum.html">المحاور والمؤشرات</a></nav></header>
+<main id="root"><p>جاري فتح محرر شرح المؤشر…</p></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+const URL_BASE="https://funltjxavowlnnfibhpl.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const cloud=window.supabase.createClient(URL_BASE,KEY);
+const root=document.getElementById("root");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const slug=new URLSearchParams(location.search).get("indicator")||"present-simple";
+let indicator=null,guide=null,savedDraft=false,isDirty=false;
+async function api(path,data){
+ const {data:auth}=await cloud.auth.getSession();
+ if(!auth.session)throw Error("سجّل دخولك في لوحة الأدمن أولًا");
+ const r=await fetch(URL_BASE+"/functions/v1/step-admin"+path,{
+  method:data?"POST":"GET",headers:{"apikey":KEY,"Authorization":"Bearer "+auth.session.access_token,"Content-Type":"application/json"},
+  body:data?JSON.stringify(data):undefined
+ });
+ const value=await r.json().catch(()=>({}));
+ if(!r.ok)throw Error(value.error||"تعذر تنفيذ العملية");
+ return value;
+}
+function freshGuide(){
+ return {schema_version:1,indicator_slug:slug,title_ar:indicator.title_ar,title_en:indicator.title_en,
+ source:{document:"اسم ملف المصدر",pages:[1]},modules:[{
+  id:"section-1",title_ar:"عنوان القسم",title_en:"Section 1",source_page:1,
+  intro_ar:"اكتب شرح القسم مستندًا إلى مصدر المؤشر.",rules:[],examples:[],keywords:[]
+ }]};
+}
+async function load(){
+ try{
+  const data=await api("/guides/"+encodeURIComponent(slug));
+  indicator=data.indicator;
+  guide=structuredClone(data.guide.draft||data.guide.published||freshGuide());
+  savedDraft=!!data.guide.draft;isDirty=false;
+  build(data.guide);
+ }catch(e){root.innerHTML='<div class="panel error">'+esc(e.message||"تعذر فتح المحرر")+'</div>';}
+}
+const field=(label,kind,val,cls,opts="")=>'<div class="field"><label>'+label+'</label>'+
+ (kind==="textarea"?'<textarea class="'+cls+'" '+opts+'>'+esc(val??"")+'</textarea>':
+ '<input class="'+cls+'" value="'+esc(val??"")+'" '+opts+'>')+'</div>';
+function ruleRow(r){
+ return '<div class="lineitem rule-row"><div class="fields">'+
+  field("عنوان القاعدة","input",r.label_ar,"rule-label")+
+  field("Formula","input",r.formula,"rule-formula ltr")+
+  '</div><div class="tools"><button type="button" class="btn alt tiny" data-remove-row>حذف القاعدة</button></div></div>';
+}
+function exampleRow(e){
+ return '<div class="lineitem example-row"><div class="fields">'+
+  field("الجملة الإنجليزية","input",e.en,"example-en ltr")+
+  field("التصنيف","input",e.tag,"example-tag ltr")+
+  '</div><div class="tools"><button type="button" class="btn alt tiny" data-remove-row>حذف المثال</button></div></div>';
+}
+function wordRow(k){
+ return '<div class="lineitem word-row"><div class="fields">'+
+  field("الكلمة بالإنجليزي","input",k.en,"word-en ltr")+
+  field("المعنى بالعربي","input",k.ar,"word-ar")+
+  '</div><div class="tools"><button type="button" class="btn alt tiny" data-remove-row>حذف الكلمة</button></div></div>';
+}
+function moduleView(m,index){
+ return '<details class="module-edit" '+(index===0?"open":"")+' data-module-id="'+esc(m.id)+'"><summary>القسم '+(index+1)+': '+esc(m.title_ar)+' <small>'+esc(m.title_en)+' · ص '+m.source_page+'</small></summary>'+
+ '<div class="module-content"><div class="tools"><button type="button" class="btn alt tiny" data-move="-1">↑ تقديم القسم</button><button type="button" class="btn alt tiny" data-move="1">↓ تأخير القسم</button><button type="button" class="btn danger tiny" data-remove-module>حذف القسم</button></div>'+
+ '<div class="fields">'+field("عنوان القسم بالعربي","input",m.title_ar,"module-ar")+
+  field("عنوان القسم بالإنجليزي","input",m.title_en,"module-en ltr")+
+  field("رقم صفحة المصدر","input",m.source_page,"module-page ltr",'type="number" min="1" max="2000"')+
+ '</div>'+field("الشرح بالعربي","textarea",m.intro_ar,"module-intro")+
+ '<div class="sectionname">القواعد والتكوين</div><div data-list="rules">'+(m.rules||[]).map(ruleRow).join("")+'</div><button type="button" class="btn alt tiny" data-add-row="rule">+ إضافة قاعدة</button>'+
+ '<div class="sectionname">أمثلة الكتاب</div><div data-list="examples">'+(m.examples||[]).map(exampleRow).join("")+'</div><button type="button" class="btn alt tiny" data-add-row="example">+ إضافة مثال</button>'+
+ '<div class="sectionname">الكلمات الدالة</div><div data-list="keywords">'+(m.keywords||[]).map(wordRow).join("")+'</div><button type="button" class="btn alt tiny" data-add-row="word">+ إضافة كلمة</button>'+
+ '</div></details>';
+}
+function build(server){
+ const canPublish=indicator?.status==="published";
+ root.innerHTML='<div class="eyebrow">INDICATOR EXPLANATION</div><h1>محرر شرح '+esc(indicator.title_ar)+'</h1>'+
+ '<p>شرح منظم حسب صفحات المصدر؛ التغييرات تظل خاصة بالأدمن لحد نشرها.</p><div class="topstatus"><span class="badge '+(savedDraft?"draft":"")+'">'+(savedDraft?"مسودة محفوظة":server?.published?"شرح منشور":"لم يُنشر")+'</span>'+
+ '<span class="badge">'+(canPublish?"المؤشر منشور":"مؤشر غير منشور")+'</span></div>'+
+ '<section class="panel"><h2>بيانات الشرح والمصدر</h2><div class="fields">'+field("عنوان المؤشر بالعربي","input",guide.title_ar,"guide-ar")+
+ field("عنوان المؤشر بالإنجليزي","input",guide.title_en,"guide-en ltr")+
+ field("اسم ملف المصدر","input",guide.source?.document||"","guide-source")+
+ field("صفحات المصدر (افصل بفاصلة)","input",(guide.source?.pages||[]).join(", "),"guide-pages ltr")+'</div></section>'+
+ '<div class="tools"><h2 style="margin:0">أقسام الشرح</h2><button id="add-module" class="btn alt tiny" type="button">+ قسم جديد</button></div>'+
+ '<div class="modules" id="modules">'+guide.modules.map(moduleView).join("")+'</div>'+
+ '<div class="panel" id="preview-box" hidden></div>'+
+ '<div class="editor-action"><div class="tools"><button type="button" class="btn alt" id="preview">معاينة الشرح</button><button type="button" class="btn" id="save">حفظ كمسودة</button>'+
+ (savedDraft&&canPublish?'<button type="button" class="btn good" id="publish">نشر الشرح للطلاب</button>':'')+
+ (savedDraft?'<button type="button" class="btn danger" id="discard">إلغاء المسودة</button>':'')+'</div><span id="dirty" class="badge draft" hidden>تعديلات غير محفوظة</span></div>';
+ const fieldChanged=()=>{isDirty=true;const p=document.getElementById("publish");if(p)p.disabled=true;document.getElementById("dirty").hidden=false;};
+ root.querySelectorAll("input,textarea").forEach(x=>x.addEventListener("input",fieldChanged));
+ root.querySelectorAll("[data-remove-row]").forEach(x=>x.onclick=()=>{x.closest(".lineitem").remove();fieldChanged();});
+ root.querySelectorAll("[data-add-row]").forEach(x=>x.onclick=()=>{
+  const list=x.parentElement.querySelector('[data-list="'+(x.dataset.addRow==="rule"?"rules":x.dataset.addRow==="example"?"examples":"keywords")+'"]');
+  if(!list)return;
+  list.insertAdjacentHTML("beforeend",x.dataset.addRow==="rule"?ruleRow({label_ar:"",formula:""}):x.dataset.addRow==="example"?exampleRow({en:"",tag:""}):wordRow({en:"",ar:""}));
+  const newRow=list.lastElementChild;
+  newRow.querySelector("[data-remove-row]").onclick=()=>{newRow.remove();fieldChanged();};
+  newRow.querySelectorAll("input").forEach(el=>el.addEventListener("input",fieldChanged));fieldChanged();
+ });
+ root.querySelectorAll("[data-move]").forEach(x=>x.onclick=()=>{
+  const mod=x.closest(".module-edit"),sibling=x.dataset.move==="-1"?mod.previousElementSibling:mod.nextElementSibling;
+  if(!sibling)return;
+  if(x.dataset.move==="-1")mod.parentElement.insertBefore(mod,sibling);
+  else mod.parentElement.insertBefore(sibling,mod);
+  fieldChanged();
+ });
+ root.querySelectorAll("[data-remove-module]").forEach(x=>x.onclick=()=>{
+  if(root.querySelectorAll(".module-edit").length<=1){alert("لازم يكون في قسم واحد على الأقل");return;}
+  if(confirm("حذف القسم من المسودة؟")){x.closest(".module-edit").remove();fieldChanged();}
+ });
+ document.getElementById("add-module").onclick=()=>{
+  const n=root.querySelectorAll(".module-edit").length+1;
+  const module={id:"section-"+crypto.randomUUID().slice(0,8),title_ar:"قسم جديد",title_en:"New Section",
+   intro_ar:"اكتب شرحًا للقسم مستندًا إلى المصدر.",source_page:guide.source.pages[0]||1,rules:[],examples:[],keywords:[]};
+  const list=document.getElementById("modules");
+  list.insertAdjacentHTML("beforeend",moduleView(module,n-1));
+  // Rebuild with the just-appended module so new edit controls are wired.
+  guide=collect();fieldChanged();build({draft:guide,published:null});
+  list.lastElementChild?.scrollIntoView({behavior:"smooth"});
+ };
+ document.getElementById("save").onclick=save;
+ document.getElementById("preview").onclick=preview;
+ const pub=document.getElementById("publish");if(pub)pub.onclick=publish;
+ const discard=document.getElementById("discard");if(discard)discard.onclick=discardDraft;
+}
+function collect(){
+ const val=(container,sel)=>container.querySelector(sel)?.value?.trim()||"";
+ const all=[...root.querySelectorAll(".module-edit")].map((mod,index)=>({
+  id:mod.dataset.moduleId||"section-"+index,
+  title_ar:val(mod,".module-ar"),title_en:val(mod,".module-en"),
+  source_page:Number(val(mod,".module-page")),intro_ar:val(mod,".module-intro"),
+  rules:[...mod.querySelectorAll(".rule-row")].map(x=>({label_ar:val(x,".rule-label"),formula:val(x,".rule-formula")})),
+  examples:[...mod.querySelectorAll(".example-row")].map(x=>({en:val(x,".example-en"),tag:val(x,".example-tag")})),
+  keywords:[...mod.querySelectorAll(".word-row")].map(x=>({en:val(x,".word-en"),ar:val(x,".word-ar")}))
+ }));
+ const pages=val(root,".guide-pages").split(/[،, ]+/).filter(Boolean).map(Number);
+ return {schema_version:1,indicator_slug:slug,title_ar:val(root,".guide-ar"),title_en:val(root,".guide-en"),
+ source:{document:val(root,".guide-source"),pages},modules:all};
+}
+function preview(){
+ const model=collect();
+ const section=model.modules.map(m=>'<div class="preview"><small>PAGE '+m.source_page+' · '+esc(m.title_en)+'</small><h3>'+esc(m.title_ar)+'</h3><p>'+esc(m.intro_ar)+'</p>'+
+ m.rules.map(r=>'<strong>'+esc(r.label_ar)+'</strong><div class="formula">'+esc(r.formula)+'</div>').join("")+
+ m.examples.map(x=>'<div class="example">'+esc(x.en)+'</div>').join("")+
+ m.keywords.map(x=>'<span class="word"><b>'+esc(x.en)+'</b>'+esc(x.ar)+'</span>').join("")+'</div>').join("");
+ const container=document.getElementById("preview-box");container.hidden=false;
+ container.innerHTML='<h2>معاينة قبل النشر</h2>'+section;
+ container.scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function save(){
+ const button=document.getElementById("save");button.disabled=true;
+ try{
+  const content=collect(),result=await api("/guides/save",{indicator_slug:slug,guide:content});
+  await load();alert("تم حفظ "+result.sections+" أقسام كمسودة. الطلاب ما شافوش التغييرات.");
+ }catch(e){alert(e.message);button.disabled=false;}
+}
+async function publish(){
+ if(isDirty){alert("احفظ التعديلات أولًا");return;}
+ if(!confirm("نشر شرح المؤشر الحالي لكل الطلاب؟"))return;
+ try{await api("/guides/publish",{indicator_slug:slug});await load();alert("تم نشر شرح المؤشر للطلاب.");}
+ catch(e){alert(e.message);}
+}
+async function discardDraft(){
+ if(!confirm("حذف المسودة غير المنشورة والرجوع للنسخة المنشورة؟"))return;
+ try{await api("/guides/discard-draft",{indicator_slug:slug});await load();}
+ catch(e){alert(e.message);}
+}
+load();
+</script></body></html>
