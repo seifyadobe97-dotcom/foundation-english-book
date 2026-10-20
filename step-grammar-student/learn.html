@@ -73,6 +73,7 @@ const HOST="https://funltjxavowlnnfibhpl.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsI
 const db=window.supabase.createClient(HOST,KEY);
 const root=document.getElementById("root");
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const format=v=>esc(v).replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>").replace(/\x60([^\x60]+)\x60/g,'<span class="en">$1</span>');
 const mini=[
 {title:"هل دي عادة متكررة؟",q:"She usually studies English in the evening.",a:["أيوه، عادة","لأ، بيحصل دلوقتي"],correct:0,why:"Usually معناها عادةً، فالجملة بتحكي عن روتين متكرر."},
 {title:"مين محتاج فعل + s؟",q:"Choose the subject that takes plays.",a:["They","She","We"],correct:1,why:"She مفرد غائب، ومع المضارع البسيط المثبت نستخدم plays."},
@@ -143,11 +144,11 @@ function lesson(){
  const words=i===5?(model.guide?.modules?.[4]?.keywords||[]):[];
  const trap=p.mistake||{},coach=mini[i]||mini[0];
  return '<div class="card"><div class="chapter-header"><div><span class="chapter-label">UNDERSTAND THE IDEA</span><h2>'+esc(p.titleAr)+'</h2><p>'+esc(p.subtitle||"")+'</p></div><div class="stepcounter">'+(i+1)+' / 6</div></div>'+
- '<p class="intro">'+esc(p.description||"")+'</p>'+
+ '<p class="intro">'+format(p.description||"")+'</p>'+
  chs.map(m=>m.intro_ar?'<p class="source-intro">'+esc(m.intro_ar)+'</p>':'').join("")+
  (rules.length?'<h3 class="mini-title">شوف القاعدة بعينك</h3><div class="rule-set">'+rules.map(r=>'<div class="rule"><strong>'+esc(r.label)+'</strong><div class="formula">'+esc(r.formula)+'</div></div>').join("")+'</div>':'')+
  (words.length?'<h3 class="mini-title">الكلمات اللي تخلّيك تلتقط الزمن</h3><div class="keywords">'+words.map(w=>'<span class="keyword"><b>'+esc(w.en)+'</b><span>'+esc(w.ar)+'</span></span>').join("")+'</div>':'')+
- '<div class="gold-note"><span>★</span><div><strong>'+esc(p.gold?.title||"ركز هنا")+'</strong><p>'+esc(String(p.gold?.body||"").replace(/<[^>]*>/g,""))+'</p></div></div>'+
+ '<div class="gold-note"><span>★</span><div><strong>'+esc(p.gold?.title||"ركز هنا")+'</strong><p>'+format(String(p.gold?.body||"").replace(/<[^>]*>/g,""))+'</p></div></div>'+
  (examples.length?'<h3 class="mini-title">شوف الفكرة في أمثلة حقيقية</h3><div class="example-list">'+examples.map(x=>'<div class="example"><b>'+esc(x.en)+'</b>'+(x.ar||x.tag?'<span>'+esc(x.ar||x.tag)+'</span>':'')+'</div>').join("")+'</div>':'')+
  '<div class="coach"><span class="chapter-label">QUICK CHECK</span><h3>جرّب تفكّر قبل الاختيارات</h3><p class="coach-q en">'+esc(coach.q)+'</p><div class="coach-answers">'+coach.a.map((a,n)=>'<button type="button" class="coach-opt" data-mini="'+n+'">'+esc(a)+'</button>').join("")+'</div><div id="coach-feedback" class="coach-feedback" aria-live="polite"></div></div>'+
  (trap.wrong?'<h3 class="mini-title">فخ شائع في الامتحان</h3><div class="trap"><div><small>مش كده</small><strong>'+esc(trap.wrong)+'</strong></div><div><small>الأصح</small><strong>'+esc(trap.right)+'</strong></div></div><p class="source-intro">'+esc(trap.why||"")+'</p>':'')+'</div>';
