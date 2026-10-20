@@ -1,0 +1,125 @@
+<!doctype html><html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>المحاور والمؤشرات | معهد القدرات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=DM+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#152f3e;--muted:#73858b;--green:#26796b;--line:#e0eae5;--bg:#f7f8f6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px/1.9 Cairo,Tahoma,sans-serif;color:#283e46}
+header{padding:17px max(20px,calc((100vw - 1220px)/2));background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px}a{color:var(--green);text-decoration:none;font-weight:800}
+header strong{font:800 17px "DM Sans";letter-spacing:.13em;color:var(--navy)}
+main{max-width:1240px;margin:auto;padding:35px 22px 80px}.eyebrow{font:800 12px "DM Sans";color:var(--green);letter-spacing:.12em}
+h1{font-size:clamp(27px,4vw,37px);margin:6px 0}h2{margin:0 0 10px;font-size:21px}p{margin:0 0 18px;color:var(--muted)}
+.axes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0 27px}
+.axis{padding:19px 14px;background:#fff;border:1px solid var(--line);border-radius:14px;text-align:right;cursor:pointer;font:inherit;color:inherit}
+.axis.active{border-color:var(--green);box-shadow:0 0 0 1px var(--green);background:#f0f8f5}
+.axis b{display:block;font-size:17px}.axis small{display:block;color:var(--muted)}.axis span{display:block;color:var(--green);font:700 12px "DM Sans";margin-bottom:6px}
+.layout{display:grid;grid-template-columns:350px minmax(0,1fr);gap:16px}.panel{background:white;border:1px solid var(--line);border-radius:15px;padding:22px}
+.filter{width:100%;border:1px solid #d6e3df;border-radius:9px;padding:10px 12px;font:inherit;margin:8px 0}
+.indicator{display:block;width:100%;text-align:right;border:1px solid var(--line);background:white;border-radius:10px;padding:11px;margin:8px 0;cursor:pointer;font:inherit}
+.indicator.active{background:#eff8f4;border-color:var(--green)}.indicator strong{display:block;color:var(--navy);font-size:13px}
+.indicator small{font-size:11px;color:var(--muted)}.status{font-weight:800;color:#ab7b39}.published{color:var(--green)}
+.field{margin:12px 0}.field label{display:block;font-weight:800;font-size:12px;margin-bottom:5px}
+.field input,.field textarea,.field select{width:100%;border-radius:9px;border:1px solid #d4e1db;font:inherit;padding:10px 12px;background:#fff}
+.field textarea{min-height:95px;resize:vertical}.ltr{direction:ltr;text-align:left;font-family:"DM Sans",Arial}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}button{font:inherit;cursor:pointer}.btn{background:var(--navy);border:1px solid var(--navy);color:#fff;border-radius:9px;padding:9px 17px;font-weight:800}
+.btn.alt{background:white;border-color:var(--line);color:var(--navy)}.btn:disabled{opacity:.5;cursor:wait}
+.note{background:#f6f7f5;border-radius:10px;padding:12px;color:#687c80;font-size:12px;margin:13px 0}
+@media(max-width:950px){.axes{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}
+@media(max-width:440px){.axes{gap:8px}.axis{padding:13px 10px}.axis b{font-size:14px}}
+</style></head><body>
+<header><strong>QUDRAT <span style="font-size:10px">STEP</span></strong><a href="./">← لوحة الأدمن</a></header>
+<main id="content"><p>جاري تحميل المحاور والمؤشرات…</p></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+const BASE="https://funltjxavowlnnfibhpl.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const client=window.supabase.createClient(BASE,KEY);
+const root=document.getElementById("content");
+const state={axes:[],indicators:[],axis:"grammar",item:null,role:null,search:""};
+const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function request(path,body){
+ const {data:{session}}=await client.auth.getSession();
+ if(!session)throw Error("سجل دخولك من لوحة الأدمن أولًا.");
+ const response=await fetch(BASE+"/functions/v1/step-admin"+path,{method:body?"POST":"GET",
+ headers:{"Authorization":"Bearer "+session.access_token,"apikey":KEY,"Content-Type":"application/json"},
+ body:body?JSON.stringify(body):undefined});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw Error(data.error||"تعذر تحميل البيانات");
+ return data;
+}
+function fail(e){root.innerHTML='<h1>المحاور والمؤشرات</h1><div class="panel">'+escapeHtml(e.message||"تعذر التحميل")+'</div><a href="./">العودة للوحة الأدمن</a>'}
+async function load(){
+ try{const data=await request("/curriculum");state.axes=data.axes||[];state.indicators=data.indicators||[];paint();}
+ catch(e){fail(e);}
+}
+function paint(){
+ const canEdit=state.role==="owner";
+ const axis=state.axes.find(x=>x.code===state.axis);
+ const filtered=state.indicators.filter(x=>x.axis_code===state.axis&&
+  (x.title_ar+" "+x.title_en).toLowerCase().includes(state.search.toLowerCase()));
+ const current=state.indicators.find(x=>x.id===state.item&&x.axis_code===state.axis)||null;
+ const isIndicatorAxis=axis?.content_model==="indicators";
+ root.innerHTML='<div class="eyebrow">STEP LEARNING STRUCTURE</div><h1>المحاور والمؤشرات</h1><p>هيكل منهج STEP. المؤشر المنشور الوحيد حاليًا هو Present Simple، وباقي المؤشرات مسودات تحتاج محتوى معتمدًا.</p><div class="axes">'+
+ state.axes.map(x=>{const total=state.indicators.filter(i=>i.axis_code===x.code).length;
+ return '<button class="axis '+(state.axis===x.code?"active":"")+'" data-axis="'+escapeHtml(x.code)+'"><span>AXIS 0'+x.position+'</span><b>'+escapeHtml(x.title_ar)+'</b><small>'+escapeHtml(x.title_en)+'</small><small>'+(x.content_model==="indicators"?total+' مؤشر':'محور مستقل')+'</small></button>';
+ }).join("")+'</div><section class="layout"><div class="panel"><h2>'+escapeHtml(axis?.title_ar||"")+'</h2>'+
+ (isIndicatorAxis?'<input id="indicator-search" class="filter" placeholder="بحث عن مؤشر…" value="'+escapeHtml(state.search)+'">'+
+ (canEdit?'<button class="btn" id="new-indicator">+ إضافة مؤشر</button>':'')+
+ '<div id="indicators-list">'+filtered.map(i=>'<button class="indicator '+(i.id===state.item?"active":"")+'" data-indicator="'+escapeHtml(i.id)+'"><small class="status '+(i.status==="published"?"published":"")+'">'+(i.status==="published"?"منشور":i.status==="archived"?"مؤرشف":"مسودة")+'</small><strong>'+escapeHtml(i.title_ar)+'</strong><small>'+escapeHtml(i.title_en)+'</small></button>').join("")+'</div>':
+ '<div class="note">المحور مستقل، وهنربط محتواه وتدريباته به مباشرة.</div>')+
+ '</div><div class="panel">'+(isIndicatorAxis?form(current,canEdit):
+ '<h2>'+escapeHtml(axis?.title_ar||"")+'</h2><p>مكان المحور جاهز. إدخال المحتوى الفعلي هيبدأ بعد اعتماد المواد والأسئلة.</p>')+
+ '</div></section>';
+ document.querySelectorAll("[data-axis]").forEach(b=>b.onclick=()=>{state.axis=b.dataset.axis;state.item=null;state.search="";paint();});
+ if(!isIndicatorAxis)return;
+ const search=document.getElementById("indicator-search");search.oninput=()=>{state.search=search.value;const pos=search.selectionStart;paint();const again=document.getElementById("indicator-search");again.focus();again.setSelectionRange(pos,pos);};
+ document.querySelectorAll("[data-indicator]").forEach(b=>b.onclick=()=>{state.item=b.dataset.indicator;paint();});
+ const add=document.getElementById("new-indicator");if(add)add.onclick=()=>{state.item=null;paint();document.getElementById("title-ar").focus();};
+ if(!canEdit)return;
+ const formNode=document.getElementById("indicator-form");
+ formNode.onsubmit=async e=>{
+ e.preventDefault();const btn=document.getElementById("save");btn.disabled=true;
+ const payload={id:current?.id||null,axis_code:state.axis,
+ slug:document.getElementById("slug").value.trim().toLowerCase(),
+ title_ar:document.getElementById("title-ar").value.trim(),
+ title_en:document.getElementById("title-en").value.trim(),
+ description:document.getElementById("description").value.trim(),
+ position:Number(document.getElementById("position").value)};
+ try{const r=await request("/curriculum/indicators/save",payload);state.item=r.indicator.id;await load();}
+ catch(e){alert(e.message);btn.disabled=false;}
+ };
+ const status=document.getElementById("archive");
+ if(status)status.onclick=async()=>{
+  const archived=current.status==="draft";
+  if(!confirm((archived?"أرشفة":"استعادة")+" مؤشر "+current.title_ar+"؟"))return;
+  status.disabled=true;
+  try{await request("/curriculum/indicators/status",{id:current.id,archived});await load();}
+  catch(e){alert(e.message);status.disabled=false;}
+ };
+}
+function form(item,canEdit){
+ const immutable=item?.status==="published";
+ const disabled=!canEdit||immutable?" disabled":"";
+ const value=(id,label,content,opts={})=>'<div class="field"><label for="'+id+'">'+label+'</label>'+
+ (opts.area?'<textarea id="'+id+'" '+disabled+'>'+escapeHtml(content||"")+'</textarea>':
+ '<input id="'+id+'" value="'+escapeHtml(content??"")+'" '+(opts.ltr?'class="ltr"':'')+disabled+' required>')+'</div>';
+ return '<h2>'+(item?'بيانات المؤشر':'إضافة مؤشر جديد')+'</h2><div class="note">'+(immutable?
+ 'المؤشر ده منشور بالفعل، ومحتواه ودرجاته محفوظة في نظام الدروس.': 
+ 'المؤشر هيتحفظ كمسودة، ومش هيظهر للطلاب إلا بعد تجهيز الدرس والأسئلة واعتماده.')+
+ '</div><form id="indicator-form">'+
+ value("title-ar","اسم المؤشر بالعربي",item?.title_ar)+
+ value("title-en","الاسم بالإنجليزي",item?.title_en,{ltr:true})+
+ value("slug","الكود الإنجليزي",item?.slug,{ltr:true})+
+ value("position","الترتيب",item?.position??(state.indicators.filter(x=>x.axis_code===state.axis).length+1))+
+ value("description","معلومات المصدر والمراجعة",item?.description,{area:true})+
+ (canEdit&&!immutable?'<div class="actions"><button class="btn" id="save">حفظ المؤشر</button>'+
+ (item?'<button class="btn alt" id="archive" type="button">'+(item.status==="draft"?"أرشفة":"استعادة المسودة")+'</button>':'')+'</div>':'')+
+ '</form>';
+}
+async function init(){
+ try{const info=await request("/me");state.role=info.role;await load();}
+ catch(e){fail(e);}
+}
+init();
+</script></body></html>
