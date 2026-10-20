@@ -23,13 +23,13 @@
 /* GitHub Pages standalone pilot: hide sign-in, improve focus and legibility. */
 .student-badge .avatar{background:#f0e4c5;color:#29464b}.question-text{font-size:17px}.course-code{letter-spacing:.07em}.gold-card{border-right-width:5px}.practice-bottom .btn:disabled{opacity:.5}
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.5/build/css/intlTelInput.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.5/dist/css/intlTelInput.css">
 <style>.iti{width:100%;direction:ltr}.iti input{padding-left:105px!important}.iti__country-container{z-index:5}.iti__dropdown-content{direction:ltr;max-width:min(360px,95vw)}.iti__selected-dial-code{font-family:'DM Sans',sans-serif}.iti__search-input{width:100%}</style>
 </head>
 <body>
 <div id="app" aria-live="polite"><div class="initial-loading">جاري تجهيز درس المضارع البسيط…</div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.5/build/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.5/dist/js/intlTelInput.min.js"></script>
 <script>window.STEP_SUPABASE_CONFIG={"url":"https://funltjxavowlnnfibhpl.supabase.co","anonKey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg"};</script>
 <script>'use strict';
 const app=document.getElementById('app');
@@ -75,7 +75,7 @@ function loginPage(message="",mode="login"){
  const iti=signup&&window.intlTelInput?window.intlTelInput(document.getElementById("phone"),{
  initialCountry:"sa",separateDialCode:true,
  countryOrder:["sa","ae","eg","kw","bh","qa","om","jo","ye"],
- loadUtils:()=>import("https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.5/build/js/utils.js")
+ loadUtils:()=>import("https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.5/dist/js/utils.js")
  }):null;
  document.getElementById("switch-mode").onclick=()=>loginPage("",signup?"login":"signup");
  document.getElementById("account-form").onsubmit=async (event)=>{
