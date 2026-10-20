@@ -101,8 +101,35 @@ function dashboard(){
  const completed=students.filter(s=>s.parts_passed>=6).length;
  const exams=students.filter(s=>s.exam_best!=null).length;
  const pages=Math.max(1,Math.ceil(total/25));
- root.innerHTML='<main class="shell"><div class="eyebrow">STUDENT MANAGEMENT</div><h1 class="page-title">لوحة إدارة طلاب STEP</h1><p class="intro">دليل الطلاب وبيانات التواصل ونتائج المضارع البسيط. الصلاحية: <strong>'+(ui.role==="owner"?"مدير المعهد":"متابعة فقط")+'</strong></p><section class="stats"><div class="stat"><strong>'+total+'</strong><span>إجمالي الطلاب المطابقين للبحث</span></div><div class="stat"><strong>'+active+'</strong><span>حسابات مفعّلة بالصفحة</span></div><div class="stat"><strong>'+completed+'</strong><span>مكملين الأجزاء الستة بالصفحة</span></div><div class="stat"><strong>'+exams+'</strong><span>أدّوا الاختبار بالصفحة</span></div></section><section class="table-panel"><div class="table-top"><div><h2>قائمة الطلاب</h2><p>ابحث باسم المستخدم أو الإيميل أو رقم الموبايل</p></div><form id="search-form" class="search"><input id="q" aria-label="البحث في الطلاب" placeholder="بحث عن طالب…" value="'+escapeHtml(ui.search)+'"><button class="btn btn-main" type="submit">بحث</button></form></div><div class="table-scroll"><table><thead><tr><th>اسم المستخدم</th><th>البريد الإلكتروني</th><th>رقم الموبايل</th><th>تقدم الدرس</th><th>أفضل اختبار</th><th>الحالة</th><th>آخر نشاط</th><th>الإجراء</th></tr></thead><tbody>'+(students.length?students.map(rowHtml).join(""):'<tr><td colspan="8" style="text-align:center;padding:35px;color:#75868d">مفيش طلاب مطابقين للبحث</td></tr>')+'</tbody></table></div><div class="bottom"><span>صفحة '+ui.page+' من '+pages+' — '+total+' طالب</span><div class="actions"><button id="prev" class="btn btn-outline btn-small" '+(ui.page<=1?"disabled":"")+'>السابق</button><button id="next" class="btn btn-outline btn-small" '+(ui.page>=pages?"disabled":"")+'>التالي</button></div></div></section><div class="footer">QUDRAT TRAINING INSTITUTE · PRIVATE STEP MANAGEMENT</div></main>';
+ root.innerHTML='<main class="shell"><div class="eyebrow">STUDENT MANAGEMENT</div><h1 class="page-title">لوحة إدارة طلاب STEP</h1><p class="intro">دليل الطلاب وبيانات التواصل ونتائج المضارع البسيط. الصلاحية: <strong>'+(ui.role==="owner"?"مدير المعهد":"متابعة فقط")+'</strong></p><section class="stats"><div class="stat"><strong>'+total+'</strong><span>إجمالي الطلاب المطابقين للبحث</span></div><div class="stat"><strong>'+active+'</strong><span>حسابات مفعّلة بالصفحة</span></div><div class="stat"><strong>'+completed+'</strong><span>مكملين الأجزاء الستة بالصفحة</span></div><div class="stat"><strong>'+exams+'</strong><span>أدّوا الاختبار بالصفحة</span></div></section><section class="table-panel"><div class="table-top"><div><h2>قائمة الطلاب</h2><p>ابحث باسم المستخدم أو الإيميل أو رقم الموبايل</p></div><button id="export-students" class="btn btn-outline btn-small" type="button">تصدير Excel / CSV</button><form id="search-form" class="search"><input id="q" aria-label="البحث في الطلاب" placeholder="بحث عن طالب…" value="'+escapeHtml(ui.search)+'"><button class="btn btn-main" type="submit">بحث</button></form></div><div class="table-scroll"><table><thead><tr><th>اسم المستخدم</th><th>البريد الإلكتروني</th><th>رقم الموبايل</th><th>تقدم الدرس</th><th>أفضل اختبار</th><th>الحالة</th><th>آخر نشاط</th><th>الإجراء</th></tr></thead><tbody>'+(students.length?students.map(rowHtml).join(""):'<tr><td colspan="8" style="text-align:center;padding:35px;color:#75868d">مفيش طلاب مطابقين للبحث</td></tr>')+'</tbody></table></div><div class="bottom"><span>صفحة '+ui.page+' من '+pages+' — '+total+' طالب</span><div class="actions"><button id="prev" class="btn btn-outline btn-small" '+(ui.page<=1?"disabled":"")+'>السابق</button><button id="next" class="btn btn-outline btn-small" '+(ui.page>=pages?"disabled":"")+'>التالي</button></div></div></section><div class="footer">QUDRAT TRAINING INSTITUTE · PRIVATE STEP MANAGEMENT</div></main>';
+
  injectAdminNavigation("students");
+ const exportBtn=document.getElementById("export-students");
+ exportBtn.onclick=async()=>{
+  exportBtn.disabled=true;exportBtn.textContent="جاري تجهيز الملف…";
+  try{
+   const entries=[];
+   const totalPages=Math.max(1,Math.ceil(ui.total/25));
+   for(let page=1;page<=totalPages;page++){
+    const batch=await api("/students?page="+page+"&q="+encodeURIComponent(ui.search));
+    entries.push(...(batch.students||[]));
+    exportBtn.textContent="جاري تجهيز "+entries.length+" طالب…";
+   }
+   const safeCell=value=>{
+    let s=String(value??"");
+    if(/^[\s]*[=+\-@]/.test(s))s="'"+s;
+    return '"'+s.replace(/"/g,'""')+'"';
+   };
+   const headings=["اسم المستخدم","البريد الإلكتروني","الموبايل","أجزاء مكتملة","أفضل اختبار %","الحالة","تاريخ التسجيل","آخر نشاط"];
+   const rows=entries.map(s=>[s.username,s.email,s.phone,s.parts_passed,s.exam_best??"",s.active?"مفعّل":"موقوف",s.created_at,s.last_activity??""]);
+   const csv="\uFEFF"+[headings,...rows].map(row=>row.map(safeCell).join(",")).join("\r\n");
+   const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+   const uri=URL.createObjectURL(blob);
+   const a=document.createElement("a");a.href=uri;a.download="QUDRAT_STEP_students_"+new Date().toISOString().slice(0,10)+".csv";
+   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(uri),5000);
+  }catch(error){alert(errorMessage(error));}
+  finally{exportBtn.disabled=false;exportBtn.textContent="تصدير Excel / CSV";}
+ };
  document.getElementById("search-form").onsubmit=e=>{e.preventDefault();ui.search=document.getElementById("q").value.trim();ui.page=1;loadStudents();};
  document.getElementById("prev").onclick=()=>{ui.page--;loadStudents();};
  document.getElementById("next").onclick=()=>{ui.page++;loadStudents();};
