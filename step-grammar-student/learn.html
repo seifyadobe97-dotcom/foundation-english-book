@@ -34,6 +34,10 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
 .example b{display:block;direction:ltr;text-align:left;font:700 15px/1.75 "DM Sans";color:#2b4350}.example span{display:block;color:#718086;font-size:12px;margin-top:4px}
 .gold-note{background:#fff8ea;border:1px solid #f0dfbe;border-radius:11px;margin:17px 0;padding:14px 18px;display:flex;gap:12px}
 .gold-note strong{color:#755324;font-size:13px}.gold-note p{margin:3px 0 0;color:#796848;font-size:13px}
+.signal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}.signal-card{border:1px dashed #9ec7b6;background:#f4fbf6;border-radius:12px;padding:13px;text-align:right;color:#285c55;min-height:90px}
+.signal-card span{display:block;font-size:10px;color:#7a9388}.signal-card strong{display:block;margin:3px 0;font-size:15px}
+.signal-card small{display:block;direction:ltr;text-align:right;font:700 13px "DM Sans";color:#1f6c5e;margin-top:6px}
+.signal-card.revealed{background:#e5f4ea;border-style:solid}
 .keywords{display:flex;flex-wrap:wrap;gap:7px;margin:15px 0}.keyword{background:#ecf7f1;border:1px solid #c9e6d9;border-radius:99px;padding:7px 13px;display:flex;gap:10px;align-items:center}
 .keyword b{font:800 12px "DM Sans";color:#18725f}.keyword span{font-size:11px}
 .coach{background:#f0f5f9;border:1px solid #d7e3eb;border-radius:13px;padding:20px;margin:20px 0}
@@ -62,7 +66,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
 .loading{background:white;border-radius:15px;padding:35px;margin-top:16px}.error{background:#fff3ef;border:1px solid #f0d4c9;color:#975544;border-radius:12px;padding:15px;margin:16px 0}
 [hidden]{display:none!important}
 @media(max-width:1040px){.map{grid-template-columns:repeat(3,1fr)}.lesson-grid{grid-template-columns:1fr}.side{display:none}}
-@media(max-width:630px){.shell{padding:15px 12px 50px}.hero{padding:22px;border-radius:14px}.hero-extra{width:100%}.hero-num{flex:1}.map{grid-template-columns:repeat(2,1fr);gap:7px}.map button{min-height:83px}.card{padding:17px}.example-list,.rule-set,.trap,.options{grid-template-columns:1fr}.headerlinks .btn{font-size:11px;padding:7px 10px}.top{padding:10px 12px}.brand small{display:none}.chapter-header{align-items:start}.coach-opt{flex:1 1 45%}}
+@media(max-width:630px){.signal-grid{grid-template-columns:1fr}}@media(max-width:630px){.shell{padding:15px 12px 50px}.hero{padding:22px;border-radius:14px}.hero-extra{width:100%}.hero-num{flex:1}.map{grid-template-columns:repeat(2,1fr);gap:7px}.map button{min-height:83px}.card{padding:17px}.example-list,.rule-set,.trap,.options{grid-template-columns:1fr}.headerlinks .btn{font-size:11px;padding:7px 10px}.top{padding:10px 12px}.brand small{display:none}.chapter-header{align-items:start}.coach-opt{flex:1 1 45%}}
 </style></head><body>
 <header class="top"><a class="brand" href="../step-grammar-student/"><span class="seal">Q</span><span><strong>QUDRAT</strong><small>STEP · ENGLISH MASTERY</small></span></a><nav class="headerlinks"><a class="btn outline slim" href="../step-grammar-student/">دروسي</a><button class="btn outline slim" id="signout">خروج</button></nav></header>
 <main id="root" class="shell"><div class="loading">بنجهز درسك…</div></main>
@@ -147,6 +151,7 @@ function lesson(){
  '<p class="intro">'+format(p.description||"")+'</p>'+
  chs.map(m=>m.intro_ar?'<p class="source-intro">'+esc(m.intro_ar)+'</p>':'').join("")+
  (rules.length?'<h3 class="mini-title">شوف القاعدة بعينك</h3><div class="rule-set">'+rules.map(r=>'<div class="rule"><strong>'+esc(r.label)+'</strong><div class="formula">'+esc(r.formula)+'</div></div>').join("")+'</div>':'')+
+ (p.tiles?.length?'<h3 class="mini-title">بطاقات تثبيت الفكرة</h3><div class="signal-grid">'+p.tiles.map((t,n)=>'<button type="button" class="signal-card" data-flip="'+n+'"><span>اضغط للكشف</span><strong>'+esc(t.label)+'</strong><small hidden>'+esc(t.text)+'</small></button>').join("")+'</div>':'')+
  (words.length?'<h3 class="mini-title">الكلمات اللي تخلّيك تلتقط الزمن</h3><div class="keywords">'+words.map(w=>'<span class="keyword"><b>'+esc(w.en)+'</b><span>'+esc(w.ar)+'</span></span>').join("")+'</div>':'')+
  '<div class="gold-note"><span>★</span><div><strong>'+esc(p.gold?.title||"ركز هنا")+'</strong><p>'+format(String(p.gold?.body||"").replace(/<[^>]*>/g,""))+'</p></div></div>'+
  (examples.length?'<h3 class="mini-title">شوف الفكرة في أمثلة حقيقية</h3><div class="example-list">'+examples.map(x=>'<div class="example"><b>'+esc(x.en)+'</b>'+(x.ar||x.tag?'<span>'+esc(x.ar||x.tag)+'</span>':'')+'</div>').join("")+'</div>':'')+
@@ -182,6 +187,7 @@ function render(){
  root.innerHTML=renderHeader()+'<div class="lesson-grid"><div class="main-col">'+lesson()+practice()+finalPromo()+'</div>'+side()+'</div>'+
  '<div class="footer">QUDRAT · STEP ENGLISH MASTERY</div>';
  wireNav();
+ root.querySelectorAll("[data-flip]").forEach(b=>b.onclick=()=>{b.classList.toggle("revealed");const answer=b.querySelector("small");answer.hidden=!b.classList.contains("revealed");b.querySelector("span").textContent=answer.hidden?"اضغط للكشف":"✓ الفكرة اتوضحت";});
  root.querySelectorAll("[data-mini]").forEach(x=>x.onclick=()=>{
   const n=Number(x.dataset.mini),m=mini[model.index];root.querySelectorAll("[data-mini]").forEach(b=>{b.disabled=true;b.classList.toggle("good",Number(b.dataset.mini)===m.correct);b.classList.toggle("bad",Number(b.dataset.mini)===n&&n!==m.correct);});
   const f=document.getElementById("coach-feedback");f.classList.add("visible");f.textContent=(n===m.correct?"✓ ممتاز! ":"راجع الفكرة: ")+m.why;
