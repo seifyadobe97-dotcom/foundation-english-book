@@ -394,15 +394,42 @@ Deno.serve(async(req)=>{
  // Four-axis STEP curriculum and indicator administration.
  if(path==="/curriculum"&&req.method==="GET"){
   try{
-   const [axisResult,indicatorResult]=await Promise.all([
+   const [axisResult,indicatorResult,bankResult]=await Promise.all([
     admin.from("step_curriculum_axes").select("code,title_ar,title_en,position,content_model").order("position"),
     admin.from("step_curriculum_indicators")
      .select("id,axis_code,slug,title_ar,title_en,description,position,status,legacy_course_code,updated_at")
-     .order("position").order("created_at")
+     .order("position").order("created_at"),
+    admin.from("step_question_bank_classifications")
+     .select("code,title_en,title_ar,first_page,indicator_slug,related_indicator_slug,mapping_status")
+     .order("first_page").order("code")
    ]);
-   if(axisResult.error||indicatorResult.error)throw(axisResult.error||indicatorResult.error);
-   return reply(200,{axes:axisResult.data||[],indicators:indicatorResult.data||[]});
+   if(axisResult.error||indicatorResult.error||bankResult.error)throw(axisResult.error||indicatorResult.error||bankResult.error);
+   return reply(200,{axes:axisResult.data||[],indicators:indicatorResult.data||[],classifications:bankResult.data||[]});
   }catch(error){console.error("STEP curriculum admin",error);return reply(500,{error:"تعذر فتح المحاور والمؤشرات"});}
+ }
+
+ if(path==="/curriculum/classifications/link"&&req.method==="POST"){
+  if(permission.role!=="owner")return reply(403,{error:"ربط تصنيفات بنك الأسئلة متاح لمدير المعهد فقط"});
+  try{
+   const raw=await req.text();if(raw.length>1500)return reply(413,{error:"بيانات كبيرة جدًا"});
+   const body=JSON.parse(raw),code=String(body?.code||""),slug=body?.indicator_slug;
+   if(!/^ASGQ[A-Z0-9]+$/.test(code)||!(slug===null||typeof slug==="string"))
+     return reply(422,{error:"كود التصنيف أو المؤشر غير صحيح"});
+   if(typeof slug==="string"&&!/^[a-z][a-z0-9-]{2,39}$/.test(slug))
+     return reply(422,{error:"كود المؤشر غير صحيح"});
+   if(slug!==null){
+    const linked=await admin.from("step_curriculum_indicators").select("slug").eq("slug",slug).maybeSingle();
+    if(linked.error)throw linked.error;
+    if(!linked.data)return reply(422,{error:"المؤشر المطلوب غير موجود"});
+   }
+   const result=await admin.from("step_question_bank_classifications")
+    .update({indicator_slug:slug,related_indicator_slug:null,
+      mapping_status:slug?"mapped":"needs_review",updated_at:new Date().toISOString()})
+    .eq("code",code).select("code,indicator_slug,mapping_status").maybeSingle();
+   if(result.error)throw result.error;
+   if(!result.data)return reply(404,{error:"تصنيف بنك الأسئلة غير موجود"});
+   return reply(200,{ok:true,classification:result.data});
+  }catch(error){console.error("Bank classification link",error);return reply(500,{error:"تعذر حفظ ربط التصنيف"});}
  }
  if(path==="/curriculum/indicators/save"&&req.method==="POST"){
   if(permission.role!=="owner")return reply(403,{error:"تعديل المؤشرات متاح لمدير المعهد فقط"});
