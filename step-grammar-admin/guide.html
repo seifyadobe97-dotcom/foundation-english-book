@@ -130,6 +130,7 @@ function build(server){
  (savedDraft&&canPublish?'<button type="button" class="btn good" id="publish">نشر الشرح للطلاب</button>':'')+
  (savedDraft?'<button type="button" class="btn danger" id="discard">إلغاء المسودة</button>':'')+'</div><span id="dirty" class="badge draft" hidden>تعديلات غير محفوظة</span></div>';
  const fieldChanged=()=>{isDirty=true;const p=document.getElementById("publish");if(p)p.disabled=true;document.getElementById("dirty").hidden=false;};
+ if(isDirty){const p=document.getElementById("publish");if(p)p.disabled=true;document.getElementById("dirty").hidden=false;}
  root.querySelectorAll("input,textarea").forEach(x=>x.addEventListener("input",fieldChanged));
  root.querySelectorAll("[data-remove-row]").forEach(x=>x.onclick=()=>{x.closest(".lineitem").remove();fieldChanged();});
  root.querySelectorAll("[data-add-row]").forEach(x=>x.onclick=()=>{
@@ -158,8 +159,8 @@ function build(server){
   const list=document.getElementById("modules");
   list.insertAdjacentHTML("beforeend",moduleView(module,n-1));
   // Rebuild with the just-appended module so new edit controls are wired.
-  guide=collect();fieldChanged();build({draft:guide,published:null});
-  list.lastElementChild?.scrollIntoView({behavior:"smooth"});
+  guide=collect();isDirty=true;build({draft:guide,published:null});
+  document.querySelector(".module-edit:last-child")?.scrollIntoView({behavior:"smooth"});
  };
  document.getElementById("save").onclick=save;
  document.getElementById("preview").onclick=preview;
