@@ -67,6 +67,60 @@ Deno.serve(async(req)=>{
    return reply(200,{students:rows,total:count||0,page,page_size:size,role:permission.role});
   }catch(error){console.error("STEP admin list failed",error);return reply(500,{error:"تعذر تحميل بيانات الطلاب"});}
  }
+
+ if(req.method==="GET"&&path==="/analytics"){
+  try{
+   const [overview,parts]=await Promise.all([
+     admin.from("step_admin_overview").select("*").single(),
+     admin.from("step_admin_part_statistics").select("*").order("part_index")
+   ]);
+   if(overview.error||parts.error)throw(overview.error||parts.error);
+   return reply(200,{overview:overview.data,parts:(parts.data||[]).map(s=>({
+     ...s,title:lesson.sections[s.part_index]?.titleAr||"جزء "+(s.part_index+1)
+   }))});
+  }catch(error){console.error("STEP analytics failed",error);return reply(500,{error:"تعذر تحميل إحصائيات المعهد"});}
+ }
+ const reportMatch=path.match(/^\/students\/([0-9a-f-]{36})\/report$/i);
+ if(req.method==="GET"&&reportMatch){
+  const studentId=reportMatch[1];
+  if(!isUUID(studentId))return reply(422,{error:"معرّف الطالب غير صحيح"});
+  try{
+   const [profile,partRows,examRows,partCount,examCount]=await Promise.all([
+    admin.from("step_student_profiles").select("user_id,username,email,phone_e164,is_active,created_at").eq("user_id",studentId).maybeSingle(),
+    admin.from("step_part_attempts").select("id,part_index,correct_count,total_questions,passed,attempted_at")
+      .eq("user_id",studentId).eq("course_code",lesson.code).order("attempted_at",{ascending:false}).limit(300),
+    admin.from("step_exam_attempts").select("id,correct_count,total_questions,attempted_at")
+      .eq("user_id",studentId).eq("course_code",lesson.code).order("attempted_at",{ascending:false}).limit(150),
+    admin.from("step_part_attempts").select("id",{count:"exact",head:true}).eq("user_id",studentId).eq("course_code",lesson.code),
+    admin.from("step_exam_attempts").select("id",{count:"exact",head:true}).eq("user_id",studentId).eq("course_code",lesson.code),
+   ]);
+   if(profile.error||partRows.error||examRows.error||partCount.error||examCount.error)
+     throw(profile.error||partRows.error||examRows.error||partCount.error||examCount.error);
+   if(!profile.data)return reply(404,{error:"الطالب غير موجود"});
+   const attempts=partRows.data||[],exams=examRows.data||[];
+   const sections=lesson.sections.map((s,index)=>{
+    const matching=attempts.filter(r=>r.part_index===index);
+    return {index,title:s.titleAr,source_questions:s.questionIds.length,
+      attempts:matching.length,passed:matching.some(r=>r.passed),
+      best_percent:matching.length?Math.max(...matching.map(r=>Math.round(100*r.correct_count/r.total_questions))):null,
+      latest_attempt:matching[0]?.attempted_at||null};
+   });
+   const passed=sections.filter(s=>s.passed).length;
+   return reply(200,{
+    student:{user_id:profile.data.user_id,username:profile.data.username,email:profile.data.email||"",
+      phone:profile.data.phone_e164||"",active:profile.data.is_active,joined:profile.data.created_at},
+    summary:{passed_parts:passed,total_parts:sections.length,
+      practice_attempts:partCount.count||0,exam_attempts:examCount.count||0,
+      best_exam_percent:exams.length?Math.max(...exams.map(e=>Math.round(100*e.correct_count/e.total_questions))):null,
+      part_history_truncated:(partCount.count||0)>attempts.length,
+      exam_history_truncated:(examCount.count||0)>exams.length},
+    sections,
+    attempts:attempts.map(r=>({...r,percentage:Math.round(100*r.correct_count/r.total_questions),
+      section_title:lesson.sections[r.part_index]?.titleAr||"جزء غير معروف"})),
+    exams:exams.map(r=>({...r,percentage:Math.round(100*r.correct_count/r.total_questions)}))
+   });
+  }catch(error){console.error("STEP student report failed",error);return reply(500,{error:"تعذر تحميل تقرير الطالب"});}
+ }
  if(req.method==="POST"&&path==="/student-status"){
   if(permission.role!=="owner")return reply(403,{error:"تعديل الحسابات متاح لمدير المعهد فقط"});
   try{
