@@ -111,6 +111,15 @@ Deno.serve(async(request)=>{
    }))});
   }
   if(method==="GET"&&path==="/me")return send(200,{student:user.user_metadata?.username||"طالب STEP"});
+  if(method==="GET"&&path==="/guide"){
+   // Authenticated and active students can read only the published study guide.
+   const {data:guide,error:guideError}=await admin.from("step_indicator_guides")
+    .select("published,published_at")
+    .eq("indicator_slug","present-simple").maybeSingle();
+   if(guideError)return send(500,{error:"تعذر فتح شرح الدرس"});
+   if(!guide?.published)return send(404,{error:"شرح الدرس غير متاح حاليًا"});
+   return send(200,{guide:guide.published,published_at:guide.published_at});
+  }
   if(method==="GET"&&path==="/course")return send(200,await getCourse());
   const partPath=path.match(/^\/parts\/([0-9]+)(\/submit)?$/);
   if(partPath){
