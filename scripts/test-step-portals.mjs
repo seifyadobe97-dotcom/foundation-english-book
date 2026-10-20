@@ -13,6 +13,7 @@ const pages = [
   "step-grammar-admin/index.html",
   "step-grammar-admin/reports.html",
   "step-grammar-admin/courses.html",
+  "step-grammar-admin/curriculum.html",
 ];
 for (const path of pages) {
   const html = readFileSync(path, "utf8");
@@ -74,4 +75,13 @@ assert(admin.includes('href="courses.html"'),"Admin navigation must link course 
 assert(adminServer.includes('path==="/course-drafts"'),"Server course draft route");
 assert(adminServer.includes('permission.role!=="owner"'),"Only owner can create courses");
 assert(courseServer.includes('const courseCode=lesson.code;'),"Student course remains safely pinned");
+const curriculum=readFileSync("step-grammar-admin/curriculum.html","utf8");
+assert(curriculum.includes('"/curriculum"'),"Admin curriculum must load axes from backend");
+assert(curriculum.includes("/curriculum/indicators/save"),"Admin indicators must save to backend");
+assert(curriculum.includes("/curriculum/indicators/status"),"Admin indicators must archive to backend");
+assert(admin.includes('href="curriculum.html"'),"Admin navigation includes axes and indicators");
+assert(adminServer.includes('path==="/curriculum"'),"Admin server includes authorized curriculum API");
+assert(courseServer.includes('path==="/catalog"'),"Student service provides published curriculum catalog");
+assert(portal.includes('step-course/catalog'),"Student portal loads backend catalog");
+assert(portal.includes("محاور STEP الأربعة"),"Four axes shown on student dashboard");
 console.log("All STEP portal contracts validated.");
