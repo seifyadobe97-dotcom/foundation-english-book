@@ -120,7 +120,13 @@ assert(adminServer.includes('path==="/guides/save"'),"Private owner-backed guide
 assert(adminServer.includes('permission.role!=="owner"'),"Guide publishing requires owner role");
 assert(courseServer.includes('path==="/guide"'),"Authenticated guide read API");
 assert(courseServer.includes('"published,published_at"'),"Guide read must never return drafts");
-assert(portal.includes('href="guide.html"'),"Student dashboard promotes explanation before practice");
+const unified=readFileSync("step-grammar-student/learn.html","utf8");
+assert(portal.includes('href="learn.html"'),"Student portal opens the unified lesson");
+assert(unified.includes("/parts/")&&unified.includes("/guide")&&unified.includes("/exam"),
+ "Merged student experience combines lessons, graded practice and final test");
+assert(unified.includes("data-mini")&&unified.includes("data-flip"),
+ "Interactive checkpoints and reveal-cards integrated");
+assert(!unified.includes("ASGQ"),"No internal question codes hardcoded into the public lesson");
 const book=readFileSync("step-grammar-account-preview/index.html","utf8");
 assert(book.includes("step-grammar-student/guide.html"),"Legacy lesson links to book explanation");
 const migration=readFileSync("supabase/migrations/20261020_step_indicator_guides.sql","utf8");
