@@ -11,6 +11,7 @@ const pages = [
   "step-grammar-account-preview/index.html",
   "step-grammar-student/index.html",
   "step-grammar-admin/index.html",
+  "step-grammar-admin/reports.html",
 ];
 for (const path of pages) {
   const html = readFileSync(path, "utf8");
@@ -56,4 +57,12 @@ assert(adminServer.includes('permission.role!=="owner"'),"Owner role required fo
 assert(courseServer.includes('row.published'),"Only published lesson content is loaded");
 assert(courseServer.includes('const editableKeys='),"Lesson edits cannot replace course identifiers");
 assert(courseServer.includes('step_lesson_content_edits'),"Persisted published content");
+const reports=readFileSync("step-grammar-admin/reports.html","utf8");
+assert(reports.includes('api("/analytics")'),"Admin reports must load aggregated analytics");
+assert(reports.includes('"/report"') || reports.includes('+"/report"'),"Per-student reports must be authenticated");
+assert(reports.includes('reportCsvValue') || reports.includes('function download('),"Student report export");
+assert(admin.includes('reports.html?student='),"Directory links to student reports");
+assert(admin.includes('href="reports.html"'),"Admin has analytics navigation");
+assert(adminServer.includes('path==="/analytics"'),"Server analytics endpoint");
+assert(adminServer.includes('reportMatch'),"Server per-student report endpoint");
 console.log("All STEP portal contracts validated.");
