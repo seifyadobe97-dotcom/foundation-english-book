@@ -9,7 +9,7 @@ const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
 const apiKey=Deno.env.get("SUPABASE_ANON_KEY")??"";
 const total=lesson.sections.length;
 const defaultExamCount=10;
-const questions=lesson.questions as Record<string,{id:string;text:string;options:Record<string,string>;correct:string;explanation:string}>;
+const originalQuestions=lesson.questions as Record<string,{id:string;text:string;options:Record<string,string>;correct:string;explanation:string}>;
 type AnswerMap=Record<string,string>;
 const reply=(origin:string,status:number,body:unknown)=>new Response(JSON.stringify(body),{
  status,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store",
@@ -17,12 +17,12 @@ const reply=(origin:string,status:number,body:unknown)=>new Response(JSON.string
  "Access-Control-Allow-Methods":"GET,POST,OPTIONS",
  "Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type",Vary:"Origin"}
 });
-const serializeQ=(id:string)=>({id,text:questions[id].text,options:questions[id].options});
-function randomIds(){const ids=Object.keys(questions);for(let i=ids.length-1;i>0;i--){const bytes=new Uint32Array(1);crypto.getRandomValues(bytes);const j=bytes[0]%(i+1);[ids[i],ids[j]]=[ids[j],ids[i]];}return ids.slice(0,defaultExamCount);}
-function sectionStatus(attempts:{part_index:number;correct_count:number;passed:boolean}[]){
- const a=lesson.sections.map((s,i)=>{const list=attempts.filter(r=>r.part_index===i);
+const serializeQ=(id:string,questions:typeof originalQuestions)=>({id,text:questions[id].text,options:questions[id].options});
+function randomIds(pool:string[]){const ids=[...pool];for(let i=ids.length-1;i>0;i--){const bytes=new Uint32Array(1);crypto.getRandomValues(bytes);const j=bytes[0]%(i+1);[ids[i],ids[j]]=[ids[j],ids[i]];}return ids.slice(0,defaultExamCount);}
+function sectionStatus(attempts:{part_index:number;correct_count:number;passed:boolean}[],effectiveLesson:typeof lesson){
+ const a=effectiveLesson.sections.map((s,i)=>{const list=attempts.filter(r=>r.part_index===i);
  return {index:i,id:s.id,title:s.title,titleAr:s.titleAr,tag:s.tag,short:s.short,duration:s.duration,questionCount:s.questionIds.length,
- required:Math.ceil(s.questionIds.length*lesson.requiredPassRate),
+ required:Math.ceil(s.questionIds.length*effectiveLesson.requiredPassRate),
  locked:false,passed:list.some(r=>r.passed),best:Math.max(0,...list.map(r=>r.correct_count)),attempts:list.length};});
  let next=0;while(next<a.length&&a[next].passed)next++;
  return {sections:a.map(s=>({...s,locked:s.index>next})),next,completed:next===a.length};
@@ -47,10 +47,29 @@ Deno.serve(async(request)=>{
  const method=request.method;
  const courseCode=lesson.code;
  try{
+  // Published edits are read at request-time. Drafts never affect student questions.
+  const {data:editRows,error:editError}=await admin.from("step_question_edits")
+    .select("id,part_index,question_text,options,correct,explanation,status")
+    .eq("course_code",courseCode).limit(1000);
+  if(editError)throw editError;
+  const questions={...originalQuestions};
+  const effectiveLesson={...lesson,sections:lesson.sections.map(s=>({...s,questionIds:[...s.questionIds]}))};
+  for(const edit of editRows||[]){
+   const canonical=Object.hasOwn(originalQuestions,edit.id);
+   const entry={id:edit.id,text:edit.question_text,options:edit.options,correct:edit.correct,explanation:edit.explanation};
+   // Retain archived custom question text for exams started before it was archived.
+   if(!canonical)questions[edit.id]=entry;
+   if(edit.status!=="published")continue;
+   if(canonical){questions[edit.id]=entry;continue;}
+   const section=effectiveLesson.sections[edit.part_index];
+   if(section&&!section.questionIds.includes(edit.id))section.questionIds.push(edit.id);
+  }
+  const activeQuestionIds=effectiveLesson.sections.flatMap(s=>s.questionIds);
+  const showQuestion=(id:string)=>serializeQ(id,questions);
   const {data:partRows,error:attemptError}=await admin.from("step_part_attempts")
    .select("part_index,correct_count,passed").eq("user_id",user.id).eq("course_code",courseCode);
   if(attemptError)throw attemptError;
-  const status=sectionStatus(partRows??[]);
+  const status=sectionStatus(partRows??[],effectiveLesson);
   const getCourse=async()=>{
    const {data:exams,error}=await admin.from("step_exam_attempts")
      .select("correct_count,total_questions,attempted_at")
@@ -58,7 +77,7 @@ Deno.serve(async(request)=>{
    if(error)throw error;
    const attempts=(exams??[]).map(x=>({score:x.correct_count,total:x.total_questions,percentage:Math.round(x.correct_count/x.total_questions*100),date:x.attempted_at}));
    return {student:user.user_metadata?.username||"طالب STEP",
-    course:{title:lesson.title,titleAr:lesson.titleAr,code:courseCode,subtitle:lesson.subtitle,totalQuestions:Object.keys(questions).length},
+    course:{title:lesson.title,titleAr:lesson.titleAr,code:courseCode,subtitle:lesson.subtitle,totalQuestions:activeQuestionIds.length},
     sections:status.sections,nextIndex:Math.min(status.next,total-1),completed:status.completed,
     exam:{unlocked:status.completed,attempts:attempts.length,best:Math.max(0,...attempts.map(x=>x.percentage)),last:attempts.at(-1)||null}};
   };
@@ -66,11 +85,11 @@ Deno.serve(async(request)=>{
   if(method==="GET"&&path==="/course")return send(200,await getCourse());
   const partPath=path.match(/^\/parts\/([0-9]+)(\/submit)?$/);
   if(partPath){
-   const index=Number(partPath[1]),s=lesson.sections[index];
+   const index=Number(partPath[1]),s=effectiveLesson.sections[index];
    if(!s)return send(404,{error:"الجزء غير موجود"});
    if(index>status.next)return send(403,{error:"لازم تنجح في الأجزاء السابقة الأول"});
-   const passRequired=Math.ceil(s.questionIds.length*lesson.requiredPassRate);
-   if(method==="GET"&&!partPath[2])return send(200,{part:{...s,passRequired,questions:s.questionIds.map(serializeQ)},progress:await getCourse()});
+   const passRequired=Math.ceil(s.questionIds.length*effectiveLesson.requiredPassRate);
+   if(method==="GET"&&!partPath[2])return send(200,{part:{...s,passRequired,questions:s.questionIds.map(showQuestion)},progress:await getCourse()});
    if(method==="POST"&&partPath[2]){
     const input=await safeBody(request),answers=input?.answers as AnswerMap;
     if(!answers||s.questionIds.some((id:string)=>!["A","B","C","D"].includes(answers[id])))return send(422,{error:"جاوب كل الأسئلة الأول"});
@@ -80,7 +99,7 @@ Deno.serve(async(request)=>{
     if(error)throw error;
     // Update the in-memory status before computing the response.
     (partRows??[]).push({part_index:index,correct_count:correctCount,passed});
-    const fresh=sectionStatus(partRows??[]);
+    const fresh=sectionStatus(partRows??[],effectiveLesson);
     const progress=await getCourse();
     progress.sections=fresh.sections;progress.nextIndex=Math.min(fresh.next,total-1);progress.completed=fresh.completed;progress.exam.unlocked=fresh.completed;
     return send(200,{passed,correctCount,total:results.length,required:passRequired,results,progress});
@@ -92,11 +111,11 @@ Deno.serve(async(request)=>{
    if(error)throw error;
    let ids=active?.question_ids as string[]|undefined;
    if(!ids){
-    ids=randomIds();
+    ids=randomIds(activeQuestionIds);
     const {error:saveErr}=await admin.from("step_active_exams").upsert({user_id:user.id,course_code:courseCode,question_ids:ids},{onConflict:"user_id,course_code"});
     if(saveErr)throw saveErr;
    }
-   return send(200,{questions:ids.map(serializeQ),total:ids.length});
+   return send(200,{questions:ids.map(showQuestion),total:ids.length});
   }
   if(path==="/exam/submit"&&method==="POST"){
    if(!status.completed)return send(403,{error:"الاختبار مقفول"});
