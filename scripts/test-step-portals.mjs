@@ -84,4 +84,18 @@ assert(adminServer.includes('path==="/curriculum"'),"Admin server includes autho
 assert(courseServer.includes('path==="/catalog"'),"Student service provides published curriculum catalog");
 assert(portal.includes('step-course/catalog'),"Student portal loads backend catalog");
 assert(portal.includes("محاور STEP الأربعة"),"Four axes shown on student dashboard");
+assert(curriculum.includes('function bankSections('),"Bank category review visible in admin");
+assert(curriculum.includes('/curriculum/classifications/link'),"Owner can link bank classifications");
+assert(adminServer.includes('step_question_bank_classifications'),"Server exposes bank mappings behind auth");
+assert(adminServer.includes('path==="/curriculum/classifications/link"'),"Bank linking API exists");
+assert(adminServer.includes('if(permission.role!=="owner")'),"Owner role required for bank-link writes");
+const writingAlignment=readFileSync("supabase/migrations/20261020_step_writing_book_alignment.sql","utf8");
+assert(writingAlignment.includes("Sequencing"),"Writing indicator three follows STEP book");
+assert(writingAlignment.includes("Logical Connectors"),"Writing indicator four follows STEP book");
+assert(writingAlignment.includes("Error Recognition"),"Writing indicator five follows STEP book");
+const taxonomy=readFileSync("supabase/migrations/20261020_step_bank_heading_normalization.sql","utf8");
+assert(taxonomy.includes("ASGQPRSIM"),"Bank source preserves Present Simple code");
+assert(taxonomy.includes("ASGQPARORDER"),"Bank source preserves Paragraph Ordering code");
+const bankSchema=readFileSync("supabase/migrations/20261020_step_bank_classification_source_map.sql","utf8");
+assert(bankSchema.includes("enable row level security"),"Bank categories cannot be listed by students");
 console.log("All STEP portal contracts validated.");
