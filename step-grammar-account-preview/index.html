@@ -23,10 +23,13 @@
 /* GitHub Pages standalone pilot: hide sign-in, improve focus and legibility. */
 .student-badge .avatar{background:#f0e4c5;color:#29464b}.question-text{font-size:17px}.course-code{letter-spacing:.07em}.gold-card{border-right-width:5px}.practice-bottom .btn:disabled{opacity:.5}
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.5/build/css/intlTelInput.css">
+<style>.iti{width:100%;direction:ltr}.iti input{padding-left:105px!important}.iti__country-container{z-index:5}.iti__dropdown-content{direction:ltr;max-width:min(360px,95vw)}.iti__selected-dial-code{font-family:'DM Sans',sans-serif}.iti__search-input{width:100%}</style>
 </head>
 <body>
 <div id="app" aria-live="polite"><div class="initial-loading">جاري تجهيز درس المضارع البسيط…</div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.5/build/js/intlTelInput.min.js"></script>
 <script>window.STEP_SUPABASE_CONFIG={"url":"https://funltjxavowlnnfibhpl.supabase.co","anonKey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg"};</script>
 <script>'use strict';
 const app=document.getElementById('app');
@@ -68,7 +71,12 @@ function normalizeContactPhone(value){
 }
 function loginPage(message="",mode="login"){
  const signup=mode==="signup";
- app.innerHTML=header(false)+'<main class="login-grid"><section class="login-art"><div class="login-art-inner"><div class="eyebrow">STEP GRAMMAR MASTERY</div><h1>قواعد الإنجليزي.<br>أسهل من اللي تتخيله.</h1><p>افهم كل جزء، حل الأسئلة، واحتفظ بدرجاتك على حسابك الشخصي.</p></div><div class="login-facts"><div><strong>01</strong><span>درس تجريبي</span></div><div><strong>06</strong><span>أجزاء تعليمية</span></div><div><strong>19</strong><span>سؤالًا</span></div></div></section><section class="login-form-wrap"><form id="account-form" class="login-card"><div class="mini-divider"></div><div class="eyebrow">STUDENT ACCOUNT</div><h2>'+(signup?'إنشاء حساب جديد':'أهلًا بيك تاني')+'</h2><p class="lead">'+(signup?'اختار اسم مستخدم وكلمة مرور وادخل بريدك الإلكتروني.':'ادخل ببيانات حسابك علشان تكمل من آخر جزء وصلت له.')+'</p><div class="field"><label for="username">اسم المستخدم</label><input id="username" required autocomplete="username" minlength="3" maxlength="24" pattern="[A-Za-z][A-Za-z0-9_]{2,23}" placeholder="studentname" dir="ltr"></div>'+(signup?'<div class="field"><label for="email">البريد الإلكتروني</label><input id="email" required type="email" autocomplete="email" placeholder="student@example.com" dir="ltr"></div>':'')+(signup?'<div class="field"><label for="phone">رقم الموبايل (بالكود الدولي)</label><input id="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="24" dir="ltr" placeholder="+9665XXXXXXXX" aria-describedby="phone-hint"><p id="phone-hint" class="field-hint">مثال: +9665XXXXXXXX — الرقم للمتابعة التعليمية ومش هيظهر لباقي الطلاب.</p></div>':'')+'<div class="field"><label for="password">كلمة المرور</label><input id="password" required minlength="10" type="password" autocomplete="'+(signup?'new-password':'current-password')+'" placeholder="10 characters or more" dir="ltr"></div>'+(message?'<div class="error-box">'+escapeHtml(message)+'</div>':'')+'<button class="btn btn-primary btn-full" type="submit">'+(signup?'إنشاء الحساب':'تسجيل الدخول')+'</button><button class="btn btn-outline btn-full" type="button" id="switch-mode" style="margin-top:12px">'+(signup?'لديك حساب بالفعل؟ سجل دخولك':'ما عندكش حساب؟ أنشئ حساب جديد')+'</button>'+whatsAppContactHtml()+'<p class="small-note">نتائجك محفوظة على حسابك. عند إنشاء حساب جديد، قد تحتاج لتأكيد البريد الإلكتروني أولًا.</p></form></section></main>';
+ app.innerHTML=header(false)+'<main class="login-grid"><section class="login-art"><div class="login-art-inner"><div class="eyebrow">STEP GRAMMAR MASTERY</div><h1>قواعد الإنجليزي.<br>أسهل من اللي تتخيله.</h1><p>افهم كل جزء، حل الأسئلة، واحتفظ بدرجاتك على حسابك الشخصي.</p></div><div class="login-facts"><div><strong>01</strong><span>درس تجريبي</span></div><div><strong>06</strong><span>أجزاء تعليمية</span></div><div><strong>19</strong><span>سؤالًا</span></div></div></section><section class="login-form-wrap"><form id="account-form" class="login-card"><div class="mini-divider"></div><div class="eyebrow">STUDENT ACCOUNT</div><h2>'+(signup?'إنشاء حساب جديد':'أهلًا بيك تاني')+'</h2><p class="lead">'+(signup?'اختار اسم مستخدم وكلمة مرور وادخل بريدك الإلكتروني.':'ادخل ببيانات حسابك علشان تكمل من آخر جزء وصلت له.')+'</p><div class="field"><label for="username">اسم المستخدم</label><input id="username" required autocomplete="username" minlength="3" maxlength="24" pattern="[A-Za-z][A-Za-z0-9_]{2,23}" placeholder="studentname" dir="ltr"></div>'+(signup?'<div class="field"><label for="email">البريد الإلكتروني</label><input id="email" required type="email" autocomplete="email" placeholder="student@example.com" dir="ltr"></div>':'')+(signup?'<div class="field"><label for="phone">رقم الموبايل</label><input id="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="24" dir="ltr"></div>':'')+'<div class="field"><label for="password">كلمة المرور</label><input id="password" required minlength="10" type="password" autocomplete="'+(signup?'new-password':'current-password')+'" placeholder="10 characters or more" dir="ltr"></div>'+(message?'<div class="error-box">'+escapeHtml(message)+'</div>':'')+'<button class="btn btn-primary btn-full" type="submit">'+(signup?'إنشاء الحساب':'تسجيل الدخول')+'</button><button class="btn btn-outline btn-full" type="button" id="switch-mode" style="margin-top:12px">'+(signup?'لديك حساب بالفعل؟ سجل دخولك':'ما عندكش حساب؟ أنشئ حساب جديد')+'</button>'+whatsAppContactHtml()+'</form></section></main>';
+ const iti=signup&&window.intlTelInput?window.intlTelInput(document.getElementById("phone"),{
+ initialCountry:"sa",separateDialCode:true,
+ countryOrder:["sa","ae","eg","kw","bh","qa","om","jo","ye"],
+ loadUtils:()=>import("https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.5/build/js/utils.js")
+ }):null;
  document.getElementById("switch-mode").onclick=()=>loginPage("",signup?"login":"signup");
  document.getElementById("account-form").onsubmit=async (event)=>{
  event.preventDefault();
@@ -77,8 +85,11 @@ function loginPage(message="",mode="login"){
  try{
   if(signup){
     const email=document.getElementById("email").value.trim();
-    const phone_e164=normalizeContactPhone(document.getElementById("phone").value);
-    if(!/^\+[1-9][0-9]{7,14}$/.test(phone_e164))throw Error("اكتب رقم الموبايل بالكود الدولي، مثال: +9665XXXXXXXX");
+    if(!iti)throw Error("تعذر تحميل قائمة الدول. حدّث الصفحة وحاول مجددًا.");
+    await iti.promise;
+    if(!iti.isValidNumber())throw Error("تأكد من رقم الموبايل والدولة المختارة.");
+    const phone_e164=iti.getNumber();
+    if(!/^\+[1-9][0-9]{7,14}$/.test(phone_e164))throw Error("رقم الموبايل غير صحيح.");
     const r=await cloudClient.auth.signUp({email,password,options:{data:{username,phone_e164,app_target:"step-grammar"},emailRedirectTo:location.origin+location.pathname}});
     if(r.error)throw r.error;
     if(r.data.session){state.username=username;await refreshCourse(true);}
