@@ -56,6 +56,10 @@ try{
   assert.equal(await pg.locator(".quiz").count(),3);
   assert.equal(await pg.locator(".example").count()>0,true);
   assert.equal(await pg.locator(".coach-opt").count(),2);
+  assert.equal(await pg.locator(".signal-card").count()>0,true,"Tap-to-reveal idea cards present");
+  await pg.locator(".signal-card").first().click();
+  assert.equal(await pg.locator(".signal-card").first().locator("small").isVisible(),true);
+
   await pg.locator(".coach-opt").first().click();
   assert.match(await pg.locator("#coach-feedback").innerText(),/ممتاز/);
   assert.equal(await pg.locator("#grade").isDisabled(),true);
