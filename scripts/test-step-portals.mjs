@@ -14,6 +14,8 @@ const pages = [
   "step-grammar-admin/reports.html",
   "step-grammar-admin/courses.html",
   "step-grammar-admin/curriculum.html",
+  "step-grammar-admin/guide.html",
+  "step-grammar-student/guide.html",
 ];
 for (const path of pages) {
   const html = readFileSync(path, "utf8");
@@ -98,4 +100,29 @@ assert(taxonomy.includes("ASGQPRSIM"),"Bank source preserves Present Simple code
 assert(taxonomy.includes("ASGQPARORDER"),"Bank source preserves Paragraph Ordering code");
 const bankSchema=readFileSync("supabase/migrations/20261020_step_bank_classification_source_map.sql","utf8");
 assert(bankSchema.includes("enable row level security"),"Bank categories cannot be listed by students");
+// Source-based study guide must be server-authenticated, owner-edited and
+// separate from the canonical quiz and grading workflow.
+const guideEditor=readFileSync("step-grammar-admin/guide.html","utf8");
+const guideStudent=readFileSync("step-grammar-student/guide.html","utf8");
+const guideData=JSON.parse(readFileSync("curriculum/guides/present-simple.source.json","utf8"));
+assert.deepEqual(guideData.source.pages,[1,2],"Guide source must remain pages 1 and 2");
+assert.deepEqual(guideData.modules.map(m=>m.id),
+ ["usage","formation","negative","questions","keywords"],"Preserve the source sequence");
+assert.equal(guideData.modules.reduce((n,m)=>n+m.examples.length,0),11,"Use the 11 book examples");
+assert.equal(guideData.modules[4].keywords.length,5,"Book signal words included");
+assert(guideStudent.includes("step-course/guide"),"Student view loads only published guide via student API");
+assert(guideStudent.includes("data-unit"),"Interactive guide chapter navigation");
+assert(guideEditor.includes("/guides/save"),"Admin draft editor");
+assert(guideEditor.includes("/guides/publish"),"Admin publish action");
+assert(guideEditor.includes("/guides/discard-draft"),"Admin discard action");
+assert(guideEditor.includes("isDirty"),"Admin unsaved-change protection");
+assert(adminServer.includes('path==="/guides/save"'),"Private owner-backed guide API");
+assert(adminServer.includes('permission.role!=="owner"'),"Guide publishing requires owner role");
+assert(courseServer.includes('path==="/guide"'),"Authenticated guide read API");
+assert(courseServer.includes('"published,published_at"'),"Guide read must never return drafts");
+assert(portal.includes('href="guide.html"'),"Student dashboard promotes explanation before practice");
+const book=readFileSync("step-grammar-account-preview/index.html","utf8");
+assert(book.includes("step-grammar-student/guide.html"),"Legacy lesson links to book explanation");
+const migration=readFileSync("supabase/migrations/20261020_step_indicator_guides.sql","utf8");
+assert(migration.includes("row level security"),"Source guide rows must remain private");
 console.log("All STEP portal contracts validated.");
