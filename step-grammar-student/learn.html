@@ -1,0 +1,234 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#142c38"><meta name="description" content="تجربة تفاعلية متكاملة لإتقان المضارع البسيط">
+<title>Present Simple · STEP Mastery</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#172e3b;--teal:#23806f;--gold:#c79e62;--bg:#f5f7f5;--ink:#243945;--muted:#72838b;--line:#e0e8e4;--card:#fff;--pale:#eaf4f0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.9 Cairo,Tahoma,sans-serif}button,a{font:inherit}a{color:inherit;text-decoration:none}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}
+button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.en,.ltr{font-family:"DM Sans",Arial,sans-serif;direction:ltr;unicode-bidi:isolate}
+.top{display:flex;align-items:center;justify-content:space-between;gap:13px;padding:13px max(18px,calc((100vw - 1240px)/2));background:white;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px}.seal{width:42px;height:42px;border:1px solid var(--gold);border-radius:12px;color:var(--gold);background:var(--navy);display:grid;place-items:center;font:800 23px "DM Sans"}
+.brand strong{font:800 16px "DM Sans";letter-spacing:.12em;color:var(--navy)}.brand small{display:block;font-size:11px;color:var(--muted)}
+.headerlinks{display:flex;gap:9px;align-items:center}.btn{border:1px solid var(--navy);color:#fff;background:var(--navy);font-weight:800;padding:10px 18px;border-radius:10px;min-height:43px;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.btn.outline{background:#fff;color:var(--navy);border-color:#dae5df}.btn.gold{background:var(--gold);border-color:var(--gold);color:#223b3f}.btn.mint{background:var(--teal);border-color:var(--teal)}.btn.slim{font-size:12px;padding:7px 12px;min-height:35px}
+.shell{max-width:1260px;margin:auto;padding:25px 20px 80px}
+.hero{border-radius:19px;background:var(--navy);color:white;padding:29px 34px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:420px;height:420px;border:1px solid #ffffff17;border-radius:50%;left:-220px;top:-130px;box-shadow:0 0 0 75px #ffffff06,0 0 0 150px #ffffff04;pointer-events:none}
+.hero>*{position:relative;z-index:1}.eyebrow{font:800 11px "DM Sans";letter-spacing:.16em;color:var(--gold)}.hero h1{font:800 clamp(33px,4vw,49px) "DM Sans";margin:9px 0 3px;direction:ltr;text-align:right}.hero p{color:#c3d7d8;margin:0;font-size:15px}.hero-extra{display:flex;gap:12px;flex-wrap:wrap}
+.hero-num{padding:11px 17px;border:1px solid #ffffff3c;border-radius:12px;background:#ffffff0a;text-align:center}.hero-num strong{display:block;font:800 26px "DM Sans"}.hero-num span{font-size:11px;color:#cbdcde}
+.map{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;margin:20px 0}.map button{padding:13px 10px;text-align:right;background:#fff;border:1px solid var(--line);border-radius:12px;color:var(--ink);min-height:91px}.map button.current{border-color:var(--teal);box-shadow:inset 0 0 0 1px var(--teal);background:#f0f8f3}.map button.completed{background:#eff8f2}.map button.locked{background:#f9faf9;color:#87969a}.map small{display:block;color:var(--teal);font:800 11px "DM Sans"}.map b{font-size:13px}.map .dot{display:inline-block;margin-left:5px}
+.lesson-grid{display:grid;grid-template-columns:minmax(0,1fr) 290px;align-items:start;gap:18px}
+.main-col{min-width:0}.card{border:1px solid var(--line);background:white;border-radius:15px;padding:25px;margin:0 0 16px;box-shadow:0 12px 35px #183c2d07}
+.chapter-label{color:var(--teal);font:800 11px "DM Sans";letter-spacing:.14em}.chapter-header{display:flex;gap:12px;align-items:center;justify-content:space-between}
+.chapter-header h2{font-size:clamp(23px,3vw,31px);margin:6px 0;color:var(--navy);line-height:1.5}.chapter-header p{margin:0;color:var(--muted)}
+.stepcounter{border-radius:11px;background:var(--pale);padding:8px 12px;font:800 14px "DM Sans";color:var(--teal);white-space:nowrap}
+.intro{font-size:17px;line-height:2.1;color:#3c565e;margin:20px 0 12px}
+.source-intro{font-size:15px;color:#526e72;padding-right:14px;border-right:3px solid var(--gold);margin:10px 0}
+.rule-set{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}
+.rule{background:#f1f8f4;border:1px solid #d4e9de;border-radius:11px;padding:15px}.rule strong{display:block;color:#216959;font-size:13px;margin-bottom:6px}
+.formula{font:700 14px/1.7 "DM Sans";direction:ltr;unicode-bidi:isolate;text-align:left;color:var(--navy);overflow-wrap:anywhere}
+.mini-title{font-size:19px;color:var(--navy);margin:24px 0 11px}
+.example-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.example{border:1px solid #efe8dc;border-right:3px solid var(--gold);border-radius:10px;padding:13px 16px;background:#fffefa}
+.example b{display:block;direction:ltr;text-align:left;font:700 15px/1.75 "DM Sans";color:#2b4350}.example span{display:block;color:#718086;font-size:12px;margin-top:4px}
+.gold-note{background:#fff8ea;border:1px solid #f0dfbe;border-radius:11px;margin:17px 0;padding:14px 18px;display:flex;gap:12px}
+.gold-note strong{color:#755324;font-size:13px}.gold-note p{margin:3px 0 0;color:#796848;font-size:13px}
+.keywords{display:flex;flex-wrap:wrap;gap:7px;margin:15px 0}.keyword{background:#ecf7f1;border:1px solid #c9e6d9;border-radius:99px;padding:7px 13px;display:flex;gap:10px;align-items:center}
+.keyword b{font:800 12px "DM Sans";color:#18725f}.keyword span{font-size:11px}
+.coach{background:#f0f5f9;border:1px solid #d7e3eb;border-radius:13px;padding:20px;margin:20px 0}
+.coach h3{font-size:18px;color:#1d566e;margin:4px 0 10px}.coach .coach-q{font-size:15px;font-weight:800;color:#2c4853;margin:0 0 14px}
+.coach-answers{display:flex;gap:8px;flex-wrap:wrap}.coach-opt{border:1px solid #c6d9dc;background:#fff;border-radius:9px;color:#304a53;min-width:115px;padding:9px 12px;font-weight:800}
+.coach-opt.chosen{background:#dfeef0;border-color:#55919b}.coach-opt.good{background:#e1f5e8;border-color:#2f9567;color:#1c6447}.coach-opt.bad{background:#fff0eb;border-color:#c98670;color:#9b4f3c}
+.coach-feedback{margin-top:12px;padding:11px 14px;background:white;border-radius:9px;color:#276358;font-weight:700;display:none}.coach-feedback.visible{display:block}
+.trap{display:grid;grid-template-columns:1fr 1fr;gap:10px}.trap div{padding:12px 14px;border-radius:10px;background:#fff2ef;border:1px solid #f3d8d1}.trap div:nth-child(2){background:#eff8f1;border-color:#d5e9dc}.trap small{display:block;font-weight:800;color:#a05145}.trap div:nth-child(2) small{color:#20735f}.trap strong{display:block;text-align:left;direction:ltr;font:700 15px "DM Sans";overflow-wrap:anywhere}
+.side .card{position:sticky;top:17px}.side h3{margin:0 0 11px;color:var(--navy)}.side p{color:var(--muted);font-size:13px;margin:0 0 13px}
+.progress{height:9px;background:#e6f0eb;border-radius:99px;overflow:hidden;margin:13px 0}.progress span{display:block;height:100%;border-radius:99px;background:var(--teal)}
+.side-feature{background:#f8faf7;padding:12px;border-radius:10px;margin:12px 0}.side-feature strong{color:#2c665c}.side-feature div{font-size:13px;color:#657d7c}
+.exercise-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.exercise-head h2{font-size:22px;color:var(--navy);margin:0}.exercise-head p{color:var(--muted);margin:3px 0 0;font-size:13px}
+.quiz{border:1px solid var(--line);border-radius:13px;padding:19px;margin:13px 0;background:#fff}.quiz-num{font:800 11px "DM Sans";color:var(--teal);letter-spacing:.1em}
+.quiz h3{font:700 16px/1.8 "DM Sans";direction:ltr;text-align:left;color:var(--navy);margin:11px 0}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.choice{border:1px solid #dfe9e5;background:#fafcfb;border-radius:9px;padding:11px;text-align:left;direction:ltr;display:flex;align-items:center;gap:10px;font:600 13px "DM Sans";color:#37525b}
+.choice.selected{border-color:var(--teal);background:#e8f6f0}.choice.correct{border-color:#309367;background:#e8f7ed;color:#1d6547}.choice.wrong{border-color:#cf8173;background:#fff0ec}
+.choice .letter{min-width:27px;height:27px;border-radius:7px;background:#e8eeeb;display:grid;place-items:center;font:800 12px "DM Sans";color:#435b60}.choice.selected .letter{background:var(--teal);color:#fff}
+.feedback{border-radius:9px;background:#f0f8f1;border:1px solid #d0e8d9;padding:12px;margin-top:12px;font-size:13px}.feedback.wrong{background:#fff6ef;border-color:#eedcca}.feedback strong{display:block;color:#217255;margin-bottom:4px}
+.summary{padding:17px;background:#eaf6ef;border-radius:13px;border:1px solid #cae6d4;margin:14px 0}.summary.bad{background:#fff4eb;border-color:#f0dac2}
+.summary h3{margin:0;color:var(--navy)}.summary p{margin:5px 0;color:#597571}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center;margin-top:18px}
+.actions .hint{color:var(--muted);font-size:12px}
+.final{background:#193948;color:#fff;border-radius:16px;padding:25px;margin:18px 0}.final h2{margin:5px 0 7px}.final p{color:#c4d6d8;margin:0 0 15px}
+.footer{margin:35px 0;text-align:center;color:#95a5a5;font:700 11px "DM Sans";letter-spacing:.12em}
+.loading{background:white;border-radius:15px;padding:35px;margin-top:16px}.error{background:#fff3ef;border:1px solid #f0d4c9;color:#975544;border-radius:12px;padding:15px;margin:16px 0}
+[hidden]{display:none!important}
+@media(max-width:1040px){.map{grid-template-columns:repeat(3,1fr)}.lesson-grid{grid-template-columns:1fr}.side{display:none}}
+@media(max-width:630px){.shell{padding:15px 12px 50px}.hero{padding:22px;border-radius:14px}.hero-extra{width:100%}.hero-num{flex:1}.map{grid-template-columns:repeat(2,1fr);gap:7px}.map button{min-height:83px}.card{padding:17px}.example-list,.rule-set,.trap,.options{grid-template-columns:1fr}.headerlinks .btn{font-size:11px;padding:7px 10px}.top{padding:10px 12px}.brand small{display:none}.chapter-header{align-items:start}.coach-opt{flex:1 1 45%}}
+</style></head><body>
+<header class="top"><a class="brand" href="../step-grammar-student/"><span class="seal">Q</span><span><strong>QUDRAT</strong><small>STEP · ENGLISH MASTERY</small></span></a><nav class="headerlinks"><a class="btn outline slim" href="../step-grammar-student/">دروسي</a><button class="btn outline slim" id="signout">خروج</button></nav></header>
+<main id="root" class="shell"><div class="loading">بنجهز درسك…</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+const HOST="https://funltjxavowlnnfibhpl.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const db=window.supabase.createClient(HOST,KEY);
+const root=document.getElementById("root");
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const mini=[
+{title:"هل دي عادة متكررة؟",q:"She usually studies English in the evening.",a:["أيوه، عادة","لأ، بيحصل دلوقتي"],correct:0,why:"Usually معناها عادةً، فالجملة بتحكي عن روتين متكرر."},
+{title:"مين محتاج فعل + s؟",q:"Choose the subject that takes plays.",a:["They","She","We"],correct:1,why:"She مفرد غائب، ومع المضارع البسيط المثبت نستخدم plays."},
+{title:"ليه هنختار studies؟",q:"He ______ English every day.",a:["study","studys","studies"],correct:2,why:"Study ينتهي بحرف ساكن + y، بنحذف y ونضيف ies."},
+{title:"اختار النفي الصحيح",q:"He ______ drink coffee.",a:["don't","doesn't","isn't"],correct:1,why:"He مفرد غائب؛ نستخدم doesn't ثم الفعل في المصدر drink."},
+{title:"اختار سؤال مضبوط",q:"______ your brother play football?",a:["Do","Does","Is"],correct:1,why:"Your brother مفرد غائب، لذلك السؤال يبدأ بـ Does."},
+{title:"اختار الكلمة اللي معناها أبدًا",q:"Which word means never?",a:["usually","always","never"],correct:2,why:"Never = أبدًا، وهي ظرف تكرار يدل على النفي في المعنى."}
+];
+const model={course:null,guide:null,part:null,index:0,answers:{},feedback:null,exam:null,examResult:null,view:"part",coachDone:{}};
+async function api(path,body){
+ const {data:{session}}=await db.auth.getSession();
+ if(!session){location.replace("../step-grammar-account-preview/");throw Error("سجّل الدخول أولًا");}
+ const response=await fetch(HOST+"/functions/v1/step-course"+path,{method:body?"POST":"GET",
+ headers:{"apikey":KEY,"Authorization":"Bearer "+session.access_token,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw Error(data.error||"تعذر تنفيذ الطلب");
+ return data;
+}
+function loading(){root.innerHTML='<div class="loading">بنجهز المرحلة التالية…</div>';}
+function error(e){root.innerHTML='<div class="error">'+esc(e.message||"تعذر فتح الدرس")+'</div><button class="btn" id="retry">إعادة المحاولة</button>';document.getElementById("retry").onclick=init;}
+async function init(){
+ loading();
+ try{
+ const [progress,guide]=await Promise.all([api("/course"),api("/guide")]);
+ model.course=progress;model.guide=guide.guide;
+ const requested=new URLSearchParams(location.search).get("step"),n=Number(requested);
+ const pick=requested!==null&&Number.isInteger(n)&&n>=0&&n<progress.sections.length&&!progress.sections[n].locked?n:progress.nextIndex;
+ await open(pick,false);
+ }catch(e){error(e);}
+}
+async function open(index,scroll=true){
+ if(model.course?.sections[index]?.locked)return;
+ loading();
+ try{
+  const data=await api("/parts/"+index);
+  model.course=data.progress;model.part=data.part;model.index=index;model.answers={};model.feedback=null;model.view="part";model.exam=null;model.examResult=null;
+  render();if(scroll)window.scrollTo({top:0,behavior:"smooth"});
+ }catch(e){error(e);}
+}
+const chapterMap=[[0],[1],[1],[2],[3],[4]];
+function lessonModules(index){return (chapterMap[index]||[]).map(i=>model.guide?.modules?.[i]).filter(Boolean);}
+function renderHeader(){
+ const c=model.course,completed=(c.sections||[]).filter(x=>x.passed).length,pct=Math.round(100*completed/Math.max(1,c.sections.length));
+ const titles=["افهم الفكرة","ابنِ الجملة","أسرار s / es / ies","النفي ببساطة","اسأل صح","الكلمات الدالة والفخاخ"];
+ return '<div class="hero"><div><div class="eyebrow">STEP · GRAMMAR MASTERY</div><h1>Present Simple</h1><p>افهم، جرّب، طبّق… وبعدين اختبر نفسك.</p></div>'+
+ '<div class="hero-extra"><div class="hero-num"><strong>'+pct+'%</strong><span>تقدمك</span></div><div class="hero-num"><strong>'+completed+'/'+c.sections.length+'</strong><span>مراحل مكتملة</span></div></div></div>'+
+ '<div class="map">'+c.sections.map((s,i)=>'<button type="button" data-step="'+i+'" class="'+(s.locked?'locked':i===model.index&&model.view==="part"?'current':s.passed?'completed':'')+'" '+(s.locked?'disabled':'')+'><small>'+(s.passed?'✓ اكتمل':'STEP '+String(i+1).padStart(2,"0"))+'</small><b class="dot">'+esc(titles[i]||s.titleAr)+'</b></button>').join("")+'</div>';
+}
+function mergedExamples(p){
+ const result=[],known=new Set();
+ for(const m of lessonModules(model.index)){
+  for(const e of m.examples||[]){const k=e.en.trim().toLowerCase();if(!known.has(k)){known.add(k);result.push({en:e.en,ar:"",tag:e.tag||""});}}
+ }
+ for(const e of p.examples||[]){const k=e.en.trim().toLowerCase();if(!known.has(k)){known.add(k);result.push({en:e.en,ar:e.ar||"",tag:""});}}
+ return result.slice(0,10);
+}
+function mergedRules(p){
+ const rows=[],seen=new Set();
+ for(const m of lessonModules(model.index))for(const r of m.rules||[]){
+   const k=r.formula.toLowerCase();if(!seen.has(k)){seen.add(k);rows.push({label:r.label_ar,formula:r.formula});}
+ }
+ const custom=[p.rule,p.alternativeRule].filter(x=>Array.isArray(x)&&x.length).map(x=>({label:"خطوات بناء الجملة",formula:x.join(" ")}));
+ for(const r of custom){if(!seen.has(r.formula.toLowerCase()))rows.push(r);}
+ return rows.slice(0,model.index===2?9:7);
+}
+function lesson(){
+ const p=model.part,i=model.index,chs=lessonModules(i),rules=mergedRules(p),examples=mergedExamples(p);
+ const words=i===5?(model.guide?.modules?.[4]?.keywords||[]):[];
+ const trap=p.mistake||{},coach=mini[i]||mini[0];
+ return '<div class="card"><div class="chapter-header"><div><span class="chapter-label">UNDERSTAND THE IDEA</span><h2>'+esc(p.titleAr)+'</h2><p>'+esc(p.subtitle||"")+'</p></div><div class="stepcounter">'+(i+1)+' / 6</div></div>'+
+ '<p class="intro">'+esc(p.description||"")+'</p>'+
+ chs.map(m=>m.intro_ar?'<p class="source-intro">'+esc(m.intro_ar)+'</p>':'').join("")+
+ (rules.length?'<h3 class="mini-title">شوف القاعدة بعينك</h3><div class="rule-set">'+rules.map(r=>'<div class="rule"><strong>'+esc(r.label)+'</strong><div class="formula">'+esc(r.formula)+'</div></div>').join("")+'</div>':'')+
+ (words.length?'<h3 class="mini-title">الكلمات اللي تخلّيك تلتقط الزمن</h3><div class="keywords">'+words.map(w=>'<span class="keyword"><b>'+esc(w.en)+'</b><span>'+esc(w.ar)+'</span></span>').join("")+'</div>':'')+
+ '<div class="gold-note"><span>★</span><div><strong>'+esc(p.gold?.title||"ركز هنا")+'</strong><p>'+esc(String(p.gold?.body||"").replace(/<[^>]*>/g,""))+'</p></div></div>'+
+ (examples.length?'<h3 class="mini-title">شوف الفكرة في أمثلة حقيقية</h3><div class="example-list">'+examples.map(x=>'<div class="example"><b>'+esc(x.en)+'</b>'+(x.ar||x.tag?'<span>'+esc(x.ar||x.tag)+'</span>':'')+'</div>').join("")+'</div>':'')+
+ '<div class="coach"><span class="chapter-label">QUICK CHECK</span><h3>جرّب تفكّر قبل الاختيارات</h3><p class="coach-q en">'+esc(coach.q)+'</p><div class="coach-answers">'+coach.a.map((a,n)=>'<button type="button" class="coach-opt" data-mini="'+n+'">'+esc(a)+'</button>').join("")+'</div><div id="coach-feedback" class="coach-feedback" aria-live="polite"></div></div>'+
+ (trap.wrong?'<h3 class="mini-title">فخ شائع في الامتحان</h3><div class="trap"><div><small>مش كده</small><strong>'+esc(trap.wrong)+'</strong></div><div><small>الأصح</small><strong>'+esc(trap.right)+'</strong></div></div><p class="source-intro">'+esc(trap.why||"")+'</p>':'')+'</div>';
+}
+function practice(){
+ const p=model.part,f=model.feedback,needed=p.passRequired||1;
+ return '<section class="card" id="practice"><div class="exercise-head"><div><span class="chapter-label">PUT IT INTO PRACTICE</span><h2>دلوقتي دورك تحل</h2><p>اختار الإجابة، وبعد التصحيح هتفهم سبب كل اختيار.</p></div><span class="stepcounter">'+needed+' من '+p.questions.length+' للانتقال</span></div>'+
+ (f?'<div class="summary '+(!f.passed?'bad':'')+'"><h3>'+(f.passed?'أحسنت، أتقنت المرحلة!':'لسه تقدر تتحسن')+'</h3><p>'+f.correctCount+' إجابة صحيحة من '+f.total+' — '+(f.passed?'المرحلة التالية اتفتحت.':'راجع الشرح وجرب مرة تانية.')+'</p></div>':'')+
+ p.questions.map((q,n)=>question(q,n,f)).join("")+
+ '<div class="actions"><span class="hint">'+(f?'المهم تفهم سبب التصحيح قبل ما تكمّل.':'إجاباتك هتتحفظ بعد الضغط على التصحيح.')+'</span>'+
+ (f?(f.passed?'<button class="btn mint" id="continue">'+(model.index===model.course.sections.length-1?'انتقل للاختبار النهائي':'كمّل للمرحلة التالية')+' ←</button>':'<button class="btn" id="retry">حاول من جديد ↻</button>'):
+ '<button class="btn" id="grade" disabled>صحّح إجاباتي ←</button>')+'</div></section>';
+}
+function question(q,n,feed){
+ const selected=model.answers[q.id],outcome=feed?.results?.find(x=>x.id===q.id);
+ return '<article class="quiz"><span class="quiz-num">QUESTION '+String(n+1).padStart(2,"0")+'</span><h3>'+esc(q.text)+'</h3><div class="options">'+
+ Object.entries(q.options||{}).map(([key,value])=>'<button class="choice '+(outcome?(outcome.correct===key?'correct':outcome.selected===key?'wrong':''):selected===key?'selected':'')+'" data-answer="'+n+'" data-choice="'+key+'" '+(outcome?'disabled':'')+'><span class="letter">'+key+'</span><span>'+esc(value)+'</span></button>').join("")+
+ '</div>'+(outcome?'<div class="feedback '+(outcome.isCorrect?'':'wrong')+'"><strong>'+(outcome.isCorrect?'إجابة صحيحة ✓':'الإجابة الصحيحة: '+esc(outcome.correct))+'</strong>'+esc(outcome.explanation||"")+'</div>':'')+'</article>';
+}
+function side(){
+ const p=model.part;
+ return '<aside class="side"><div class="card"><div class="chapter-label">YOUR PROGRESS</div><h3>خطوة صغيرة… فرق كبير</h3><p>مش محتاج تحفظ الإجابات؛ افهم الفكرة وبعدها طبق على أسئلة متنوعة.</p><div class="side-feature"><strong>إتقان بالتدريج</strong><div>كل مرحلة بتفتح اللي بعدها بمجرد ما تحقق الدرجة المطلوبة.</div></div><div class="side-feature"><strong>تصحيح يفهّمك</strong><div>بعد كل محاولة هتشوف ليه الإجابة صح، وإزاي تتجنب الفخ.</div></div><div class="progress"><span style="width:'+Math.round(100*model.course.sections.filter(x=>x.passed).length/model.course.sections.length)+'%"></span></div><p>مرحلة '+(model.index+1)+' من 6</p></div></aside>';
+}
+function finalPromo(){
+ const ready=model.course.completed;
+ return '<section class="final"><span class="eyebrow">FINAL CHALLENGE</span><h2>اختبار إتقان المضارع البسيط</h2><p>'+(ready?'مزيج من الأسئلة هيقيس مدى فهمك للقاعدة في مواقف مختلفة. نتيجتك بتتحفظ في حسابك.':'اجتز المراحل الستة الأول، وبعدها هتقدر تدخل اختبار الإتقان.')+'</p>'+
+ '<button class="btn gold" id="start-exam" '+(ready?'':'disabled')+'>ابدأ الاختبار ←</button></section>';
+}
+function render(){
+ const c=model.course;
+ root.innerHTML=renderHeader()+'<div class="lesson-grid"><div class="main-col">'+lesson()+practice()+finalPromo()+'</div>'+side()+'</div>'+
+ '<div class="footer">QUDRAT · STEP ENGLISH MASTERY</div>';
+ wireNav();
+ root.querySelectorAll("[data-mini]").forEach(x=>x.onclick=()=>{
+  const n=Number(x.dataset.mini),m=mini[model.index];root.querySelectorAll("[data-mini]").forEach(b=>{b.disabled=true;b.classList.toggle("good",Number(b.dataset.mini)===m.correct);b.classList.toggle("bad",Number(b.dataset.mini)===n&&n!==m.correct);});
+  const f=document.getElementById("coach-feedback");f.classList.add("visible");f.textContent=(n===m.correct?"✓ ممتاز! ":"راجع الفكرة: ")+m.why;
+  model.coachDone[model.index]=true;
+ });
+ if(model.coachDone[model.index]){root.querySelectorAll('[data-mini="'+mini[model.index].correct+'"]').forEach(x=>x.classList.add("good"));const f=document.getElementById("coach-feedback");f.classList.add("visible");f.textContent="✓ "+mini[model.index].why;}
+ wireAnswers(model.part.questions,model.feedback,false);
+ const next=document.getElementById("continue");if(next)next.onclick=()=>{
+  if(model.index===model.course.sections.length-1){loadExam();return;}
+  open(model.index+1);
+ };
+ const retry=document.getElementById("retry");if(retry)retry.onclick=()=>{model.feedback=null;model.answers={};render();document.getElementById("practice")?.scrollIntoView({behavior:"smooth"});};
+ const start=document.getElementById("start-exam");if(start)start.onclick=loadExam;
+}
+function wireNav(){root.querySelectorAll("[data-step]").forEach(b=>b.onclick=()=>open(Number(b.dataset.step)));}
+function wireAnswers(questions,feedback,isExam){
+ root.querySelectorAll("[data-answer]").forEach(b=>b.onclick=()=>{
+  if(feedback)return;
+  const n=Number(b.dataset.answer),id=questions[n].id;
+  model.answers[id]=b.dataset.choice;
+  root.querySelectorAll('[data-answer="'+n+'"]').forEach(x=>x.classList.toggle("selected",x.dataset.choice===model.answers[id]));
+  const grade=document.getElementById("grade");if(grade)grade.disabled=questions.some(q=>!model.answers[q.id]);
+ });
+ const grade=document.getElementById("grade");if(grade)grade.onclick=async()=>{
+  grade.disabled=true;grade.textContent="جاري التصحيح…";
+  try{
+   if(isExam){const result=await api("/exam/submit",{answers:model.answers});model.examResult=result;model.course=result.progress;renderExam();window.scrollTo({top:0,behavior:"smooth"});}
+   else{const result=await api("/parts/"+model.index+"/submit",{answers:model.answers});model.feedback=result;model.course=result.progress;render();document.getElementById("practice")?.scrollIntoView({behavior:"smooth"});}
+  }catch(e){alert(e.message);grade.disabled=false;grade.textContent="صحّح إجاباتي";}
+ };
+}
+async function loadExam(){
+ if(!model.course.completed)return;
+ loading();
+ try{const d=await api("/exam");model.exam=d;model.answers={};model.view="exam";model.examResult=null;renderExam();window.scrollTo({top:0,behavior:"smooth"});}
+ catch(e){error(e);}
+}
+function renderExam(){
+ const data=model.exam,f=model.examResult;
+ root.innerHTML=renderHeader()+'<div class="card"><span class="chapter-label">YOUR FINAL CHALLENGE</span><h2 style="font-size:29px;color:var(--navy)">اختبار الإتقان</h2><p style="color:var(--muted)">راجع كل سؤال بعناية؛ التصحيح والشرح هيظهروا بعد إرسال الإجابات.</p>'+
+ (f?'<div class="summary"><h3>درجتك: '+f.result.score+' / '+f.result.total+'</h3><p>النسبة: '+f.result.percentage+'% — النتيجة محفوظة في حسابك.</p></div>':'')+
+ data.questions.map((q,n)=>question(q,n,f)).join("")+
+ '<div class="actions"><a class="btn outline" href="../step-grammar-student/">العودة لدروسي</a>'+
+ (f?'<button class="btn mint" id="try-exam">اختبار جديد ↻</button>':'<button class="btn" id="grade" disabled>صحّح الاختبار ←</button>')+
+ '</div></div>';
+ wireNav();wireAnswers(data.questions,f,true);
+ const retry=document.getElementById("try-exam");if(retry)retry.onclick=loadExam;
+}
+document.getElementById("signout").onclick=async()=>{await db.auth.signOut();location.replace("../step-grammar-account-preview/");};
+init();
+</script></body></html>
