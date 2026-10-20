@@ -390,5 +390,82 @@ Deno.serve(async(req)=>{
    return reply(200,{ok:true,course:data});
   }catch(error){console.error("course status",error);return reply(500,{error:"تعذر تحديث حالة الدرس"});}
  }
+
+ // Four-axis STEP curriculum and indicator administration.
+ if(path==="/curriculum"&&req.method==="GET"){
+  try{
+   const [axisResult,indicatorResult]=await Promise.all([
+    admin.from("step_curriculum_axes").select("code,title_ar,title_en,position,content_model").order("position"),
+    admin.from("step_curriculum_indicators")
+     .select("id,axis_code,slug,title_ar,title_en,description,position,status,legacy_course_code,updated_at")
+     .order("position").order("created_at")
+   ]);
+   if(axisResult.error||indicatorResult.error)throw(axisResult.error||indicatorResult.error);
+   return reply(200,{axes:axisResult.data||[],indicators:indicatorResult.data||[]});
+  }catch(error){console.error("STEP curriculum admin",error);return reply(500,{error:"تعذر فتح المحاور والمؤشرات"});}
+ }
+ if(path==="/curriculum/indicators/save"&&req.method==="POST"){
+  if(permission.role!=="owner")return reply(403,{error:"تعديل المؤشرات متاح لمدير المعهد فقط"});
+  try{
+   const raw=await req.text();
+   if(raw.length>5000)return reply(413,{error:"البيانات كبيرة جدًا"});
+   const input=JSON.parse(raw);
+   const axisCode=String(input?.axis_code||"");
+   const slug=String(input?.slug||"").trim().toLowerCase();
+   const titleAr=String(input?.title_ar||"").trim();
+   const titleEn=String(input?.title_en||"").trim();
+   const description=String(input?.description||"").trim();
+   const position=Number(input?.position);
+   if(!["grammar","writing-analysis"].includes(axisCode))
+     return reply(422,{error:"المؤشرات متاحة لمحوري الجرامر والتحليل الكتابي فقط"});
+   if(!/^[a-z][a-z0-9-]{2,39}$/.test(slug)||slug==="present-simple")
+     return reply(422,{error:"اكتب كود مؤشر فريد مثل present-continuous"});
+   if(titleAr.length<3||titleAr.length>140||titleEn.length<3||titleEn.length>140||
+      description.length>1500||!Number.isInteger(position)||position<1||position>9999)
+     return reply(422,{error:"راجع بيانات المؤشر والترتيب"});
+   const updates={axis_code:axisCode,slug,title_ar:titleAr,title_en:titleEn,
+    description,position,updated_at:new Date().toISOString()};
+   let saved:any,error:any;
+   if(input.id){
+    if(!isUUID(input.id))return reply(422,{error:"المعرّف غير صحيح"});
+    const {data:existing,error:lookupError}=await admin.from("step_curriculum_indicators")
+      .select("status,legacy_course_code").eq("id",input.id).maybeSingle();
+    if(lookupError)throw lookupError;
+    if(!existing)return reply(404,{error:"المؤشر غير موجود"});
+    if(existing.status==="published"||existing.legacy_course_code)
+      return reply(403,{error:"مؤشر المضارع البسيط المنشور مرتبط بدرجات الطلاب ولا يمكن نقله من هنا"});
+    const res=await admin.from("step_curriculum_indicators").update(updates)
+      .eq("id",input.id).in("status",["draft","archived"])
+      .select("id,slug,status,axis_code").maybeSingle();
+    saved=res.data;error=res.error;
+   }else{
+    const res=await admin.from("step_curriculum_indicators").insert({
+      ...updates,status:"draft",created_by:auth.user.id,legacy_course_code:null
+    }).select("id,slug,status,axis_code").single();
+    saved=res.data;error=res.error;
+   }
+   if(error?.code==="23505")return reply(409,{error:"كود المؤشر مستخدم بالفعل"});
+   if(error)throw error;
+   if(!saved)return reply(404,{error:"تعذر العثور على المؤشر"});
+   return reply(200,{ok:true,indicator:saved});
+  }catch(error){console.error("STEP indicator save",error);return reply(500,{error:"تعذر حفظ المؤشر"});}
+ }
+ if(path==="/curriculum/indicators/status"&&req.method==="POST"){
+  if(permission.role!=="owner")return reply(403,{error:"تغيير حالة المؤشرات متاح لمدير المعهد فقط"});
+  try{
+   const raw=await req.text();if(raw.length>1000)return reply(413,{error:"البيانات كبيرة"});
+   const body=JSON.parse(raw);
+   if(!isUUID(body?.id)||typeof body?.archived!=="boolean")
+    return reply(422,{error:"بيانات المؤشر غير صحيحة"});
+   const {data,error}=await admin.from("step_curriculum_indicators")
+    .update({status:body.archived?"archived":"draft",updated_at:new Date().toISOString()})
+    .eq("id",body.id).in("status",["draft","archived"])
+    .is("legacy_course_code",null)
+    .select("id,status").maybeSingle();
+   if(error)throw error;
+   if(!data)return reply(403,{error:"لا يمكن أرشفة المؤشر المنشور أو تعديله من هنا"});
+   return reply(200,{ok:true,indicator:data});
+  }catch(error){console.error("STEP indicator status",error);return reply(500,{error:"تعذر تحديث حالة المؤشر"});}
+ }
  return reply(404,{error:"المسار غير موجود"});
 });
