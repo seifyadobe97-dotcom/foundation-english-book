@@ -54,6 +54,21 @@ Deno.serve(async(request)=>{
   if(editError)throw editError;
   const questions={...originalQuestions};
   const effectiveLesson={...lesson,sections:lesson.sections.map(s=>({...s,questionIds:[...s.questionIds]}))};
+  // Apply only published owner-reviewed lesson content; never allow edits to
+  // question IDs, section identifiers, pass thresholds or course routing.
+  const {data:lessonEditRows,error:lessonEditError}=await admin.from("step_lesson_content_edits")
+   .select("part_index,published").eq("course_code",courseCode).not("published","is",null);
+  if(lessonEditError)throw lessonEditError;
+  const editableKeys=["titleAr","subtitle","short","duration","description","rule",
+    "alternativeRule","gold","mistake","examples","tiles"];
+  for(const row of lessonEditRows||[]){
+   if(!Number.isInteger(row.part_index)||!effectiveLesson.sections[row.part_index]
+     ||!row.published||typeof row.published!=="object")continue;
+   const base=effectiveLesson.sections[row.part_index];
+   for(const key of editableKeys){
+    if(Object.hasOwn(row.published,key))base[key]=row.published[key];
+   }
+  }
   for(const edit of editRows||[]){
    const canonical=Object.hasOwn(originalQuestions,edit.id);
    const entry={id:edit.id,text:edit.question_text,options:edit.options,correct:edit.correct,explanation:edit.explanation};
