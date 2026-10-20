@@ -166,5 +166,111 @@ Deno.serve(async(req)=>{
    return reply(200,{ok:true,id,status:"archived"});
   }catch(error){console.error("question archive",error);return reply(500,{error:"تعذر أرشفة السؤال"});}
  }
+
+ // Editing course text is independent from question-bank changes and exam scores.
+ if(path==="/lessons"&&req.method==="GET"){
+  try{
+   const {data,error}=await admin.from("step_lesson_content_edits")
+    .select("part_index,draft,published,draft_updated_at,published_at")
+    .eq("course_code",lesson.code);
+   if(error)throw error;
+   const changes=new Map((data||[]).map(x=>[x.part_index,x]));
+   return reply(200,{course:lesson.title,sections:lesson.sections.map((original,i)=>{
+    const change=changes.get(i);
+    const {questionIds,...content}=original;
+    return {index:i,base:content,draft:change?.draft||null,published:change?.published||null,
+      draft_updated_at:change?.draft_updated_at||null,published_at:change?.published_at||null};
+   })});
+  }catch(error){console.error("admin lessons list",error);return reply(500,{error:"تعذر فتح محرر الدروس"});}
+ }
+ if(path==="/lessons/save"&&req.method==="POST"){
+  if(permission.role!=="owner")return reply(403,{error:"تعديل الدروس متاح للمدير فقط"});
+  try{
+   const raw=await req.text();if(raw.length>48000)return reply(413,{error:"حجم الدرس كبير جدًا"});
+   const input=JSON.parse(raw);
+   const i=Number(input.part_index),base=lesson.sections[i];
+   if(!Number.isInteger(i)||!base)return reply(422,{error:"رقم الجزء غير صحيح"});
+   const d=input.content;
+   if(!d||typeof d!=="object"||Array.isArray(d))return reply(422,{error:"بيانات الدرس غير صحيحة"});
+   const take=(v:unknown,label:string,min=1,max=2500)=>{
+    if(typeof v!=="string"||v.trim().length<min||v.trim().length>max)throw Error("راجع حقل "+label);
+    return v.trim();
+   };
+   const tokens=(v:unknown,label:string)=>{
+    if(!Array.isArray(v)||v.length<1||v.length>14)return null;
+    return v.map((t,index)=>take(t,label+" "+(index+1),1,140));
+   };
+   const mainRule=tokens(d.rule,"القاعدة");
+   if(!mainRule)return reply(422,{error:"القاعدة الأساسية مطلوبة"});
+   let altRule:null|string[]=null;
+   if(base.alternativeRule){
+    altRule=tokens(d.alternativeRule,"القاعدة البديلة");
+    if(!altRule)return reply(422,{error:"القاعدة البديلة مطلوبة"});
+   }
+   if(!d.gold||!d.mistake||!Array.isArray(d.examples)||!Array.isArray(d.tiles)
+     ||d.examples.length!==base.examples.length||d.tiles.length!==base.tiles.length)
+      return reply(422,{error:"راجع عدد الأمثلة والبطاقات"});
+   const content={
+    titleAr:take(d.titleAr,"عنوان الجزء",3,110),
+    subtitle:take(d.subtitle,"العنوان الفرعي",3,180),
+    short:take(d.short,"وصف مختصر",2,180),
+    duration:take(d.duration,"المدة",2,35),
+    description:take(d.description,"الشرح",15,4500),
+    rule:mainRule,
+    ...(altRule?{alternativeRule:altRule}:{}),
+    gold:{title:take(d.gold.title,"عنوان القاعدة الذهبية",3,120),
+      body:take(d.gold.body,"القاعدة الذهبية",5,2200)},
+    mistake:{wrong:take(d.mistake.wrong,"مثال الخطأ",2,300),
+      right:take(d.mistake.right,"التصحيح",2,300),
+      why:take(d.mistake.why,"سبب التصحيح",5,950)},
+    examples:d.examples.map((e,j)=>({en:take(e?.en,"المثال الإنجليزي "+(j+1),3,500),
+      ar:take(e?.ar,"معنى المثال "+(j+1),2,500)})),
+    tiles:d.tiles.map((e,j)=>({icon:base.tiles[j].icon,
+      label:take(e?.label,"عنوان البطاقة "+(j+1),1,100),
+      text:take(e?.text,"نص البطاقة "+(j+1),2,300)}))
+   };
+   const stamp=new Date().toISOString();
+   // Select previous state to retain any version already published to students.
+   const {data:previous,error:readError}=await admin.from("step_lesson_content_edits")
+    .select("published,published_at").eq("course_code",lesson.code).eq("part_index",i).maybeSingle();
+   if(readError)throw readError;
+   const {error}=await admin.from("step_lesson_content_edits").upsert({
+    course_code:lesson.code,part_index:i,draft:content,
+    published:previous?.published||null,published_at:previous?.published_at||null,
+    draft_updated_at:stamp,updated_by:auth.user.id
+   },{onConflict:"course_code,part_index"});
+   if(error)throw error;
+   return reply(200,{ok:true,part_index:i,status:"draft"});
+  }catch(error){console.error("lesson save",error);return reply(422,{error:error instanceof Error&&error.message.startsWith("راجع")?error.message:"تعذر حفظ مسودة الدرس"});}
+ }
+ if(path==="/lessons/publish"&&req.method==="POST"){
+  if(permission.role!=="owner")return reply(403,{error:"النشر متاح للمدير فقط"});
+  try{
+   const raw=await req.text();if(raw.length>1000)return reply(413,{error:"Request too large"});
+   const {part_index}=JSON.parse(raw),i=Number(part_index);
+   if(!Number.isInteger(i)||i<0||i>=lesson.sections.length)return reply(422,{error:"رقم الجزء غير صحيح"});
+   const {data:entry,error:readError}=await admin.from("step_lesson_content_edits")
+    .select("draft").eq("course_code",lesson.code).eq("part_index",i).maybeSingle();
+   if(readError||!entry?.draft)return reply(404,{error:"احفظ مسودة الدرس الأول"});
+   const {error}=await admin.from("step_lesson_content_edits").update({
+    published:entry.draft,published_at:new Date().toISOString(),
+    draft:null,draft_updated_at:null,updated_by:auth.user.id
+   }).eq("course_code",lesson.code).eq("part_index",i);
+   if(error)throw error;
+   return reply(200,{ok:true,part_index:i,status:"published"});
+  }catch(error){console.error("lesson publish",error);return reply(500,{error:"تعذر نشر الدرس"});}
+ }
+ if(path==="/lessons/reset"&&req.method==="POST"){
+  if(permission.role!=="owner")return reply(403,{error:"استعادة النسخة الأصلية متاحة للمدير فقط"});
+  try{
+   const raw=await req.text();if(raw.length>1000)return reply(413,{error:"Request too large"});
+   const {part_index}=JSON.parse(raw),i=Number(part_index);
+   if(!Number.isInteger(i)||i<0||i>=lesson.sections.length)return reply(422,{error:"رقم الجزء غير صحيح"});
+   const {error}=await admin.from("step_lesson_content_edits").delete()
+    .eq("course_code",lesson.code).eq("part_index",i);
+   if(error)throw error;
+   return reply(200,{ok:true,part_index:i,status:"original"});
+  }catch(error){console.error("lesson reset",error);return reply(500,{error:"تعذر استعادة النسخة الأصلية"});}
+ }
  return reply(404,{error:"المسار غير موجود"});
 });
