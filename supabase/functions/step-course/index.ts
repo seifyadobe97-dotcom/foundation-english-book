@@ -40,6 +40,9 @@ Deno.serve(async(request)=>{
  const {data:userData,error:authError}=await admin.auth.getUser(bearer);
  const user=userData?.user;
  if(authError||!user)return send(401,{error:"انتهت الجلسة. سجّل دخولك مرة تانية"});
+ const {data:studentAccount,error:studentError}=await admin.from("step_student_profiles").select("is_active").eq("user_id",user.id).maybeSingle();
+ if(studentError||!studentAccount)return send(403,{error:"لا يوجد ملف طالب مرتبط بالحساب"});
+ if(studentAccount.is_active===false)return send(403,{error:"الحساب موقوف مؤقتًا، تواصل مع إدارة المعهد"});
  const path=new URL(request.url).pathname.replace(/^\/(?:functions\/v1\/)?step-course/,"");
  const method=request.method;
  const courseCode=lesson.code;
