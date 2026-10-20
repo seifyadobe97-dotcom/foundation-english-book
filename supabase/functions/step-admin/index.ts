@@ -326,5 +326,69 @@ Deno.serve(async(req)=>{
    return reply(200,{ok:true,part_index:i,status:"original"});
   }catch(error){console.error("lesson reset",error);return reply(500,{error:"تعذر استعادة النسخة الأصلية"});}
  }
+
+ // Draft course catalog: these records are NOT exposed as student lessons.
+ if(path==="/course-drafts"&&req.method==="GET"){
+  try{
+   const {data,error}=await admin.from("step_course_drafts")
+    .select("id,slug,title_en,title_ar,description,position,status,updated_at,created_at")
+    .order("position",{ascending:true}).order("created_at",{ascending:true}).limit(500);
+   if(error)throw error;
+   return reply(200,{courses:data||[],existing_course:{
+    code:lesson.code,title_en:lesson.title,title_ar:lesson.titleAr,parts:lesson.sections.length,
+    status:"published",immutable:true
+   }});
+  }catch(error){console.error("course drafts list",error);return reply(500,{error:"تعذر تحميل قائمة الدروس"});}
+ }
+ if(path==="/course-drafts/save"&&req.method==="POST"){
+  if(permission.role!=="owner")return reply(403,{error:"إدارة الدروس الجديدة متاحة للمدير فقط"});
+  try{
+   const raw=await req.text();if(raw.length>4500)return reply(413,{error:"البيانات طويلة جدًا"});
+   const input=JSON.parse(raw);
+   if(!input||typeof input!=="object")return reply(422,{error:"البيانات غير صحيحة"});
+   const slug=String(input.slug||"").trim().toLowerCase(),
+    title_en=String(input.title_en||"").trim(),
+    title_ar=String(input.title_ar||"").trim(),
+    description=String(input.description||"").trim(),
+    position=Number(input.position);
+   if(!/^[a-z][a-z0-9-]{2,39}$/.test(slug)||slug==="present-simple")
+     return reply(422,{error:"اختار كود درس إنجليزي فريد مثل present-continuous"});
+   if(title_en.length<3||title_en.length>140||title_ar.length<3||title_ar.length>140
+    ||description.length>1500||!Number.isInteger(position)||position<1||position>9999)
+      return reply(422,{error:"راجع عنوان الدرس والوصف والترتيب"});
+   const payload={slug,title_en,title_ar,description,position,updated_at:new Date().toISOString()};
+   let row:any,error:any;
+   if(input.id){
+    if(!isUUID(input.id))return reply(422,{error:"معرّف الدرس غير صحيح"});
+    const result=await admin.from("step_course_drafts")
+      .update(payload).eq("id",input.id).select("id,slug,status").maybeSingle();
+    row=result.data;error=result.error;
+   }else{
+    const result=await admin.from("step_course_drafts")
+      .insert({...payload,created_by:auth.user.id,status:"draft"}).select("id,slug,status").single();
+    row=result.data;error=result.error;
+   }
+   if(error){
+    if(error.code==="23505")return reply(409,{error:"كود الدرس مستخدم بالفعل"});
+    throw error;
+   }
+   if(!row)return reply(404,{error:"الدرس غير موجود"});
+   return reply(200,{ok:true,course:row});
+  }catch(error){console.error("save course draft",error);return reply(500,{error:"تعذر حفظ الدرس"});}
+ }
+ if(path==="/course-drafts/status"&&req.method==="POST"){
+  if(permission.role!=="owner")return reply(403,{error:"إدارة الدروس متاحة للمدير فقط"});
+  try{
+   const raw=await req.text();if(raw.length>1300)return reply(413,{error:"البيانات طويلة"});
+   const body=JSON.parse(raw);
+   if(!isUUID(body?.id)||typeof body?.archived!=="boolean")return reply(422,{error:"البيانات غير صحيحة"});
+   const {data,error}=await admin.from("step_course_drafts")
+    .update({status:body.archived?"archived":"draft",updated_at:new Date().toISOString()})
+    .eq("id",body.id).select("id,status").maybeSingle();
+   if(error)throw error;
+   if(!data)return reply(404,{error:"الدرس غير موجود"});
+   return reply(200,{ok:true,course:data});
+  }catch(error){console.error("course status",error);return reply(500,{error:"تعذر تحديث حالة الدرس"});}
+ }
  return reply(404,{error:"المسار غير موجود"});
 });
