@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "indicator_slug": "present-simple",
+  "title_ar": "المضارع البسيط",
+  "title_en": "The Present Simple Tense",
+  "source": {
+    "document": "STEP course book.pdf",
+    "pages": [
+      1,
+      2
+    ]
+  },
+  "modules": [
+    {
+      "id": "usage",
+      "title_ar": "الاستخدام",
+      "title_en": "Usage",
+      "source_page": 1,
+      "intro_ar": "يُستخدم للتعبير عن العادات والحقائق والأعمال المنتظمة.",
+      "rules": [],
+      "examples": [],
+      "keywords": []
+    },
+    {
+      "id": "formation",
+      "title_ar": "التكوين",
+      "title_en": "Formation",
+      "source_page": 1,
+      "intro_ar": "يتحدد شكل الفعل حسب الفاعل.",
+      "rules": [],
+      "examples": [],
+      "keywords": []
+    },
+    {
+      "id": "negative",
+      "title_ar": "النفي",
+      "title_en": "Negative",
+      "source_page": 1,
+      "intro_ar": "النفي باستخدام don't أو doesn't.",
+      "rules": [],
+      "examples": [],
+      "keywords": []
+    },
+    {
+      "id": "questions",
+      "title_ar": "السؤال",
+      "title_en": "Question",
+      "source_page": 2,
+      "intro_ar": "أسئلة Do وDoes وأدوات الاستفهام.",
+      "rules": [],
+      "examples": [],
+      "keywords": []
+    },
+    {
+      "id": "keywords",
+      "title_ar": "الكلمات الدالة",
+      "title_en": "Key Words",
+      "source_page": 2,
+      "intro_ar": "الكلمات الدالة على المضارع البسيط.",
+      "rules": [],
+      "examples": [],
+      "keywords": []
+    }
+  ]
+}
