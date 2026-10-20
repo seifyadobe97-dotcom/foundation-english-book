@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#152f3e"><meta name="description" content="شرح المضارع البسيط من كتاب STEP في خمس وحدات تفاعلية">
+<title>شرح المضارع البسيط | معهد القدرات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--night:#162f3f;--mint:#287c70;--muted:#698086;--gold:#c6a273;--bg:#f6f8f6;--line:#e0e9e4;--shadow:0 14px 40px #162e3e08}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:15px/1.85 Cairo,Tahoma,sans-serif;color:#263d46}
+a,button{font:inherit}a{text-decoration:none;color:inherit}button{cursor:pointer}
+a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.top{background:white;border-bottom:1px solid var(--line);padding:15px max(17px,calc((100vw - 1240px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;gap:11px;align-items:center}.seal{width:44px;height:44px;border:1px solid var(--gold);background:var(--night);border-radius:12px;display:grid;place-items:center;color:var(--gold);font:800 22px "DM Sans"}
+.brand strong{font:800 16px "DM Sans";letter-spacing:.1em;color:var(--night)}.brand small{display:block;color:var(--muted);font-size:11px}.toplinks{display:flex;gap:9px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--night);background:var(--night);color:#fff;padding:10px 19px;border-radius:10px;font-weight:800;min-height:42px;gap:8px}
+.btn.alt{background:#fff;border-color:#d4e0db;color:var(--night)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.layout{max-width:1260px;margin:auto;padding:30px 22px 75px}.breadcrumbs{font-size:12px;color:var(--muted);margin-bottom:13px}
+.hero{border-radius:20px;background:var(--night);color:#fff;padding:30px 34px;display:flex;gap:20px;justify-content:space-between;align-items:center;position:relative;overflow:hidden;margin-bottom:24px}
+.hero:before{content:"";width:320px;height:320px;border:1px solid #ffffff13;position:absolute;border-radius:50%;left:-80px;top:-160px;box-shadow:0 0 0 50px #ffffff06,0 0 0 100px #ffffff04}
+.hero>*{position:relative}.eyebrow{font:800 11px "DM Sans";letter-spacing:.12em;color:var(--gold)}
+.hero h1{font-size:clamp(27px,3.8vw,41px);margin:10px 0 4px;line-height:1.35}.hero p{margin:0;color:#cbdbdc}.page-ref{border:1px solid #ffffff3a;background:#ffffff10;padding:11px 15px;border-radius:11px;white-space:nowrap;font-size:12px;text-align:center}
+.body-grid{display:grid;grid-template-columns:270px minmax(0,1fr);align-items:start;gap:20px}
+.sidemenu,.chapter{background:white;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.sidemenu{padding:19px;position:sticky;top:18px}.sidemenu h2{font-size:17px;margin:2px 0 14px}
+.unitbtn{width:100%;display:flex;gap:11px;align-items:center;text-align:right;padding:13px 9px;border-radius:11px;background:white;border:1px solid transparent;color:#4b646c;margin:5px 0;font-weight:800}
+.unitbtn.active{color:#176c5e;border-color:#cbe5d9;background:#eef7f2}.unitbtn .no{display:grid;place-items:center;min-width:32px;height:32px;background:#f0f4f2;border-radius:9px;font:800 12px "DM Sans";color:var(--night)}.unitbtn.active .no{background:var(--mint);color:white}
+.unitbtn small{display:block;font:600 10px "DM Sans";color:var(--muted)}.chapter{overflow:hidden}.chapter-top{border-bottom:1px solid var(--line);padding:25px 30px;display:flex;justify-content:space-between;gap:15px}
+.chapter-top h2{font-size:clamp(22px,3vw,29px);margin:6px 0}.chapter-top p{font:700 13px "DM Sans";color:var(--muted);margin:0;direction:ltr;text-align:right}
+.counter{color:var(--mint);font:800 12px "DM Sans";white-space:nowrap}
+.chapter-body{padding:28px 30px}.intro{color:#3e5b61;font-size:17px;margin:0 0 26px;line-height:2}.subtitle{margin:24px 0 13px;color:var(--night);font-size:19px}
+.rule-grid{display:grid;gap:10px}.rule{border:1px solid var(--line);border-radius:12px;padding:13px 18px;background:#fcfdfc}
+.rule b{font-size:13px;color:#236b60;display:block;margin-bottom:6px}.formula{direction:ltr;text-align:left;unicode-bidi:isolate;font:700 15px/1.7 "DM Sans",Arial,sans-serif;color:var(--night);padding:7px 11px;border-radius:8px;background:#eff5f3;overflow-wrap:anywhere}
+.example-grid{display:grid;gap:10px}.example{border:1px solid #ede8dd;border-right:4px solid var(--gold);border-radius:10px;padding:14px 18px;background:#fffefa}
+.example .tag{font:800 11px "DM Sans";color:#ab8858;display:block;margin-bottom:7px;direction:ltr;text-align:right}.example .english{display:block;direction:ltr;text-align:left;unicode-bidi:isolate;font:600 16px/1.65 "DM Sans",Arial;color:#213d49}
+.words{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}.word{padding:19px 12px;border:1px solid #cee3d8;background:#f1f8f4;border-radius:12px;text-align:center}.word strong{display:block;font:800 17px "DM Sans";color:#1b7161}.word span{display:block;color:#415d58;font-weight:700}
+.bottom{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;padding:22px 30px;border-top:1px solid var(--line);background:#fbfdfb}
+.completion{font-size:12px;color:var(--muted)}.empty{padding:30px;background:white;border:1px solid var(--line);border-radius:15px;color:#9a5353}
+@media(max-width:790px){.body-grid{grid-template-columns:1fr}.sidemenu{position:static;display:flex;gap:6px;flex-wrap:wrap}.sidemenu h2{width:100%;margin:0}.unitbtn{flex:1 1 140px;margin:0}.hero{padding:23px;flex-wrap:wrap}.chapter-body{padding:18px}.chapter-top{padding:19px}.bottom{padding:19px}}
+@media(max-width:475px){.toplinks a{font-size:11px;padding:7px 9px}.brand small{font-size:10px}.layout{padding:18px 12px 50px}.hero{border-radius:15px}.unitbtn{flex:1 1 100%;}.words{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head><body>
+<header class="top"><div class="brand"><span class="seal">Q</span><span><strong>QUDRAT</strong><small>STEP · GRAMMAR MASTERY</small></span></div><div class="toplinks"><a class="btn alt" href="./">بوابة الطالب</a><a class="btn alt" href="../step-grammar-account-preview/">التدريبات</a></div></header>
+<main class="layout" id="root"><p>جاري تحميل شرح الدرس…</p></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+const SERVER="https://funltjxavowlnnfibhpl.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const db=window.supabase.createClient(SERVER,KEY);
+const root=document.getElementById("root");
+const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+let guide=null,active=0;
+async function init(){
+ try{
+  const auth=await db.auth.getSession(),session=auth.data.session;
+  if(!session){location.replace("../step-grammar-account-preview/");return;}
+  const res=await fetch(SERVER+"/functions/v1/step-course/guide",{headers:{
+   "apikey":KEY,"Authorization":"Bearer "+session.access_token
+  }});
+  const data=await res.json().catch(()=>({}));
+  if(!res.ok)throw Error(data.error||"تعذر تحميل شرح المؤشر");
+  guide=data.guide;active=0;paint();
+ }catch(e){root.innerHTML='<div class="empty">'+esc(e.message||"تعذر فتح الدرس")+'</div>';}
+}
+function paint(){
+ if(!guide||!Array.isArray(guide.modules))return;
+ const modules=guide.modules,item=modules[active];
+ const rules=(item.rules||[]).map(r=>'<div class="rule"><b>'+esc(r.label_ar)+'</b><div class="formula">'+esc(r.formula)+'</div></div>').join("");
+ const examples=(item.examples||[]).map(e=>'<div class="example"><span class="tag">'+esc(e.tag)+'</span><span class="english">'+esc(e.en)+'</span></div>').join("");
+ const keys=(item.keywords||[]).map(k=>'<div class="word"><strong>'+esc(k.en)+'</strong><span>'+esc(k.ar)+'</span></div>').join("");
+ root.innerHTML='<div class="breadcrumbs">STEP / Grammar / Present Simple / '+esc(item.title_ar)+'</div>'+
+ '<section class="hero"><div><div class="eyebrow">SOURCE-BASED GRAMMAR LESSON</div><h1>'+esc(guide.title_en)+'</h1><p>'+esc(guide.title_ar)+'</p></div><div class="page-ref">'+esc(guide.source?.document||"STEP")+'<div>صفحات '+(guide.source?.pages||[]).map(esc).join("–")+'</div></div></section>'+
+ '<div class="body-grid"><nav class="sidemenu" aria-label="أقسام شرح المضارع البسيط"><h2>محتوى الشرح</h2>'+
+ modules.map((x,i)=>'<button class="unitbtn '+(i===active?"active":"")+'" data-unit="'+i+'" aria-current="'+(i===active?"step":"false")+'"><span class="no">'+String(i+1).padStart(2,"0")+'</span><span>'+esc(x.title_ar)+'<small>'+esc(x.title_en)+'</small></span></button>').join("")+
+ '</nav><article class="chapter"><div class="chapter-top"><div><span class="eyebrow">LESSON SECTION · SOURCE PAGE '+Number(item.source_page)+'</span><h2>'+esc(item.title_ar)+'</h2><p>'+esc(item.title_en)+'</p></div><span class="counter">'+(active+1)+' / '+modules.length+'</span></div>'+
+ '<div class="chapter-body"><p class="intro">'+esc(item.intro_ar)+'</p>'+
+ (rules?'<h3 class="subtitle">القواعد والتكوين</h3><div class="rule-grid">'+rules+'</div>':'')+
+ (examples?'<h3 class="subtitle">أمثلة الكتاب</h3><div class="example-grid">'+examples+'</div>':'')+
+ (keys?'<h3 class="subtitle">الكلمات الدالة</h3><div class="words">'+keys+'</div>':'')+
+ '</div><footer class="bottom"><button class="btn alt" id="previous" '+(active===0?"disabled":"")+'>السابق</button><span class="completion">'+(active+1)+' من '+modules.length+' أقسام</span>'+
+ (active===modules.length-1?'<a class="btn" href="../step-grammar-account-preview/">ابدأ تدريبات المؤشر ←</a>':
+ '<button class="btn" id="next">القسم التالي ←</button>')+'</footer></article></div>';
+ document.querySelectorAll("[data-unit]").forEach(b=>b.onclick=()=>switchTo(Number(b.dataset.unit)));
+ const prev=document.getElementById("previous");if(prev)prev.onclick=()=>switchTo(active-1);
+ const next=document.getElementById("next");if(next)next.onclick=()=>switchTo(active+1);
+}
+function switchTo(n){if(n<0||!guide||n>=guide.modules.length)return;active=n;paint();window.scrollTo({top:0,behavior:"smooth"});}
+init();
+</script></body></html>
