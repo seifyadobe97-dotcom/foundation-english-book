@@ -30,6 +30,8 @@ jobs:
           node-version: '22'
       - name: Validate structure, answers, audio mappings and navigation
         run: npm run test:static
+      - name: Validate STEP registration, student dashboard and admin question editor
+        run: node scripts/test-step-portals.mjs
       - name: Install pinned browser-test dependency
         run: npm install --ignore-scripts --no-package-lock --no-audit --no-fund
       - name: Install Chromium for actual-browser tests
