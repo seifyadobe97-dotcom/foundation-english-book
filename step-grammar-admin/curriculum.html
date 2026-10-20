@@ -26,6 +26,7 @@ h1{font-size:clamp(27px,4vw,37px);margin:6px 0}h2{margin:0 0 10px;font-size:21px
 .btn.alt{background:white;border-color:var(--line);color:var(--navy)}.btn:disabled{opacity:.5;cursor:wait}
 .note{background:#f6f7f5;border-radius:10px;padding:12px;color:#687c80;font-size:12px;margin:13px 0}
 .bank-panel{margin-top:17px}.bank-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.bank-tag{background:#f8faf8;border:1px solid var(--line);border-radius:10px;padding:12px}
+.bank-unlink{margin-top:8px;font-size:11px;padding:4px 9px}
 .bank-tag strong,.bank-tag small{display:block}.bank-tag strong{font-size:12px}.bank-tag small{color:var(--muted);font-size:11px}
 .bank-stats{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.bank-stats span{padding:5px 12px;border-radius:20px;background:#e9f3ef;color:#2c756a;font-weight:800;font-size:12px}
 .unmapped{margin-top:22px;border-top:1px solid var(--line);padding-top:14px}.unmapped summary{cursor:pointer;color:var(--navy);font-weight:800}
@@ -84,6 +85,13 @@ function paint(){
  if(!isIndicatorAxis)return;
  const search=document.getElementById("indicator-search");search.oninput=()=>{state.search=search.value;const pos=search.selectionStart;paint();const again=document.getElementById("indicator-search");again.focus();again.setSelectionRange(pos,pos);};
  document.querySelectorAll("[data-indicator]").forEach(b=>b.onclick=()=>{state.item=b.dataset.indicator;paint();});
+ document.querySelectorAll("[data-unlink-code]").forEach(btn=>btn.onclick=async()=>{
+  const code=btn.dataset.unlinkCode;
+  if(!confirm("فصل تصنيف "+code+" من المؤشر الحالي وإعادته لقائمة المراجعة؟"))return;
+  btn.disabled=true;
+  try{await request("/curriculum/classifications/link",{code,indicator_slug:null});await load();}
+  catch(error){alert(error.message);btn.disabled=false;}
+ });
  document.querySelectorAll("[data-link-code]").forEach(btn=>btn.onclick=async()=>{
   const code=btn.dataset.linkCode, slug=document.getElementById("link-"+code)?.value||"";
   if(!slug){alert("اختار المؤشر المناسب أولًا");return;}
@@ -120,7 +128,7 @@ function bankSections(selected,canEdit){
  const total=state.bank.length, matched=total-pending.length;
  const options=state.indicators.map(x=>'<option value="'+escapeHtml(x.slug)+'">'+escapeHtml((x.axis_code==="grammar"?"جرامر":"تحليل كتابي")+" · "+x.title_ar)+'</option>').join("");
  const mineHtml=selected?'<h2>تصنيفات الأسئلة المرتبطة بمؤشر '+escapeHtml(selected.title_ar)+'</h2>'+
- (mine.length?'<div class="bank-grid">'+mine.map(x=>'<div class="bank-tag"><span class="ltr">'+escapeHtml(x.code)+'</span><strong>'+escapeHtml(x.title_en)+'</strong><small>بنك الأسئلة · صفحة '+x.first_page+(x.related_indicator_slug===selected.slug?' · رابط إضافي':'')+'</small></div>').join("")+'</div>':
+ (mine.length?'<div class="bank-grid">'+mine.map(x=>'<div class="bank-tag"><span class="ltr">'+escapeHtml(x.code)+'</span><strong>'+escapeHtml(x.title_en)+'</strong><small>بنك الأسئلة · صفحة '+x.first_page+(x.related_indicator_slug===selected.slug?' · رابط إضافي':'')+'</small>'+(canEdit&&x.indicator_slug===selected.slug?'<button type="button" class="btn alt bank-unlink" data-unlink-code="'+escapeHtml(x.code)+'">فصل الربط</button>':'')+'</div>').join("")+'</div>':
  '<p>لا يوجد تصنيف أسئلة مرتبط بهذا المؤشر حتى الآن.</p>'):'<p>اختار مؤشر من القائمة علشان تشوف تصنيفات بنك الأسئلة المرتبطة به.</p>';
  const pendingHtml=pending.map(x=>'<div class="bank-pending"><div><b>'+escapeHtml(x.title_en)+'</b><small class="ltr">'+escapeHtml(x.code)+'</small><small>صفحة '+x.first_page+'</small></div>'+
  (canEdit?'<div class="link-controls"><select aria-label="مؤشر التصنيف '+escapeHtml(x.code)+'" id="link-'+escapeHtml(x.code)+'"><option value="">اختار المؤشر…</option>'+options+'</select><button class="btn alt" data-link-code="'+escapeHtml(x.code)+'" type="button">ربط</button></div>':'')+'</div>').join("");
