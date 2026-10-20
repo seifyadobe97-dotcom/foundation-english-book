@@ -168,7 +168,8 @@
       "questionIds": [
         "ASGQPRSIM-AGG-10",
         "ASGQPRSIM-BOOK-02",
-        "ASGQPRSIM-BOOK-03"
+        "ASGQPRSIM-BOOK-03",
+        "ASGQPRSIM-BOOK-10"
       ]
     },
     {
@@ -348,7 +349,8 @@
         "ASGQPRSIM-AGG-05",
         "ASGQPRSIM-AGG-07",
         "ASGQPRSIM-AGG-03",
-        "ASGQPRSIM-AGG-08"
+        "ASGQPRSIM-AGG-08",
+        "ASGQPRSIM-BOOK-11"
       ]
     }
   ],
@@ -694,6 +696,40 @@
         "number": "091",
         "page": "262",
         "editorial_status": "individually_checked_for_pilot"
+      }
+    },
+    "ASGQPRSIM-BOOK-10": {
+      "id": "ASGQPRSIM-BOOK-10",
+      "text": "He _______ his homework every day at 7 p.m.",
+      "options": {
+        "A": "do",
+        "B": "does",
+        "C": "doing",
+        "D": "did"
+      },
+      "correct": "B",
+      "explanation": "الفاعل He مفرد غائب، ولأن الجملة بتوصف عادة يومية، نستخدم does. كلمة every day بتوضح التكرار.",
+      "source": {
+        "type": "course_book",
+        "pdf_page": 3,
+        "status": "rechecked"
+      }
+    },
+    "ASGQPRSIM-BOOK-11": {
+      "id": "ASGQPRSIM-BOOK-11",
+      "text": "We ______ go to school on Friday.",
+      "options": {
+        "A": "always",
+        "B": "usually",
+        "C": "never",
+        "D": "sometimes"
+      },
+      "correct": "C",
+      "explanation": "السياق في السؤال عن عدم الذهاب إلى المدرسة يوم الجمعة؛ لذا كلمة never هي المقصودة. اختَر ظرف التكرار حسب معنى الجملة، مش شكل الفعل فقط.",
+      "source": {
+        "type": "course_book",
+        "pdf_page": 3,
+        "status": "rechecked"
       }
     }
   }
