@@ -101,7 +101,7 @@ function rowHtml(s){
  const wa=digits(phone);
  const phoneHtml=wa.length>=8&&wa.length<=15?'<a href="https://wa.me/'+wa+'" target="_blank" rel="noopener noreferrer" class="ltr">'+escapeHtml(phone)+' ↗</a>':'<span class="ltr">'+escapeHtml(phone||"—")+'</span>';
  const btn=ui.role==="owner"?(s.active?'<button class="btn btn-danger btn-small" data-status="0" data-id="'+escapeHtml(s.user_id)+'">إيقاف</button>':'<button class="btn btn-good btn-small" data-status="1" data-id="'+escapeHtml(s.user_id)+'">تفعيل</button>'):"—";
- return '<tr><td class="name"><span class="ltr">'+escapeHtml(s.username)+'</span></td><td><span class="contact ltr">'+escapeHtml(s.email||"—")+'</span></td><td>'+phoneHtml+'</td><td><strong class="ltr">'+Number(s.parts_passed)+'/6</strong><div class="progress"><div style="width:'+pct+'%"></div></div></td><td>'+(s.exam_best==null?"—":'<strong class="ltr">'+Number(s.exam_best)+'%</strong>')+'</td><td><span class="tag '+(s.active?"active":"inactive")+'">'+label+'</span></td><td>'+niceDate(s.last_activity||s.created_at)+'</td><td><div class="actions">'+btn+'</div></td></tr>';
+ return '<tr><td class="name"><span class="ltr">'+escapeHtml(s.username)+'</span></td><td><span class="contact ltr">'+escapeHtml(s.email||"—")+'</span></td><td>'+phoneHtml+'</td><td><strong class="ltr">'+Number(s.parts_passed)+'/6</strong><div class="progress"><div style="width:'+pct+'%"></div></div></td><td>'+(s.exam_best==null?"—":'<strong class="ltr">'+Number(s.exam_best)+'%</strong>')+'</td><td><span class="tag '+(s.active?"active":"inactive")+'">'+label+'</span></td><td>'+niceDate(s.last_activity||s.created_at)+'</td><td><div class="actions"><a class="btn btn-outline btn-small" href="reports.html?student='+encodeURIComponent(s.user_id)+'">التقرير</a>'+btn+'</div></td></tr>';
 }
 function dashboard(){
  logoutButton.hidden=false;
@@ -169,7 +169,7 @@ async function loadStudents(){
 function injectAdminNavigation(active){
  const container=document.createElement("nav");
  container.className="admin-tabs";container.setAttribute("aria-label","أقسام لوحة الإدارة");
- container.innerHTML='<button class="admin-tab '+(active==="students"?"is-active":"")+'" id="nav-students">الطلاب والنتائج</button><button class="admin-tab '+(active==="questions"?"is-active":"")+'" id="nav-questions">بنك الأسئلة</button><button class="admin-tab '+(active==="lessons"?"is-active":"")+'" id="nav-lessons">محتوى الدروس</button>';
+ container.innerHTML='<button class="admin-tab '+(active==="students"?"is-active":"")+'" id="nav-students">الطلاب والنتائج</button><button class="admin-tab '+(active==="questions"?"is-active":"")+'" id="nav-questions">بنك الأسئلة</button><button class="admin-tab '+(active==="lessons"?"is-active":"")+'" id="nav-lessons">محتوى الدروس</button><a href="reports.html" class="admin-tab">التقارير والإحصائيات</a>';
  const anchor=root.querySelector(".intro")||root.querySelector(".page-title");
  if(anchor)anchor.after(container);
  document.getElementById("nav-students").onclick=()=>{ui.page=1;loadStudents();};
