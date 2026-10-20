@@ -71,12 +71,14 @@ function normalizeContactPhone(value){
 }
 function loginPage(message="",mode="login"){
  const signup=mode==="signup";
- app.innerHTML=header(false)+'<main class="login-grid"><section class="login-art"><div class="login-art-inner"><div class="eyebrow">STEP GRAMMAR MASTERY</div><h1>قواعد الإنجليزي.<br>أسهل من اللي تتخيله.</h1><p>افهم كل جزء، حل الأسئلة، واحتفظ بدرجاتك على حسابك الشخصي.</p></div><div class="login-facts"><div><strong>01</strong><span>درس تجريبي</span></div><div><strong>06</strong><span>أجزاء تعليمية</span></div><div><strong>19</strong><span>سؤالًا</span></div></div></section><section class="login-form-wrap"><form id="account-form" class="login-card"><div class="mini-divider"></div><div class="eyebrow">STUDENT ACCOUNT</div><h2>'+(signup?'إنشاء حساب جديد':'أهلًا بيك تاني')+'</h2><p class="lead">'+(signup?'اختار اسم مستخدم وكلمة مرور وادخل بريدك الإلكتروني.':'ادخل ببيانات حسابك علشان تكمل من آخر جزء وصلت له.')+'</p><div class="field"><label for="username">اسم المستخدم</label><input id="username" required autocomplete="username" minlength="3" maxlength="24" pattern="[A-Za-z][A-Za-z0-9_]{2,23}" placeholder="studentname" dir="ltr"></div>'+(signup?'<div class="field"><label for="email">البريد الإلكتروني</label><input id="email" required type="email" autocomplete="email" placeholder="student@example.com" dir="ltr"></div>':'')+(signup?'<div class="field"><label for="phone">رقم الموبايل</label><input id="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="24" dir="ltr"></div>':'')+'<div class="field"><label for="password">كلمة المرور</label><input id="password" required minlength="10" type="password" autocomplete="'+(signup?'new-password':'current-password')+'" placeholder="10 characters or more" dir="ltr"></div>'+(message?'<div class="error-box">'+escapeHtml(message)+'</div>':'')+'<button class="btn btn-primary btn-full" type="submit">'+(signup?'إنشاء الحساب':'تسجيل الدخول')+'</button><button class="btn btn-outline btn-full" type="button" id="switch-mode" style="margin-top:12px">'+(signup?'لديك حساب بالفعل؟ سجل دخولك':'ما عندكش حساب؟ أنشئ حساب جديد')+'</button>'+whatsAppContactHtml()+'</form></section></main>';
+ app.innerHTML=header(false)+'<main class="login-grid"><section class="login-art"><div class="login-art-inner"><div class="eyebrow">STEP GRAMMAR MASTERY</div><h1>قواعد الإنجليزي.<br>أسهل من اللي تتخيله.</h1><p>افهم كل جزء، حل الأسئلة، واحتفظ بدرجاتك على حسابك الشخصي.</p></div><div class="login-facts"><div><strong>01</strong><span>درس تجريبي</span></div><div><strong>06</strong><span>أجزاء تعليمية</span></div><div><strong>19</strong><span>سؤالًا</span></div></div></section><section class="login-form-wrap"><form id="account-form" class="login-card"><div class="mini-divider"></div><div class="eyebrow">STUDENT ACCOUNT</div><h2>'+(signup?'إنشاء حساب جديد':'أهلًا بيك تاني')+'</h2><p class="lead">'+(signup?'اختار اسم مستخدم وكلمة مرور وادخل بريدك الإلكتروني.':'ادخل ببيانات حسابك علشان تكمل من آخر جزء وصلت له.')+'</p><div class="field"><label for="username">اسم المستخدم</label><input id="username" required autocomplete="username" minlength="3" maxlength="24" pattern="[A-Za-z][A-Za-z0-9_]{2,23}" placeholder="studentname" dir="ltr"></div>'+(signup?'<div class="field"><label for="email">البريد الإلكتروني</label><input id="email" required type="email" autocomplete="email" placeholder="student@example.com" dir="ltr"></div>':'')+(signup?'<div class="field"><label for="phone">رقم الموبايل</label><input id="phone" type="tel" inputmode="tel" autocomplete="tel" required maxlength="24" dir="ltr"></div>':'')+'<div class="field"><label for="password">كلمة المرور</label><input id="password" required minlength="10" type="password" autocomplete="'+(signup?'new-password':'current-password')+'" placeholder="10 characters or more" dir="ltr"></div>'+(message?'<div class="error-box">'+escapeHtml(message)+'</div>':'')+'<button class="btn btn-primary btn-full" type="submit">'+(signup?'إنشاء الحساب':'تسجيل الدخول')+'</button><button class="btn btn-outline btn-full" type="button" id="switch-mode" style="margin-top:12px">'+(signup?'لديك حساب بالفعل؟ سجل دخولك':'ما عندكش حساب؟ أنشئ حساب جديد')+'</button>'+(signup?'':'<button class="btn btn-quiet btn-full" type="button" id="forgot-password" style="margin-top:10px">نسيت كلمة المرور؟</button>')+whatsAppContactHtml()+'</form></section></main>';
  const iti=signup&&window.intlTelInput?window.intlTelInput(document.getElementById("phone"),{
  initialCountry:"sa",separateDialCode:true,
  countryOrder:["sa","ae","eg","kw","bh","qa","om","jo","ye"],
  loadUtils:()=>import("https://cdn.jsdelivr.net/npm/intl-tel-input@29.5.5/dist/js/utils.js")
  }):null;
+ const forgot=document.getElementById("forgot-password");
+ if(forgot)forgot.onclick=()=>passwordRecoveryPage();
  document.getElementById("switch-mode").onclick=()=>loginPage("",signup?"login":"signup");
  document.getElementById("account-form").onsubmit=async (event)=>{
  event.preventDefault();
@@ -106,6 +108,37 @@ function loginPage(message="",mode="login"){
  };
 }
 
+
+function passwordRecoveryPage(message=""){
+ app.innerHTML=header(false)+'<main class="login-grid"><section class="login-art"><div class="login-art-inner"><div class="eyebrow">ACCOUNT RECOVERY</div><h1>استرجع حسابك بسهولة.</h1></div></section><section class="login-form-wrap"><form class="login-card" id="recover-form"><div class="mini-divider"></div><h2>نسيت كلمة المرور؟</h2><div class="field"><label for="recovery-email">البريد الإلكتروني</label><input id="recovery-email" type="email" autocomplete="email" dir="ltr" required></div>'+(message?'<div class="error-box">'+escapeHtml(message)+'</div>':'')+'<button class="btn btn-primary btn-full" type="submit">إرسال رابط الاسترجاع</button><button class="btn btn-outline btn-full" type="button" id="recovery-back" style="margin-top:10px">العودة لتسجيل الدخول</button></form></section></main>';
+ document.getElementById("recovery-back").onclick=()=>loginPage();
+ document.getElementById("recover-form").onsubmit=async e=>{
+  e.preventDefault();const b=e.target.querySelector('[type="submit"]');b.disabled=true;
+  try{
+   const email=document.getElementById("recovery-email").value.trim();
+   const {error}=await cloudClient.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+   if(error)throw error;
+   passwordRecoveryPage("لو البريد مسجل عندنا، هتوصلك رسالة فيها رابط إعادة تعيين كلمة المرور.");
+  }catch(error){passwordRecoveryPage(error.message||"تعذر إرسال رابط الاسترجاع.");}
+ };
+}
+function newPasswordPage(message=""){
+ app.innerHTML=header(false)+'<main class="login-grid"><section class="login-art"><div class="login-art-inner"><div class="eyebrow">SECURE ACCOUNT</div><h1>كلمة مرور جديدة.</h1></div></section><section class="login-form-wrap"><form class="login-card" id="new-password-form"><div class="mini-divider"></div><h2>تغيير كلمة المرور</h2><div class="field"><label for="new-password">كلمة المرور الجديدة</label><input id="new-password" type="password" autocomplete="new-password" minlength="10" required dir="ltr"></div><div class="field"><label for="confirm-password">تأكيد كلمة المرور</label><input id="confirm-password" type="password" autocomplete="new-password" minlength="10" required dir="ltr"></div>'+(message?'<div class="error-box">'+escapeHtml(message)+'</div>':'')+'<button class="btn btn-primary btn-full" type="submit">حفظ كلمة المرور</button></form></section></main>';
+ document.getElementById("new-password-form").onsubmit=async e=>{
+  e.preventDefault();const p=document.getElementById("new-password").value,confirm=document.getElementById("confirm-password").value;
+  if(p!==confirm){newPasswordPage("كلمتا المرور غير متطابقتين.");return;}
+  try{
+   const {error}=await cloudClient.auth.updateUser({password:p});
+   if(error)throw error;
+   await cloudClient.auth.signOut();
+   loginPage("تم تغيير كلمة المرور. تقدر تسجّل دخولك دلوقتي.");
+  }catch(error){newPasswordPage(error.message||"تعذر تغيير كلمة المرور.");}
+ };
+}
+cloudClient.auth.onAuthStateChange(event=>{
+ if(event==="PASSWORD_RECOVERY")setTimeout(()=>newPasswordPage(),0);
+});
+
 async function refreshCourse(initial=false){const d=await api('/course');state.course=d;state.username=d.student;if(initial||state.active>d.nextIndex)state.active=d.nextIndex;await openPart(state.active,false);}
 async function openPart(index,scroll=true){try{const d=await api('/parts/'+index);state.active=index;state.part=d.part;state.answers={};state.feedback=null;state.view='course';state.examQuestions=null;state.examResult=null;renderCourse();if(scroll)window.scrollTo({top:0,behavior:'smooth'});}catch(e){toast(e.message);}}
 function stepNav(c){return `<aside class="right-menu"><div class="menu-label">COURSE NAVIGATION</div><h3 class="menu-title">خطة الدرس</h3><p class="menu-caption">لازم تنجح في كل جزء علشان تفتح اللي بعده.</p><nav class="part-menu">${c.sections.map(s=>`<button class="part-nav ${s.index===state.active?'active':''} ${s.passed?'passed':''} ${s.locked?'locked':''}" data-go="${s.index}" ${s.locked?'disabled':''} aria-label="${escapeHtml(s.titleAr)}${s.locked?' (مقفول)':''}"><span class="nav-num">${s.passed?'✓':String(s.index+1).padStart(2,'0')}</span><span class="nav-name">${escapeHtml(s.titleAr)}</span><span class="nav-icon">${s.locked?'⌑':s.index===state.active?'←':''}</span></button>`).join('')}</nav><div class="menu-bottom"><bdi>ASGQPRSIM</bdi><p>كل خطوة تفتح اللي بعدها. تقدّمك محفوظ في حسابك.</p></div></aside>`;}
@@ -134,7 +167,7 @@ function renderExam(){const qs=state.examQuestions;app.innerHTML=header(true)+`<
  document.getElementById('submit-exam').onclick=async()=>{try{const r=await api('/exam/submit',{method:'POST',body:JSON.stringify({answers:state.examAnswers})});state.examResult=r;state.course=r.progress;renderExamResult();window.scrollTo(0,0);}catch(e){toast(e.message);}};
 }
 function renderExamResult(){const data=state.examResult,r=data.result;app.innerHTML=header(true)+`<main class="main-work exam-shell"><div class="exam-result"><div class="eyebrow">YOUR RESULT</div><div class="score-big">${r.percentage}%</div><h1>نتيجتك: ${r.score} من ${r.total}</h1><p>النتيجة محفوظة في حسابك. راجع الإجابات اللي محتاج تفهمها، وتقدر تختبر نفسك مرة تانية.</p><hr class="section-divider"><h2>مراجعة الأسئلة</h2>${data.results.map((x,i)=>`<div class="exam-review"><span class="eng">${i+1}. ${escapeHtml(x.text)}</span><b style="color:${x.isCorrect?'#278269':'#a34b4a'}">${x.isCorrect?'✓ صحيح':'✕ يحتاج مراجعة'}</b> · الاختيار الصحيح <b>${escapeHtml(x.correct)}</b><p>${inline(x.explanation)}</p></div>`).join('')}<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:23px"><button id="retry-exam" class="btn btn-primary">اختبار جديد</button><button id="back-course" class="btn btn-outline">العودة للدرس</button></div></div></main>`;document.getElementById('logout').onclick=logout;document.getElementById('retry-exam').onclick=loadExam;document.getElementById('back-course').onclick=()=>openPart(state.active);}
-async function init(){try{const {data:{session}}=await cloudClient.auth.getSession();if(!session){loginPage();return;}await refreshCourse(true);}catch(error){console.error(error);loginPage("تعذر فتح بيانات الحساب. حاول مرة تانية.");}}
+async function init(){try{if(new URLSearchParams(location.hash.slice(1)).get("type")==="recovery"){newPasswordPage();return;}const {data:{session}}=await cloudClient.auth.getSession();if(!session){loginPage();return;}await refreshCourse(true);}catch(error){console.error(error);loginPage("تعذر فتح بيانات الحساب. حاول مرة تانية.");}}
 init();
 </script>
 </body>
