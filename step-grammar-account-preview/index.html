@@ -41,7 +41,7 @@ function en(s){return `<span class="eng" dir="ltr">${escapeHtml(s)}</span>`;}
 function toast(message){const t=document.createElement('div');t.className='toast';t.textContent=message;document.body.append(t);setTimeout(()=>t.remove(),4200);}
 async function api(route,opts={}){return cloudApi(route,opts);}
 function brand(){return `<div class="brand"><span class="brand-crest">Q</span><div><div class="brand-name">QUDRAT</div><div class="brand-sub">TRAINING INSTITUTE</div></div></div>`;}
-function header(loggedIn){return `<header class="site-header">${brand()}${loggedIn?`<div class="student-badge"><div class="avatar">${escapeHtml(state.username?.[0]||'S').toUpperCase()}</div><span class="header-tag">أهلًا بيك</span><button id="logout" class="btn btn-outline btn-small" type="button">تسجيل الخروج</button></div>`:'<div class="header-tag">STEP GRAMMAR · STUDENT EDITION</div>'}</header>`;}
+function header(loggedIn){return `<header class="site-header">${brand()}${loggedIn?`<div class="student-badge"><a class="btn btn-outline btn-small" href="../step-grammar-student/">لوحة الطالب</a><div class="avatar">${escapeHtml(state.username?.[0]||'S').toUpperCase()}</div><span class="header-tag">أهلًا بيك</span><button id="logout" class="btn btn-outline btn-small" type="button">تسجيل الخروج</button></div>`:'<div class="header-tag">STEP GRAMMAR · STUDENT EDITION</div>'}</header>`;}
 
 const config=window.STEP_SUPABASE_CONFIG;
 const cloudClient=window.supabase.createClient(config.url,config.anonKey);
@@ -92,7 +92,7 @@ function loginPage(message="",mode="login"){
     if(!/^\+[1-9][0-9]{7,14}$/.test(phone_e164))throw Error("رقم الموبايل غير صحيح.");
     const r=await cloudClient.auth.signUp({email,password,options:{data:{username,phone_e164,app_target:"step-grammar"},emailRedirectTo:location.origin+location.pathname}});
     if(r.error)throw r.error;
-    if(r.data.session){state.username=username;await refreshCourse(true);}
+    if(r.data.session){location.assign("../step-grammar-student/");return;}
     else loginPage("تم إرسال رسالة تأكيد إلى بريدك. بعد التأكيد سجّل دخولك باسم المستخدم.","login");
   }else{
     const r=await fetch(config.url+"/functions/v1/username-login",{method:"POST",headers:{"Content-Type":"application/json","apikey":config.anonKey},body:JSON.stringify({username,password})});
@@ -100,7 +100,7 @@ function loginPage(message="",mode="login"){
     if(!r.ok)throw Error(j.error||"فشل تسجيل الدخول.");
     const result=await cloudClient.auth.setSession({access_token:j.access_token,refresh_token:j.refresh_token});
     if(result.error)throw result.error;
-    state.username=username;await refreshCourse(true);
+    state.username=username;location.assign("../step-grammar-student/");return;
   }
  }catch(error){loginPage(error.message||"تعذر التسجيل. حاول مرة تانية.",mode);}
  };
