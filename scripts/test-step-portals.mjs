@@ -44,4 +44,16 @@ const adminServer=readFileSync("supabase/functions/step-admin/index.ts","utf8");
 assert(adminServer.includes('permission.role!=="owner"'),"Owner authorization before edits");
 const courseServer=readFileSync("supabase/functions/step-course/index.ts","utf8");
 assert(courseServer.includes('edit.status!=="published"'),"Draft questions must not go live");
+// Lesson content editing must be gated by owner authorization and
+// must keep canonical IDs, questions and pass rates untouched.
+assert(admin.includes('id="nav-lessons"'),"Admin lesson editor tab");
+assert(admin.includes('function renderLessonEditor('),"Admin lesson editor form");
+assert(admin.includes('/lessons/save'),"Admin lesson draft save");
+assert(admin.includes('/lessons/publish'),"Admin lesson publish");
+assert(admin.includes('/lessons/reset'),"Admin lesson original restore");
+assert(adminServer.includes('path==="/lessons"'),"Server lesson editor routes");
+assert(adminServer.includes('permission.role!=="owner"'),"Owner role required for writes");
+assert(courseServer.includes('row.published'),"Only published lesson content is loaded");
+assert(courseServer.includes('const editableKeys='),"Lesson edits cannot replace course identifiers");
+assert(courseServer.includes('step_lesson_content_edits'),"Persisted published content");
 console.log("All STEP portal contracts validated.");
