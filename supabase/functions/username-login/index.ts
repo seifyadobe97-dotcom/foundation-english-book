@@ -37,7 +37,7 @@ Deno.serve(async (request) => {
       return reply(401,{error:"اسم المستخدم أو كلمة المرور غير صحيحة"});
     }
     const admin = createClient(SUPABASE_URL,SERVICE_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
-    const {data:profile,error:profileError} = await admin.from("step_student_profiles").select("user_id").eq("username",username).maybeSingle();
+    const {data:profile,error:profileError} = await admin.from("step_student_profiles").select("user_id,is_active").eq("username",username).maybeSingle();
     if (profileError || !profile) return reply(401,{error:"اسم المستخدم أو كلمة المرور غير صحيحة"});
     const {data:userData,error:userError} = await admin.auth.admin.getUserById(profile.user_id);
     if (userError || !userData.user?.email) return reply(401,{error:"اسم المستخدم أو كلمة المرور غير صحيحة"});
@@ -46,6 +46,7 @@ Deno.serve(async (request) => {
       email:userData.user.email,password,
     });
     if (signInError || !session.session) return reply(401,{error:"اسم المستخدم أو كلمة المرور غير صحيحة أو البريد لم يتم تأكيده"});
+    if(profile.is_active===false)return reply(403,{error:"الحساب موقوف مؤقتًا، تواصل مع إدارة المعهد"});
     return reply(200,{
       access_token:session.session.access_token,
       refresh_token:session.session.refresh_token,
