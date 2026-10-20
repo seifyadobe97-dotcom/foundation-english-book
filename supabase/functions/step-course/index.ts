@@ -96,6 +96,20 @@ Deno.serve(async(request)=>{
     sections:status.sections,nextIndex:Math.min(status.next,total-1),completed:status.completed,
     exam:{unlocked:status.completed,attempts:attempts.length,best:Math.max(0,...attempts.map(x=>x.percentage)),last:attempts.at(-1)||null}};
   };
+  if(method==="GET"&&path==="/catalog"){
+   const [axes,indicators]=await Promise.all([
+    admin.from("step_curriculum_axes")
+     .select("code,title_ar,title_en,position,content_model").order("position"),
+    admin.from("step_curriculum_indicators")
+     .select("axis_code,slug,title_ar,title_en,description,position,legacy_course_code")
+     .eq("status","published").order("position")
+   ]);
+   if(axes.error||indicators.error)throw(axes.error||indicators.error);
+   return send(200,{axes:axes.data||[],indicators:(indicators.data||[]).map(i=>({
+    axis_code:i.axis_code,slug:i.slug,title_ar:i.title_ar,title_en:i.title_en,
+    position:i.position,course_code:i.legacy_course_code
+   }))});
+  }
   if(method==="GET"&&path==="/me")return send(200,{student:user.user_metadata?.username||"طالب STEP"});
   if(method==="GET"&&path==="/course")return send(200,await getCourse());
   const partPath=path.match(/^\/parts\/([0-9]+)(\/submit)?$/);
