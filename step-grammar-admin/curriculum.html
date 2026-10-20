@@ -144,7 +144,7 @@ function form(item,canEdit){
  const value=(id,label,content,opts={})=>'<div class="field"><label for="'+id+'">'+label+'</label>'+
  (opts.area?'<textarea id="'+id+'" '+disabled+'>'+escapeHtml(content||"")+'</textarea>':
  '<input id="'+id+'" value="'+escapeHtml(content??"")+'" '+(opts.ltr?'class="ltr"':'')+disabled+' required>')+'</div>';
- return '<h2>'+(item?'بيانات المؤشر':'إضافة مؤشر جديد')+'</h2><div class="note">'+(immutable?
+ return '<h2>'+(item?'بيانات المؤشر':'إضافة مؤشر جديد')+'</h2>'+(item?'<a class="btn alt" href="guide.html?indicator='+encodeURIComponent(item.slug)+'">افتح محرر شرح المؤشر ←</a>':'')+'<div class="note">'+(immutable?
  'المؤشر ده منشور بالفعل، ومحتواه ودرجاته محفوظة في نظام الدروس.': 
  'المؤشر هيتحفظ كمسودة، ومش هيظهر للطلاب إلا بعد تجهيز الدرس والأسئلة واعتماده.')+
  '</div><form id="indicator-form">'+
