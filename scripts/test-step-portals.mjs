@@ -12,6 +12,7 @@ const pages = [
   "step-grammar-student/index.html",
   "step-grammar-admin/index.html",
   "step-grammar-admin/reports.html",
+  "step-grammar-admin/courses.html",
 ];
 for (const path of pages) {
   const html = readFileSync(path, "utf8");
@@ -65,4 +66,12 @@ assert(admin.includes('reports.html?student='),"Directory links to student repor
 assert(admin.includes('href="reports.html"'),"Admin has analytics navigation");
 assert(adminServer.includes('path==="/analytics"'),"Server analytics endpoint");
 assert(adminServer.includes('reportMatch'),"Server per-student report endpoint");
+const courses=readFileSync("step-grammar-admin/courses.html","utf8");
+assert(courses.includes('/course-drafts/save'),"Course planning must save as draft");
+assert(courses.includes('/course-drafts/status'),"Course planning must archive/restore drafts");
+assert(courses.includes('غير متاحة للطلاب'),"Drafts must not claim to be published");
+assert(admin.includes('href="courses.html"'),"Admin navigation must link course builder");
+assert(adminServer.includes('path==="/course-drafts"'),"Server course draft route");
+assert(adminServer.includes('permission.role!=="owner"'),"Only owner can create courses");
+assert(courseServer.includes('const courseCode=lesson.code;'),"Student course remains safely pinned");
 console.log("All STEP portal contracts validated.");
