@@ -23,6 +23,15 @@
 .table-scroll{width:100%;overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:900px}th,td{text-align:right;padding:13px 15px;border-top:1px solid #edf0ee;vertical-align:middle}th{background:#f7f9f8;color:#65777c;font-size:12px;white-space:nowrap}td{font-size:13px}td.name{font-weight:800;color:var(--navy)}.contact{display:block;font-size:12px;color:var(--muted)}.contact a{color:var(--teal);font-weight:700}.tag{font-size:12px;font-weight:800;padding:4px 9px;border-radius:99px;white-space:nowrap;display:inline-block}.tag.active{background:var(--teal-bg);color:#1b7454}.tag.inactive{background:#fff0ef;color:#9e4a47}.progress{width:80px;height:7px;background:#e9efec;border-radius:7px;overflow:hidden;margin-top:4px}.progress div{height:100%;background:var(--teal)}.actions{display:flex;gap:7px;flex-wrap:wrap}.bottom{padding:14px 21px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);gap:10px}.bottom span{font-size:12px;color:var(--muted)}.footer{text-align:center;margin-top:35px;color:#8c9c9d;font:600 11px "DM Sans"}
 [hidden]{display:none!important}
 @media(max-width:650px){.top{padding:12px 15px}.brand-name{font-size:12px}.brand-sub{font-size:10px}.shell{padding:25px 14px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{padding:13px}.table-top{padding:16px}.login{padding:23px}.nav-actions a{display:none}}
+/* STEP lesson content editor */
+.lesson-edit-heading{font-size:19px;margin:18px 0 8px;padding-bottom:7px;border-bottom:1px solid var(--line);color:var(--navy)}
+.lesson-edit-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.lesson-edit-block{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:11px;background:#fbfcfb}
+.lesson-edit-block strong{color:var(--teal)}
+.lesson-editor-help{background:#f1f7f5;padding:10px;border-radius:9px;color:#526d68;font-size:12px}
+.lesson-status{display:inline-flex;background:#e9f5ef;color:#1c7653;border-radius:99px;padding:3px 10px;font-size:12px;font-weight:800}
+.lesson-status.draft{background:#fff1d7;color:#95652e}
+@media(max-width:650px){.lesson-edit-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -160,11 +169,12 @@ async function loadStudents(){
 function injectAdminNavigation(active){
  const container=document.createElement("nav");
  container.className="admin-tabs";container.setAttribute("aria-label","أقسام لوحة الإدارة");
- container.innerHTML='<button class="admin-tab '+(active==="students"?"is-active":"")+'" id="nav-students">الطلاب والنتائج</button><button class="admin-tab '+(active==="questions"?"is-active":"")+'" id="nav-questions">بنك الأسئلة</button>';
+ container.innerHTML='<button class="admin-tab '+(active==="students"?"is-active":"")+'" id="nav-students">الطلاب والنتائج</button><button class="admin-tab '+(active==="questions"?"is-active":"")+'" id="nav-questions">بنك الأسئلة</button><button class="admin-tab '+(active==="lessons"?"is-active":"")+'" id="nav-lessons">محتوى الدروس</button>';
  const anchor=root.querySelector(".intro")||root.querySelector(".page-title");
  if(anchor)anchor.after(container);
  document.getElementById("nav-students").onclick=()=>{ui.page=1;loadStudents();};
  document.getElementById("nav-questions").onclick=()=>loadQuestions();
+ document.getElementById("nav-lessons").onclick=()=>loadLessonEditor();
 }
 async function loadQuestions(preserveId=null){
  root.innerHTML='<main class="shell"><p>جاري تحميل بنك الأسئلة…</p></main>';
@@ -224,6 +234,110 @@ function renderQuestionForm(q,canEdit,msg){
  if(pub)pub.onclick=async()=>{if(!confirm("نشر السؤال للطلاب الآن؟"))return;pub.disabled=true;try{await api("/questions/publish",{method:"POST",body:JSON.stringify({id:q.id})});await loadQuestions(q.id);}catch(error){alert(errorMessage(error));pub.disabled=false;}};
  const archive=document.getElementById("archive-q");
  if(archive)archive.onclick=async()=>{if(!confirm("أرشفة السؤال وإخفاؤه عن الطلاب؟"))return;archive.disabled=true;try{await api("/questions/archive",{method:"POST",body:JSON.stringify({id:q.id})});await loadQuestions(q.id);}catch(error){alert(errorMessage(error));archive.disabled=false;}};
+}
+
+
+const lessonEditor={rows:[],active:0};
+const lessonField=(id,label,value,opts={})=>{
+ const isArea=!!opts.area;
+ const input=isArea?'<textarea id="'+id+'" rows="'+(opts.rows||3)+'" maxlength="'+(opts.max||4500)+'" '+(opts.ltr?'dir="ltr"':'')+' required>'+escapeHtml(value||"")+'</textarea>':
+ '<input id="'+id+'" type="text" maxlength="'+(opts.max||250)+'" value="'+escapeHtml(value||"")+'" '+(opts.ltr?'dir="ltr"':'')+' required>';
+ return '<div class="field"><label for="'+id+'">'+label+'</label>'+input+'</div>';
+};
+async function loadLessonEditor(partIndex=null){
+ root.innerHTML='<main class="shell"><p>جاري تحميل محتوى الدروس…</p></main>';
+ try{
+  const result=await api("/lessons");
+  lessonEditor.rows=result.sections||[];
+  if(partIndex!=null)lessonEditor.active=partIndex;
+  renderLessonEditor();
+ }catch(error){
+  root.innerHTML='<main class="shell"><div class="panel"><div class="notice error">'+escapeHtml(errorMessage(error))+'</div><button class="btn btn-outline" id="retry-lessons">إعادة المحاولة</button></div></main>';
+  document.getElementById("retry-lessons").onclick=()=>loadLessonEditor();
+ }
+}
+function renderLessonEditor(){
+ const all=lessonEditor.rows,entry=all.find(x=>x.index===lessonEditor.active);
+ if(!entry)return;
+ const canEdit=ui.role==="owner";
+ const content=entry.draft||entry.published||entry.base;
+ const isDraft=!!entry.draft,wasPublished=!!entry.published;
+ const lessonNames=all.map(s=>'<button class="q-item '+(s.index===lessonEditor.active?'active':'')+'" data-lesson-index="'+s.index+'" type="button"><small>PART '+String(s.index+1).padStart(2,'0')+' · '+(s.draft?'مسودة قيد التحرير':s.published?'تم تعديل النسخة المنشورة':'المحتوى الأصلي')+'</small><strong style="direction:rtl;text-align:right">'+escapeHtml((s.draft||s.published||s.base).titleAr)+'</strong></button>').join("");
+ const src=entry.base;
+ const exampleFields=src.examples.map((_,i)=>{
+  const ex=content.examples[i]||{en:"",ar:""};
+  return '<div class="lesson-edit-block"><strong>مثال '+(i+1)+'</strong><div class="lesson-edit-row">'+lessonField('example-en-'+i,'الجملة بالإنجليزي',ex.en,{ltr:true,max:500})+lessonField('example-ar-'+i,'المعنى بالعربي',ex.ar,{max:500})+'</div></div>';
+ }).join("");
+ const tileFields=src.tiles.map((_,i)=>{
+  const tile=content.tiles[i]||{label:"",text:""};
+  return '<div class="lesson-edit-block"><strong>بطاقة '+(i+1)+'</strong><div class="lesson-edit-row">'+lessonField('tile-label-'+i,'عنوان البطاقة',tile.label,{max:100})+lessonField('tile-text-'+i,'محتوى البطاقة',tile.text,{ltr:true,max:300})+'</div></div>';
+ }).join("");
+ const rules=content.rule.join('\n');
+ const altField=src.alternativeRule?lessonField('lesson-alt-rule','القاعدة البديلة: كل عنصر في سطر',content.alternativeRule?.join('\n')||src.alternativeRule.join('\n'),{area:true,rows:4,max:2500}):"";
+ root.innerHTML='<main class="shell"><div class="eyebrow">LESSON CONTENT MANAGEMENT</div><h1 class="page-title">إدارة شرح الدروس</h1><p class="intro">عدّل العناوين والقواعد والأمثلة، واحفظ مسودة. لن يظهر التعديل للطلاب إلا عند نشره.</p><div class="question-layout"><section class="panel"><strong>أجزاء Present Simple</strong><div class="question-list">'+lessonNames+'</div></section><section class="panel q-form"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><h2 style="margin:0;font-size:22px">الجزء '+(entry.index+1)+': '+escapeHtml(content.titleAr)+'</h2><span class="lesson-status '+(isDraft?'draft':'')+'">'+(isDraft?'مسودة غير منشورة':wasPublished?'نسخة منشورة':'محتوى أصلي')+'</span></div><form id="lesson-content-form"><h3 class="lesson-edit-heading">بيانات الجزء</h3><div class="lesson-edit-row">'+
+  lessonField('lesson-title','عنوان الدرس',content.titleAr,{max:110})+
+  lessonField('lesson-subtitle','العنوان الفرعي',content.subtitle,{max:180})+
+  lessonField('lesson-short','وصف مختصر',content.short,{max:180})+
+  lessonField('lesson-duration','المدة',content.duration,{max:35})+
+ '</div>'+lessonField('lesson-description','الشرح الرئيسي',content.description,{area:true,rows:7,max:4500})+
+ '<h3 class="lesson-edit-heading">القواعد</h3><div class="lesson-editor-help">اكتب كل عنصر من القاعدة في سطر مستقل، بما في ذلك علامة +. هتظهر العناصر بالترتيب من الشمال لليمين.</div>'+
+ lessonField('lesson-rule','القاعدة الرئيسية: كل عنصر في سطر',rules,{area:true,rows:5,max:2500})+altField+
+ '<h3 class="lesson-edit-heading">القاعدة الذهبية</h3>'+lessonField('gold-title','عنوان القاعدة الذهبية',content.gold.title,{max:120})+lessonField('gold-body','نص القاعدة الذهبية',content.gold.body,{area:true,max:2200,rows:5})+
+ '<h3 class="lesson-edit-heading">أمثلة الشرح</h3>'+exampleFields+
+ '<h3 class="lesson-edit-heading">البطاقات التعليمية</h3>'+tileFields+
+ '<h3 class="lesson-edit-heading">الخطأ الشائع والتصحيح</h3>'+lessonField('mistake-wrong','الجملة الخطأ',content.mistake.wrong,{ltr:true,max:300})+
+ lessonField('mistake-right','الجملة الصحيحة',content.mistake.right,{ltr:true,max:300})+
+ lessonField('mistake-why','سبب التصحيح',content.mistake.why,{area:true,max:950})+
+ '<div class="q-actions">'+(canEdit?'<button class="btn btn-main" type="submit" id="save-lesson">حفظ كمسودة</button>'+(isDraft?'<button class="btn btn-good" type="button" id="publish-lesson">نشر المسودة للطلاب</button>':'')+
+ ((isDraft||wasPublished)?'<button class="btn btn-danger" type="button" id="reset-lesson">استعادة المحتوى الأصلي</button>':''):'')+'</div></form></section></div><div class="footer">QUDRAT · LESSON CONTENT EDITOR</div></main>';
+ injectAdminNavigation("lessons");
+ document.querySelectorAll("[data-lesson-index]").forEach(b=>b.onclick=()=>{if(!confirmDiscardLesson())return;lessonEditor.active=Number(b.dataset.lessonIndex);renderLessonEditor();window.scrollTo(0,0);});
+ const form=document.getElementById("lesson-content-form");
+ if(!canEdit){form.querySelectorAll("input,textarea,button").forEach(el=>el.disabled=true);return;}
+ let dirty=false;
+ const publish=document.getElementById("publish-lesson");
+ form.addEventListener("input",()=>{dirty=true;if(publish){publish.disabled=true;publish.title="احفظ التعديلات كمسودة قبل النشر";}});
+ function confirmDiscardLesson(){return !dirty||confirm("في تعديلات غير محفوظة. تجاهل التعديلات؟");}
+ const value=id=>document.getElementById(id).value.trim();
+ form.onsubmit=async event=>{
+  event.preventDefault();
+  const b=document.getElementById("save-lesson");b.disabled=true;b.textContent="جاري الحفظ…";
+  const tokenList=id=>value(id).split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+  const payload={part_index:entry.index,content:{
+   titleAr:value("lesson-title"),subtitle:value("lesson-subtitle"),
+   short:value("lesson-short"),duration:value("lesson-duration"),
+   description:value("lesson-description"),rule:tokenList("lesson-rule"),
+   ...(src.alternativeRule?{alternativeRule:tokenList("lesson-alt-rule")}:{}),
+   gold:{title:value("gold-title"),body:value("gold-body")},
+   mistake:{wrong:value("mistake-wrong"),right:value("mistake-right"),why:value("mistake-why")},
+   examples:src.examples.map((_,i)=>({en:value("example-en-"+i),ar:value("example-ar-"+i)})),
+   tiles:src.tiles.map((t,i)=>({icon:t.icon,label:value("tile-label-"+i),text:value("tile-text-"+i)}))
+  }};
+  try{
+   await api("/lessons/save",{method:"POST",body:JSON.stringify(payload)});
+   dirty=false;await loadLessonEditor(entry.index);
+   alert("المسودة اتحفظت. الدرس المنشور للطلاب ما اتغيرش.");
+  }catch(error){alert(errorMessage(error));b.disabled=false;b.textContent="حفظ كمسودة";}
+ };
+ if(publish)publish.onclick=async()=>{
+  if(dirty){alert("احفظ التعديلات كمسودة الأول.");return;}
+  if(!confirm("متأكد إنك راجعت الشرح وعايز تنشره للطلاب؟"))return;
+  publish.disabled=true;
+  try{
+   await api("/lessons/publish",{method:"POST",body:JSON.stringify({part_index:entry.index})});
+   await loadLessonEditor(entry.index);
+   alert("تم نشر محتوى الجزء للطلاب.");
+  }catch(error){alert(errorMessage(error));publish.disabled=false;}
+ };
+ const reset=document.getElementById("reset-lesson");
+ if(reset)reset.onclick=async()=>{
+  if(!confirm("استعادة نسخة الدرس الأصلية؟ هتُلغى المسودة والنسخة المنشورة لهذا الجزء."))return;
+  reset.disabled=true;
+  try{
+   await api("/lessons/reset",{method:"POST",body:JSON.stringify({part_index:entry.index})});
+   await loadLessonEditor(entry.index);
+  }catch(error){alert(errorMessage(error));reset.disabled=false;}
+ };
 }
 
 async function logout(){await db.auth.signOut();ui.role=null;ui.rows=[];showLogin();}
