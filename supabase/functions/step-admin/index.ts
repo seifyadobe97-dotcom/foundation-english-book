@@ -494,5 +494,106 @@ Deno.serve(async(req)=>{
    return reply(200,{ok:true,indicator:data});
   }catch(error){console.error("STEP indicator status",error);return reply(500,{error:"تعذر تحديث حالة المؤشر"});}
  }
+
+ // Source-based instructional guides: draft/preview/publish per indicator.
+ const guideRead=path.match(/^\/guides\/([a-z][a-z0-9-]{2,39})$/);
+ if(req.method==="GET"&&guideRead){
+  const slug=guideRead[1];
+  try{
+   const [ind,found]=await Promise.all([
+    admin.from("step_curriculum_indicators").select("slug,title_ar,title_en,axis_code,status").eq("slug",slug).maybeSingle(),
+    admin.from("step_indicator_guides").select("published,draft,published_at,draft_updated_at")
+     .eq("indicator_slug",slug).maybeSingle()
+   ]);
+   if(ind.error||found.error)throw(ind.error||found.error);
+   if(!ind.data)return reply(404,{error:"المؤشر غير موجود"});
+   return reply(200,{indicator:ind.data,guide:found.data||{published:null,draft:null}});
+  }catch(error){console.error("Admin guide read",error);return reply(500,{error:"تعذر تحميل شرح المؤشر"});}
+ }
+ const guideWrite=path==="/guides/save"||path==="/guides/publish"||path==="/guides/discard-draft";
+ if(req.method==="POST"&&guideWrite){
+  if(permission.role!=="owner")return reply(403,{error:"إدارة الشرح متاحة لمدير المعهد فقط"});
+  try{
+   const raw=await req.text();if(raw.length>95000)return reply(413,{error:"حجم الشرح كبير جدًا"});
+   const input=JSON.parse(raw),slug=String(input?.indicator_slug||"");
+   if(!/^[a-z][a-z0-9-]{2,39}$/.test(slug))return reply(422,{error:"كود المؤشر غير صالح"});
+   const ind=await admin.from("step_curriculum_indicators").select("slug,axis_code")
+    .eq("slug",slug).maybeSingle();
+   if(ind.error)throw ind.error;
+   if(!ind.data)return reply(404,{error:"المؤشر غير موجود"});
+   const {data:previous,error:readError}=await admin.from("step_indicator_guides")
+    .select("draft,published,published_at,draft_updated_at")
+    .eq("indicator_slug",slug).maybeSingle();
+   if(readError)throw readError;
+   const when=new Date().toISOString();
+   if(path==="/guides/save"){
+    const rawGuide=input?.guide;
+    if(!rawGuide||typeof rawGuide!=="object"||Array.isArray(rawGuide))
+     return reply(422,{error:"محتوى الشرح غير صحيح"});
+    const str=(v:unknown,field:string,min=1,max=600)=>{
+      if(typeof v!=="string"||v.trim().length<min||v.trim().length>max)
+       throw Error("راجع حقل "+field);
+      return v.trim();
+    };
+    const sections=rawGuide.modules;
+    if(!Array.isArray(sections)||sections.length<1||sections.length>16)
+     return reply(422,{error:"أضف قسمًا واحدًا على الأقل وبحد أقصى 16 قسمًا"});
+    const used=new Set<string>();
+    const modules=sections.map((s:any,index:number)=>{
+     const id=str(s?.id,"رقم القسم",2,40);
+     if(!/^[a-z][a-z0-9-]*$/.test(id)||used.has(id))throw Error("راجع معرّفات أقسام الشرح");
+     used.add(id);
+     const page=Number(s.source_page);
+     if(!Number.isInteger(page)||page<1||page>2000)throw Error("راجع صفحة المصدر");
+     if(!Array.isArray(s.rules)||s.rules.length>18||!Array.isArray(s.examples)||s.examples.length>30
+       ||!Array.isArray(s.keywords)||s.keywords.length>40)
+       throw Error("راجع عدد القواعد والأمثلة والكلمات");
+     return {id,title_ar:str(s.title_ar,"عنوان القسم",2,150),
+       title_en:str(s.title_en,"عنوان القسم الإنجليزي",2,150),
+       source_page:page,intro_ar:str(s.intro_ar,"شرح القسم",5,3200),
+       rules:s.rules.map((r:any)=>({label_ar:str(r?.label_ar,"عنوان القاعدة",2,180),
+         formula:str(r?.formula,"صيغة القاعدة",2,330)})),
+       examples:s.examples.map((e:any)=>({en:str(e?.en,"نص المثال",3,500),
+         tag:typeof e?.tag==="string"?e.tag.trim().slice(0,70):""})),
+       keywords:s.keywords.map((v:any)=>({en:str(v?.en,"الكلمة الإنجليزية",1,100),
+         ar:str(v?.ar,"المعنى العربي",1,140)}))
+     };
+    });
+    const pages=rawGuide?.source?.pages;
+    if(!Array.isArray(pages)||pages.length<1||pages.length>20||
+      pages.some((p:unknown)=>!Number.isInteger(p)||p<1||p>2000))
+      return reply(422,{error:"حدد صفحات المصدر بشكل صحيح"});
+    const clean={schema_version:1,indicator_slug:slug,
+     title_ar:str(rawGuide.title_ar,"عنوان الدرس",3,180),
+     title_en:str(rawGuide.title_en,"عنوان الدرس الإنجليزي",3,180),
+     source:{document:str(rawGuide?.source?.document,"اسم المرجع",3,230),pages},
+     modules
+    };
+    const {error}=await admin.from("step_indicator_guides").upsert({
+     indicator_slug:slug,draft:clean,published:previous?.published||null,
+     published_at:previous?.published_at||null,draft_updated_at:when,updated_at:when,updated_by:auth.user.id
+    },{onConflict:"indicator_slug"});
+    if(error)throw error;
+    return reply(200,{ok:true,status:"draft",indicator_slug:slug,sections:modules.length});
+   }
+   if(!previous)return reply(404,{error:"مفيش شرح محفوظ للمؤشر"});
+   if(path==="/guides/publish"&&!previous.draft)
+    return reply(422,{error:"احفظ المسودة قبل النشر"});
+   if(path==="/guides/publish"&&ind.data.status!=="published")
+    return reply(403,{error:"المؤشر نفسه غير منشور؛ لا يمكن نشر شرحه للطلاب الآن"});
+   const fields=path==="/guides/publish"?
+     {published:previous.draft,published_at:when,draft:null,draft_updated_at:null}:
+     {draft:null,draft_updated_at:null};
+   const {error}=await admin.from("step_indicator_guides").update({
+     ...fields,updated_by:auth.user.id,updated_at:when
+   }).eq("indicator_slug",slug);
+   if(error)throw error;
+   return reply(200,{ok:true,status:path==="/guides/publish"?"published":"draft-discarded"});
+  }catch(error){
+   console.error("Admin guide write",error);
+   return reply(422,{error:error instanceof Error&&error.message.startsWith("راجع")?
+     error.message:"تعذر حفظ أو نشر شرح المؤشر"});
+  }
+ }
  return reply(404,{error:"المسار غير موجود"});
 });
