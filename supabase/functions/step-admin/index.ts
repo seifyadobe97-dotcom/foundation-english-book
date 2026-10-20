@@ -1,6 +1,7 @@
 // Private administrative API for STEP Grammar, authenticated with Supabase JWT.
 // The service-role key is available only inside this Edge Function, never in public HTML.
 import { createClient } from "npm:@supabase/supabase-js@2.57.0";
+import lesson from "./lesson-data.json" with { type: "json" };
 const url=Deno.env.get("SUPABASE_URL")??"";
 const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
 const allow=new Set(["https://seifyadobe97-dotcom.github.io","http://localhost:3000","http://127.0.0.1:3000"]);
@@ -84,6 +85,86 @@ Deno.serve(async(req)=>{
    if(auditError)console.error("STEP audit recording failed",auditError);
    return reply(200,{ok:true,active:student.is_active});
   }catch(error){console.error("STEP admin status failed",error);return reply(500,{error:"تعذر تعديل الحساب"});}
+ }
+
+ // Question-editor API. Public students never access these admin routes.
+ if(path==="/questions"&&req.method==="GET"){
+  try{
+   const {data:edits,error}=await admin.from("step_question_edits").select("*").eq("course_code",lesson.code).limit(1000);
+   if(error)throw error;
+   const sectionIds=new Map<string,number>();
+   lesson.sections.forEach((s,index)=>s.questionIds.forEach(id=>sectionIds.set(id,index)));
+   const base=Object.values(lesson.questions).map(q=>({
+    id:q.id,part_index:sectionIds.get(q.id),text:q.text,options:q.options,correct:q.correct,
+    explanation:q.explanation,status:"published",origin:"source",
+    source:q.source||null,has_edit:false
+   }));
+   const all=new Map(base.map(q=>[q.id,q]));
+   for(const e of edits||[]){
+    const canonical=all.get(e.id);
+    all.set(e.id,{...(canonical||{}),id:e.id,part_index:e.part_index,text:e.question_text,
+     options:e.options,correct:e.correct,explanation:e.explanation,status:e.status,
+     origin:canonical?"source":"custom",source:canonical?.source||null,has_edit:true});
+   }
+   return reply(200,{
+    sections:lesson.sections.map((s,i)=>({index:i,title:s.titleAr,english:s.title})),
+    questions:Array.from(all.values()),total:all.size,
+   });
+  }catch(error){console.error("admin questions",error);return reply(500,{error:"تعذر تحميل بنك الأسئلة"});}
+ }
+ if(path==="/questions/save"&&req.method==="POST"){
+  if(permission.role!=="owner")return reply(403,{error:"تحرير الأسئلة متاح للمدير فقط"});
+  try{
+   const raw=await req.text();if(raw.length>18000)return reply(413,{error:"المدخلات طويلة جدًا"});
+   const a=JSON.parse(raw);
+   const part=Number(a.part_index);
+   const isExisting=typeof a.id==="string"&&Object.hasOwn(lesson.questions,a.id);
+   if(!Number.isInteger(part)||part<0||part>=lesson.sections.length)return reply(422,{error:"اختار جزءًا صحيحًا"});
+   if(isExisting&&!lesson.sections[part].questionIds.includes(a.id))return reply(422,{error:"لا يمكن نقل سؤال المصدر إلى جزء آخر"});
+   const title=String(a.text||"").trim(),exp=String(a.explanation||"").trim();
+   if(title.length<8||title.length>2000||exp.length>2500)return reply(422,{error:"راجع طول نص السؤال والشرح"});
+   const options=a.options;
+   if(!options||typeof options!=="object"||["A","B","C","D"].some(x=>typeof options[x]!=="string"||options[x].trim().length<1||options[x].trim().length>500))return reply(422,{error:"اكتب الاختيارات الأربعة"});
+   if(!["A","B","C","D"].includes(a.correct))return reply(422,{error:"اختار الإجابة الصحيحة"});
+   let id:string;
+   if(isExisting)id=a.id;
+   else if(typeof a.id==="string"&&a.id.startsWith("STEP-NEW-")){
+    // Only allow updates to existing custom rows, not caller-chosen new IDs.
+    const {data:existing}=await admin.from("step_question_edits").select("id").eq("id",a.id).eq("course_code",lesson.code).maybeSingle();
+    if(!existing)return reply(404,{error:"السؤال غير موجود"});
+    id=a.id;
+   }else if(!a.id) id="STEP-NEW-"+crypto.randomUUID();
+   else return reply(422,{error:"معرّف السؤال غير صحيح"});
+   const payload={id,course_code:lesson.code,part_index:part,question_text:title,
+    options:{A:options.A.trim(),B:options.B.trim(),C:options.C.trim(),D:options.D.trim()},
+    correct:a.correct,explanation:exp,status:"draft",created_by:auth.user.id,updated_at:new Date().toISOString()};
+   const {error}=await admin.from("step_question_edits").upsert(payload,{onConflict:"id"});
+   if(error)throw error;
+   return reply(200,{ok:true,id,status:"draft"});
+  }catch(error){console.error("question save",error);return reply(500,{error:"تعذر حفظ السؤال"});}
+ }
+ if(path==="/questions/publish"&&req.method==="POST"){
+  if(permission.role!=="owner")return reply(403,{error:"النشر متاح للمدير فقط"});
+  try{
+   const payload=JSON.parse(await req.text());
+   const id=String(payload.id||"");
+   if(id.length>100)return reply(422,{error:"معرّف غير صحيح"});
+   const {data:existing,error:findError}=await admin.from("step_question_edits").select("id,part_index").eq("id",id).eq("course_code",lesson.code).maybeSingle();
+   if(findError||!existing)return reply(404,{error:"احفظ السؤال كمسودة الأول"});
+   const {error}=await admin.from("step_question_edits").update({status:"published",updated_at:new Date().toISOString()}).eq("id",id).eq("course_code",lesson.code);
+   if(error)throw error;
+   return reply(200,{ok:true,id,status:"published"});
+  }catch(error){console.error("question publish",error);return reply(500,{error:"تعذر نشر السؤال"});}
+ }
+ if(path==="/questions/archive"&&req.method==="POST"){
+  if(permission.role!=="owner")return reply(403,{error:"الأرشفة متاحة للمدير فقط"});
+  try{
+   const payload=JSON.parse(await req.text()),id=String(payload.id||"");
+   if(!id.startsWith("STEP-NEW-")||id.length>100)return reply(422,{error:"لا يمكن أرشفة أسئلة المصدر الأصلية"});
+   const {error}=await admin.from("step_question_edits").update({status:"archived",updated_at:new Date().toISOString()}).eq("id",id).eq("course_code",lesson.code);
+   if(error)throw error;
+   return reply(200,{ok:true,id,status:"archived"});
+  }catch(error){console.error("question archive",error);return reply(500,{error:"تعذر أرشفة السؤال"});}
  }
  return reply(404,{error:"المسار غير موجود"});
 });
