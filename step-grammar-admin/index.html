@@ -12,7 +12,11 @@
 <style>
 :root{--navy:#162e3c;--ink:#283b44;--muted:#71818a;--bg:#f6f7f5;--line:#dfe7e4;--teal:#25746a;--teal-bg:#e9f5ef;--gold:#c79b61;--red:#ab4b4b}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.8 Cairo,Tahoma,sans-serif}button,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}a{color:inherit;text-decoration:none}.ltr{font-family:"DM Sans",Arial,sans-serif;direction:ltr;unicode-bidi:isolate;display:inline-block}.shell{max-width:1280px;margin:0 auto;padding:30px clamp(16px,4vw,50px) 75px}
-.top{background:#fff;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:19px clamp(16px,4vw,65px);border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:13px}.logo{width:43px;height:43px;display:grid;place-items:center;border-radius:12px;background:var(--navy);border:1px solid var(--gold);color:var(--gold);font:800 20px "DM Sans"}.brand-name{font:800 15px/1.2 "DM Sans";letter-spacing:.1em;color:var(--navy)}.brand-sub{font-size:11px;color:var(--muted)}.nav-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.nav-actions a{font-size:13px;color:var(--teal);font-weight:800}.btn{border:0;border-radius:10px;padding:11px 19px;min-height:43px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-main{color:#fff;background:var(--navy)}.btn-main:hover{background:#244b5c}.btn-outline{background:white;border:1px solid #cddbd7;color:var(--navy)}.btn-small{min-height:34px;padding:5px 12px;font-size:12px}.btn-danger{color:#9a4242;background:#fff3f3;border:1px solid #f3d5d5}.btn-good{color:#17694e;background:#e8f5ef;border:1px solid #c4e1d4}
+.top{background:#fff;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:19px clamp(16px,4vw,65px);border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:13px}.logo{width:43px;height:43px;display:grid;place-items:center;border-radius:12px;background:var(--navy);border:1px solid var(--gold);color:var(--gold);font:800 20px "DM Sans"}.brand-name{font:800 15px/1.2 "DM Sans";letter-spacing:.1em;color:var(--navy)}.brand-sub{font-size:11px;color:var(--muted)}.nav-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.nav-actions a{font-size:13px;color:var(--teal);font-weight:800}
+.admin-tabs{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:18px 0 23px}.admin-tab{border:1px solid #d3dfdc;border-radius:11px;background:white;padding:9px 18px;font-weight:800;color:#54716f}.admin-tab.is-active{background:var(--navy);color:white;border-color:var(--navy)}
+.question-layout{display:grid;grid-template-columns:minmax(255px,350px) minmax(0,1fr);gap:18px;align-items:start}.question-list{display:grid;gap:8px;max-height:680px;overflow-y:auto;padding:8px}.q-item{width:100%;text-align:right;background:#fff;border:1px solid var(--line);padding:12px;border-radius:10px;color:var(--ink);cursor:pointer}.q-item.active{border-color:var(--teal);background:#eff8f5}.q-item small{display:block;color:var(--muted);font-size:11px}.q-item strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;text-align:left}.q-form{padding:22px}.q-form textarea,.q-form input,.q-form select{width:100%;border:1px solid #ccdcd7;border-radius:9px;padding:10px 12px;font:inherit;background:white}.q-form textarea{min-height:90px;resize:vertical;direction:ltr;text-align:left}.q-form select{direction:rtl}.q-form .q-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.q-form label{display:block;font-size:12px;font-weight:800;margin-bottom:4px}.q-form .field{margin-top:14px}.q-actions{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px}.q-item .state{color:#b1803f;direction:rtl;text-align:right}
+@media(max-width:850px){.question-layout{grid-template-columns:1fr}.question-list{max-height:240px}}
+.btn{border:0;border-radius:10px;padding:11px 19px;min-height:43px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn-main{color:#fff;background:var(--navy)}.btn-main:hover{background:#244b5c}.btn-outline{background:white;border:1px solid #cddbd7;color:var(--navy)}.btn-small{min-height:34px;padding:5px 12px;font-size:12px}.btn-danger{color:#9a4242;background:#fff3f3;border:1px solid #f3d5d5}.btn-good{color:#17694e;background:#e8f5ef;border:1px solid #c4e1d4}
 .eyebrow{font:800 11px "DM Sans";color:#bc9163;letter-spacing:.16em;text-transform:uppercase}.page-title{font-size:clamp(26px,3.6vw,38px);line-height:1.4;margin:6px 0 8px}.intro{color:var(--muted);margin:0 0 28px}.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:25px;box-shadow:0 12px 45px #152f3d08}.auth-layout{display:grid;place-items:center;min-height:60vh}.login{width:min(100%,470px);padding:36px}.login h1{font-size:26px;margin:9px 0}.login p{font-size:14px;color:var(--muted)}.field{margin-top:18px}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:6px}.field input{width:100%;border:1px solid #d7e0df;padding:12px 15px;border-radius:9px;background:#fcfcfb;direction:ltr;text-align:left;outline:none}.field input:focus{border-color:var(--teal)}.login .btn-main{width:100%;margin-top:24px}.help{font-size:13px;color:var(--muted);margin-top:18px}.notice{padding:14px 17px;margin:16px 0;border-radius:10px;color:#87572f;background:#fff7e9;border:1px solid #f0dfc5}.notice.error{background:#fff1f1;color:#a44848;border-color:#f1d4d4}
 .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:23px}.stat{background:#fff;border:1px solid var(--line);border-radius:13px;padding:20px}.stat strong{display:block;font:800 clamp(26px,3vw,34px) "DM Sans";color:var(--navy)}.stat span{font-size:13px;color:var(--muted)}
 .table-panel{background:white;border:1px solid var(--line);border-radius:16px;overflow:hidden}.table-top{padding:21px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}.table-top h2{margin:0;font-size:20px}.table-top p{margin:0;color:var(--muted);font-size:13px}.search{display:flex;gap:9px;flex-wrap:wrap}.search input{width:min(300px,75vw);padding:8px 13px;border:1px solid #d3dddb;border-radius:9px;background:#fafcfb;direction:rtl;text-align:right}
@@ -51,7 +55,7 @@ async function api(path,opts={}){
 }
 function showLogin(msg=""){
  logoutButton.hidden=true;
- root.innerHTML='<div class="auth-layout shell"><form id="login-form" class="panel login"><div class="eyebrow">SECURE ADMIN ACCESS</div><h1>لوحة إدارة طلاب STEP</h1><p>سجّل دخولك بالحساب اللي مُنحت له صلاحية الأدمن. إنشاء حساب طالب لوحده لا يمنح صلاحيات الإدارة.</p>'+(msg?'<div class="notice error">'+escapeHtml(msg)+'</div>':'')+'<div class="field"><label for="username">اسم المستخدم</label><input id="username" autocomplete="username" required minlength="3" dir="ltr"></div><div class="field"><label for="password">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required minlength="10" dir="ltr"></div><button id="login" class="btn btn-main" type="submit">تسجيل الدخول للوحة</button><p class="help">البيانات محفوظة في Supabase، ومفيش تفاصيل طلاب بتظهر إلا للحسابات الإدارية المعتمدة.</p></form></div>';
+ root.innerHTML='<div class="auth-layout shell"><form id="login-form" class="panel login"><div class="eyebrow">SECURE ADMIN ACCESS</div><h1>لوحة إدارة طلاب STEP</h1><p>سجّل دخولك بالحساب اللي مُنحت له صلاحية الأدمن. إنشاء حساب طالب لوحده لا يمنح صلاحيات الإدارة.</p>'+(msg?'<div class="notice error">'+escapeHtml(msg)+'</div>':'')+'<div class="field"><label for="username">اسم المستخدم</label><input id="username" autocomplete="username" required minlength="3" dir="ltr"></div><div class="field"><label for="password">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required minlength="10" dir="ltr"></div><button id="login" class="btn btn-main" type="submit">تسجيل الدخول للوحة</button></form></div>';
  document.getElementById("login-form").onsubmit=async e=>{
   e.preventDefault();const b=document.getElementById("login");b.disabled=true;b.textContent="جاري التحقق…";
   try{
@@ -69,6 +73,7 @@ function showLogin(msg=""){
   }catch(error){showLogin(errorMessage(error));}
  };
 }
+const questionState={list:[],sections:[],currentId:null,filter:"all"};
 async function checkAdmin(){
  try{
   const info=await api("/me");ui.role=info.role;logoutButton.hidden=false;await loadStudents();
@@ -97,6 +102,7 @@ function dashboard(){
  const exams=students.filter(s=>s.exam_best!=null).length;
  const pages=Math.max(1,Math.ceil(total/25));
  root.innerHTML='<main class="shell"><div class="eyebrow">STUDENT MANAGEMENT</div><h1 class="page-title">لوحة إدارة طلاب STEP</h1><p class="intro">دليل الطلاب وبيانات التواصل ونتائج المضارع البسيط. الصلاحية: <strong>'+(ui.role==="owner"?"مدير المعهد":"متابعة فقط")+'</strong></p><section class="stats"><div class="stat"><strong>'+total+'</strong><span>إجمالي الطلاب المطابقين للبحث</span></div><div class="stat"><strong>'+active+'</strong><span>حسابات مفعّلة بالصفحة</span></div><div class="stat"><strong>'+completed+'</strong><span>مكملين الأجزاء الستة بالصفحة</span></div><div class="stat"><strong>'+exams+'</strong><span>أدّوا الاختبار بالصفحة</span></div></section><section class="table-panel"><div class="table-top"><div><h2>قائمة الطلاب</h2><p>ابحث باسم المستخدم أو الإيميل أو رقم الموبايل</p></div><form id="search-form" class="search"><input id="q" aria-label="البحث في الطلاب" placeholder="بحث عن طالب…" value="'+escapeHtml(ui.search)+'"><button class="btn btn-main" type="submit">بحث</button></form></div><div class="table-scroll"><table><thead><tr><th>اسم المستخدم</th><th>البريد الإلكتروني</th><th>رقم الموبايل</th><th>تقدم الدرس</th><th>أفضل اختبار</th><th>الحالة</th><th>آخر نشاط</th><th>الإجراء</th></tr></thead><tbody>'+(students.length?students.map(rowHtml).join(""):'<tr><td colspan="8" style="text-align:center;padding:35px;color:#75868d">مفيش طلاب مطابقين للبحث</td></tr>')+'</tbody></table></div><div class="bottom"><span>صفحة '+ui.page+' من '+pages+' — '+total+' طالب</span><div class="actions"><button id="prev" class="btn btn-outline btn-small" '+(ui.page<=1?"disabled":"")+'>السابق</button><button id="next" class="btn btn-outline btn-small" '+(ui.page>=pages?"disabled":"")+'>التالي</button></div></div></section><div class="footer">QUDRAT TRAINING INSTITUTE · PRIVATE STEP MANAGEMENT</div></main>';
+ injectAdminNavigation("students");
  document.getElementById("search-form").onsubmit=e=>{e.preventDefault();ui.search=document.getElementById("q").value.trim();ui.page=1;loadStudents();};
  document.getElementById("prev").onclick=()=>{ui.page--;loadStudents();};
  document.getElementById("next").onclick=()=>{ui.page++;loadStudents();};
@@ -123,6 +129,76 @@ async function loadStudents(){
   document.getElementById("try-again").onclick=loadStudents;
  }
 }
+
+function injectAdminNavigation(active){
+ const container=document.createElement("nav");
+ container.className="admin-tabs";container.setAttribute("aria-label","أقسام لوحة الإدارة");
+ container.innerHTML='<button class="admin-tab '+(active==="students"?"is-active":"")+'" id="nav-students">الطلاب والنتائج</button><button class="admin-tab '+(active==="questions"?"is-active":"")+'" id="nav-questions">بنك الأسئلة</button>';
+ const anchor=root.querySelector(".intro")||root.querySelector(".page-title");
+ if(anchor)anchor.after(container);
+ document.getElementById("nav-students").onclick=()=>{ui.page=1;loadStudents();};
+ document.getElementById("nav-questions").onclick=()=>loadQuestions();
+}
+async function loadQuestions(preserveId=null){
+ root.innerHTML='<main class="shell"><p>جاري تحميل بنك الأسئلة…</p></main>';
+ try{
+  const result=await api("/questions");
+  questionState.list=result.questions||[];
+  questionState.sections=result.sections||[];
+  questionState.currentId=preserveId||questionState.currentId||questionState.list[0]?.id||null;
+  renderQuestionEditor();
+ }catch(error){
+  root.innerHTML='<main class="shell"><div class="panel"><div class="notice error">'+escapeHtml(errorMessage(error))+'</div><button id="try-again" class="btn btn-outline">إعادة المحاولة</button></div></main>';
+  document.getElementById("try-again").onclick=()=>loadQuestions();
+ }
+}
+function renderQuestionEditor(msg=""){
+ const canEdit=ui.role==="owner";
+ const options=questionState.sections.map(x=>'<option value="'+x.index+'">'+escapeHtml((x.index+1)+". "+x.title)+'</option>').join("");
+ const visible=questionState.list.filter(q=>questionState.filter==="all"||q.part_index===Number(questionState.filter));
+ const selected=questionState.list.find(q=>q.id===questionState.currentId)||null;
+ root.innerHTML='<main class="shell"><div class="eyebrow">CONTENT MANAGEMENT</div><h1 class="page-title">إدارة بنك الأسئلة</h1><p class="intro">أضف الأسئلة أو عدل نصوصها وإجاباتها، واحفظ مسودة قبل نشر أي تغيير.</p><div id="question-nav-anchor"></div><div class="question-layout"><section class="panel"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>الأسئلة ('+questionState.list.length+')</strong>'+(canEdit?'<button type="button" class="btn btn-good btn-small" id="new-question">+ سؤال جديد</button>':'')+'</div><div class="field"><label for="question-filter">الجزء</label><select id="question-filter"><option value="all">جميع الأجزاء</option>'+options+'</select></div><div class="question-list" id="q-list">'+visible.map(q=>'<button type="button" class="q-item '+(q.id===questionState.currentId?"active":"")+'" data-edit="'+escapeHtml(q.id)+'"><small>'+(Number(q.part_index)+1)+' · '+(q.origin==="source"?"سؤال المصدر":"سؤال مضاف")+' · '+(q.status==="published"?"منشور":q.status==="draft"?"مسودة":"مؤرشف")+'</small><strong>'+escapeHtml(q.text)+'</strong></button>').join("")+'</div></section><section class="panel q-form" id="question-edit-area"></section></div><div class="footer">STEP GRAMMAR CONTENT EDITOR · QUDRAT</div></main>';
+ injectAdminNavigation("questions");
+ const filter=document.getElementById("question-filter");
+ filter.value=questionState.filter;
+ filter.onchange=()=>{questionState.filter=filter.value;renderQuestionEditor();};
+ document.querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{questionState.currentId=b.dataset.edit;renderQuestionEditor();});
+ const newBtn=document.getElementById("new-question");if(newBtn)newBtn.onclick=()=>{questionState.currentId=null;renderQuestionEditor();};
+ renderQuestionForm(selected,canEdit,msg);
+}
+function renderQuestionForm(q,canEdit,msg){
+ const fresh=!q;
+ const form=document.getElementById("question-edit-area");
+ const correct=q?.correct||"A";
+ const qopt=q?.options||{A:"",B:"",C:"",D:""};
+ const sectionSelect=questionState.sections.map(s=>'<option value="'+s.index+'">'+escapeHtml((s.index+1)+". "+s.title)+'</option>').join("");
+ form.innerHTML='<h2 style="margin:0 0 8px;font-size:21px">'+(fresh?"إضافة سؤال جديد":"تعديل السؤال")+'</h2><p style="margin:0;color:var(--muted);font-size:13px">'+(q?escapeHtml(q.id):"سؤال جديد")+'</p>'+(msg?'<div class="notice">'+escapeHtml(msg)+'</div>':'')+'<form id="question-form"><div class="field"><label for="part-index">جزء الدرس</label><select id="part-index">'+sectionSelect+'</select></div><div class="field"><label for="q-text">نص السؤال</label><textarea id="q-text" minlength="8" maxlength="2000" required>'+escapeHtml(q?.text||"")+'</textarea></div><div class="q-options">'+["A","B","C","D"].map(key=>'<div class="field"><label for="opt-'+key+'">الاختيار '+key+'</label><input id="opt-'+key+'" value="'+escapeHtml(qopt[key]||"")+'" required maxlength="500" dir="ltr"></div>').join("")+'</div><div class="field"><label for="q-correct">الإجابة الصحيحة</label><select id="q-correct">'+["A","B","C","D"].map(key=>'<option value="'+key+'">'+key+'</option>').join("")+'</select></div><div class="field"><label for="q-explain">شرح الإجابة</label><textarea id="q-explain" maxlength="2500">'+escapeHtml(q?.explanation||"")+'</textarea></div><div class="q-actions">'+(canEdit?'<button type="submit" class="btn btn-main" id="save-draft">حفظ كمسودة</button>'+(q&&q.has_edit?'<button type="button" class="btn btn-good" id="publish-q">نشر السؤال</button>':'')+(q&&q.origin==="custom"?'<button type="button" class="btn btn-danger" id="archive-q">أرشفة</button>':''):'')+'</div></form>';
+ const selector=document.getElementById("part-index");selector.value=String(q?.part_index??Number(questionState.filter==="all"?0:questionState.filter));
+ if(q?.origin==="source")selector.disabled=true;
+ document.getElementById("q-correct").value=correct;
+ if(!canEdit){form.querySelectorAll("input,textarea,select").forEach(x=>x.disabled=true);return;}
+ document.getElementById("question-form").onsubmit=async e=>{
+  e.preventDefault();
+  const b=document.getElementById("save-draft");b.disabled=true;b.textContent="جاري الحفظ…";
+  const payload={
+   id:q?.id||null,part_index:Number(selector.value),
+   text:document.getElementById("q-text").value,
+   options:Object.fromEntries(["A","B","C","D"].map(x=>[x,document.getElementById("opt-"+x).value])),
+   correct:document.getElementById("q-correct").value,
+   explanation:document.getElementById("q-explain").value
+  };
+  try{
+   const saved=await api("/questions/save",{method:"POST",body:JSON.stringify(payload)});
+   questionState.currentId=saved.id;await loadQuestions(saved.id);
+   alert("تم حفظ السؤال كمسودة. اضغط نشر السؤال لعرضه للطلاب.");
+  }catch(error){alert(errorMessage(error));b.disabled=false;b.textContent="حفظ كمسودة";}
+ };
+ const pub=document.getElementById("publish-q");
+ if(pub)pub.onclick=async()=>{if(!confirm("نشر السؤال للطلاب الآن؟"))return;pub.disabled=true;try{await api("/questions/publish",{method:"POST",body:JSON.stringify({id:q.id})});await loadQuestions(q.id);}catch(error){alert(errorMessage(error));pub.disabled=false;}};
+ const archive=document.getElementById("archive-q");
+ if(archive)archive.onclick=async()=>{if(!confirm("أرشفة السؤال وإخفاؤه عن الطلاب؟"))return;archive.disabled=true;try{await api("/questions/archive",{method:"POST",body:JSON.stringify({id:q.id})});await loadQuestions(q.id);}catch(error){alert(errorMessage(error));archive.disabled=false;}};
+}
+
 async function logout(){await db.auth.signOut();ui.role=null;ui.rows=[];showLogin();}
 logoutButton.onclick=logout;
 async function init(){try{const {data:{session}}=await db.auth.getSession();if(session)await checkAdmin();else showLogin();}catch(e){showLogin("تعذر الاتصال بالخدمة")}}
