@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#183341">
+<meta name="description" content="بوابة الطالب التفاعلية لمعهد القدرات - STEP Grammar">
+<title>بوابة الطالب | QUDRAT STEP Grammar</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#183441;--teal:#28786d;--gold:#caa579;--bg:#f4f7f5;--text:#273a42;--muted:#6a7e86;--line:#dfe8e4;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:15px/1.9 Cairo,Tahoma,sans-serif;color:var(--text)}button,a{font:inherit}a{text-decoration:none;color:inherit}button{cursor:pointer}.header{background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:15px max(18px,calc((100vw - 1180px)/2));gap:10px}.identity{display:flex;align-items:center;gap:12px}.seal{width:45px;height:45px;border-radius:12px;background:var(--navy);color:var(--gold);border:1px solid var(--gold);font:800 25px "DM Sans",sans-serif;display:grid;place-items:center}.identity strong{font:800 14px "DM Sans";letter-spacing:.1em;color:var(--navy)}.identity small{display:block;color:var(--muted);font-size:11px}.button{padding:10px 16px;background:var(--navy);color:white;border:0;border-radius:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:10px}.button.outline{background:#fff;color:var(--navy);border:1px solid #d2dfdb}.button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}.header-tools{display:flex;gap:9px}.wrap{max-width:1210px;margin:auto;padding:34px 20px 70px}.eyebrow{font:800 12px "DM Sans",Arial;letter-spacing:.17em;color:var(--teal);direction:ltr;text-align:right}.hero{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:25px}.hero h1{font-size:clamp(27px,4vw,41px);line-height:1.4;margin:6px 0;color:var(--navy)}.hero p{color:var(--muted);margin:3px 0}.hero-symbol{font-size:44px;opacity:.25}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:22px}.metric{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px}.metric strong{display:block;font:800 clamp(25px,3vw,35px) "DM Sans",sans-serif;color:var(--navy);direction:ltr;text-align:right}.metric span{font-size:13px;color:var(--muted)}.section-head{display:flex;justify-content:space-between;align-items:center;gap:14px}.section-head h2{font-size:24px;margin:20px 0 13px}.course-card{display:grid;grid-template-columns:minmax(0,1fr) 245px;gap:18px;border:1px solid var(--line);background:white;border-radius:18px;padding:26px;margin-bottom:25px;box-shadow:0 12px 33px #24483a08}.course-card h3{font-size:27px;margin:6px 0;color:var(--navy)}.course-card p{color:var(--muted);font-size:14px;margin:0 0 15px}.course-side{background:#eef5f1;border-radius:15px;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:25px;text-align:center}.course-side strong{font-size:32px;color:var(--teal);font-family:"DM Sans"}.bar{background:#e6eeeb;border-radius:99px;height:10px;overflow:hidden}.bar span{display:block;background:var(--teal);height:100%;border-radius:99px}.course-side .bar{background:white}.lesson-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.lesson{background:white;border:1px solid var(--line);border-radius:13px;padding:18px}.lesson.locked{background:#f8faf9;color:#87928f}.lesson .num{display:inline-flex;font:800 12px "DM Sans";color:var(--teal);background:#edf5f2;padding:7px;border-radius:8px;margin-bottom:12px}.lesson h3{margin:0 0 5px;font-size:16px}.lesson p{color:var(--muted);font-size:12px;margin:0}.lesson small{font-size:12px;font-weight:800}.lesson .done{color:var(--teal)}.lesson .locked-icon{color:#97a4a0}.notice{border:1px solid #e8ddd1;background:#fff9f1;border-radius:11px;color:#765a34;padding:14px 18px;margin:15px 0}.lower{margin-top:30px;padding:18px;display:flex;justify-content:space-between;align-items:center;background:white;border:1px solid var(--line);border-radius:13px;gap:15px;flex-wrap:wrap}.lower a{font-weight:800;color:var(--teal)}.ltr{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:"DM Sans"}[hidden]{display:none!important}@media(max-width:730px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.metric{padding:13px}.course-card{grid-template-columns:1fr}.course-side{padding:15px}.lesson-grid{grid-template-columns:1fr 1fr}.header{padding:12px 14px}.header-tools .button{padding:8px 11px;font-size:12px}}@media(max-width:470px){.lesson-grid{grid-template-columns:1fr}.metrics{gap:7px}.metric strong{font-size:23px}.metric span{font-size:11px}.hero h1{font-size:27px}}
+</style>
+</head><body>
+<header class="header"><div class="identity"><div class="seal">Q</div><div><strong>QUDRAT</strong><small>TRAINING INSTITUTE · STEP</small></div></div><div class="header-tools"><button id="refresh" class="button outline" hidden>تحديث</button><button id="signout" class="button outline" hidden>خروج</button></div></header>
+<main id="app" class="wrap"><p>جاري تحميل بوابة الطالب…</p></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+const config={"url":"https://funltjxavowlnnfibhpl.supabase.co","anonKey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg"};
+const db=window.supabase.createClient(config.url,config.anonKey);
+const app=document.getElementById("app");
+const signout=document.getElementById("signout"),refresh=document.getElementById("refresh");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const lessonUrl="../step-grammar-account-preview/";
+async function course(){
+ const {data:{session}}=await db.auth.getSession();
+ if(!session){location.replace(lessonUrl);return;}
+ const response=await fetch(config.url+"/functions/v1/step-course/course",{
+  headers:{"Content-Type":"application/json","apikey":config.anonKey,"Authorization":"Bearer "+session.access_token}
+ });
+ const result=await response.json().catch(()=>({}));
+ if(!response.ok)throw Error(result.error||"تعذر جلب بيانات الطالب");
+ return result;
+}
+function paint(x){
+ signout.hidden=false;refresh.hidden=false;
+ const sections=x.sections||[],passed=sections.filter(s=>s.passed).length;
+ const percent=Math.round(passed/Math.max(1,sections.length)*100);
+ const name=esc(x.student||"طالب STEP");
+ const next=sections.find(s=>!s.locked&&!s.passed)||sections.at(-1);
+ const exam=x.exam||{};
+ app.innerHTML='<div class="hero"><div><div class="eyebrow">YOUR LEARNING SPACE</div><h1>أهلًا بيك، '+name+'</h1><p>كمّل من آخر خطوة وصلت لها، وخلّي تقدمك معاك في أي جهاز.</p></div><div class="hero-symbol">✦</div></div><div class="metrics"><div class="metric"><strong>'+passed+'/'+sections.length+'</strong><span>أجزاء مكتملة</span></div><div class="metric"><strong>'+percent+'%</strong><span>نسبة التقدم</span></div><div class="metric"><strong>'+(exam.best||0)+'%</strong><span>أفضل اختبار نهائي</span></div></div><div class="section-head"><h2>دروسي</h2><span style="color:var(--muted);font-size:12px">COURSE LIBRARY</span></div><article class="course-card"><div><div class="eyebrow">GRAMMAR · UNIT 01</div><h3>Present Simple — المضارع البسيط</h3><p>'+esc(x.course?.subtitle||"")+'</p><div class="bar"><span style="width:'+percent+'%"></span></div><p style="margin-top:11px">'+passed+' من '+sections.length+' أجزاء منتهية</p><a class="button" href="'+lessonUrl+'">'+(passed===sections.length?"راجع الدرس والاختبار":"كمّل التعلم")+' ←</a></div><div class="course-side"><strong>'+percent+'%</strong><span>COURSE PROGRESS</span><div class="bar"><span style="width:'+percent+'%"></span></div><span>'+(exam.unlocked?"الاختبار النهائي متاح":"الاختبار النهائي بعد إكمال الأجزاء")+'</span></div></article><div class="section-head"><h2>خطوات الدرس</h2></div><section class="lesson-grid">'+sections.map(s=>'<div class="lesson '+(s.locked?"locked":"")+'"><span class="num">STEP '+String(s.index+1).padStart(2,"0")+'</span><h3>'+esc(s.titleAr)+'</h3><p>'+esc(s.short||s.title||"")+'</p><small class="'+(s.passed?"done":s.locked?"locked-icon":"")+'">'+(s.passed?"✓ تم اجتياز الجزء":s.locked?"🔒 مقفول":"← جاهز للمذاكرة")+'</small></div>').join("")+'</section><div class="lower"><span>عايز تستفسر عن الدراسة أو التسجيل؟</span><a href="https://wa.me/966544149974?text='+encodeURIComponent("السلام عليكم، عندي استفسار عن دراسة STEP Grammar بمعهد القدرات.")+'" target="_blank" rel="noopener noreferrer">تواصل واتساب ↗</a></div>';
+}
+async function init(){
+ try{const result=await course();if(result)paint(result);}
+ catch(error){app.innerHTML='<div class="notice">'+esc(error.message||"تعذر تحميل بيانات حسابك")+'</div><button id="retry" class="button">إعادة المحاولة</button>';document.getElementById("retry").onclick=init;}
+}
+signout.onclick=async()=>{await db.auth.signOut();location.replace(lessonUrl);};
+refresh.onclick=init;
+init();
+</script></body></html>
