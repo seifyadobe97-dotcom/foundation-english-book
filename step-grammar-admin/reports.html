@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#152f3d">
+<title>تقارير طلاب STEP | QUDRAT</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#162e3c;--green:#2f8071;--muted:#74858a;--line:#e2eae6}
+*{box-sizing:border-box}body{margin:0;background:#f6f8f6;color:#213741;font:14px/1.85 Cairo,Tahoma,sans-serif}
+button,input,a{font:inherit}button{cursor:pointer}a{color:#207368}h1{font-size:clamp(25px,4vw,37px);margin:5px 0 12px}h2{font-size:20px;margin:0 0 15px}
+header{background:#fff;border-bottom:1px solid var(--line);padding:17px max(18px,calc((100vw - 1180px)/2));display:flex;justify-content:space-between;align-items:center;gap:16px}
+.logo{font:800 15px "DM Sans";letter-spacing:.12em;color:var(--navy)}.logo small{display:block;letter-spacing:0;font:600 11px Cairo;color:var(--muted)}
+main{max-width:1200px;padding:28px 18px 70px;margin:auto}.eyebrow{font:800 11px "DM Sans";letter-spacing:.13em;color:var(--green)}.lead{color:var(--muted);margin-top:0}
+.btn{border:0;padding:10px 15px;border-radius:9px;background:var(--navy);color:#fff;font-weight:800;min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none}
+.btn.alt{background:#fff;border:1px solid #d6e1de;color:var(--navy)}.btn:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #c1a276;outline-offset:2px}.btn:disabled{opacity:.55;cursor:wait}
+.panel{background:#fff;border:1px solid var(--line);border-radius:15px;padding:23px;margin:20px 0;box-shadow:0 6px 30px #12282208}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:18px 0}.stat{background:white;border:1px solid var(--line);border-radius:12px;padding:18px}.stat b{display:block;color:var(--navy);font:800 31px "DM Sans";direction:ltr;text-align:right}.stat span{color:var(--muted);font-size:12px}
+.sectionbar{display:grid;grid-template-columns:155px 1fr 130px;gap:15px;align-items:center;margin:14px 0}.sectionbar label{font-size:12px;font-weight:700}.track{height:12px;background:#edf2f0;border-radius:30px;overflow:hidden}.fill{height:100%;background:var(--green);border-radius:30px}.sectionbar strong{font:700 12px Cairo;text-align:left}
+.table-wrap{overflow:auto;width:100%}table{border-collapse:collapse;width:100%;min-width:680px}th,td{padding:12px;border-top:1px solid var(--line);text-align:right;vertical-align:middle}th{background:#f7faf8;font-size:12px;color:#62777c}td{font-size:13px}
+.form-line{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.form-line input{padding:10px 13px;border:1px solid #d4e2dd;border-radius:9px;background:white;min-width:230px}
+.ltr{direction:ltr;unicode-bidi:isolate;display:inline-block;font:600 13px "DM Sans",Arial}
+.small{color:var(--muted);font-size:12px}.tabs{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.error{background:#fff0ef;color:#9b4545;border:1px solid #e9cbcb;padding:16px;border-radius:10px}
+@media(max-width:780px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.sectionbar{grid-template-columns:1fr;gap:4px}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<header><div class="logo">QUDRAT <small>TRAINING INSTITUTE · STEP REPORTS</small></div><div class="tabs"><a class="btn alt" href="./">لوحة الأدمن</a><button id="logout" class="btn alt" hidden>خروج</button></div></header>
+<main id="main"><p>جاري التأكد من صلاحية الدخول…</p></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+const SUPABASE_URL="https://funltjxavowlnnfibhpl.supabase.co";
+const ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const client=window.supabase.createClient(SUPABASE_URL,ANON_KEY);
+const pageRoot=document.getElementById("main"),logoutButton=document.getElementById("logout");
+let page=1,q="",total=0;
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const date=s=>s?new Date(s).toLocaleString("ar-SA",{year:"numeric",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"}):"—";
+const num=n=>Number(n||0).toLocaleString("ar-SA");
+async function api(url){
+ const {data:{session}}=await client.auth.getSession();
+ if(!session)throw Error("يرجى تسجيل دخول الأدمن أولًا");
+ const r=await fetch(SUPABASE_URL+"/functions/v1/step-admin"+url,{headers:{"Authorization":"Bearer "+session.access_token,"apikey":ANON_KEY}});
+ const j=await r.json().catch(()=>({}));
+ if(!r.ok)throw Error(j.error||"تعذر فتح التقرير");
+ return j;
+}
+function message(text){pageRoot.innerHTML='<div class="panel error">'+esc(text)+' <a class="btn alt" href="./">الرجوع للوحة الأدمن</a></div>';}
+function csvCell(v){let s=String(v??"");if(/^\s*[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
+function download(filename,headers,rows){
+ const csv="\uFEFF"+[headers,...rows].map(row=>row.map(csvCell).join(",")).join("\r\n");
+ const u=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+ const a=document.createElement("a");a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(u),5000);
+}
+async function analytics(){
+ pageRoot.innerHTML='<p>جاري تحميل إحصائيات المعهد…</p>';
+ try{
+  const [result,students]=await Promise.all([api("/analytics"),api("/students?page="+page+"&q="+encodeURIComponent(q))]);
+  const a=result.overview,parts=result.parts||[],rows=students.students||[];total=students.total||0;
+  const pct=x=>x==null?"—":Number(x).toFixed(1)+"%";
+  const max=Math.max(1,...parts.map(x=>Number(x.students_tried||0)));
+  pageRoot.innerHTML='<div class="eyebrow">INSTITUTE ANALYTICS</div><h1>تقارير المعهد والطلاب</h1><p class="lead">بيانات فعلية لجميع الطلاب والمحاولات، بتتحدث مباشرة من Supabase.</p><section class="stats">'+
+   [["إجمالي الطلاب",a.students_total],["حسابات مفعّلة",a.students_active],["أكملوا الدرس",a.students_completed],["أدّوا النهائي",a.students_exam_taken],["محاولات التدريب",a.practice_attempts],["محاولات النهائي",a.exam_attempts],["متوسط نتيجة النهائي",pct(a.avg_exam_percent)]].map(x=>'<div class="stat"><b>'+esc(x[1]==null?"—":x[1])+'</b><span>'+x[0]+'</span></div>').join("")+
+   '</section><section class="panel"><h2>أداء أجزاء المضارع البسيط</h2><p class="small">عدد الطلاب اللي حلّوا في كل جزء، ونسبة الطلاب اللي نجحوا فيه.</p>'+
+   parts.map(p=>{const tried=Number(p.students_tried||0),passed=Number(p.students_passed||0);
+   return '<div class="sectionbar"><label>'+esc((p.part_index+1)+". "+p.title)+'</label><div class="track"><div class="fill" style="width:'+(100*tried/max)+'%"></div></div><strong>'+num(tried)+' طالب · '+(tried?Math.round(100*passed/tried):0)+'% نجاح</strong></div>';
+   }).join("")+
+   '<div class="table-wrap"><table><thead><tr><th>الجزء</th><th>الطلاب المجربون</th><th>الطلاب الناجحون</th><th>المحاولات</th><th>متوسط الدرجة</th></tr></thead><tbody>'+
+   parts.map(p=>'<tr><td>'+esc(p.title)+'</td><td>'+num(p.students_tried)+'</td><td>'+num(p.students_passed)+'</td><td>'+num(p.attempts)+'</td><td>'+pct(p.avg_score_percent)+'</td></tr>').join("")+'</tbody></table></div></section>'+
+   '<section class="panel"><h2>التقارير الفردية</h2><form class="form-line" id="search"><input id="search-q" aria-label="بحث باسم الطالب أو الإيميل أو الهاتف" placeholder="اسم الطالب أو الإيميل أو التليفون" value="'+esc(q)+'"><button class="btn" type="submit">بحث</button><button type="button" class="btn alt" id="reload">تحديث</button></form><div class="table-wrap"><table><thead><tr><th>الطالب</th><th>التواصل</th><th>التقدم</th><th>أفضل اختبار</th><th>التقرير</th></tr></thead><tbody>'+
+   (rows.length?rows.map(s=>'<tr><td><span class="ltr">'+esc(s.username)+'</span></td><td>'+esc(s.email)+'</td><td>'+s.parts_passed+'/6</td><td>'+(s.exam_best==null?"—":s.exam_best+"%")+'</td><td><button class="btn alt" data-open="'+esc(s.user_id)+'">فتح التقرير</button></td></tr>').join(""):'<tr><td colspan="5">لا توجد نتائج.</td></tr>')+
+   '</tbody></table></div><div class="form-line" style="margin-top:15px"><span class="small">الصفحة '+page+' · '+num(total)+' طالب</span><button class="btn alt" id="prev" '+(page===1?'disabled':'')+'>السابق</button><button class="btn alt" id="next" '+(page*25>=total?'disabled':'')+'>التالي</button></div></section>';
+  document.getElementById("search").onsubmit=e=>{e.preventDefault();q=document.getElementById("search-q").value.trim();page=1;analytics();};
+  document.getElementById("reload").onclick=analytics;
+  document.getElementById("prev").onclick=()=>{page--;analytics();};
+  document.getElementById("next").onclick=()=>{page++;analytics();};
+  document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{history.replaceState({}, "", "?student="+encodeURIComponent(b.dataset.open));report(b.dataset.open);});
+ }catch(e){message(e.message);}
+}
+async function report(id){
+ pageRoot.innerHTML='<p>جاري تحميل تقرير الطالب…</p>';
+ try{
+  const r=await api("/students/"+encodeURIComponent(id)+"/report");
+  const s=r.student,x=r.summary;
+  const sectionRows=r.sections.map(p=>'<tr><td>'+esc((p.index+1)+". "+p.title)+'</td><td>'+p.attempts+'</td><td>'+(p.best_percent==null?"—":p.best_percent+"%")+'</td><td>'+(p.passed?"ناجح":"لم يجتز")+'</td><td>'+date(p.latest_attempt)+'</td></tr>').join("");
+  const attemptRows=r.attempts.map(a=>'<tr><td>'+date(a.attempted_at)+'</td><td>'+esc(a.section_title)+'</td><td>'+a.correct_count+'/'+a.total_questions+'</td><td>'+a.percentage+'%</td><td>'+(a.passed?"ناجح":"غير ناجح")+'</td></tr>').join("");
+  const exams=r.exams.map(e=>'<tr><td>'+date(e.attempted_at)+'</td><td>'+e.correct_count+'/'+e.total_questions+'</td><td>'+e.percentage+'%</td></tr>').join("");
+  pageRoot.innerHTML='<div class="eyebrow">STUDENT PERFORMANCE</div><h1>تقرير الطالب <span class="ltr">'+esc(s.username)+'</span></h1><div class="form-line"><button id="back" class="btn alt">العودة للإحصائيات</button><button id="export" class="btn">تصدير محاولات الطالب CSV</button></div><div class="panel"><div class="form-line"><span>الإيميل: <span class="ltr">'+esc(s.email||"—")+'</span></span><span>الموبايل: <span class="ltr">'+esc(s.phone||"—")+'</span></span><span>الحالة: '+(s.active?"مفعّل":"موقوف")+'</span><span>تاريخ التسجيل: '+date(s.joined)+'</span></div></div><section class="stats">'+
+   [["الأجزاء الناجحة",x.passed_parts+"/"+x.total_parts],["محاولات التدريب",x.practice_attempts],["محاولات الاختبار",x.exam_attempts],["أفضل اختبار",x.best_exam_percent==null?"—":x.best_exam_percent+"%"]].map(t=>'<div class="stat"><b>'+esc(t[1])+'</b><span>'+t[0]+'</span></div>').join("")+
+   '</section><section class="panel"><h2>الأداء في كل جزء</h2><div class="table-wrap"><table><thead><tr><th>الجزء</th><th>المحاولات المعروضة</th><th>أفضل درجة</th><th>الحالة</th><th>آخر محاولة</th></tr></thead><tbody>'+sectionRows+'</tbody></table></div></section><section class="panel"><h2>محاولات التدريب</h2>'+(x.part_history_truncated?'<p class="small">يتم عرض أحدث 300 محاولة.</p>':'')+
+   '<div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الجزء</th><th>الدرجة</th><th>النسبة</th><th>النتيجة</th></tr></thead><tbody>'+(attemptRows||'<tr><td colspan="5">لم يبدأ الطالب التدريبات.</td></tr>')+'</tbody></table></div></section><section class="panel"><h2>نتائج الاختبار النهائي</h2>'+(x.exam_history_truncated?'<p class="small">يتم عرض أحدث 150 محاولة.</p>':'')+
+   '<div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الدرجة</th><th>النسبة</th></tr></thead><tbody>'+(exams||'<tr><td colspan="3">لا توجد اختبارات نهائية.</td></tr>')+'</tbody></table></div></section>';
+  document.getElementById("back").onclick=()=>{history.replaceState({},"",location.pathname);analytics();};
+  document.getElementById("export").onclick=()=>{
+   const head=["النوع","التاريخ","الجزء","الإجابات الصحيحة","إجمالي الأسئلة","النسبة","ناجح"];
+   const practice=r.attempts.map(a=>["تدريب",a.attempted_at,a.section_title,a.correct_count,a.total_questions,a.percentage,a.passed?"نعم":"لا"]);
+   const results=r.exams.map(e=>["نهائي",e.attempted_at,"Final Exam",e.correct_count,e.total_questions,e.percentage,""]);
+   download("STEP_"+s.username+"_report.csv",head,[...practice,...results]);
+  };
+ }catch(e){message(e.message);}
+}
+async function init(){
+ try{
+  const {data:{session}}=await client.auth.getSession();
+  if(!session){message("تسجيل الدخول مطلوب. افتح لوحة الأدمن وسجل دخولك الأول.");return;}
+  await api("/me");
+  logoutButton.hidden=false;
+  const id=new URLSearchParams(location.search).get("student");
+  if(id&&/^[0-9a-f-]{36}$/i.test(id))await report(id);else await analytics();
+ }catch(e){message(e.message);}
+}
+logoutButton.onclick=async()=>{await client.auth.signOut();location.assign("./");};
+init();
+</script>
+</body></html>
