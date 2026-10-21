@@ -18,7 +18,8 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
 .lesson-inner{padding:33px clamp(19px,4.4vw,55px) 28px}.eyebrow{font:800 11px "DM Sans";color:var(--green);letter-spacing:.12em;direction:ltr;text-align:right}
 .lesson-title{font-size:clamp(25px,3.3vw,34px);line-height:1.4;color:var(--ink);margin:7px 0 6px}.explain{font-size:17px;line-height:2.15;color:#425963;margin:0 0 23px;max-width:720px}.explain strong{color:var(--ink)}
 .section-label{font-size:16px;color:var(--ink);margin:26px 0 13px;font-weight:800}
-.simple-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.concept-card{border:1px solid var(--line);border-radius:12px;padding:19px;min-width:0;background:#fff}
+.simple-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.simple-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.concept-card{border:1px solid var(--line);border-radius:12px;padding:19px;min-width:0;background:#fff}
 .concept-top{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.concept-icon{font-size:21px;line-height:1}.concept-heading{font-size:15px;font-weight:800;color:var(--ink)}
 .concept-card p{color:#587077;margin:7px 0 0;font-size:13px}.concept-formula{border-radius:8px;background:#f3f7f5;padding:11px 12px;font-weight:800;color:#234c44;font-size:15px;line-height:2}.concept-formula .en{font:700 15px "DM Sans"}.concept-formula mark{background:var(--yellow);color:#604b26;padding:1px 5px;border-radius:4px}
 .tip{border-right:3px solid var(--gold);padding:10px 14px;margin:23px 0 20px;background:#fffcf6;border-radius:0 8px 8px 0;font-size:14px;color:#52616a}.tip strong{color:#896022}.tip mark,.example-sentence mark,.check-desc mark{color:#5f4e20;background:var(--yellow);border-radius:4px;padding:0 4px;font-weight:800}
@@ -51,5 +52,5 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
 .empty{padding:30px 25px;border:1px solid #f1d5cf;background:#fff8f5;border-radius:13px;color:#824b45}
 .site-foot{text-align:center;font:700 11px "DM Sans";letter-spacing:.12em;color:#91a2a5;margin-top:30px}
 [hidden]{display:none!important}
-@media(max-width:740px){.simple-grid,.examples{grid-template-columns:1fr}.masthead-inner{padding:12px 15px}.shell{padding:18px 13px 50px}.path-button{flex:0 0 145px}.lesson-inner{padding:22px 18px}.practice{padding:22px 18px}.hero .progress-block{text-align:right}.example{min-height:0}}
+@media(max-width:740px){.simple-grid,.simple-grid.three,.examples{grid-template-columns:1fr}.masthead-inner{padding:12px 15px}.shell{padding:18px 13px 50px}.path-button{flex:0 0 145px}.lesson-inner{padding:22px 18px}.practice{padding:22px 18px}.hero .progress-block{text-align:right}.example{min-height:0}}
 @media(max-width:480px){.q-answers,.check-options{grid-template-columns:1fr}.hero h1{font-size:30px}.wordmark small{display:none}.explain{font-size:16px}.chapter-footer .button{flex:1}.path-button{flex-basis:130px}}
