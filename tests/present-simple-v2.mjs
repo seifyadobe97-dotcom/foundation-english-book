@@ -256,6 +256,14 @@ try{
   const path=new URL(route.request().url()).pathname;
   let data;
   if(path.endsWith("/me"))data={role:"owner",username:"Pilot Admin"};
+  else if(path.endsWith("/indicators"))data={indicators:[
+   {slug:"present-simple",axis_code:"grammar",title_ar:"المضارع البسيط",
+    title_en:"Present Simple",status:"published",report_ready:true},
+   {slug:"present-continuous",axis_code:"grammar",title_ar:"المضارع المستمر",
+    title_en:"Present Continuous",status:"draft",report_ready:false},
+   {slug:"punctuation",axis_code:"writing-analysis",title_ar:"علامات الترقيم",
+    title_en:"Punctuation",status:"draft",report_ready:false}
+  ]};
   else if(path.endsWith("/analytics"))data={
    overview:{students_total:2,students_active:2,students_completed:1,students_exam_taken:1,
     practice_attempts:16,exam_attempts:1,avg_exam_percent:80},
@@ -286,13 +294,27 @@ try{
     priority:[{title:"s / es / ies",status:"تحتاج متابعة",action:"راجع القاعدة"}],
     questions:[{question_text:"He ____ every day.",answers:4,accuracy:25,avg_seconds:45,
      common_wrong:{letter:"A",option:"go"}}],truncated:false,
-    note:"هذا تحليل للمحاولات الجديدة فقط"}
+    note:"هذا تحليل للمحاولات الجديدة فقط"},
+   followup_impact:[{id:"44444444-4444-4444-8444-444444444444",
+    part_index:2,title:"s / es / ies",assigned_at:"2026-10-21T18:00:00Z",
+    before:{answers:6,correct:2,unique_questions:3,accuracy:33},
+    after:{answers:6,correct:5,unique_questions:3,accuracy:83},
+    delta:50,status:"تحسن مبدئي"}],impact_history_limited:false
   };
   else data={error:"Unknown admin route"};
   return route.fulfill({status:data.error?404:200,contentType:"application/json",body:JSON.stringify(data)});
  });
- await adminPage.goto(base+"/step-grammar-admin/reports.html?student="+studentId,{waitUntil:"domcontentloaded"});
+ await adminPage.goto(base+"/step-grammar-admin/reports.html",{waitUntil:"domcontentloaded"});
+ await adminPage.locator(".indicator-card").first().waitFor({timeout:10000});
+ assert.equal(await adminPage.locator(".indicator-card").count(),3,"All indicators have report entry cards");
+ assert.equal(await adminPage.locator('.indicator-card[href*="present-simple"]').count(),1);
+ await adminPage.locator('.indicator-card[href*="present-continuous"]').click();
+ await adminPage.getByText(/المؤشر لسه مسودة/).waitFor({timeout:7000});
+ assert.equal(await adminPage.locator("#skill-insights").count(),0,"A draft must not display another indicator's grades");
+ await adminPage.goto(base+"/step-grammar-admin/reports.html?indicator=present-simple&student="+studentId,{waitUntil:"domcontentloaded"});
  await adminPage.locator("#skill-insights").waitFor({timeout:10000});
+ assert.match(await adminPage.locator("h1").first().innerText(),/المضارع البسيط/);
+ assert.match(await adminPage.locator("#followup-impact").innerText(),/تحسن مبدئي/);
  assert.match(await adminPage.locator("#skill-insights").innerText(),/تحليل المهارات وتوصيات المتابعة/);
  assert.match(await adminPage.locator("#skill-insights").innerText(),/تحتاج متابعة/);
  await adminPage.locator("#followup-form").waitFor();
@@ -307,6 +329,8 @@ try{
  await adminPage.getByText("ملغي").waitFor({timeout:7000});
  await adminPage.locator("#back").click();
  await adminPage.getByText("نظرة تعليمية على مهارات المجموعة").waitFor({timeout:10000});
+ assert.equal(new URL(adminPage.url()).searchParams.get("indicator"),"present-simple");
+ assert.match(await adminPage.locator("h1").first().innerText(),/المضارع البسيط/);
  assert.equal(await adminPage.locator(".insight-card").count()>=6,true);
  assert.equal(await adminPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),true,"Admin insights fit mobile");
  assert.deepEqual(adminErrors,[],"Admin report and cohort JS must not fail");
