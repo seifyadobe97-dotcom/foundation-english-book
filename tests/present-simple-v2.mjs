@@ -48,9 +48,13 @@ function setupRoutes(page,initialPassed=0){
    else if(/^\/parts\/\d+$/.test(url))payload=part(Number(url.split("/").at(-1)),passed);
    else if(/^\/parts\/\d+\/submit$/.test(url)){
     const index=Number(url.split("/")[2]),qs=part(index,passed).part.questions,answers=JSON.parse(req.postData()).answers;
-    const result=qs.map((q,n)=>({id:q.id,correct:dataset.questions[dataset.sections[index].questionIds[n]].correct,
-      selected:answers[q.id],isCorrect:answers[q.id]===dataset.questions[dataset.sections[index].questionIds[n]].correct,
-      explanation:"الإجابة مرتبطة بالفاعل وزمن الجملة."}));
+    const result=qs.map((q,n)=>{
+     const item=dataset.questions[dataset.sections[index].questionIds[n]];
+     const selected=answers[q.id];
+     return {id:q.id,correct:item.correct,selected,isCorrect:selected===item.correct,
+      wrongReason:selected===item.correct?null:item.wrongReasons?.[selected],
+      explanation:item.explanation};
+    });
     const correctCount=result.filter(r=>r.isCorrect).length;
     const success=correctCount>=Math.ceil(qs.length*dataset.requiredPassRate);
     if(success)passed=Math.max(passed,index+1);
@@ -60,7 +64,9 @@ function setupRoutes(page,initialPassed=0){
     const qs=examQuestions(),answers=JSON.parse(req.postData()).answers;
     const results=qs.map((q,n)=>{
      const correct=dataset.questions[examIds[n]].correct,selected=answers[q.id];
-     return {id:q.id,correct,selected,isCorrect:selected===correct,explanation:"إجابة مرتبطة بالقاعدة."};
+     return {id:q.id,correct,selected,isCorrect:selected===correct,
+      wrongReason:selected===correct?null:dataset.questions[examIds[n]].wrongReasons?.[selected],
+      explanation:dataset.questions[examIds[n]].explanation};
     });
     const score=results.filter(r=>r.isCorrect).length;
     payload={result:{score,total:qs.length,percentage:Math.round(score/qs.length*100)},results,progress:course(6)};
@@ -93,16 +99,48 @@ try{
   assert(!((await page.locator("body").innerText()).includes("بنك الأسئلة")),"No source labels");
   const quick=page.locator(".check-option");
   assert.equal(await quick.count(),2);
-  await quick.first().click();
-  assert.match(await page.locator(".check-result").innerText(),/ممتاز/);
+  assert.deepEqual(await page.locator(".option-letter").allInnerTexts(),["A","B"]);
+  assert.equal(await page.locator(".check-desc").evaluate(el=>getComputedStyle(el).direction),"ltr");
+  assert.equal(await page.locator(".check-options").evaluate(el=>getComputedStyle(el).direction),"ltr");
+  const quickBoxes=await Promise.all([quick.first().boundingBox(),quick.nth(1).boundingBox()]);
+  if(viewport.width>480)assert(quickBoxes[0].x<quickBoxes[1].x,"Quick answers should flow A then B from left to right");
+  const wrongQuick=viewport.width<500;
+  await quick.nth(wrongQuick?1:0).click();
+  assert.match(await page.locator(".check-result").innerText(),wrongQuick?/إجابة غير صحيحة/:/إجابة صحيحة/);
+  if(wrongQuick){
+   assert.equal(await page.locator(".check-option.incorrect").count(),1);
+   assert.equal(await page.locator(".check-option.correct").count(),1);
+   assert.match(await page.locator(".feedback-why").first().innerText(),/every day/);
+   assert.match(await page.locator(".feedback-correct").first().innerText(),/الإجابة الصحيحة/);
+  }
   assert.equal(await page.locator(".question").count(),3);
   assert.equal(await page.locator('#submit-practice').isDisabled(),true);
   const ids=dataset.sections[0].questionIds;
-  for(const [i,id] of ids.entries())await page.locator(".question").nth(i).locator('[data-value="'+dataset.questions[id].correct+'"]').click();
+  assert.equal(await page.locator(".q-answers").first().evaluate(el=>getComputedStyle(el).direction),"ltr");
+  const optionBoxes=await Promise.all([
+   page.locator(".question").first().locator(".q-answer").first().boundingBox(),
+   page.locator(".question").first().locator(".q-answer").nth(1).boundingBox()
+  ]);
+  if(viewport.width>480)assert(optionBoxes[0].x<optionBoxes[1].x,"Bank options should flow A then B from left to right");
+  let wrongCode;
+  for(const [i,id] of ids.entries()){
+   const q=dataset.questions[id],value=viewport.width<500&&i===0?(wrongCode=Object.keys(q.wrongReasons)[0]):q.correct;
+   await page.locator(".question").nth(i).locator('[data-value="'+value+'"]').click();
+  }
   assert.equal(await page.locator('#submit-practice').isEnabled(),true);
   await page.locator('#submit-practice').click();
   await page.locator(".score").waitFor({timeout:10000});
   assert.match(await page.locator(".score").innerText(),/نجحت/);
+  assert.equal(await page.locator(".answer-feedback.is-correct").count(),viewport.width<500?2:3);
+  if(viewport.width<500){
+   const wrong=page.locator(".answer-feedback.is-wrong");
+   assert.equal(await wrong.count(),1);
+   assert.match(await wrong.innerText(),/ليه اختيارك غلط/);
+   assert.match(await wrong.innerText(),/الإجابة الصحيحة/);
+   assert.match(await wrong.innerText(),new RegExp(dataset.questions[ids[0]].wrongReasons[wrongCode].slice(0,12)));
+   assert.equal(await page.locator(".q-answer.bad").count(),1);
+   assert.equal(await page.locator(".q-answer.good").count(),3);
+  }
   assert.equal(await page.locator('[data-action="continue"]').count(),1);
   assert.equal((await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2)),true,"No horizontal overflow");
   assert.deepEqual(errors,[],"Unexpected client errors");
@@ -142,7 +180,12 @@ try{
  await page.locator('#submit-practice').click();
  await page.locator('.score').waitFor({timeout:10000});
  assert.match(await page.locator('.score').innerText(),/9 من 10/);
- assert.equal(await page.locator('.answer-feedback.wrong').count(),1);
+ assert.equal(await page.locator('.answer-feedback.is-wrong').count(),1);
+ assert.equal(await page.locator('.answer-feedback.is-correct').count(),9);
+ assert.match(await page.locator('.answer-feedback.is-wrong').innerText(),/ليه اختيارك غلط/);
+ assert.match(await page.locator('.answer-feedback.is-wrong').innerText(),/الإجابة الصحيحة/);
+ assert.equal(await page.locator('.q-answer.bad').count(),1);
+ assert.equal(await page.locator('.q-answer.good').count(),10);
  assert.match(await page.locator('.score').innerText(),/النتيجة محفوظة/);
  assert(!((await page.locator('body').innerText()).includes("ASGQ")),"Exam never exposes bank codes");
  await context.close();
