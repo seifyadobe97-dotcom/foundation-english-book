@@ -9,7 +9,7 @@ const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
 const apiKey=Deno.env.get("SUPABASE_ANON_KEY")??"";
 const total=lesson.sections.length;
 const defaultExamCount=10;
-const originalQuestions=lesson.questions as Record<string,{id:string;text:string;options:Record<string,string>;correct:string;explanation:string}>;
+const originalQuestions=lesson.questions as Record<string,{id:string;text:string;options:Record<string,string>;correct:string;explanation:string;wrongReasons?:Record<string,string>}>;
 type AnswerMap=Record<string,string>;
 const reply=(origin:string,status:number,body:unknown)=>new Response(JSON.stringify(body),{
  status,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store",
@@ -71,7 +71,12 @@ Deno.serve(async(request)=>{
   }
   for(const edit of editRows||[]){
    const canonical=Object.hasOwn(originalQuestions,edit.id);
-   const entry={id:edit.id,text:edit.question_text,options:edit.options,correct:edit.correct,explanation:edit.explanation};
+   // Never reuse a distractor rationale if an admin has changed its question, options, or answer.
+   const sameOriginal=canonical&&edit.question_text===originalQuestions[edit.id].text
+     &&edit.correct===originalQuestions[edit.id].correct
+     &&["A","B","C","D"].every(k=>edit.options?.[k]===originalQuestions[edit.id].options[k]);
+   const entry={id:edit.id,text:edit.question_text,options:edit.options,correct:edit.correct,
+     explanation:edit.explanation,wrongReasons:sameOriginal?originalQuestions[edit.id].wrongReasons:undefined};
    // Retain archived custom question text for exams started before it was archived.
    if(!canonical)questions[edit.id]=entry;
    if(edit.status!=="published")continue;
@@ -124,7 +129,8 @@ Deno.serve(async(request)=>{
    if(method==="POST"&&partPath[2]){
     const input=await safeBody(request),answers=input?.answers as AnswerMap;
     if(!answers||s.questionIds.some((id:string,i:number)=>!["A","B","C","D"].includes(answers["q"+(i+1)]??answers[id])))return send(422,{error:"جاوب كل الأسئلة الأول"});
-    const results=s.questionIds.map((id:string,i:number)=>{const q=questions[id],selected=answers["q"+(i+1)]??answers[id];return {id:"q"+(i+1),selected,correct:q.correct,isCorrect:selected===q.correct,explanation:q.explanation};});
+    const results=s.questionIds.map((id:string,i:number)=>{const q=questions[id],selected=answers["q"+(i+1)]??answers[id];return {id:"q"+(i+1),selected,correct:q.correct,isCorrect:selected===q.correct,
+      wrongReason:selected===q.correct?null:(q.wrongReasons?.[selected]??null),explanation:q.explanation};});
     const correctCount=results.filter((x:{isCorrect:boolean})=>x.isCorrect).length,passed=correctCount>=passRequired;
     const {error}=await admin.from("step_part_attempts").insert({user_id:user.id,course_code:courseCode,part_index:index,correct_count:correctCount,total_questions:results.length,passed});
     if(error)throw error;
@@ -154,7 +160,8 @@ Deno.serve(async(request)=>{
    if(error||!active)return send(403,{error:"افتح الاختبار الأول"});
    const ids=active.question_ids as string[],input=await safeBody(request),answers=input?.answers as AnswerMap;
    if(!answers||ids.some((id,i)=>!["A","B","C","D"].includes(answers["q"+(i+1)]??answers[id])))return send(422,{error:"جاوب كل الأسئلة"});
-   const results=ids.map((id,i)=>{const q=questions[id],selected=answers["q"+(i+1)]??answers[id];return{id:"q"+(i+1),text:q.text,selected,correct:q.correct,isCorrect:selected===q.correct,explanation:q.explanation};});
+   const results=ids.map((id,i)=>{const q=questions[id],selected=answers["q"+(i+1)]??answers[id];return{id:"q"+(i+1),text:q.text,selected,correct:q.correct,isCorrect:selected===q.correct,
+      wrongReason:selected===q.correct?null:(q.wrongReasons?.[selected]??null),explanation:q.explanation};});
    const score=results.filter(x=>x.isCorrect).length;
    const record={score,total:results.length,percentage:Math.round(score/results.length*100),date:new Date().toISOString()};
    const {error:saveErr}=await admin.from("step_exam_attempts").insert({user_id:user.id,course_code:courseCode,correct_count:score,total_questions:results.length});
