@@ -44,7 +44,7 @@ async function openPart(i,scroll=true){
  }catch(e){fail(e);}
  finally{state.busy=false;}
 }
-function top(){
+function renderLessonHeader(){
  const list=state.course.sections,passed=list.filter(s=>s.passed).length,pct=Math.round(passed/list.length*100);
  return '<section class="hero"><div><div class="kicker">STEP · GRAMMAR</div><h1>Present Simple</h1><p class="lead">افهم الفكرة ببساطة، شوف مثال، وجرب بنفسك.</p></div>'+
  '<div class="progress-block"><div class="progress-number">'+pct+'%</div><div class="progress-caption">تقدمك في الدرس</div><div class="progress-track"><span style="width:'+pct+'%"></span></div></div></section>'+
@@ -134,7 +134,7 @@ function examView(){
 }
 function draw(){
  if(!state.course||!state.part)return;
- root.innerHTML=top()+(state.mode==="exam"?examView():'<article class="lesson">'+chapter()+practice()+'</article>'+examBanner())+
+ root.innerHTML=renderLessonHeader()+(state.mode==="exam"?examView():'<article class="lesson">'+chapter()+practice()+'</article>'+examBanner())+
  '<div class="site-foot">QUDRAT · STEP ENGLISH MASTERY</div>';
 }
 async function submit(isExam){
