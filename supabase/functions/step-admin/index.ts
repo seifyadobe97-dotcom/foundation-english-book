@@ -78,7 +78,7 @@ Deno.serve(async(req)=>{
    return reply(200,{overview:overview.data,parts:(parts.data||[]).map(s=>({
      ...s,title:lesson.sections[s.part_index]?.titleAr||"جزء "+(s.part_index+1)
    }))});
-  }catch(error){console.error("STEP analytics failed",error);return reply(500,{error:"تعذر تحميل إحصائيات المعهد"});}
+  }catch(error){console.error("STEP analytics failed",error);return reply(500,{error:"تعذر تحميل إحصائيات المنصة"});}
  }
  const reportMatch=path.match(/^\/students\/([0-9a-f-]{36})\/report$/i);
  if(req.method==="GET"&&reportMatch){
@@ -122,7 +122,7 @@ Deno.serve(async(req)=>{
   }catch(error){console.error("STEP student report failed",error);return reply(500,{error:"تعذر تحميل تقرير الطالب"});}
  }
  if(req.method==="POST"&&path==="/student-status"){
-  if(permission.role!=="owner")return reply(403,{error:"تعديل الحسابات متاح لمدير المعهد فقط"});
+  if(permission.role!=="owner")return reply(403,{error:"تعديل الحسابات متاح لمدير المنصة فقط"});
   try{
    const raw=await req.text();if(raw.length>1500)return reply(413,{error:"Invalid request"});
    const payload=JSON.parse(raw);
@@ -409,7 +409,7 @@ Deno.serve(async(req)=>{
  }
 
  if(path==="/curriculum/classifications/link"&&req.method==="POST"){
-  if(permission.role!=="owner")return reply(403,{error:"ربط تصنيفات بنك الأسئلة متاح لمدير المعهد فقط"});
+  if(permission.role!=="owner")return reply(403,{error:"ربط تصنيفات بنك الأسئلة متاح لمدير المنصة فقط"});
   try{
    const raw=await req.text();if(raw.length>1500)return reply(413,{error:"بيانات كبيرة جدًا"});
    const body=JSON.parse(raw),code=String(body?.code||""),slug=body?.indicator_slug;
@@ -432,7 +432,7 @@ Deno.serve(async(req)=>{
   }catch(error){console.error("Bank classification link",error);return reply(500,{error:"تعذر حفظ ربط التصنيف"});}
  }
  if(path==="/curriculum/indicators/save"&&req.method==="POST"){
-  if(permission.role!=="owner")return reply(403,{error:"تعديل المؤشرات متاح لمدير المعهد فقط"});
+  if(permission.role!=="owner")return reply(403,{error:"تعديل المؤشرات متاح لمدير المنصة فقط"});
   try{
    const raw=await req.text();
    if(raw.length>5000)return reply(413,{error:"البيانات كبيرة جدًا"});
@@ -478,7 +478,7 @@ Deno.serve(async(req)=>{
   }catch(error){console.error("STEP indicator save",error);return reply(500,{error:"تعذر حفظ المؤشر"});}
  }
  if(path==="/curriculum/indicators/status"&&req.method==="POST"){
-  if(permission.role!=="owner")return reply(403,{error:"تغيير حالة المؤشرات متاح لمدير المعهد فقط"});
+  if(permission.role!=="owner")return reply(403,{error:"تغيير حالة المؤشرات متاح لمدير المنصة فقط"});
   try{
    const raw=await req.text();if(raw.length>1000)return reply(413,{error:"البيانات كبيرة"});
    const body=JSON.parse(raw);
@@ -512,7 +512,7 @@ Deno.serve(async(req)=>{
  }
  const guideWrite=path==="/guides/save"||path==="/guides/publish"||path==="/guides/discard-draft";
  if(req.method==="POST"&&guideWrite){
-  if(permission.role!=="owner")return reply(403,{error:"إدارة الشرح متاحة لمدير المعهد فقط"});
+  if(permission.role!=="owner")return reply(403,{error:"إدارة الشرح متاحة لمدير المنصة فقط"});
   try{
    const raw=await req.text();if(raw.length>95000)return reply(413,{error:"حجم الشرح كبير جدًا"});
    const input=JSON.parse(raw),slug=String(input?.indicator_slug||"");

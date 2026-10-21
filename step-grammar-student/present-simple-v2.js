@@ -160,7 +160,7 @@ function examView(){
 function draw(){
  if(!state.course||!state.part)return;
  root.innerHTML=renderLessonHeader()+(state.mode==="exam"?examView():'<article class="lesson">'+chapter()+practice()+'</article>'+examBanner())+
- '<div class="site-foot">QUDRAT · STEP ENGLISH MASTERY</div>';
+ '<div class="site-foot">STEP with Seify</div>';
 }
 async function submit(isExam){
  if(state.busy)return;

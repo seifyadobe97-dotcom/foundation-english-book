@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#152f3d">
-<title>لوحة إدارة STEP | معهد القدرات للتدريب</title>
+<title>لوحة الإدارة | STEP with Seify</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -35,7 +35,7 @@
 </style>
 </head>
 <body>
-<header class="top"><div class="brand"><div class="logo">Q</div><div><div class="brand-name">QUDRAT</div><div class="brand-sub">TRAINING INSTITUTE • STEP ADMIN</div></div></div><div class="nav-actions"><a href="../step-grammar-account-preview/" target="_blank" rel="noopener">صفحة الطلاب ↗</a><button id="logout" class="btn btn-outline btn-small" hidden>تسجيل الخروج</button></div></header>
+<header class="top"><div class="brand"><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"></div><div class="nav-actions"><a href="../step-grammar-account-preview/" target="_blank" rel="noopener">صفحة الطلاب ↗</a><button id="logout" class="btn btn-outline btn-small" hidden>تسجيل الخروج</button></div></header>
 <div id="root"><main class="shell"><p>جاري التحقق من صلاحية الدخول…</p></main></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
 <script>
@@ -89,7 +89,7 @@ async function checkAdmin(){
  }catch(error){
   const accessDenied=errorMessage(error).includes("غير مخوّل");
   if(accessDenied){
-   root.innerHTML='<main class="shell"><div class="panel" style="max-width:650px;margin:55px auto"><div class="eyebrow">ACCESS RESTRICTED</div><h1>الحساب ده مش أدمن</h1><div class="notice">الحساب شغال كطالب، لكن محتاج تفعيله من إدارة المعهد علشان تفتح لوحة التحكم.</div><p>ممكن تخرج وتسجّل دخول بحساب الأدمن بعد تفعيله.</p><button id="denied-logout" class="btn btn-outline">تسجيل الخروج</button></div></main>';
+   root.innerHTML='<main class="shell"><div class="panel" style="max-width:650px;margin:55px auto"><div class="eyebrow">ACCESS RESTRICTED</div><h1>الحساب ده مش أدمن</h1><div class="notice">الحساب شغال كطالب، لكن محتاج تفعيله من إدارة المنصة علشان تفتح لوحة التحكم.</div><p>ممكن تخرج وتسجّل دخول بحساب الأدمن بعد تفعيله.</p><button id="denied-logout" class="btn btn-outline">تسجيل الخروج</button></div></main>';
    logoutButton.hidden=false;document.getElementById("denied-logout").onclick=logout;
   }else showLogin(errorMessage(error));
  }
@@ -110,7 +110,7 @@ function dashboard(){
  const completed=students.filter(s=>s.parts_passed>=6).length;
  const exams=students.filter(s=>s.exam_best!=null).length;
  const pages=Math.max(1,Math.ceil(total/25));
- root.innerHTML='<main class="shell"><div class="eyebrow">STUDENT MANAGEMENT</div><h1 class="page-title">لوحة إدارة طلاب STEP</h1><p class="intro">دليل الطلاب وبيانات التواصل ونتائج المضارع البسيط. الصلاحية: <strong>'+(ui.role==="owner"?"مدير المعهد":"متابعة فقط")+'</strong></p><section class="stats"><div class="stat"><strong>'+total+'</strong><span>إجمالي الطلاب المطابقين للبحث</span></div><div class="stat"><strong>'+active+'</strong><span>حسابات مفعّلة بالصفحة</span></div><div class="stat"><strong>'+completed+'</strong><span>مكملين الأجزاء الستة بالصفحة</span></div><div class="stat"><strong>'+exams+'</strong><span>أدّوا الاختبار بالصفحة</span></div></section><section class="table-panel"><div class="table-top"><div><h2>قائمة الطلاب</h2><p>ابحث باسم المستخدم أو الإيميل أو رقم الموبايل</p></div><button id="export-students" class="btn btn-outline btn-small" type="button">تصدير Excel / CSV</button><form id="search-form" class="search"><input id="q" aria-label="البحث في الطلاب" placeholder="بحث عن طالب…" value="'+escapeHtml(ui.search)+'"><button class="btn btn-main" type="submit">بحث</button></form></div><div class="table-scroll"><table><thead><tr><th>اسم المستخدم</th><th>البريد الإلكتروني</th><th>رقم الموبايل</th><th>تقدم الدرس</th><th>أفضل اختبار</th><th>الحالة</th><th>آخر نشاط</th><th>الإجراء</th></tr></thead><tbody>'+(students.length?students.map(rowHtml).join(""):'<tr><td colspan="8" style="text-align:center;padding:35px;color:#75868d">مفيش طلاب مطابقين للبحث</td></tr>')+'</tbody></table></div><div class="bottom"><span>صفحة '+ui.page+' من '+pages+' — '+total+' طالب</span><div class="actions"><button id="prev" class="btn btn-outline btn-small" '+(ui.page<=1?"disabled":"")+'>السابق</button><button id="next" class="btn btn-outline btn-small" '+(ui.page>=pages?"disabled":"")+'>التالي</button></div></div></section><div class="footer">QUDRAT TRAINING INSTITUTE · PRIVATE STEP MANAGEMENT</div></main>';
+ root.innerHTML='<main class="shell"><div class="eyebrow">STUDENT MANAGEMENT</div><h1 class="page-title">لوحة إدارة طلاب STEP</h1><p class="intro">دليل الطلاب وبيانات التواصل ونتائج المضارع البسيط. الصلاحية: <strong>'+(ui.role==="owner"?"مدير المنصة":"متابعة فقط")+'</strong></p><section class="stats"><div class="stat"><strong>'+total+'</strong><span>إجمالي الطلاب المطابقين للبحث</span></div><div class="stat"><strong>'+active+'</strong><span>حسابات مفعّلة بالصفحة</span></div><div class="stat"><strong>'+completed+'</strong><span>مكملين الأجزاء الستة بالصفحة</span></div><div class="stat"><strong>'+exams+'</strong><span>أدّوا الاختبار بالصفحة</span></div></section><section class="table-panel"><div class="table-top"><div><h2>قائمة الطلاب</h2><p>ابحث باسم المستخدم أو الإيميل أو رقم الموبايل</p></div><button id="export-students" class="btn btn-outline btn-small" type="button">تصدير Excel / CSV</button><form id="search-form" class="search"><input id="q" aria-label="البحث في الطلاب" placeholder="بحث عن طالب…" value="'+escapeHtml(ui.search)+'"><button class="btn btn-main" type="submit">بحث</button></form></div><div class="table-scroll"><table><thead><tr><th>اسم المستخدم</th><th>البريد الإلكتروني</th><th>رقم الموبايل</th><th>تقدم الدرس</th><th>أفضل اختبار</th><th>الحالة</th><th>آخر نشاط</th><th>الإجراء</th></tr></thead><tbody>'+(students.length?students.map(rowHtml).join(""):'<tr><td colspan="8" style="text-align:center;padding:35px;color:#75868d">مفيش طلاب مطابقين للبحث</td></tr>')+'</tbody></table></div><div class="bottom"><span>صفحة '+ui.page+' من '+pages+' — '+total+' طالب</span><div class="actions"><button id="prev" class="btn btn-outline btn-small" '+(ui.page<=1?"disabled":"")+'>السابق</button><button id="next" class="btn btn-outline btn-small" '+(ui.page>=pages?"disabled":"")+'>التالي</button></div></div></section><div class="footer">STEP with Seify · PRIVATE STEP MANAGEMENT</div></main>';
 
  injectAdminNavigation("students");
  const exportBtn=document.getElementById("export-students");
@@ -134,7 +134,7 @@ function dashboard(){
    const csv="\uFEFF"+[headings,...rows].map(row=>row.map(safeCell).join(",")).join("\r\n");
    const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
    const uri=URL.createObjectURL(blob);
-   const a=document.createElement("a");a.href=uri;a.download="QUDRAT_STEP_students_"+new Date().toISOString().slice(0,10)+".csv";
+   const a=document.createElement("a");a.href=uri;a.download="STEP_with_Seify_students_"+new Date().toISOString().slice(0,10)+".csv";
    document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(uri),5000);
   }catch(error){alert(errorMessage(error));}
   finally{exportBtn.disabled=false;exportBtn.textContent="تصدير Excel / CSV";}
@@ -194,7 +194,7 @@ function renderQuestionEditor(msg=""){
  const options=questionState.sections.map(x=>'<option value="'+x.index+'">'+escapeHtml((x.index+1)+". "+x.title)+'</option>').join("");
  const visible=questionState.list.filter(q=>questionState.filter==="all"||q.part_index===Number(questionState.filter));
  const selected=questionState.list.find(q=>q.id===questionState.currentId)||null;
- root.innerHTML='<main class="shell"><div class="eyebrow">CONTENT MANAGEMENT</div><h1 class="page-title">إدارة بنك الأسئلة</h1><p class="intro">أضف الأسئلة أو عدل نصوصها وإجاباتها، واحفظ مسودة قبل نشر أي تغيير.</p><div id="question-nav-anchor"></div><div class="question-layout"><section class="panel"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>الأسئلة ('+questionState.list.length+')</strong>'+(canEdit?'<button type="button" class="btn btn-good btn-small" id="new-question">+ سؤال جديد</button>':'')+'</div><div class="field"><label for="question-filter">الجزء</label><select id="question-filter"><option value="all">جميع الأجزاء</option>'+options+'</select></div><div class="question-list" id="q-list">'+visible.map(q=>'<button type="button" class="q-item '+(q.id===questionState.currentId?"active":"")+'" data-edit="'+escapeHtml(q.id)+'"><small>'+(Number(q.part_index)+1)+' · '+(q.origin==="source"?"سؤال المصدر":"سؤال مضاف")+' · '+(q.status==="published"?"منشور":q.status==="draft"?"مسودة":"مؤرشف")+'</small><strong>'+escapeHtml(q.text)+'</strong></button>').join("")+'</div></section><section class="panel q-form" id="question-edit-area"></section></div><div class="footer">STEP GRAMMAR CONTENT EDITOR · QUDRAT</div></main>';
+ root.innerHTML='<main class="shell"><div class="eyebrow">CONTENT MANAGEMENT</div><h1 class="page-title">إدارة بنك الأسئلة</h1><p class="intro">أضف الأسئلة أو عدل نصوصها وإجاباتها، واحفظ مسودة قبل نشر أي تغيير.</p><div id="question-nav-anchor"></div><div class="question-layout"><section class="panel"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><strong>الأسئلة ('+questionState.list.length+')</strong>'+(canEdit?'<button type="button" class="btn btn-good btn-small" id="new-question">+ سؤال جديد</button>':'')+'</div><div class="field"><label for="question-filter">الجزء</label><select id="question-filter"><option value="all">جميع الأجزاء</option>'+options+'</select></div><div class="question-list" id="q-list">'+visible.map(q=>'<button type="button" class="q-item '+(q.id===questionState.currentId?"active":"")+'" data-edit="'+escapeHtml(q.id)+'"><small>'+(Number(q.part_index)+1)+' · '+(q.origin==="source"?"سؤال المصدر":"سؤال مضاف")+' · '+(q.status==="published"?"منشور":q.status==="draft"?"مسودة":"مؤرشف")+'</small><strong>'+escapeHtml(q.text)+'</strong></button>').join("")+'</div></section><section class="panel q-form" id="question-edit-area"></section></div><div class="footer">STEP with Seify · CONTENT EDITOR</div></main>';
  injectAdminNavigation("questions");
  const filter=document.getElementById("question-filter");
  filter.value=questionState.filter;
@@ -289,7 +289,7 @@ function renderLessonEditor(){
  lessonField('mistake-right','الجملة الصحيحة',content.mistake.right,{ltr:true,max:300})+
  lessonField('mistake-why','سبب التصحيح',content.mistake.why,{area:true,max:950})+
  '<div class="q-actions">'+(canEdit?'<button class="btn btn-main" type="submit" id="save-lesson">حفظ كمسودة</button>'+(isDraft?'<button class="btn btn-good" type="button" id="publish-lesson">نشر المسودة للطلاب</button>':'')+
- ((isDraft||wasPublished)?'<button class="btn btn-danger" type="button" id="reset-lesson">استعادة المحتوى الأصلي</button>':''):'')+'</div></form></section></div><div class="footer">QUDRAT · LESSON CONTENT EDITOR</div></main>';
+ ((isDraft||wasPublished)?'<button class="btn btn-danger" type="button" id="reset-lesson">استعادة المحتوى الأصلي</button>':''):'')+'</div></form></section></div><div class="footer">STEP with Seify · LESSON CONTENT EDITOR</div></main>';
  injectAdminNavigation("lessons");
  document.querySelectorAll("[data-lesson-index]").forEach(b=>b.onclick=()=>{if(!confirmDiscardLesson())return;lessonEditor.active=Number(b.dataset.lessonIndex);renderLessonEditor();window.scrollTo(0,0);});
  const form=document.getElementById("lesson-content-form");

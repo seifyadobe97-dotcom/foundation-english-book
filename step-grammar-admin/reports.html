@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#152f3d">
-<title>تقارير طلاب STEP | QUDRAT</title>
+<title>تقارير الطلاب | STEP with Seify</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#162e3c;--green:#2f8071;--muted:#74858a;--line:#e2eae6}
@@ -21,10 +21,10 @@ main{max-width:1200px;padding:28px 18px 70px;margin:auto}.eyebrow{font:800 11px 
 .ltr{direction:ltr;unicode-bidi:isolate;display:inline-block;font:600 13px "DM Sans",Arial}
 .small{color:var(--muted);font-size:12px}.tabs{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.error{background:#fff0ef;color:#9b4545;border:1px solid #e9cbcb;padding:16px;border-radius:10px}
 @media(max-width:780px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.sectionbar{grid-template-columns:1fr;gap:4px}.panel{padding:15px}}
-</style>
-</head>
+.step-brand-image{display:block;width:206px;max-width:100%;height:auto;flex:none}@media(max-width:480px){.step-brand-image{width:158px}}</style>
+<link rel="icon" type="image/svg+xml" href="../step-brand/mark.svg"></head>
 <body>
-<header><div class="logo">QUDRAT <small>TRAINING INSTITUTE · STEP REPORTS</small></div><div class="tabs"><a class="btn alt" href="./">لوحة الأدمن</a><button id="logout" class="btn alt" hidden>خروج</button></div></header>
+<header><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"><div class="tabs"><a class="btn alt" href="./">لوحة الأدمن</a><button id="logout" class="btn alt" hidden>خروج</button></div></header>
 <main id="main"><p>جاري التأكد من صلاحية الدخول…</p></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
 <script>
@@ -54,13 +54,13 @@ function download(filename,headers,rows){
  setTimeout(()=>URL.revokeObjectURL(u),5000);
 }
 async function analytics(){
- pageRoot.innerHTML='<p>جاري تحميل إحصائيات المعهد…</p>';
+ pageRoot.innerHTML='<p>جاري تحميل إحصائيات المنصة…</p>';
  try{
   const [result,students]=await Promise.all([api("/analytics"),api("/students?page="+page+"&q="+encodeURIComponent(q))]);
   const a=result.overview,parts=result.parts||[],rows=students.students||[];total=students.total||0;
   const pct=x=>x==null?"—":Number(x).toFixed(1)+"%";
   const max=Math.max(1,...parts.map(x=>Number(x.students_tried||0)));
-  pageRoot.innerHTML='<div class="eyebrow">INSTITUTE ANALYTICS</div><h1>تقارير المعهد والطلاب</h1><p class="lead">بيانات فعلية لجميع الطلاب والمحاولات، بتتحدث مباشرة من Supabase.</p><section class="stats">'+
+  pageRoot.innerHTML='<div class="eyebrow">STEP ANALYTICS</div><h1>تقارير المنصة والطلاب</h1><p class="lead">بيانات فعلية لجميع الطلاب والمحاولات، بتتحدث مباشرة من Supabase.</p><section class="stats">'+
    [["إجمالي الطلاب",a.students_total],["حسابات مفعّلة",a.students_active],["أكملوا الدرس",a.students_completed],["أدّوا النهائي",a.students_exam_taken],["محاولات التدريب",a.practice_attempts],["محاولات النهائي",a.exam_attempts],["متوسط نتيجة النهائي",pct(a.avg_exam_percent)]].map(x=>'<div class="stat"><b>'+esc(x[1]==null?"—":x[1])+'</b><span>'+x[0]+'</span></div>').join("")+
    '</section><section class="panel"><h2>أداء أجزاء المضارع البسيط</h2><p class="small">عدد الطلاب اللي حلّوا في كل جزء، ونسبة الطلاب اللي نجحوا فيه.</p>'+
    parts.map(p=>{const tried=Number(p.students_tried||0),passed=Number(p.students_passed||0);

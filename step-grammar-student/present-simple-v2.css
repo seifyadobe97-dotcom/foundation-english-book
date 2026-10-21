@@ -1,4 +1,4 @@
-/* QUDRAT STEP · Present Simple · Calm learning interface */
+/* STEP with Seify · Present Simple learning interface */
 :root{--ink:#193343;--text:#344b55;--muted:#71828a;--line:#e5e9e8;--paper:#fff;--canvas:#f8faf9;--green:#23756a;--pale:#eff7f3;--gold:#b98c48;--yellow:#fff0c7;--bad:#a74b42;--good:#177557}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--canvas);color:var(--text);font:15px/1.95 Cairo,Tahoma,sans-serif}
 button,a{font:inherit}a{color:inherit;text-decoration:none}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.48}
@@ -6,7 +6,7 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
 .en,[lang=en]{font-family:"DM Sans",Arial,sans-serif;direction:ltr;unicode-bidi:isolate}
 .masthead{background:#fff;border-bottom:1px solid var(--line)}
 .masthead-inner{max-width:1060px;margin:auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:15px}
-.wordmark{display:flex;align-items:center;gap:10px;min-width:0}.monogram{width:40px;height:40px;border-radius:11px;background:var(--ink);color:#fff;display:grid;place-items:center;font:800 22px "DM Sans",sans-serif}.wordmark strong{display:block;letter-spacing:.12em;color:var(--ink);font:800 15px "DM Sans",sans-serif}.wordmark small{display:block;color:var(--muted);font-size:10px}
+.wordmark{display:flex;align-items:center;gap:10px;min-width:0}.wordmark .step-brand-image{display:block;width:206px;max-width:100%;height:auto}@media(max-width:480px){.wordmark .step-brand-image{width:158px}}.monogram{width:40px;height:40px;border-radius:11px;background:var(--ink);color:#fff;display:grid;place-items:center;font:800 22px "DM Sans",sans-serif}.wordmark strong{display:block;letter-spacing:.12em;color:var(--ink);font:800 15px "DM Sans",sans-serif}.wordmark small{display:block;color:var(--muted);font-size:10px}
 .back-link{border:1px solid var(--line);padding:7px 13px;border-radius:9px;color:var(--ink);font-weight:800;font-size:12px;white-space:nowrap}
 .shell{max-width:1060px;padding:24px 22px 85px;margin:auto}.hero{padding:19px 0 21px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
 .kicker{font:800 11px "DM Sans",sans-serif;letter-spacing:.16em;color:var(--green);direction:ltr;text-align:right}.hero h1{font:800 clamp(29px,4vw,40px)/1.25 "DM Sans";color:var(--ink);direction:ltr;text-align:right;margin:8px 0 4px}.hero .lead{margin:0;color:#536971;font-size:15px}.hero .progress-block{min-width:160px;text-align:left}.progress-number{font:800 25px "DM Sans";color:var(--green)}.progress-caption{font-size:11px;color:var(--muted)}

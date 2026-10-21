@@ -1,5 +1,5 @@
 /**
- * Regression gate for QUDRAT STEP account, student and admin portals.
+ * Regression gate for STEP with Seify account, student and admin portals.
  * Validates inline JavaScript and security-sensitive integration contracts.
  * Does not make any external requests or expose credentials.
  */
@@ -126,6 +126,20 @@ assert(!unified.includes("ASGQ")&&!v2Content.includes("ASGQ")&&!v2.includes("ASG
 assert(css.includes("@media(max-width:480px)"),"Mobile layout is included");
 assert(oldGuide.includes("learn.html"),"Old explanation links redirect into a single lesson");
 assert(courseServer.includes('const showQuestions='),"API replaces internal question identifiers");
+const brandedPages=[
+ "step-grammar-account-preview/index.html","step-grammar-student/index.html",
+ "step-grammar-student/learn.html","step-grammar-student/lesson-v2.html",
+ "step-grammar-pilot/index.html","step-grammar-admin/index.html",
+ "step-grammar-admin/reports.html","step-grammar-admin/courses.html",
+ "step-grammar-admin/curriculum.html","step-grammar-admin/guide.html"];
+for(const page of brandedPages){
+ const html=readFileSync(page,"utf8");
+ assert(!/QUDRAT|TRAINING INSTITUTE|معهد القدرات|إدارة المعهد|مدير المعهد/i.test(html),page+" retains old branding");
+ assert(html.includes("step-brand/logo.svg"),page+" is missing the STEP with Seify logo");
+ assert(html.includes("step-brand/mark.svg"),page+" is missing STEP favicon");
+}
+assert(!/إدارة المعهد|مدير المعهد/.test(adminServer),"Admin messages must use STEP brand");
+assert(!/إدارة المعهد/.test(courseServer),"Course messages must use STEP brand");
 assert(courseServer.includes('const {questionIds:_privateIds'),"API removes raw question-ID arrays");
 const book=readFileSync("step-grammar-account-preview/index.html","utf8");
 assert(book.includes("step-grammar-student/learn.html"),"Legacy lesson also links to new lesson");

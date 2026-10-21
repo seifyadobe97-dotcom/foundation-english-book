@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><title>STEP with Seify</title>
+<defs><linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#174879"/><stop offset="1" stop-color="#0b213d"/></linearGradient></defs>
+<rect x="3" y="3" width="94" height="94" rx="23" fill="url(#g)"/>
+<path d="M19 65q17-9 31 1 14-10 31-1v14q-17-8-31 2-14-10-31-2z" fill="#fff"/>
+<path d="M50 66v15" stroke="#6fc4e1" stroke-width="3"/>
+<path d="M26 25h44M26 38h39M26 51h44" stroke="#f7b431" stroke-width="10" stroke-linecap="round"/>
+<path d="M42 25h28M42 38h23M42 51h28" stroke="#28a79b" stroke-width="10" stroke-linecap="round"/>
+<path d="M26 25h23M26 38h23M26 51h23" stroke="#56b3ff" stroke-width="10" stroke-linecap="round"/></svg>
