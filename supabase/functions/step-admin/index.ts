@@ -6,7 +6,7 @@ const url=Deno.env.get("SUPABASE_URL")??"";
 const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
 const allow=new Set(["https://seifyadobe97-dotcom.github.io","http://localhost:3000","http://127.0.0.1:3000"]);
 const isUUID=(v:unknown)=>typeof v==="string"&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
-type AnswerEvent={question_id:string;part_index:number|null;attempt_kind:string;is_correct:boolean;elapsed_ms:number|null;choice_changes:number|null;selected:string};
+type AnswerEvent={question_id:string;part_index:number|null;attempt_kind:string;is_correct:boolean;elapsed_ms:number|null;choice_changes:number|null;selected:string;recorded_at?:string};
 const lessonSource=lesson.questions as Record<string,{text:string;options:Record<string,string>}>;
 const sectionForQuestion=new Map(lesson.sections.flatMap((sec,i)=>sec.questionIds.map(id=>[id,i] as const)));
 const rate=(a:number,b:number)=>b?Math.round(100*a/b):null;
@@ -57,6 +57,27 @@ function buildLearningInsights(items:AnswerEvent[]){
  };
 }
 
+type FollowupEvent={id:string;part_index:number;kind:string;assigned_at:string;cancelled_at:string|null};
+function compareFollowups(tasks:FollowupEvent[],events:AnswerEvent[]){
+ return tasks.filter(t=>!t.cancelled_at).map(task=>{
+  const data=events.filter(e=>e.part_index===task.part_index&&e.attempt_kind==="practice"&&e.recorded_at);
+  const before=data.filter(e=>e.recorded_at!<task.assigned_at);
+  const after=data.filter(e=>e.recorded_at!>=task.assigned_at);
+  const summarize=(rows:AnswerEvent[])=>({
+   answers:rows.length,unique_questions:new Set(rows.map(r=>r.question_id)).size,
+   correct:rows.filter(r=>r.is_correct).length,accuracy:rate(rows.filter(r=>r.is_correct).length,rows.length)
+  });
+  const a=summarize(before),b=summarize(after);
+  const required=Math.min(3,lesson.sections[task.part_index]?.questionIds.length??3);
+  const sufficient=a.answers>=5&&b.answers>=5&&a.unique_questions>=required&&b.unique_questions>=required;
+  const change=sufficient&&a.accuracy!==null&&b.accuracy!==null?b.accuracy-a.accuracy:null;
+  return {id:task.id,part_index:task.part_index,title:lesson.sections[task.part_index]?.titleAr||"مهارة",
+   kind:task.kind,assigned_at:task.assigned_at,before:a,after:b,
+   delta:change,
+   status:change===null?"بيانات غير كافية":change>=10?"تحسن مبدئي":change<=-10?"تراجع يحتاج متابعة":"مستوى شبه ثابت",
+   note:"مقارنة أولية لدقة الإجابات قبل التكليف وبعده؛ تكرار الأسئلة والاختلاف في الصعوبة قد يؤثران في النتيجة."};
+ });
+}
 Deno.serve(async(req)=>{
  const origin=req.headers.get("origin")??"";
  const cors={"Access-Control-Allow-Origin":allow.has(origin)?origin:"https://seifyadobe97-dotcom.github.io",
@@ -231,7 +252,7 @@ Deno.serve(async(req)=>{
   const studentId=reportMatch[1];
   if(!isUUID(studentId))return reply(422,{error:"معرّف الطالب غير صحيح"});
   try{
-   const [profile,partRows,examRows,partCount,examCount,detailRows,detailCount]=await Promise.all([
+   const [profile,partRows,examRows,partCount,examCount,detailRows,detailCount,followupRows]=await Promise.all([
     admin.from("step_student_profiles").select("user_id,username,email,phone_e164,is_active,created_at").eq("user_id",studentId).maybeSingle(),
     admin.from("step_part_attempts").select("id,part_index,correct_count,total_questions,passed,attempted_at")
       .eq("user_id",studentId).eq("course_code",lesson.code).order("attempted_at",{ascending:false}).limit(300),
@@ -240,14 +261,17 @@ Deno.serve(async(req)=>{
     admin.from("step_part_attempts").select("id",{count:"exact",head:true}).eq("user_id",studentId).eq("course_code",lesson.code),
     admin.from("step_exam_attempts").select("id",{count:"exact",head:true}).eq("user_id",studentId).eq("course_code",lesson.code),
     admin.from("step_question_attempt_details")
-     .select("question_id,part_index,attempt_kind,is_correct,elapsed_ms,choice_changes,selected")
+     .select("question_id,part_index,attempt_kind,is_correct,elapsed_ms,choice_changes,selected,recorded_at")
      .eq("user_id",studentId).eq("course_code",lesson.code)
      .order("recorded_at",{ascending:false}).limit(1500),
     admin.from("step_question_attempt_details").select("id",{count:"exact",head:true})
+     .eq("user_id",studentId).eq("course_code",lesson.code),
+    admin.from("step_student_followups").select("id,part_index,kind,assigned_at,cancelled_at")
      .eq("user_id",studentId).eq("course_code",lesson.code)
+     .order("assigned_at",{ascending:false}).limit(50)
    ]);
-   if(profile.error||partRows.error||examRows.error||partCount.error||examCount.error||detailRows.error||detailCount.error)
-     throw(profile.error||partRows.error||examRows.error||partCount.error||examCount.error||detailRows.error||detailCount.error);
+   if(profile.error||partRows.error||examRows.error||partCount.error||examCount.error||detailRows.error||detailCount.error||followupRows.error)
+     throw(profile.error||partRows.error||examRows.error||partCount.error||examCount.error||detailRows.error||detailCount.error||followupRows.error);
    if(!profile.data)return reply(404,{error:"الطالب غير موجود"});
    const attempts=partRows.data||[],exams=examRows.data||[];
    const sections=lesson.sections.map((s,index)=>{
@@ -269,6 +293,9 @@ Deno.serve(async(req)=>{
     sections,
     insights:{...buildLearningInsights((detailRows.data||[]) as AnswerEvent[]),
      truncated:(detailCount.count||0)>(detailRows.data||[]).length},
+    followup_impact:compareFollowups((followupRows.data||[]) as FollowupEvent[],
+      (detailRows.data||[]) as AnswerEvent[]),
+    impact_history_limited:(detailCount.count||0)>(detailRows.data||[]).length,
     attempts:attempts.map(r=>({...r,percentage:Math.round(100*r.correct_count/r.total_questions),
       section_title:lesson.sections[r.part_index]?.titleAr||"جزء غير معروف"})),
     exams:exams.map(r=>({...r,percentage:Math.round(100*r.correct_count/r.total_questions)}))
