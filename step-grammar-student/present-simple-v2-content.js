@@ -8,7 +8,7 @@ window.PRESENT_SIMPLE_UNITS=[
  ["دي حقيقة","The Earth [[moves]] around the Sun.","حقيقة علمية."],
  ["دي وظيفة","A teacher [[teaches]] students.","عمل معتاد."],
  ["ده موعد ثابت","The train [[leaves]] at eight.","جدول منتظم."]],
- quick:{q:"She studies English every day.",choices:["دي عادة","حدث بيحصل دلوقتي"],correct:0,why:"every day معناها كل يوم؛ يعني عادة متكررة."}},
+ quick:{q:"She studies English every day.",choices:["دي عادة","حدث بيحصل دلوقتي"],correct:0,why:"every day معناها كل يوم؛ يعني عادة متكررة.",wrongWhy:{"1":"الاختيار ده بيقول إن الحدث بيحصل دلوقتي، لكن every day بتدل على حاجة بتتكرر مش لحظة حالية."}}},
  {title:"ابنِ الجملة",detail:"أول سؤال تسأله لنفسك: [[مين الفاعل؟]] مع [[المفرد الغائب]] غالبًا بنضيف s. مع الجمع و I و You بنستخدم الفعل من غير إضافة.",
  cards:[
  ["مفرد غائب","He / She / It / اسم مفرد","فعل + s / es / ies","👤"],
@@ -19,7 +19,7 @@ window.PRESENT_SIMPLE_UNITS=[
  ["مع الجمع","They [[work]] every day.","الفعل من غير s."],
  ["مفرد غائب","She [[works]] every day.","ضفنا s."],
  ["اسم مفرد","My friend [[works]] here.","اسم مفرد = He أو She."]],
- quick:{q:"He ____ football every week.",choices:["play","plays"],correct:1,why:"He مفرد غائب؛ نستخدم plays."}},
+ quick:{q:"He ____ football every week.",choices:["play","plays"],correct:1,why:"He مفرد غائب؛ نستخدم plays.",wrongWhy:{"0":"play من غير s ينفع مع I وYou والجمع، لكن He مفرد غائب فنقول plays."}}},
  {title:"s / es / ies",detail:"لما الفاعل يكون [[مفرد غائب]]، بص على نهاية الفعل علشان تعرف هتضيف إيه.",
  cards:[
  ["أغلب الأفعال","play → plays","نضيف s","①"],
@@ -31,7 +31,7 @@ window.PRESENT_SIMPLE_UNITS=[
  ["إضافة es","She [[watches]] TV.","watch → watches"],
  ["إضافة ies","Mona [[studies]] English.","study → studies"],
  ["فعل خاص","He [[does]] his homework.","do → does"]],
- quick:{q:"Mona ____ English every day.",choices:["studys","studies","study"],correct:1,why:"study: حرف ساكن + y، نحذف y ونضيف ies."}},
+ quick:{q:"Mona ____ English every day.",choices:["studys","studies","study"],correct:1,why:"study: حرف ساكن + y، نحذف y ونضيف ies.",wrongWhy:{"0":"studys كتابة غلط؛ قبل y حرف ساكن، فبنحذف y ونضيف ies.","2":"study من غير تغيير يناسب I أو الجمع، لكن Mona مفرد غائب؛ المطلوب studies."}}},
  {title:"النفي",detail:"مع I و You والجمع بنستخدم [[don't]]. مع المفرد الغائب بنستخدم [[doesn't]]. وبعد الاتنين الفعل [[في المصدر]].",
  cards:[
  ["I / You / We / They","فاعل + don't + فعل","We don't play.","①"],
@@ -42,18 +42,18 @@ window.PRESENT_SIMPLE_UNITS=[
  ["مع I","I [[don't drink]] coffee.","don't + فعل في المصدر."],
  ["مع المفرد","Sara [[doesn't work]] on Sunday.","doesn't + فعل في المصدر."],
  ["فخ مهم","He doesn't [[need]] help.","مش needs بعد doesn't."]],
- quick:{q:"He doesn't ____ coffee.",choices:["drinks","drink"],correct:1,why:"بعد doesn't الفعل يرجع للمصدر drink."}},
+ quick:{q:"He doesn't ____ coffee.",choices:["drinks","drink"],correct:1,why:"بعد doesn't الفعل يرجع للمصدر drink.",wrongWhy:{"0":"drinks فيها s زيادة؛ doesn't حملت بالفعل علامة المفرد، فلازم الفعل بعدها يكون drink."}}},
  {title:"السؤال",detail:"في سؤال نعم أو لا، نبدأ بـ [[Do]] مع I و You والجمع، و[[Does]] مع المفرد الغائب. وبعدها الفعل [[مصدر]].",
  cards:[
  ["Do","Do + فاعل + فعل؟","Do they study?","①"],
  ["Does","Does + فاعل + فعل؟","Does she study?","②"]],
- tip:"Does she [[plays]]؟ غلط. الصح: [[Does she play?]] — ولو سألنا بـ Where أو When، نكمّل بنفس الطريقة.",
+ tip:"بعد [[Does]] الفعل الرئيسي يرجع للمصدر، حتى لو الفاعل مفرد غائب.",warning:{wrong:"Does she plays?",correct:"Does she play?",why:"Does فيها علامة المفرد، عشان كده بنستخدم play من غير s. ونفس القاعدة مع Where وWhen."},
  examples:[
  ["مع You","[[Do]] you play football?","Do + فاعل + فعل."],
  ["مع He","[[Does]] he play football?","Does + فاعل + فعل."],
  ["سؤال Where","Where [[does]] she live?","Where + does + فاعل + فعل."],
  ["لما Who فاعل","Who [[knows]] the answer?","Who هنا فاعل السؤال؛ مفيش Does."]],
- quick:{q:"____ your brother play football?",choices:["Do","Does"],correct:1,why:"Your brother مفرد غائب؛ نبدأ بـ Does."}},
+ quick:{q:"____ your brother play football?",choices:["Do","Does"],correct:1,why:"Your brother مفرد غائب؛ نبدأ بـ Does، وبعدها play في المصدر.",wrongWhy:{"0":"Do مع I وYou والجمع. Your brother مفرد غائب، لذلك محتاج Does."}}},
  {title:"الكلمات الدالة",detail:"الكلمات الدالة بتساعدك تلتقط [[العادة]] و[[التكرار]]. لكن لازم برضه تفكر في [[الفاعل]] ومعنى الجملة.",
  cards:[],tip:"[[never]] معناها أبدًا، فمش بنحط معاها don't من غير سبب. وأفعال الحالة زي need و weigh غالبًا بتكون في المضارع البسيط.",
  keywords:[["always","دائمًا"],["usually","عادةً"],["often","غالبًا"],["sometimes","أحيانًا"],["never","أبدًا"],["every day","كل يوم"]],
@@ -65,5 +65,5 @@ window.PRESENT_SIMPLE_UNITS=[
  extra:{heading:"لو قابلت سؤالًا أصعب",paragraphs:[
   "مع when أو in case بنستخدم عادة المضارع البسيط في الجملة التابعة، حتى لو بنتكلم عن المستقبل: Take a sweater in case it gets cold.",
   "أفعال الحالة زي need و weigh مش بنستخدمها عادة في المضارع المستمر لما بنوصف حالة ثابتة."]},
- quick:{q:"Which word means «أبدًا»?",choices:["always","never","usually"],correct:1,why:"never معناها أبدًا."}}
+ quick:{q:"Which word means «أبدًا»?",choices:["always","never","usually"],correct:1,why:"never معناها أبدًا.",wrongWhy:{"0":"always معناها دائمًا، وده عكس معنى أبدًا.","2":"usually معناها عادةً، لكن أبدًا معناها never."}}}
 ];
