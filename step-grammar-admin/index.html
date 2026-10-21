@@ -169,7 +169,7 @@ async function loadStudents(){
 function injectAdminNavigation(active){
  const container=document.createElement("nav");
  container.className="admin-tabs";container.setAttribute("aria-label","أقسام لوحة الإدارة");
- container.innerHTML='<button class="admin-tab '+(active==="students"?"is-active":"")+'" id="nav-students">الطلاب والنتائج</button><button class="admin-tab '+(active==="questions"?"is-active":"")+'" id="nav-questions">بنك الأسئلة</button><button class="admin-tab '+(active==="lessons"?"is-active":"")+'" id="nav-lessons">محتوى الدروس</button><a href="reports.html" class="admin-tab">التقارير والإحصائيات</a><a href="curriculum.html" class="admin-tab">المحاور والمؤشرات</a><a href="guide.html?indicator=present-simple" class="admin-tab">شرح المؤشر من الكتاب</a><a href="courses.html" class="admin-tab">إضافة دروس جديدة</a>';
+ container.innerHTML='<button class="admin-tab '+(active==="students"?"is-active":"")+'" id="nav-students">الطلاب والنتائج</button><button class="admin-tab '+(active==="questions"?"is-active":"")+'" id="nav-questions">بنك الأسئلة</button><button class="admin-tab '+(active==="lessons"?"is-active":"")+'" id="nav-lessons">محتوى الدروس</button><a href="reports.html" class="admin-tab">التقارير والإحصائيات</a><a href="curriculum.html" class="admin-tab">المحاور والمؤشرات</a><a href="courses.html" class="admin-tab">إضافة دروس جديدة</a>';
  const anchor=root.querySelector(".intro")||root.querySelector(".page-title");
  if(anchor)anchor.after(container);
  document.getElementById("nav-students").onclick=()=>{ui.page=1;loadStudents();};
