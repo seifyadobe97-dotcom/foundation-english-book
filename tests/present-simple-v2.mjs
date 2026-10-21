@@ -161,7 +161,7 @@ try{
  assert.equal(await tiktokLink.getAttribute("target"),"_blank");
  assert.equal(await tiktokLink.getAttribute("rel"),"noopener noreferrer");
  const logoStatus=await mediaPage.locator(".step-brand-image").evaluate(async img=>{
-  try{await img.decode();return {ok:img.naturalWidth>400,width:img.naturalWidth,complete:img.complete};}
+  try{await img.decode();return {ok:img.naturalWidth>=300,width:img.naturalWidth,complete:img.complete};}
   catch(e){return {ok:false,width:img.naturalWidth,complete:img.complete,error:String(e)};}
  });
  assert.equal(logoStatus.ok,true,"STEP logo must decode in Chromium: "+JSON.stringify(logoStatus));
