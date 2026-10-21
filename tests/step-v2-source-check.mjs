@@ -20,4 +20,20 @@ assert(content.includes("دي عادة")&&content.includes("دي حقيقة")&&c
 assert(css.includes("@media(max-width:480px)"),"Responsive mobile support");
 assert(api.includes("showQuestions"),"Student API obscures bank question identifiers");
 assert(questionBank.sections.length===6,"Six learning steps");
-console.log("PASS STEP pilot source checks: 6 steps, student privacy, safe JS, mobile styles");
+const publishedIds=[...new Set(questionBank.sections.flatMap(section=>section.questionIds))];
+assert.equal(publishedIds.length,20,"Only the 20 vetted questions are published");
+let distractors=0;
+for(const id of publishedIds){
+ const question=questionBank.questions[id];
+ assert(question&&question.options&&question.correct&&question.explanation,"Complete graded question: "+id);
+ for(const letter of Object.keys(question.options)){
+  if(letter===question.correct)continue;
+  assert(question.wrongReasons?.[letter]?.trim(),"Missing why-wrong explanation: "+id+" / "+letter);
+  distractors++;
+ }
+}
+assert.equal(distractors,60,"Every bank distractor has an individual explanation");
+assert(api.includes("wrongReason:selected===q.correct?null"),"Never return wrong explanations before grading");
+assert(script.includes('dir="ltr"'),"English and answer choices are isolated LTR");
+assert(css.includes(".answer-feedback.is-wrong")&&css.includes(".check-option.incorrect"),"Clear error colors for graded and quick checks");
+console.log("PASS STEP pilot source checks: 6 steps, 20 questions, 60 distinct distractor explanations, safe JS, mobile styles");
