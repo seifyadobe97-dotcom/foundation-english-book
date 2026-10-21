@@ -50,14 +50,14 @@ async function course(){
   followupError:followupResponse.ok?"":"تعذر تحميل خطة المتابعة؛ اضغط تحديث للمحاولة مرة تانية."};
 }
 const taskKind={review:"مراجعة الشرح",practice:"حل تدريب",video:"فيديو مع Seify"};
-const taskStatus={pending:"بانتظار المراجعة",reviewed:"تمت المراجعة — منتظر التدريب",completed:"✓ اتأكد التدريب الناجح"};
+const taskStatus={pending:"بانتظار المراجعة",reviewed:"تمت المراجعة — منتظر التدريب",completed:"✓ تدريب ناجح بعد التكليف"};
 function followupCards(x){
  const tasks=x.followups||[];
  if(!tasks.length&&!x.followupError)return "";
  return '<section class="student-followups"><div class="section-head"><h2>خطة متابعتي</h2><span class="task-count">'+
  tasks.filter(t=>t.status!=="completed").length+' تكليف مفتوح</span></div>'+
  (x.followupError?'<div class="notice">'+esc(x.followupError)+'</div>':'')+
- '<p class="task-intro">مراجعات محددة من المدرّس حسب احتياجك. الإتقان بيتأكد لما تحل تدريب جديد بنجاح.</p>'+
+ '<p class="task-intro">مراجعات محددة من المدرّس حسب احتياجك. إنجاز المتابعة بيتأكد لما تحل تدريب جديد بنجاح.</p>'+
  '<div class="task-grid">'+tasks.map(t=>'<article class="student-task '+(t.status==="completed"?"is-done":"")+'">'+
  '<div class="task-meta"><span>'+esc(taskKind[t.kind]||"متابعة")+'</span><span>'+
  esc(taskStatus[t.status]||"بانتظارك")+'</span></div>'+
