@@ -371,6 +371,11 @@
         "number": "063",
         "page": "9",
         "editorial_status": "individually_checked_for_pilot"
+      },
+      "wrongReasons": {
+        "A": "am studying بتصف مذاكرة جارية دلوقتي، لكن usually هنا معناها عادة متكررة.",
+        "B": "will study للمستقبل، بينما الجملة بتتكلم عن حاجة بتحصل عادة.",
+        "C": "studied للماضي، ومفيش سياق بيحكي عن مرة انتهت."
       }
     },
     "ASGQPRSIM-AGG-04": {
@@ -390,6 +395,11 @@
         "number": "093",
         "page": "115",
         "editorial_status": "individually_checked_for_pilot"
+      },
+      "wrongReasons": {
+        "B": "got ماضي، لكن Every time هنا بتوصف استجابة بتتكرر عادة.",
+        "C": "have gotten مضارع تام يركز على نتيجة/تجربة مرتبطة بالماضي، مش الصياغة الطبيعية لعادة بتحصل كل مرة.",
+        "D": "am getting مضارع مستمر يوحي بتغير جارٍ الآن، لكن Every time بتوصف نمط متكرر."
       }
     },
     "ASGQPRSIM-AGG-09": {
@@ -409,6 +419,11 @@
         "number": "090",
         "page": "30",
         "editorial_status": "individually_checked_for_pilot"
+      },
+      "wrongReasons": {
+        "A": "reading لوحدها صيغة ing مش فعل كامل بعد I؛ محتاجة فعل مساعد مناسب.",
+        "B": "am reading للمذاكرة/القراءة اللي بتحصل الآن، لكن usually بتدل على عادة.",
+        "D": "to read مصدر بـ to، ومينفعش يكون هو الفعل الرئيسي مباشرة بعد I في الجملة دي."
       }
     },
     "ASGQPRSIM-AGG-02": {
@@ -428,6 +443,11 @@
         "number": "071",
         "page": "22",
         "editorial_status": "individually_checked_for_pilot"
+      },
+      "wrongReasons": {
+        "B": "studied ماضي، لكن pass في الجزء التاني مضارع بسيط والجملة بتشرح علاقة عامة.",
+        "C": "will study للمستقبل، لكن الكلام هنا عن قاعدة عامة متكررة، مش توقع لحدث جاي.",
+        "D": "would study غالبًا محتاج سياق شرطي أو افتراضي، وهو مش موجود هنا."
       }
     },
     "ASGQPRSIM-BOOK-01": {
@@ -445,6 +465,11 @@
         "type": "course_book",
         "pdf_page": 3,
         "status": "rechecked"
+      },
+      "wrongReasons": {
+        "A": "goes فيها s للمفرد الغائب، لكن الفاعل We جمع.",
+        "B": "went ماضي، وكلمة usually هنا بتوضح عادة في الحاضر.",
+        "C": "going صيغة ing، ومفيش فعل مساعد زي are يكملها."
       }
     },
     "ASGQPRSIM-BOOK-09": {
@@ -462,6 +487,11 @@
         "type": "course_book",
         "pdf_page": 3,
         "status": "rechecked"
+      },
+      "wrongReasons": {
+        "A": "coming صيغة ing، ومينفعش تجي كفعل رئيسي لوحدها بعد They.",
+        "B": "comes للمفرد الغائب، لكن They فاعل جمع.",
+        "D": "to come مصدر بـ to، لكن بعد They في الجملة المثبتة نحتاج الفعل المباشر."
       }
     },
     "ASGQPRSIM-AGG-10": {
@@ -481,6 +511,11 @@
         "number": "078",
         "page": "34",
         "editorial_status": "individually_checked_for_pilot"
+      },
+      "wrongReasons": {
+        "B": "will wear مستقبل، لكن always هنا بيوصف عادة معتادة لِـ Dave.",
+        "C": "was to wear بتشير لخطة أو ترتيب في الماضي، مش عادة حالية.",
+        "D": "has been wearing بتركز على الاستمرار من الماضي للحاضر؛ السؤال هنا يقصد عادة عامة، فالأبسط والأدق wears."
       }
     },
     "ASGQPRSIM-BOOK-02": {
@@ -498,6 +533,11 @@
         "type": "course_book",
         "pdf_page": 3,
         "status": "rechecked"
+      },
+      "wrongReasons": {
+        "A": "go من غير es، لكن She مفرد غائب والفعل go بيأخد es.",
+        "C": "going صيغة ing، ومش فعل مضارع بسيط مكتمل لوحدها.",
+        "D": "gone التصريف الثالث، وبيحتاج فعل مساعد زي has."
       }
     },
     "ASGQPRSIM-BOOK-03": {
@@ -515,6 +555,11 @@
         "type": "course_book",
         "pdf_page": 8,
         "status": "rechecked"
+      },
+      "wrongReasons": {
+        "B": "studying صيغة ing من غير فعل مساعد؛ ومش مناسبة لتعريف علمي ثابت.",
+        "C": "study من غير ies، لكن which راجعة على science المفرد.",
+        "D": "is studying بتصور دراسة جارية حاليًا، بينما الجملة بتعرّف مجال علمي وصفته العامة."
       }
     },
     "ASGQPRSIM-BOOK-04": {
@@ -532,6 +577,11 @@
         "type": "course_book",
         "pdf_page": 3,
         "status": "rechecked"
+      },
+      "wrongReasons": {
+        "A": "drank ماضي، لكن بعد does not لازم الفعل يرجع للمصدر.",
+        "C": "drinks فيها s زيادة؛ does أخدت علامة المفرد بالفعل.",
+        "D": "having صيغة ing ومش مصدر الفعل drink المطلوب بعد does not."
       }
     },
     "ASGQPRSIM-BOOK-05": {
@@ -549,6 +599,11 @@
         "type": "course_book",
         "pdf_page": 3,
         "status": "rechecked"
+      },
+      "wrongReasons": {
+        "A": "don't مع I وYou والجمع، لكن My father مفرد غائب.",
+        "C": "isn't مينفعش قبل الفعل work في المضارع البسيط؛ النفي هنا بـ doesn't.",
+        "D": "aren't مع الجمع في فعل be، ومش مساعد النفي المناسب قبل work."
       }
     },
     "ASGQPRSIM-AGG-06": {
@@ -568,6 +623,11 @@
         "number": "U017",
         "page": "174",
         "editorial_status": "individually_checked_for_pilot"
+      },
+      "wrongReasons": {
+        "A": "is known صيغة مبني للمجهول، ومينفعش نكملها هنا بـ the answer بالشكل ده.",
+        "B": "do know مش الصيغة المعتادة لما Who تكون هي فاعل السؤال.",
+        "D": "know من غير s، لكن Who هنا فاعل مفرد في السؤال العام: Who knows?"
       }
     },
     "ASGQPRSIM-BOOK-06": {
@@ -585,6 +645,11 @@
         "type": "course_book",
         "pdf_page": 3,
         "status": "rechecked"
+      },
+      "wrongReasons": {
+        "B": "Did بتسأل عن الماضي؛ كل أسبوع هنا يقصد عادة حالية من غير إطار زمني ماضي.",
+        "C": "Do مع I وYou والجمع، لكن your brother مفرد غائب.",
+        "D": "Doing مش فعل مساعد نبدأ به السؤال ده؛ المطلوب Does."
       }
     },
     "ASGQPRSIM-BOOK-07": {
@@ -602,6 +667,11 @@
         "type": "course_book",
         "pdf_page": 3,
         "status": "rechecked"
+      },
+      "wrongReasons": {
+        "B": "does تكرار لعلامة المفرد؛ بعد Does في أول السؤال نستخدم do.",
+        "C": "did ماضي، ومينفعش بعد Does؛ الفعل الرئيسي يكون في المصدر.",
+        "D": "doing صيغة ing، ومش المصدر المطلوب بعد Does."
       }
     },
     "ASGQPRSIM-BOOK-08": {
@@ -619,6 +689,11 @@
         "type": "course_book",
         "pdf_page": 3,
         "status": "rechecked"
+      },
+      "wrongReasons": {
+        "A": "woke ماضي، لكن I never هنا بتوصف عادة حالية.",
+        "B": "waking صيغة ing، ومفيش فعل مساعد يكملها.",
+        "C": "wakes فيها s للمفرد الغائب، لكن الفاعل I بياخد wake."
       }
     },
     "ASGQPRSIM-AGG-05": {
@@ -638,6 +713,11 @@
         "number": "068",
         "page": "142",
         "editorial_status": "individually_checked_for_pilot"
+      },
+      "wrongReasons": {
+        "A": "is needing صيغة مستمرة؛ need هنا فعل حالة، وعادة مش بنستخدمه في المستمر بالمعنى ده.",
+        "B": "needed ماضي، بينما Ali محتاج المساعدة دلوقتي حسب السياق.",
+        "D": "need من غير s، لكن he مفرد غائب، فنختار needs."
       }
     },
     "ASGQPRSIM-AGG-07": {
@@ -657,6 +737,11 @@
         "number": "089",
         "page": "234",
         "editorial_status": "individually_checked_for_pilot"
+      },
+      "wrongReasons": {
+        "A": "is weighing بتوحي بعملية وزن جارية، لكن weighs هنا خاصية ثابتة للمخ.",
+        "C": "weighed ماضي، والجملة بتعرض حقيقة عامة في الحاضر.",
+        "D": "was weighed مبني للمجهول في الماضي، بينما المطلوب وصف وزن المخ عمومًا."
       }
     },
     "ASGQPRSIM-AGG-03": {
@@ -676,6 +761,11 @@
         "number": "076",
         "page": "75",
         "editorial_status": "individually_checked_for_pilot"
+      },
+      "wrongReasons": {
+        "A": "started ماضي، لكن Take a break توجيه عام وفي when نستخدم المضارع البسيط.",
+        "C": "starts مع المفرد الغائب، لكن الفاعل you.",
+        "D": "starting صيغة ing، ومش الفعل الكامل المطلوب بعد you."
       }
     },
     "ASGQPRSIM-AGG-08": {
@@ -695,6 +785,11 @@
         "number": "091",
         "page": "262",
         "editorial_status": "individually_checked_for_pilot"
+      },
+      "wrongReasons": {
+        "A": "got ماضي، لكن in case هنا بتتكلم عن احتمال ممكن يحصل بعدين.",
+        "C": "will get مش الصيغة المعتادة في جملة in case التابعة عند التحسب للمستقبل؛ نستخدم gets.",
+        "D": "would get محتاج سياق شرطي افتراضي، لكن الكلام هنا عن احتياط واقعي."
       }
     },
     "ASGQPRSIM-BOOK-10": {
@@ -712,6 +807,11 @@
         "type": "course_book",
         "pdf_page": 3,
         "status": "rechecked"
+      },
+      "wrongReasons": {
+        "A": "do من غير es، لكن He مفرد غائب في المضارع البسيط.",
+        "C": "doing صيغة ing من غير فعل مساعد ومش مناسبة لعادة every day.",
+        "D": "did ماضي، لكن every day هنا بيوصف عادة مستمرة."
       }
     },
     "ASGQPRSIM-BOOK-11": {
