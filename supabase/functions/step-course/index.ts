@@ -133,6 +133,42 @@ Deno.serve(async(request)=>{
     sections:status.sections,nextIndex:Math.min(status.next,total-1),completed:status.completed,
     exam:{unlocked:status.completed,attempts:attempts.length,best:Math.max(0,...attempts.map(x=>x.percentage)),last:attempts.at(-1)||null}};
   };
+
+  // Assigned learning follow-ups: the authenticated student can only read/review their own.
+  if(method==="GET"&&path==="/followups"){
+   const {data:rows,error}=await admin.from("step_student_followups")
+    .select("id,part_index,kind,note,due_at,assigned_at,reviewed_at")
+    .eq("user_id",user.id).eq("course_code",courseCode).is("cancelled_at",null)
+    .order("assigned_at",{ascending:false}).limit(100);
+   if(error)throw error;
+   const since=(rows??[]).reduce((a,r)=>r.assigned_at<a?r.assigned_at:a,new Date().toISOString());
+   const {data:passes,error:passError}=await admin.from("step_part_attempts")
+    .select("part_index,attempted_at").eq("user_id",user.id).eq("course_code",courseCode)
+    .eq("passed",true).gte("attempted_at",since).order("attempted_at",{ascending:false}).limit(2000);
+   if(passError)throw passError;
+   return send(200,{followups:(rows||[]).map(r=>{
+    const completed=(passes||[]).some(a=>a.part_index===r.part_index&&a.attempted_at>=r.assigned_at);
+    return {...r,title:effectiveLesson.sections[r.part_index]?.titleAr||"مهارة",
+     accessible:!status.sections[r.part_index]?.locked,
+     status:completed?"completed":r.reviewed_at?"reviewed":"pending"};
+   })});
+  }
+  const reviewMatch=path.match(/^\/followups\/([0-9a-f-]{36})\/review$/i);
+  if(method==="POST"&&reviewMatch){
+   const {data:task,error}=await admin.from("step_student_followups")
+    .select("id,kind,reviewed_at").eq("id",reviewMatch[1]).eq("user_id",user.id)
+    .eq("course_code",courseCode).is("cancelled_at",null).maybeSingle();
+   if(error)throw error;
+   if(!task)return send(404,{error:"المتابعة غير موجودة"});
+   if(task.kind==="practice")return send(422,{error:"التدريب يكتمل بعد حل أسئلته بنجاح"});
+   if(!task.reviewed_at){
+    const {error:saveError}=await admin.from("step_student_followups")
+     .update({reviewed_at:new Date().toISOString()})
+     .eq("id",task.id).eq("user_id",user.id).is("cancelled_at",null);
+    if(saveError)throw saveError;
+   }
+   return send(200,{ok:true});
+  }
   if(method==="GET"&&path==="/catalog"){
    const [axes,indicators]=await Promise.all([
     admin.from("step_curriculum_axes")
