@@ -76,7 +76,36 @@ Deno.serve(async(req)=>{
   .eq("user_id",auth.user.id).maybeSingle();
  if(roleError)return reply(500,{error:"تعذر فحص الصلاحيات"});
  if(!permission)return reply(403,{error:"الحساب الحالي غير مخوّل لفتح لوحة الأدمن"});
- const path=new URL(req.url).pathname.replace(/^\/(?:functions\/v1\/)?step-admin/,"")||"/";
+ let path=new URL(req.url).pathname.replace(/^\/(?:functions\/v1\/)?step-admin/,"")||"/";
+ // All indicator reports are resolved by the server, never by client-supplied course codes.
+ const indicatorReportRoute=path.match(/^\/indicators\/([a-z][a-z0-9-]{2,39})(?:\/(analytics|students\/([0-9a-f-]{36})\/report))?$/i);
+ if(req.method==="GET"&&path==="/indicators"){
+  const {data,error}=await admin.from("step_curriculum_indicators")
+   .select("slug,axis_code,title_ar,title_en,status,position,legacy_course_code")
+   .order("position");
+  if(error){console.error("STEP indicator reports catalog failed",error);return reply(500,{error:"تعذر تحميل المؤشرات"});}
+  return reply(200,{indicators:(data||[]).map(i=>({
+   slug:i.slug,axis_code:i.axis_code,title_ar:i.title_ar,title_en:i.title_en,
+   status:i.status,position:i.position,
+   report_ready:i.status==="published"&&i.legacy_course_code===lesson.code
+  }))});
+ }
+ if(req.method==="GET"&&indicatorReportRoute){
+  const [_,slug,section,studentId]=indicatorReportRoute;
+  const {data:indicator,error}=await admin.from("step_curriculum_indicators")
+   .select("slug,title_ar,title_en,axis_code,status,legacy_course_code")
+   .eq("slug",slug).maybeSingle();
+  if(error){console.error("Indicator route lookup",error);return reply(500,{error:"تعذر تحميل المؤشر"});}
+  if(!indicator)return reply(404,{error:"المؤشر غير موجود"});
+  const ready=indicator.status==="published"&&indicator.legacy_course_code===lesson.code;
+  if(!section)return reply(200,{indicator:{...indicator,report_ready:ready}});
+  if(!ready)return reply(200,{indicator:{...indicator,report_ready:false},available:false,
+   message:"المؤشر لم ينشر له تدريب قابل للقياس بعد. لا توجد نتائج طلاب لهذا المؤشر."});
+  if(section==="analytics")path="/analytics";
+  else if(studentId&&isUUID(studentId))path="/students/"+studentId+"/report";
+  else return reply(422,{error:"طلب تقرير الطالب غير صالح"});
+ }
+
 
  // Student Success Center: all write operations require the owner role, never JWT user_metadata.
  const assignmentMatch=path.match(/^\/students\/([0-9a-f-]{36})\/followups$/i);
