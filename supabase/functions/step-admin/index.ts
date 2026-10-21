@@ -15,15 +15,18 @@ function buildLearningInsights(items:AnswerEvent[]){
  const groups=lesson.sections.map((section,index)=>{
   const records=items.filter(row=>sectionForQuestion.get(row.question_id)===index);
   const answered=records.length,correct=records.filter(row=>row.is_correct).length;
+  const unique_questions=new Set(records.map(row=>row.question_id)).size;
+  const min_questions=Math.min(3,section.questionIds.length);
   const times=records.map(r=>r.elapsed_ms).filter((n):n is number=>n!==null&&Number.isFinite(n));
   const accuracy=rate(correct,answered);
   let status="بيانات غير كافية",recommendation="حل أسئلة إضافية قبل تحديد مستوى المهارة.";
-  if(answered>=5){
+  if(answered>=5&&unique_questions>=min_questions){
    if(accuracy!==null&&accuracy<60){status="تحتاج متابعة";recommendation="راجع شرح "+section.titleAr+" ثم حل تدريبات مركزة واختبار قصير.";}
    else if(accuracy!==null&&accuracy<80){status="تحتاج تدريب";recommendation="حل أسئلة متنوعة في "+section.titleAr+" وراجع أسباب الاختيارات الغلط.";}
    else{status="مستوى جيد";recommendation="حافظ على مستواك بتدريب متباعد وتأكد من الثبات بمرور الوقت.";}
   }
-  return {index,title:section.titleAr,answers:answered,correct,accuracy,avg_seconds:seconds(times.reduce((a,b)=>a+b,0),times.length),
+  return {index,title:section.titleAr,answers:answered,correct,unique_questions,
+   accuracy,avg_seconds:seconds(times.reduce((a,b)=>a+b,0),times.length),
    timed_answers:times.length,status,recommendation};
  });
  const questionGroups=new Map<string,AnswerEvent[]>();
@@ -48,7 +51,7 @@ function buildLearningInsights(items:AnswerEvent[]){
   timed_answers:allTimes.length,
   avg_seconds:seconds(allTimes.reduce((a,b)=>a+b,0),allTimes.length),
   sections:groups,questions,
-  priority:groups.filter(g=>g.answers>=5&&g.accuracy!==null&&g.accuracy<80)
+  priority:groups.filter(g=>g.status!=="بيانات غير كافية"&&g.accuracy!==null&&g.accuracy<80)
     .sort((a,b)=>(a.accuracy??100)-(b.accuracy??100)).map(g=>({title:g.title,status:g.status,action:g.recommendation})),
   note:"التحليل خاص بالمحاولات الجديدة المسجّلة بالتفصيل. أزمنة الإجابة تقديرية من جهاز الطالب، ولا تُستخدم للدرجات."
  };
