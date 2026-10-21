@@ -126,6 +126,22 @@ assert(!unified.includes("ASGQ")&&!v2Content.includes("ASGQ")&&!v2.includes("ASG
 assert(css.includes("@media(max-width:480px)"),"Mobile layout is included");
 assert(oldGuide.includes("learn.html"),"Old explanation links redirect into a single lesson");
 assert(courseServer.includes('const showQuestions='),"API replaces internal question identifiers");
+
+// The instructor follow-up table is private, and only an owner can mutate assignments.
+const followupSchema=readFileSync("supabase/migrations/20261021204000_step_student_success_followups_v1.sql","utf8");
+assert(followupSchema.includes("enable row level security")&&followupSchema.includes("revoke all"),
+ "Student follow-up notes must never be readable via the public database API");
+assert(adminServer.includes('permission.role!=="owner"')&&
+ adminServer.includes('step_student_followups')&&adminServer.includes('cancelMatch'),
+ "Only an owner can assign or cancel follow-ups");
+assert(courseServer.includes('path==="/followups"')&&courseServer.includes('reviewMatch')&&
+ courseServer.includes('.eq("user_id",user.id)'),
+ "A student can only load or review their own follow-ups");
+assert(reports.includes("followupPanel(")&&reports.includes("wireFollowups("),
+ "Admin report must manage a student's learning plan");
+assert(portal.includes("followupCards(")&&portal.includes("markFollowupReviewed("),
+ "Student dashboard must render and acknowledge assignments");
+
 const brandedPages=[
  "step-grammar-account-preview/index.html","step-grammar-student/index.html",
  "step-grammar-student/learn.html","step-grammar-student/lesson-v2.html",
