@@ -144,7 +144,10 @@ function form(item,canEdit){
  const value=(id,label,content,opts={})=>'<div class="field"><label for="'+id+'">'+label+'</label>'+
  (opts.area?'<textarea id="'+id+'" '+disabled+'>'+escapeHtml(content||"")+'</textarea>':
  '<input id="'+id+'" value="'+escapeHtml(content??"")+'" '+(opts.ltr?'class="ltr"':'')+disabled+' required>')+'</div>';
- return '<h2>'+(item?'بيانات المؤشر':'إضافة مؤشر جديد')+'</h2>'+(item?(item.slug==='present-simple'?'<a class="btn alt" href="../step-grammar-student/learn.html">عاين درس المضارع البسيط الجديد ←</a>':'<a class="btn alt" href="guide.html?indicator='+encodeURIComponent(item.slug)+'">محرر الشرح ←</a>'):'')+'<div class="note">'+(immutable?
+ return '<h2>'+(item?'بيانات المؤشر':'إضافة مؤشر جديد')+'</h2>'+(item?
+ '<div class="actions"><a class="btn" href="reports.html?indicator='+encodeURIComponent(item.slug)+'">تقرير المؤشر ←</a>'+
+ (item.slug==='present-simple'?'<a class="btn alt" href="../step-grammar-student/learn.html">عاين درس المضارع البسيط الجديد ←</a>':
+ '<a class="btn alt" href="guide.html?indicator='+encodeURIComponent(item.slug)+'">محرر الشرح ←</a>')+'</div>':'')+'<div class="note">'+(immutable?
  'المؤشر ده منشور بالفعل، ومحتواه ودرجاته محفوظة في نظام الدروس.': 
  'المؤشر هيتحفظ كمسودة، ومش هيظهر للطلاب إلا بعد تجهيز الدرس والأسئلة واعتماده.')+
  '</div><form id="indicator-form">'+
