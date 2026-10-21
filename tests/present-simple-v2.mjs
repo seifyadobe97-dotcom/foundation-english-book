@@ -12,7 +12,7 @@ const server=createServer(async(req,res)=>{
  if(!f.startsWith(root+path.sep)){res.writeHead(403);res.end();return;}
  try{
   if(!(await stat(f)).isFile())throw Error("No file");
-  res.writeHead(200,{"Content-Type":f.endsWith(".html")?"text/html; charset=utf-8":f.endsWith(".css")?"text/css":"text/javascript"});
+  res.writeHead(200,{"Content-Type":f.endsWith(".html")?"text/html; charset=utf-8":f.endsWith(".css")?"text/css":f.endsWith(".svg")?"image/svg+xml":f.endsWith(".webp")?"image/webp":"text/javascript"});
   res.end(await readFile(f));
  }catch{res.writeHead(404);res.end("No file");}
 });
