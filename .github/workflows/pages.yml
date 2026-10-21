@@ -50,6 +50,8 @@ jobs:
           node-version: '22'
       - name: Check STEP student, admin and secure question flows
         run: node scripts/test-step-portals.mjs
+      - name: Fast STEP source and JavaScript checks
+        run: node tests/step-v2-source-check.mjs
       - name: Install browser-test dependencies
         run: npm install --ignore-scripts --no-package-lock --no-audit --no-fund
       - name: Install Chromium
