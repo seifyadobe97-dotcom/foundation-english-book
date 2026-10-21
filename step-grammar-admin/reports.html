@@ -20,7 +20,7 @@ main{max-width:1200px;padding:28px 18px 70px;margin:auto}.eyebrow{font:800 11px 
 .form-line{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.form-line input{padding:10px 13px;border:1px solid #d4e2dd;border-radius:9px;background:white;min-width:230px}
 .ltr{direction:ltr;unicode-bidi:isolate;display:inline-block;font:600 13px "DM Sans",Arial}
 .small{color:var(--muted);font-size:12px}.insight-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:14px 0}.insight-card{border:1px solid var(--line);padding:16px;border-radius:12px;background:#fcfdfc}.insight-card h3{margin:0 0 4px;font-size:14px;color:var(--navy)}.insight-card strong{font:800 27px "DM Sans",Arial,sans-serif;color:var(--green)}.insight-card p{margin:4px 0;font-size:12px}.insight-chip{display:inline-block;padding:2px 10px;border-radius:20px;background:#e7f5ee;color:#176449;font-weight:800;font-size:11px}.insight-chip.watch{background:#fff1de;color:#985f1f}.insight-chip.weak{background:#fff0ed;color:#9b3931}.insight-chip.unknown{background:#eef2f3;color:#63747a}.insight-note{border-right:3px solid #c5a16c;padding:10px 12px;background:#fffaf0;color:#6d603b;border-radius:8px;font-size:12px}.insight-list{padding:0 20px 0 0}.insight-list li{margin:8px 0}.insight-table{width:100%}@media(max-width:850px){.insight-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.insight-grid{grid-template-columns:1fr}}.tabs{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.error{background:#fff0ef;color:#9b4545;border:1px solid #e9cbcb;padding:16px;border-radius:10px}
-@media(max-width:780px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.sectionbar{grid-template-columns:1fr;gap:4px}.panel{padding:15px}}
+.followup-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0;padding:16px;border:1px solid #dbe7e2;border-radius:12px;background:#f8fbf9}.followup-form label{font-size:12px;font-weight:800;display:grid;gap:5px}.followup-form select,.followup-form input,.followup-form textarea{font:inherit;background:white;border:1px solid #cfdbd6;border-radius:8px;padding:10px;width:100%;min-width:0}.followup-wide{grid-column:1/-1}.followup-item{border-top:1px solid var(--line);padding:13px 0;display:flex;justify-content:space-between;align-items:center;gap:12px}.followup-item p{margin:4px 0;color:#4b6062}.followup-item small{color:var(--muted)}.followup-pill{font-size:11px;display:inline-block;margin-inline-start:7px;border-radius:20px;background:#e9f5ef;color:#16674f;padding:3px 9px;font-weight:800}@media(max-width:780px){.followup-form{grid-template-columns:1fr}.followup-item{align-items:flex-start}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.sectionbar{grid-template-columns:1fr;gap:4px}.panel{padding:15px}}
 .step-brand-image{display:block;width:206px;max-width:100%;height:auto;flex:none}@media(max-width:480px){.step-brand-image{width:158px}}</style>
 <link rel="icon" type="image/svg+xml" href="../step-brand/mark.svg"></head>
 <body>
@@ -33,14 +33,14 @@ const SUPABASE_URL="https://funltjxavowlnnfibhpl.supabase.co";
 const ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
 const client=window.supabase.createClient(SUPABASE_URL,ANON_KEY);
 const pageRoot=document.getElementById("main"),logoutButton=document.getElementById("logout");
-let page=1,q="",total=0;
+let page=1,q="",total=0,adminRole="viewer";
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const date=s=>s?new Date(s).toLocaleString("ar-SA",{year:"numeric",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"}):"—";
 const num=n=>Number(n||0).toLocaleString("ar-SA");
-async function api(url){
+async function api(url,body){
  const {data:{session}}=await client.auth.getSession();
  if(!session)throw Error("يرجى تسجيل دخول الأدمن أولًا");
- const r=await fetch(SUPABASE_URL+"/functions/v1/step-admin"+url,{headers:{"Authorization":"Bearer "+session.access_token,"apikey":ANON_KEY}});
+ const r=await fetch(SUPABASE_URL+"/functions/v1/step-admin"+url,{method:body===undefined?"GET":"POST",headers:{"Authorization":"Bearer "+session.access_token,"apikey":ANON_KEY,"Content-Type":"application/json"},body:body===undefined?undefined:JSON.stringify(body)});
  const j=await r.json().catch(()=>({}));
  if(!r.ok)throw Error(j.error||"تعذر فتح التقرير");
  return j;
@@ -95,6 +95,60 @@ function renderCohortInsights(v){
  '<p class="insight-note">'+esc(v.note||"التحليل مبني على المحاولات الجديدة فقط.")+
  ' · الإجابات المُحلّلة: '+num(v.answers)+'.</p>'+skillCards(v.sections)+'</section>';
 }
+
+const followupKind={review:"مراجعة الشرح",practice:"تدريب إضافي",video:"فيديو Seify"};
+const followupState={pending:"بانتظار الطالب",reviewed:"راجع المحتوى — منتظر التدريب",completed:"اتأكد التحسن بتدريب ناجح",cancelled:"ملغي"};
+function followupPanel(studentId,rows){
+ const options=Array.from({length:6},(_,i)=>'<option value="'+i+'">'+esc((i+1)+". "+(window.STEP_PART_TITLES?.[i]||["استخدمه إمتى؟","ابنِ الجملة","s / es / ies","النفي","السؤال","الكلمات الدالة"][i]))+'</option>').join("");
+ const form=adminRole==="owner"?'<form id="followup-form" class="followup-form">'+
+ '<label>المهارة<select name="part_index" required>'+options+'</select></label>'+
+ '<label>نوع المتابعة<select name="kind"><option value="review">راجع الشرح</option><option value="practice">حل تدريب</option><option value="video">شاهد الفيديو (مرحلة s / es / ies فقط)</option></select></label>'+
+ '<label>الموعد المستهدف (اختياري)<input type="date" name="due_date"></label>'+
+ '<label class="followup-wide">رسالة قصيرة للطالب<textarea name="note" maxlength="350" rows="2" placeholder="مثال: ركّز على سبب إضافة s مع He / She / It"></textarea></label>'+
+ '<button class="btn" type="submit">+ كلف الطالب بالمتابعة</button><span id="followup-message" class="small" role="status"></span></form>':
+ '<p class="small">يمكنك مشاهدة المتابعة؛ إضافة أو إلغاء التكليفات متاح لمدير المنصة فقط.</p>';
+ const items=rows?.length?rows.map(t=>'<div class="followup-item"><div><b>'+esc(t.title)+'</b> · '+esc(followupKind[t.kind]||t.kind)+
+ ' <span class="followup-pill">'+esc(followupState[t.status]||t.status)+'</span>'+
+ (t.note?'<p>'+esc(t.note)+'</p>':'')+
+ '<small>أُسند: '+date(t.assigned_at)+(t.due_at?' · المستهدف: '+date(t.due_at):'')+'</small></div>'+
+ (adminRole==="owner"&&t.status!=="cancelled"&&t.status!=="completed"?
+ '<button class="btn alt" type="button" data-cancel-followup="'+esc(t.id)+'">إلغاء</button>':'')+'</div>').join(""):
+ '<p class="small">مفيش تكليفات متابعة للطالب حتى الآن.</p>';
+ return '<section class="panel" id="student-followups"><div class="eyebrow">STUDENT SUCCESS CENTER</div>'+
+ '<h2>خطة متابعة الطالب</h2><p class="small">التكليف بيتأكد تلقائيًا بعد تدريب ناجح جديد في نفس المهارة. وضع علامة «راجعت» لوحده لا يثبت الإتقان.</p>'+
+ form+'<div class="followup-items">'+items+'</div></section>';
+}
+async function refreshFollowups(id){
+ const response=await api("/students/"+encodeURIComponent(id)+"/followups");
+ const old=document.getElementById("student-followups");
+ if(!old)return;
+ old.outerHTML=followupPanel(id,response.followups||[]);
+ wireFollowups(id);
+}
+function wireFollowups(id){
+ const form=document.getElementById("followup-form");
+ if(form)form.onsubmit=async e=>{
+  e.preventDefault();
+  const part=Number(form.elements.namedItem("part_index").value),
+   kind=form.elements.namedItem("kind").value,
+   note=form.elements.namedItem("note").value.trim(),
+   due=form.elements.namedItem("due_date").value;
+  const message=document.getElementById("followup-message");
+  if(kind==="video"&&part!==2){message.textContent="الفيديو متاح حاليًا في مرحلة s / es / ies فقط.";return;}
+  const button=form.querySelector('button[type="submit"]');button.disabled=true;
+  try{
+   await api("/students/"+encodeURIComponent(id)+"/followups",{
+    part_index:part,kind,note,due_at:due?new Date(due+"T23:59:59").toISOString():null});
+   await refreshFollowups(id);
+  }catch(err){message.textContent=err.message;button.disabled=false;}
+ };
+ document.querySelectorAll("[data-cancel-followup]").forEach(b=>b.onclick=async()=>{
+  if(!confirm("إلغاء متابعة الطالب دي؟"))return;
+  b.disabled=true;
+  try{await api("/followups/"+encodeURIComponent(b.dataset.cancelFollowup)+"/cancel",{});await refreshFollowups(id);}
+  catch(err){alert(err.message);b.disabled=false;}
+ });
+}
 async function analytics(){
  pageRoot.innerHTML='<p>جاري تحميل إحصائيات المنصة…</p>';
  try{
@@ -124,7 +178,7 @@ async function analytics(){
 async function report(id){
  pageRoot.innerHTML='<p>جاري تحميل تقرير الطالب…</p>';
  try{
-  const r=await api("/students/"+encodeURIComponent(id)+"/report");
+  const [r,followupData]=await Promise.all([api("/students/"+encodeURIComponent(id)+"/report"),api("/students/"+encodeURIComponent(id)+"/followups")]);
   const s=r.student,x=r.summary;
   const sectionRows=r.sections.map(p=>'<tr><td>'+esc((p.index+1)+". "+p.title)+'</td><td>'+p.attempts+'</td><td>'+(p.best_percent==null?"—":p.best_percent+"%")+'</td><td>'+(p.passed?"ناجح":"لم يجتز")+'</td><td>'+date(p.latest_attempt)+'</td></tr>').join("");
   const attemptRows=r.attempts.map(a=>'<tr><td>'+date(a.attempted_at)+'</td><td>'+esc(a.section_title)+'</td><td>'+a.correct_count+'/'+a.total_questions+'</td><td>'+a.percentage+'%</td><td>'+(a.passed?"ناجح":"غير ناجح")+'</td></tr>').join("");
@@ -134,7 +188,8 @@ async function report(id){
    '</section><section class="panel"><h2>الأداء في كل جزء</h2><div class="table-wrap"><table><thead><tr><th>الجزء</th><th>المحاولات المعروضة</th><th>أفضل درجة</th><th>الحالة</th><th>آخر محاولة</th></tr></thead><tbody>'+sectionRows+'</tbody></table></div></section><section class="panel"><h2>محاولات التدريب</h2>'+(x.part_history_truncated?'<p class="small">يتم عرض أحدث 300 محاولة.</p>':'')+
    '<div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الجزء</th><th>الدرجة</th><th>النسبة</th><th>النتيجة</th></tr></thead><tbody>'+(attemptRows||'<tr><td colspan="5">لم يبدأ الطالب التدريبات.</td></tr>')+'</tbody></table></div></section><section class="panel"><h2>نتائج الاختبار النهائي</h2>'+(x.exam_history_truncated?'<p class="small">يتم عرض أحدث 150 محاولة.</p>':'')+
    '<div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الدرجة</th><th>النسبة</th></tr></thead><tbody>'+(exams||'<tr><td colspan="3">لا توجد اختبارات نهائية.</td></tr>')+'</tbody></table></div></section>';
-  pageRoot.insertAdjacentHTML("beforeend",renderLearningInsights(r.insights));
+  pageRoot.insertAdjacentHTML("beforeend",renderLearningInsights(r.insights)+followupPanel(id,followupData.followups||[]));
+  wireFollowups(id);
   document.getElementById("back").onclick=()=>{history.replaceState({},"",location.pathname);analytics();};
   document.getElementById("export").onclick=()=>{
    const head=["النوع","التاريخ","الجزء","الإجابات الصحيحة","إجمالي الأسئلة","النسبة","ناجح"];
@@ -148,7 +203,7 @@ async function init(){
  try{
   const {data:{session}}=await client.auth.getSession();
   if(!session){message("تسجيل الدخول مطلوب. افتح لوحة الأدمن وسجل دخولك الأول.");return;}
-  await api("/me");
+  const me=await api("/me");adminRole=me.role||"viewer";
   logoutButton.hidden=false;
   const id=new URLSearchParams(location.search).get("student");
   if(id&&/^[0-9a-f-]{36}$/i.test(id))await report(id);else await analytics();
