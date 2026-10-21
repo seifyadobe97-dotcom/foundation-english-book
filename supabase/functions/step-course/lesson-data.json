@@ -349,8 +349,7 @@
         "ASGQPRSIM-AGG-05",
         "ASGQPRSIM-AGG-07",
         "ASGQPRSIM-AGG-03",
-        "ASGQPRSIM-AGG-08",
-        "ASGQPRSIM-BOOK-11"
+        "ASGQPRSIM-AGG-08"
       ]
     }
   ],
@@ -729,7 +728,7 @@
       "source": {
         "type": "course_book",
         "pdf_page": 3,
-        "status": "rechecked"
+        "status": "review_only_ambiguous"
       }
     }
   }
