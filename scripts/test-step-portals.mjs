@@ -137,6 +137,13 @@ assert(adminServer.includes('permission.role!=="owner"')&&
 assert(courseServer.includes('path==="/followups"')&&courseServer.includes('reviewMatch')&&
  courseServer.includes('.eq("user_id",user.id)'),
  "A student can only load or review their own follow-ups");
+assert(reports.includes("indicatorLink(")&&reports.includes("openIndicator(")&&reports.includes("findIndicator("),
+ "Admin reports must route by indicator slug and show drafts without scores");
+assert(adminServer.includes('path==="/indicators"')&&adminServer.includes("indicatorReportRoute")&&
+ adminServer.includes("indicator.legacy_course_code===lesson.code"),
+ "Per-indicator report API must verify published course mapping on the server");
+assert(readFileSync("step-grammar-admin/curriculum.html","utf8").includes('reports.html?indicator='),
+ "Curriculum indicators must deep-link to separate reports");
 assert(reports.includes("followupPanel(")&&reports.includes("wireFollowups("),
  "Admin report must manage a student's learning plan");
 assert(portal.includes("followupCards(")&&portal.includes("markFollowupReviewed("),
