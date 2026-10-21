@@ -107,7 +107,7 @@ function videoSource(video){
    if(id&&/^[a-zA-Z0-9_-]{11}$/.test(id))return {type:"youtube",external:url.href,embed:"https://www.youtube-nocookie.com/embed/"+id+"?rel=0"};
   }
   if(host==="tiktok.com"||host==="www.tiktok.com"){
-   const match=path.match(/\\/video\\/(\\d{12,22})(?:\\/|$)/)||path.match(/^\\/player\\/v1\\/(\\d{12,22})(?:\\/|$)/);
+   const match=path.match(/\/video\/(\d{12,22})(?:\/|$)/)||path.match(/^\/player\/v1\/(\d{12,22})(?:\/|$)/);
    if(match)return {type:"tiktok",external:url.href,embed:"https://www.tiktok.com/player/v1/"+match[1]};
   }
   if(host==="vt.tiktok.com"||host==="vm.tiktok.com")return {type:"tiktok",external:url.href,embed:null};
