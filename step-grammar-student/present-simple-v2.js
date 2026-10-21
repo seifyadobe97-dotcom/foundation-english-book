@@ -5,7 +5,12 @@ const state={course:null,part:null,index:0,answers:{},graded:null,quick:{},mode:
 const root=document.getElementById("lesson-root");
 const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const mark=s=>escapeHtml(s).replace(/\[\[([\s\S]+?)\]\]/g,"<mark>$1</mark>");
-const clean=s=>escapeHtml(String(s??"").replace(/<\/?bdi>/gi,"").replaceAll(String.fromCharCode(96),"")).replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+// Escape editor copy first, then isolate English phrases so Arabic punctuation stays in place.
+const clean=s=>String(s??"").replace(/<\\/?bdi>/gi,"").replace(/\\*\\*/g,"")
+ .split(/(`[^`]+`|[A-Za-z][A-Za-z0-9]*(?:[ '’.-]+[A-Za-z0-9]+)*)/g)
+ .map(part=>/^`[^`]+`$/.test(part)||/^[A-Za-z]/.test(part)
+  ?'<bdi class="en" dir="ltr">'+escapeHtml(part.replace(/^`|`$/g,""))+'</bdi>'
+  :escapeHtml(part)).join("");
 const projectUrl="https://funltjxavowlnnfibhpl.supabase.co";
 const anonKey=document.querySelector('meta[name="step-anon-key"]').content;
 const client=window.supabase.createClient(projectUrl,anonKey);
@@ -71,34 +76,54 @@ function words(m){
  '<span class="keyword"><b class="en" lang="en">'+escapeHtml(en)+'</b><span>'+escapeHtml(ar)+'</span></span>').join("")+'</div>':'';
 }
 function quick(m){
- const picked=state.quick[state.index],done=picked!==undefined;
+ const picked=state.quick[state.index],done=picked!==undefined,correct=picked===m.quick.correct;
+ const correctValue=m.quick.choices[m.quick.correct],letter=ABC[m.quick.correct];
  return '<section class="check"><div class="check-head">جرّبها بنفسك <span class="chip">QUICK CHECK</span></div>'+
- '<div class="check-desc">'+mark(m.quick.q)+'</div><div class="check-options">'+m.quick.choices.map((v,i)=>
- '<button class="check-option '+(done?(i===m.quick.correct?'correct':i===picked?'incorrect':''):'')+'" data-action="mini" data-index="'+i+'" '+(done?'disabled':'')+'>'+escapeHtml(v)+'</button>').join("")+'</div>'+
- (done?'<div class="check-result" role="status"><b>'+(picked===m.quick.correct?'✓ ممتاز!':'تعالى نفهمها:')+'</b> '+escapeHtml(m.quick.why)+'</div>':'')+'</section>';
+ '<div class="check-desc" dir="ltr" lang="en">'+mark(m.quick.q)+'</div><div class="check-options" dir="ltr">'+m.quick.choices.map((v,i)=>
+ '<button type="button" class="check-option '+(done?(i===m.quick.correct?'correct':i===picked?'incorrect':''):'')+
+ '" data-action="mini" data-index="'+i+'" '+(done?'disabled':'')+'><span class="option-letter">'+ABC[i]+'</span><span dir="auto">'+escapeHtml(v)+'</span></button>').join("")+'</div>'+
+ (done?'<div class="check-result '+(correct?'is-correct':'is-wrong')+'" role="status"><strong>'+
+ (correct?'✓ إجابة صحيحة':'✕ إجابة غير صحيحة')+'</strong>'+
+ (correct?'':'<p class="feedback-why"><b>ليه اختيارك غلط؟</b> '+clean(m.quick.wrongWhy?.[picked]||"الاختيار ده مش مناسب لمعنى الجملة.")+'</p>'+
+ '<p class="feedback-correct"><b>الإجابة الصحيحة:</b> <span class="correct-choice">'+letter+' — <bdi dir="auto">'+escapeHtml(correctValue)+'</bdi></span></p>')+
+ '<p class="feedback-explain"><b>ليه دي صح؟</b> '+clean(m.quick.why)+'</p></div>':'')+'</section>';
+}
+function warningExamples(m){
+ if(!m.warning)return "";
+ return '<div class="tip-examples"><div class="tip-case is-wrong"><span class="tip-case-label">✕ غلط</span>'+
+ '<bdi dir="ltr" lang="en">'+escapeHtml(m.warning.wrong)+'</bdi></div>'+
+ '<div class="tip-case is-correct"><span class="tip-case-label">✓ صح</span>'+
+ '<bdi dir="ltr" lang="en">'+escapeHtml(m.warning.correct)+'</bdi></div></div>'+
+ '<p class="tip-why">'+clean(m.warning.why)+'</p>';
 }
 function chapter(){
  const m=LESSONS[state.index],number=state.index+1;
  return '<div class="lesson-inner"><div class="eyebrow">المرحلة '+number+' من '+LESSONS.length+'</div>'+
  '<h2 class="lesson-title">'+escapeHtml(m.title)+'</h2><p class="explain">'+mark(m.detail)+'</p>'+
  concepts(m)+words(m)+examples(m)+
- '<div class="tip"><strong>خد بالك:</strong> '+mark(m.tip)+'</div>'+
+ '<div class="tip"><strong>خد بالك:</strong> '+mark(m.tip)+warningExamples(m)+'</div>'+
  (m.extra?'<details class="optional"><summary>'+escapeHtml(m.extra.heading)+'</summary><div class="optional-content">'+m.extra.paragraphs.map(p=>'<p>'+escapeHtml(p)+'</p>').join("")+'</div></details>':'')+
  quick(m)+'<div class="chapter-footer">'+(number>1?'<button class="button secondary" data-action="part" data-index="'+(number-2)+'">المرحلة السابقة</button>':'<span></span>')+
  '<button class="button green" data-action="practice">جاهز؟ حل تدريبات المرحلة ↓</button></div></div>';
 }
 function question(q,i,result){
  const chosen=state.answers[q.id],feedback=result?.results?.find(x=>x.id===q.id);
+ const selectedValue=feedback&&q.options?.[feedback.selected],correctValue=feedback&&q.options?.[feedback.correct];
  return '<article class="question"><div class="q-number">QUESTION '+String(i+1).padStart(2,"0")+'</div>'+
- '<h4 class="q-text" lang="en">'+escapeHtml(q.text)+'</h4><div class="q-answers">'+ABC.map(code=>{
+ '<h4 class="q-text" dir="ltr" lang="en">'+escapeHtml(q.text)+'</h4><div class="q-answers" dir="ltr">'+ABC.map(code=>{
  const value=q.options?.[code];if(value===undefined)return "";
  const tone=feedback?(code===feedback.correct?'good':code===feedback.selected?'bad':''):chosen===code?'chosen':'';
  return '<button type="button" class="q-answer '+tone+'" data-action="answer" data-index="'+i+'" data-value="'+code+'" '+(feedback?'disabled':'')+'>'+
- '<span class="letter">'+code+'</span><span>'+escapeHtml(value)+'</span></button>';
+ '<span class="letter">'+code+'</span><span dir="auto">'+escapeHtml(value)+'</span></button>';
  }).join("")+'</div>'+
- (feedback?'<div class="answer-feedback '+(feedback.isCorrect?'':'wrong')+'"><strong>'+
- (feedback.isCorrect?'✓ إجابة صحيحة':'الإجابة الصحيحة: '+escapeHtml(feedback.correct))+
- '</strong>'+clean(feedback.explanation||"راجع القاعدة وجرّب مرة تانية.")+'</div>':'')+'</article>';
+ (feedback?'<div class="answer-feedback '+(feedback.isCorrect?'is-correct':'is-wrong')+'" role="status">'+
+ '<strong>'+(feedback.isCorrect?'✓ إجابة صحيحة':'✕ إجابة غير صحيحة')+'</strong>'+
+ (feedback.isCorrect?'':'<p class="feedback-why"><b>ليه اختيارك غلط؟</b> <span class="selected-choice">'+
+ escapeHtml(feedback.selected)+' — <bdi dir="auto">'+escapeHtml(selectedValue??"")+'</bdi></span> · '+
+ clean(feedback.wrongReason||"الاختيار ده مش مناسب للقاعدة المطلوبة في الجملة.")+'</p>'+
+ '<p class="feedback-correct"><b>الإجابة الصحيحة:</b> <span class="correct-choice">'+
+ escapeHtml(feedback.correct)+' — <bdi dir="auto">'+escapeHtml(correctValue??"")+'</bdi></span></p>')+
+ '<p class="feedback-explain"><b>ليه دي صح؟</b> '+clean(feedback.explanation||"راجع القاعدة المرتبطة بالسؤال.")+'</p></div>':'')+'</article>';
 }
 function practice(){
  const p=state.part,r=state.graded;
