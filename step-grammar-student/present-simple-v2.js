@@ -6,7 +6,7 @@ const root=document.getElementById("lesson-root");
 const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const mark=s=>escapeHtml(s).replace(/\[\[([\s\S]+?)\]\]/g,"<mark>$1</mark>");
 // Escape editor copy first, then isolate English phrases so Arabic punctuation stays in place.
-const clean=s=>String(s??"").replace(/<\\/?bdi>/gi,"").replace(/\\*\\*/g,"")
+const clean=s=>String(s??"").replace(/<\/?bdi>/gi,"").replace(/\*\*/g,"")
  .split(/(`[^`]+`|[A-Za-z][A-Za-z0-9]*(?:[ '’.-]+[A-Za-z0-9]+)*)/g)
  .map(part=>/^`[^`]+`$/.test(part)||/^[A-Za-z]/.test(part)
   ?'<bdi class="en" dir="ltr">'+escapeHtml(part.replace(/^`|`$/g,""))+'</bdi>'
