@@ -334,7 +334,7 @@ try{
   else data={error:"Unknown student route"};
   return route.fulfill({status:data.error?404:200,contentType:"application/json",body:JSON.stringify(data)});
  });
- await studentPage.goto(base+"/step-grammar-student/",{waitUntil:"domcontentloaded"});
+ await studentPage.goto(base+"/step-grammar-student/index.html",{waitUntil:"domcontentloaded"});
  await studentPage.locator(".student-task").waitFor({timeout:10000});
  assert.match(await studentPage.locator(".student-task").innerText(),/ركز على قاعدة/);
  assert.equal(await studentPage.locator(".student-task a").getAttribute("href"),"learn.html?step=2");
