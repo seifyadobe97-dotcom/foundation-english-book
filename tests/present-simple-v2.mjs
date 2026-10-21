@@ -30,6 +30,11 @@ function part(i,passed){
   questions:s.questionIds.map((id,n)=>({id:"q"+(n+1),text:dataset.questions[id].text,options:dataset.questions[id].options}))},
  progress:course(passed)};
 }
+// Deterministic ten-question exam fixture: the production API selects ten random bank questions.
+const examIds=dataset.sections.flatMap(s=>s.questionIds).slice(0,10);
+function examQuestions(){
+ return examIds.map((id,i)=>({id:"q"+(i+1),text:dataset.questions[id].text,options:dataset.questions[id].options}));
+}
 function setupRoutes(page,initialPassed=0){
  let passed=initialPassed;
  return Promise.all([
@@ -50,12 +55,15 @@ function setupRoutes(page,initialPassed=0){
     const success=correctCount>=Math.ceil(qs.length*dataset.requiredPassRate);
     if(success)passed=Math.max(passed,index+1);
     payload={passed:success,correctCount,total:qs.length,results:result,progress:course(passed)};
-   }else if(url==="/exam")payload={questions:part(0,passed).part.questions,total:3};
+   }else if(url==="/exam")payload={questions:examQuestions(),total:examIds.length};
    else if(url==="/exam/submit"){
-    const qs=part(0,passed).part.questions,answers=JSON.parse(req.postData()).answers;
-    const results=qs.map((q,n)=>({id:q.id,correct:dataset.questions[dataset.sections[0].questionIds[n]].correct,
-     selected:answers[q.id],isCorrect:true,explanation:"إجابة صحيحة."}));
-    payload={result:{score:qs.length,total:qs.length,percentage:100},results,progress:course(6)};
+    const qs=examQuestions(),answers=JSON.parse(req.postData()).answers;
+    const results=qs.map((q,n)=>{
+     const correct=dataset.questions[examIds[n]].correct,selected=answers[q.id];
+     return {id:q.id,correct,selected,isCorrect:selected===correct,explanation:"إجابة مرتبطة بالقاعدة."};
+    });
+    const score=results.filter(r=>r.isCorrect).length;
+    payload={result:{score,total:qs.length,percentage:Math.round(score/qs.length*100)},results,progress:course(6)};
    }else payload={error:"Unknown mock route "+url};
    return route.fulfill({status:payload.error?404:200,contentType:"application/json",body:JSON.stringify(payload)});
   })
@@ -110,8 +118,35 @@ try{
  assert.equal(await page.locator(".optional summary").count(),1);
  await page.locator(".optional summary").click();
  assert.equal(await page.locator(".optional .optional-content").isVisible(),true);
+ // Finish stage six and open the mastery exam without bypassing lesson navigation.
+ const finalIds=dataset.sections[5].questionIds;
+ assert.equal(await page.locator(".question").count(),finalIds.length);
+ for(const [i,id] of finalIds.entries()){
+  await page.locator(".question").nth(i).locator('[data-value="'+dataset.questions[id].correct+'"]').click();
+ }
+ await page.locator('#submit-practice').click();
+ await page.locator('.score').waitFor({timeout:10000});
+ assert.match(await page.locator('.score').innerText(),/نجحت/);
+ await page.locator('[data-action="continue"]').click();
+ await page.locator('.lesson-title').waitFor({timeout:10000});
+ assert.match(await page.locator('.lesson-title').innerText(),/اختبار الإتقان/);
+ assert.equal(await page.locator('.question').count(),10);
+ assert.equal(await page.locator('#submit-practice').isDisabled(),true);
+ // Intentionally miss one answer: the mock must grade it as wrong, not always 100%.
+ for(let i=0;i<examIds.length;i++){
+  const correct=dataset.questions[examIds[i]].correct;
+  const choice=i===0?["A","B","C","D"].find(v=>v!==correct):correct;
+  await page.locator('.question').nth(i).locator('[data-value="'+choice+'"]').click();
+ }
+ assert.equal(await page.locator('#submit-practice').isEnabled(),true);
+ await page.locator('#submit-practice').click();
+ await page.locator('.score').waitFor({timeout:10000});
+ assert.match(await page.locator('.score').innerText(),/9 من 10/);
+ assert.equal(await page.locator('.answer-feedback.wrong').count(),1);
+ assert.match(await page.locator('.score').innerText(),/النتيجة محفوظة/);
+ assert(!((await page.locator('body').innerText()).includes("ASGQ")),"Exam never exposes bank codes");
  await context.close();
- console.log("PASS Present Simple V2 final section");
+ console.log("PASS Present Simple V2 final section, mastery exam, and grading");
 }finally{
  if(browser)await browser.close();
  await new Promise(done=>server.close(done));
