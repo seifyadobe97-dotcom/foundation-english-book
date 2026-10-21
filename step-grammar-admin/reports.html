@@ -97,7 +97,7 @@ function renderCohortInsights(v){
 }
 
 const followupKind={review:"مراجعة الشرح",practice:"تدريب إضافي",video:"فيديو Seify"};
-const followupState={pending:"بانتظار الطالب",reviewed:"راجع المحتوى — منتظر التدريب",completed:"اتأكد التحسن بتدريب ناجح",cancelled:"ملغي"};
+const followupState={pending:"بانتظار الطالب",reviewed:"راجع المحتوى — منتظر التدريب",completed:"تدريب ناجح بعد التكليف",cancelled:"ملغي"};
 function followupPanel(studentId,rows){
  const options=Array.from({length:6},(_,i)=>'<option value="'+i+'">'+esc((i+1)+". "+(window.STEP_PART_TITLES?.[i]||["استخدمه إمتى؟","ابنِ الجملة","s / es / ies","النفي","السؤال","الكلمات الدالة"][i]))+'</option>').join("");
  const form=adminRole==="owner"?'<form id="followup-form" class="followup-form">'+
