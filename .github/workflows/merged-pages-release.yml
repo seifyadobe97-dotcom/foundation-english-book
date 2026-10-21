@@ -1,0 +1,50 @@
+name: Publish verified STEP and Foundation site after merge
+
+on:
+  workflow_run:
+    workflows: ["Test and deploy Foundation English to GitHub Pages"]
+    types: [completed]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  pull-requests: read
+
+concurrency:
+  group: verified-site-release
+  cancel-in-progress: true
+
+jobs:
+  deploy_from_main:
+    name: Publish merged and verified main
+    # Never run privileged deployment with unmerged PR content.
+    if: ${{ github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Confirm tested pull request was merged into main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          gh api -H "Accept: application/vnd.github+json" "repos/${GITHUB_REPOSITORY}/commits/${SOURCE_SHA}/pulls" \
+            | jq -e 'any(.[]; .merged_at != null and .base.ref == "main")' >/dev/null
+          echo "Verified: tested pull request was merged into main."
+      - name: Checkout trusted main only
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload verified site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
