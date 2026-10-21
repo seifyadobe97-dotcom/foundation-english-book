@@ -159,6 +159,18 @@ try{
  const tiktokLink=videoCard.locator("a.video-open");
  assert.equal(await tiktokLink.getAttribute("href"),"https://vt.tiktok.com/ZSgyJoEnb/");
  assert.equal(await tiktokLink.getAttribute("target"),"_blank");
+ assert.equal(await tiktokLink.getAttribute("rel"),"noopener noreferrer");
+ assert.equal(await mediaPage.locator(".step-brand-image").evaluate(img=>img.complete&&img.naturalWidth>400),true,
+  "Responsive STEP with Seify logo should load");
+ const sources=await mediaPage.evaluate(()=>({
+  youtube:videoSource({url:"https://youtu.be/dQw4w9WgXcQ"})?.embed,
+  tiktok:videoSource({url:"https://www.tiktok.com/@seify/video/7333333333333333333"})?.embed,
+  malicious:videoSource({url:"https://vt.tiktok.com.evil.example/ZSa/"})
+ }));
+ assert.equal(sources.youtube,"https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0");
+ assert.equal(sources.tiktok,"https://www.tiktok.com/player/v1/7333333333333333333");
+ assert.equal(sources.malicious,null,"Do not follow lookalike video hosts");
+
  assert.match(await tiktokLink.innerText(),/TikTok/);
  assert.equal(await videoCard.locator("iframe").count(),0,"Unresolved TikTok short links should not load a broken iframe");
  assert.equal(await mediaPage.locator(".question").count(),dataset.sections[2].questionIds.length,"Video does not replace practice");
