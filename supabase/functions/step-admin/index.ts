@@ -6,6 +6,54 @@ const url=Deno.env.get("SUPABASE_URL")??"";
 const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
 const allow=new Set(["https://seifyadobe97-dotcom.github.io","http://localhost:3000","http://127.0.0.1:3000"]);
 const isUUID=(v:unknown)=>typeof v==="string"&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
+type AnswerEvent={question_id:string;part_index:number|null;attempt_kind:string;is_correct:boolean;elapsed_ms:number|null;choice_changes:number|null;selected:string};
+const lessonSource=lesson.questions as Record<string,{text:string;options:Record<string,string>}>;
+const sectionForQuestion=new Map(lesson.sections.flatMap((sec,i)=>sec.questionIds.map(id=>[id,i] as const)));
+const rate=(a:number,b:number)=>b?Math.round(100*a/b):null;
+const seconds=(ms:number,n:number)=>n?Math.round(ms/100/n)/10:null;
+function buildLearningInsights(items:AnswerEvent[]){
+ const groups=lesson.sections.map((section,index)=>{
+  const records=items.filter(row=>sectionForQuestion.get(row.question_id)===index);
+  const answered=records.length,correct=records.filter(row=>row.is_correct).length;
+  const times=records.map(r=>r.elapsed_ms).filter((n):n is number=>n!==null&&Number.isFinite(n));
+  const accuracy=rate(correct,answered);
+  let status="بيانات غير كافية",recommendation="حل أسئلة إضافية قبل تحديد مستوى المهارة.";
+  if(answered>=5){
+   if(accuracy!==null&&accuracy<60){status="تحتاج متابعة";recommendation="راجع شرح "+section.titleAr+" ثم حل تدريبات مركزة واختبار قصير.";}
+   else if(accuracy!==null&&accuracy<80){status="تحتاج تدريب";recommendation="حل أسئلة متنوعة في "+section.titleAr+" وراجع أسباب الاختيارات الغلط.";}
+   else{status="مستوى جيد";recommendation="حافظ على مستواك بتدريب متباعد وتأكد من الثبات بمرور الوقت.";}
+  }
+  return {index,title:section.titleAr,answers:answered,correct,accuracy,avg_seconds:seconds(times.reduce((a,b)=>a+b,0),times.length),
+   timed_answers:times.length,status,recommendation};
+ });
+ const questionGroups=new Map<string,AnswerEvent[]>();
+ for(const event of items){
+  if(!questionGroups.has(event.question_id))questionGroups.set(event.question_id,[]);
+  questionGroups.get(event.question_id)!.push(event);
+ }
+ const questions=[...questionGroups.entries()].map(([id,rows])=>{
+  const times=rows.map(r=>r.elapsed_ms).filter((n):n is number=>n!==null&&Number.isFinite(n));
+  const counts=new Map<string,number>();
+  for(const row of rows)if(!row.is_correct)counts.set(row.selected,(counts.get(row.selected)||0)+1);
+  const selected=[...counts].sort((a,b)=>b[1]-a[1])[0]?.[0]??null;
+  return {section_index:sectionForQuestion.get(id)??null,
+   question_text:lessonSource[id]?.text||"سؤال تم تحديثه",answers:rows.length,
+   accuracy:rate(rows.filter(r=>r.is_correct).length,rows.length),
+   avg_seconds:seconds(times.reduce((a,b)=>a+b,0),times.length),
+   common_wrong:selected?{letter:selected,option:lessonSource[id]?.options?.[selected]||null}:null};
+ }).sort((a,b)=>(a.accuracy??100)-(b.accuracy??100)||b.answers-a.answers).slice(0,25);
+ const allTimes=items.map(r=>r.elapsed_ms).filter((n):n is number=>n!==null&&Number.isFinite(n));
+ return {answers:items.length,correct:items.filter(x=>x.is_correct).length,
+  accuracy:rate(items.filter(x=>x.is_correct).length,items.length),
+  timed_answers:allTimes.length,
+  avg_seconds:seconds(allTimes.reduce((a,b)=>a+b,0),allTimes.length),
+  sections:groups,questions,
+  priority:groups.filter(g=>g.answers>=5&&g.accuracy!==null&&g.accuracy<80)
+    .sort((a,b)=>(a.accuracy??100)-(b.accuracy??100)).map(g=>({title:g.title,status:g.status,action:g.recommendation})),
+  note:"التحليل خاص بالمحاولات الجديدة المسجّلة بالتفصيل. أزمنة الإجابة تقديرية من جهاز الطالب، ولا تُستخدم للدرجات."
+ };
+}
+
 Deno.serve(async(req)=>{
  const origin=req.headers.get("origin")??"";
  const cors={"Access-Control-Allow-Origin":allow.has(origin)?origin:"https://seifyadobe97-dotcom.github.io",
@@ -75,9 +123,17 @@ Deno.serve(async(req)=>{
      admin.from("step_admin_part_statistics").select("*").order("part_index")
    ]);
    if(overview.error||parts.error)throw(overview.error||parts.error);
+   const {data:itemRows,error:itemError}=await admin.from("step_question_attempt_details")
+    .select("question_id,part_index,attempt_kind,is_correct,elapsed_ms,choice_changes,selected")
+    .eq("course_code",lesson.code).eq("attempt_kind","practice")
+    .order("recorded_at",{ascending:false}).limit(5000);
+   if(itemError)throw itemError;
+   const cohort=buildLearningInsights((itemRows||[]) as AnswerEvent[]);
    return reply(200,{overview:overview.data,parts:(parts.data||[]).map(s=>({
      ...s,title:lesson.sections[s.part_index]?.titleAr||"جزء "+(s.part_index+1)
-   }))});
+   })),learning:{sections:cohort.sections,answers:cohort.answers,
+     timed_answers:cohort.timed_answers,limited_to_latest:5000,
+     note:cohort.note}});
   }catch(error){console.error("STEP analytics failed",error);return reply(500,{error:"تعذر تحميل إحصائيات المنصة"});}
  }
  const reportMatch=path.match(/^\/students\/([0-9a-f-]{36})\/report$/i);
@@ -85,7 +141,7 @@ Deno.serve(async(req)=>{
   const studentId=reportMatch[1];
   if(!isUUID(studentId))return reply(422,{error:"معرّف الطالب غير صحيح"});
   try{
-   const [profile,partRows,examRows,partCount,examCount]=await Promise.all([
+   const [profile,partRows,examRows,partCount,examCount,detailRows,detailCount]=await Promise.all([
     admin.from("step_student_profiles").select("user_id,username,email,phone_e164,is_active,created_at").eq("user_id",studentId).maybeSingle(),
     admin.from("step_part_attempts").select("id,part_index,correct_count,total_questions,passed,attempted_at")
       .eq("user_id",studentId).eq("course_code",lesson.code).order("attempted_at",{ascending:false}).limit(300),
@@ -93,9 +149,15 @@ Deno.serve(async(req)=>{
       .eq("user_id",studentId).eq("course_code",lesson.code).order("attempted_at",{ascending:false}).limit(150),
     admin.from("step_part_attempts").select("id",{count:"exact",head:true}).eq("user_id",studentId).eq("course_code",lesson.code),
     admin.from("step_exam_attempts").select("id",{count:"exact",head:true}).eq("user_id",studentId).eq("course_code",lesson.code),
+    admin.from("step_question_attempt_details")
+     .select("question_id,part_index,attempt_kind,is_correct,elapsed_ms,choice_changes,selected")
+     .eq("user_id",studentId).eq("course_code",lesson.code)
+     .order("recorded_at",{ascending:false}).limit(1500),
+    admin.from("step_question_attempt_details").select("id",{count:"exact",head:true})
+     .eq("user_id",studentId).eq("course_code",lesson.code)
    ]);
-   if(profile.error||partRows.error||examRows.error||partCount.error||examCount.error)
-     throw(profile.error||partRows.error||examRows.error||partCount.error||examCount.error);
+   if(profile.error||partRows.error||examRows.error||partCount.error||examCount.error||detailRows.error||detailCount.error)
+     throw(profile.error||partRows.error||examRows.error||partCount.error||examCount.error||detailRows.error||detailCount.error);
    if(!profile.data)return reply(404,{error:"الطالب غير موجود"});
    const attempts=partRows.data||[],exams=examRows.data||[];
    const sections=lesson.sections.map((s,index)=>{
@@ -115,6 +177,8 @@ Deno.serve(async(req)=>{
       part_history_truncated:(partCount.count||0)>attempts.length,
       exam_history_truncated:(examCount.count||0)>exams.length},
     sections,
+    insights:{...buildLearningInsights((detailRows.data||[]) as AnswerEvent[]),
+     truncated:(detailCount.count||0)>(detailRows.data||[]).length},
     attempts:attempts.map(r=>({...r,percentage:Math.round(100*r.correct_count/r.total_questions),
       section_title:lesson.sections[r.part_index]?.titleAr||"جزء غير معروف"})),
     exams:exams.map(r=>({...r,percentage:Math.round(100*r.correct_count/r.total_questions)}))
