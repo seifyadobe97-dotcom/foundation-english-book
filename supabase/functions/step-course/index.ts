@@ -17,7 +17,7 @@ const reply=(origin:string,status:number,body:unknown)=>new Response(JSON.string
  "Access-Control-Allow-Methods":"GET,POST,OPTIONS",
  "Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type",Vary:"Origin"}
 });
-const serializeQ=(id:string,questions:typeof originalQuestions)=>({id,text:questions[id].text,options:questions[id].options});
+const serializeQ=(id:string,questions:typeof originalQuestions,publicId:string)=>({id:publicId,text:questions[id].text,options:questions[id].options});
 function randomIds(pool:string[]){const ids=[...pool];for(let i=ids.length-1;i>0;i--){const bytes=new Uint32Array(1);crypto.getRandomValues(bytes);const j=bytes[0]%(i+1);[ids[i],ids[j]]=[ids[j],ids[i]];}return ids.slice(0,defaultExamCount);}
 function sectionStatus(attempts:{part_index:number;correct_count:number;passed:boolean}[],effectiveLesson:typeof lesson){
  const a=effectiveLesson.sections.map((s,i)=>{const list=attempts.filter(r=>r.part_index===i);
@@ -80,7 +80,7 @@ Deno.serve(async(request)=>{
    if(section&&!section.questionIds.includes(edit.id))section.questionIds.push(edit.id);
   }
   const activeQuestionIds=effectiveLesson.sections.flatMap(s=>s.questionIds);
-  const showQuestion=(id:string)=>serializeQ(id,questions);
+  const showQuestions=(ids:string[])=>ids.map((id,i)=>serializeQ(id,questions,"q"+(i+1)));
   const {data:partRows,error:attemptError}=await admin.from("step_part_attempts")
    .select("part_index,correct_count,passed").eq("user_id",user.id).eq("course_code",courseCode);
   if(attemptError)throw attemptError;
@@ -92,7 +92,7 @@ Deno.serve(async(request)=>{
    if(error)throw error;
    const attempts=(exams??[]).map(x=>({score:x.correct_count,total:x.total_questions,percentage:Math.round(x.correct_count/x.total_questions*100),date:x.attempted_at}));
    return {student:user.user_metadata?.username||"طالب STEP",
-    course:{title:lesson.title,titleAr:lesson.titleAr,code:courseCode,subtitle:lesson.subtitle,totalQuestions:activeQuestionIds.length},
+    course:{title:lesson.title,titleAr:lesson.titleAr,subtitle:lesson.subtitle,totalQuestions:activeQuestionIds.length},
     sections:status.sections,nextIndex:Math.min(status.next,total-1),completed:status.completed,
     exam:{unlocked:status.completed,attempts:attempts.length,best:Math.max(0,...attempts.map(x=>x.percentage)),last:attempts.at(-1)||null}};
   };
@@ -107,7 +107,7 @@ Deno.serve(async(request)=>{
    if(axes.error||indicators.error)throw(axes.error||indicators.error);
    return send(200,{axes:axes.data||[],indicators:(indicators.data||[]).map(i=>({
     axis_code:i.axis_code,slug:i.slug,title_ar:i.title_ar,title_en:i.title_en,
-    position:i.position,course_code:i.legacy_course_code
+    position:i.position
    }))});
   }
   if(method==="GET"&&path==="/me")return send(200,{student:user.user_metadata?.username||"طالب STEP"});
@@ -127,11 +127,11 @@ Deno.serve(async(request)=>{
    if(!s)return send(404,{error:"الجزء غير موجود"});
    if(index>status.next)return send(403,{error:"لازم تنجح في الأجزاء السابقة الأول"});
    const passRequired=Math.ceil(s.questionIds.length*effectiveLesson.requiredPassRate);
-   if(method==="GET"&&!partPath[2])return send(200,{part:{...s,passRequired,questions:s.questionIds.map(showQuestion)},progress:await getCourse()});
+   if(method==="GET"&&!partPath[2]){const {questionIds:_privateIds,...studentPart}=s;return send(200,{part:{...studentPart,passRequired,questions:showQuestions(s.questionIds)},progress:await getCourse()});}
    if(method==="POST"&&partPath[2]){
     const input=await safeBody(request),answers=input?.answers as AnswerMap;
-    if(!answers||s.questionIds.some((id:string)=>!["A","B","C","D"].includes(answers[id])))return send(422,{error:"جاوب كل الأسئلة الأول"});
-    const results=s.questionIds.map((id:string)=>{const q=questions[id];return {id,selected:answers[id],correct:q.correct,isCorrect:answers[id]===q.correct,explanation:q.explanation};});
+    if(!answers||s.questionIds.some((id:string,i:number)=>!["A","B","C","D"].includes(answers["q"+(i+1)]??answers[id])))return send(422,{error:"جاوب كل الأسئلة الأول"});
+    const results=s.questionIds.map((id:string,i:number)=>{const q=questions[id],selected=answers["q"+(i+1)]??answers[id];return {id:"q"+(i+1),selected,correct:q.correct,isCorrect:selected===q.correct,explanation:q.explanation};});
     const correctCount=results.filter((x:{isCorrect:boolean})=>x.isCorrect).length,passed=correctCount>=passRequired;
     const {error}=await admin.from("step_part_attempts").insert({user_id:user.id,course_code:courseCode,part_index:index,correct_count:correctCount,total_questions:results.length,passed});
     if(error)throw error;
@@ -153,15 +153,15 @@ Deno.serve(async(request)=>{
     const {error:saveErr}=await admin.from("step_active_exams").upsert({user_id:user.id,course_code:courseCode,question_ids:ids},{onConflict:"user_id,course_code"});
     if(saveErr)throw saveErr;
    }
-   return send(200,{questions:ids.map(showQuestion),total:ids.length});
+   return send(200,{questions:showQuestions(ids),total:ids.length});
   }
   if(path==="/exam/submit"&&method==="POST"){
    if(!status.completed)return send(403,{error:"الاختبار مقفول"});
    const {data:active,error}=await admin.from("step_active_exams").select("question_ids").eq("user_id",user.id).eq("course_code",courseCode).maybeSingle();
    if(error||!active)return send(403,{error:"افتح الاختبار الأول"});
    const ids=active.question_ids as string[],input=await safeBody(request),answers=input?.answers as AnswerMap;
-   if(!answers||ids.some(id=>!["A","B","C","D"].includes(answers[id])))return send(422,{error:"جاوب كل الأسئلة"});
-   const results=ids.map(id=>{const q=questions[id];return{id,text:q.text,selected:answers[id],correct:q.correct,isCorrect:answers[id]===q.correct,explanation:q.explanation};});
+   if(!answers||ids.some((id,i)=>!["A","B","C","D"].includes(answers["q"+(i+1)]??answers[id])))return send(422,{error:"جاوب كل الأسئلة"});
+   const results=ids.map((id,i)=>{const q=questions[id],selected=answers["q"+(i+1)]??answers[id];return{id:"q"+(i+1),text:q.text,selected,correct:q.correct,isCorrect:selected===q.correct,explanation:q.explanation};});
    const score=results.filter(x=>x.isCorrect).length;
    const record={score,total:results.length,percentage:Math.round(score/results.length*100),date:new Date().toISOString()};
    const {error:saveErr}=await admin.from("step_exam_attempts").insert({user_id:user.id,course_code:courseCode,correct_count:score,total_questions:results.length});
