@@ -2,8 +2,8 @@
 const LESSONS=window.PRESENT_SIMPLE_UNITS;
 const ABC=["A","B","C","D"];
 // Browser timings are advisory, not a grading or cheating-detection signal.
-function newTiming(){
- return {started:performance.now(),lastAction:performance.now(),pauseMs:0,pausedAt:null,
+function newTiming(forExam=false){
+ return {started:performance.now(),lastAction:forExam?performance.now():null,pauseMs:0,pausedAt:null,
   perQuestion:{},changes:{}};
 }
 function elapsedMs(){
@@ -18,7 +18,7 @@ function timeLabel(ms){
 function recordAnswerTime(id,alreadyChosen){
  const t=state.timing;if(!t)return;
  const now=performance.now();
- t.perQuestion[id]=(t.perQuestion[id]||0)+Math.max(0,Math.round(now-t.lastAction));
+ t.perQuestion[id]=(t.perQuestion[id]||0)+Math.max(0,Math.round(t.lastAction===null?0:now-t.lastAction));
  if(alreadyChosen)t.changes[id]=(t.changes[id]||0)+1;
  t.lastAction=now;
 }
@@ -27,9 +27,24 @@ document.addEventListener("visibilitychange",()=>{
  const now=performance.now();
  if(document.hidden && t.pausedAt===null)t.pausedAt=now;
  else if(!document.hidden&&t.pausedAt!==null){
-  t.pauseMs+=now-t.pausedAt;t.pausedAt=null;t.lastAction=now;
+  t.pauseMs+=now-t.pausedAt;t.pausedAt=null;if(t.lastAction!==null)t.lastAction=now;
  }
 });
+let practiceObserver=null;
+function monitorPracticeStart(){
+ practiceObserver?.disconnect();
+ if(state.mode!=="lesson"||state.timing?.lastAction!==null||!window.IntersectionObserver)return;
+ const first=document.querySelector(".question");if(!first)return;
+ const tracked=state.timing;
+ practiceObserver=new IntersectionObserver(entries=>{
+  if(tracked!==state.timing){practiceObserver?.disconnect();return;}
+  if(entries.some(e=>e.isIntersecting)){
+   if(tracked?.lastAction===null)tracked.lastAction=performance.now();
+   practiceObserver?.disconnect();
+  }
+ },{threshold:0.15});
+ practiceObserver.observe(first);
+}
 setInterval(()=>{
  const el=document.getElementById("exam-elapsed");
  if(el&&state.mode==="exam"&&!state.examResult)el.textContent=timeLabel(elapsedMs());
@@ -230,6 +245,7 @@ function draw(){
  if(!state.course||!state.part)return;
  root.innerHTML=renderLessonHeader()+(state.mode==="exam"?examView():'<article class="lesson">'+chapter()+practice()+'</article>'+examBanner())+
  '<div class="site-foot">STEP with Seify</div>';
+ monitorPracticeStart();
 }
 async function submit(isExam){
  if(state.busy)return;
@@ -253,7 +269,7 @@ async function submit(isExam){
 async function openExam(){
  if(!state.course?.completed||state.busy)return;
  state.busy=true;loading("بنجهز اختبار الإتقان…");
- try{state.exam=await api("/exam");state.mode="exam";state.examResult=null;state.answers={};state.timing=newTiming();draw();window.scrollTo({top:0,behavior:"smooth"});}
+ try{state.exam=await api("/exam");state.mode="exam";state.examResult=null;state.answers={};state.timing=newTiming(true);draw();window.scrollTo({top:0,behavior:"smooth"});}
  catch(e){fail(e);}
  finally{state.busy=false;}
 }
@@ -263,7 +279,7 @@ root.addEventListener("click",async ev=>{
  const action=b.dataset.action,n=Number(b.dataset.index);
  if(action==="reload"){init();return;}
  if(action==="part"){await openPart(n);return;}
- if(action==="practice"){document.getElementById("practice")?.scrollIntoView({behavior:"smooth"});return;}
+ if(action==="practice"){if(state.timing?.lastAction===null)state.timing.lastAction=performance.now();document.getElementById("practice")?.scrollIntoView({behavior:"smooth"});return;}
  if(action==="video"){
   if(!videoSource(LESSONS[state.index]?.video)?.embed)return;
   state.openedVideo=state.openedVideo===state.index?null:state.index;
