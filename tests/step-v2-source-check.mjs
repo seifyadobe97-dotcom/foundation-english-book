@@ -41,4 +41,20 @@ assert(script.includes("tiktok.com/player/v1/"),"Safe full TikTok embed template
 assert(content.includes("https://vt.tiktok.com/ZSgyJoEnb/"),"Pilot TikTok link must be configured in lesson data");
 
 assert(css.includes(".answer-feedback.is-wrong")&&css.includes(".check-option.incorrect"),"Clear error colors for graded and quick checks");
-console.log("PASS STEP pilot source checks: 6 steps, 20 questions, 60 distinct distractor explanations, safe JS, mobile styles");
+
+const adminApi=readFileSync("supabase/functions/step-admin/index.ts","utf8");
+const reports=readFileSync("step-grammar-admin/reports.html","utf8");
+const migration=readFileSync("supabase/migrations/20261021200727_step_question_level_learning_telemetry.sql","utf8");
+assert(api.includes("saveItemTelemetry(")&&api.includes('select("id").single()'),
+ "Server must associate item telemetry with committed grade attempts");
+assert(script.includes("function recordAnswerTime(")&&script.includes('id="exam-elapsed"'),
+ "The lesson must collect interaction timing and show the exam stopwatch");
+assert(script.includes("{answers:state.answers,timings}"),"Submissions must include measured time separately from answers");
+assert(adminApi.includes("buildLearningInsights(")&&adminApi.includes("step_question_attempt_details"),
+ "Authorized admin must calculate per-skill insights from question events");
+assert(reports.includes("renderLearningInsights(")&&reports.includes("renderCohortInsights("),
+ "Admin reports must show learning diagnostics");
+assert(migration.includes("enable row level security")&&migration.includes("revoke all"),
+ "Sensitive student item events require RLS and no client privileges");
+
+console.log("PASS STEP pilot source checks: 6 steps, 20 questions, 60 distractors, item timing, admin skill insights, safe JS, mobile styles");
