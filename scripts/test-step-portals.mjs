@@ -62,7 +62,7 @@ assert(courseServer.includes('row.published'),"Only published lesson content is 
 assert(courseServer.includes('const editableKeys='),"Lesson edits cannot replace course identifiers");
 assert(courseServer.includes('step_lesson_content_edits'),"Persisted published content");
 const reports=readFileSync("step-grammar-admin/reports.html","utf8");
-assert(reports.includes('api("/analytics")'),"Admin reports must load aggregated analytics");
+assert(reports.includes('"/indicators/"+encodeURIComponent(slug)+"/analytics"'),"Admin reports must load indicator-scoped analytics");
 assert(reports.includes('"/report"') || reports.includes('+"/report"'),"Per-student reports must be authenticated");
 assert(reports.includes('reportCsvValue') || reports.includes('function download('),"Student report export");
 assert(admin.includes('reports.html?student='),"Directory links to student reports");
