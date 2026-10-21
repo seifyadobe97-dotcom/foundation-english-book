@@ -212,7 +212,7 @@ try{
  await page.locator('.lesson-title').waitFor({timeout:10000});
  assert.match(await page.locator('.lesson-title').innerText(),/اختبار الإتقان/);
  assert.equal(await page.locator('#exam-elapsed').count(),1);
- assert.match(await page.locator('#exam-elapsed').innerText(),/^\\d{2}:\\d{2}$/);
+ assert.match(await page.locator('#exam-elapsed').innerText(),/^\d{2}:\d{2}$/);
  assert.equal(await page.locator('.question').count(),10);
  assert.equal(await page.locator('#submit-practice').isDisabled(),true);
  // Intentionally miss one answer: the mock must grade it as wrong, not always 100%.
