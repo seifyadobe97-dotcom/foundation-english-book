@@ -237,6 +237,59 @@ try{
  assert(!((await page.locator('body').innerText()).includes("ASGQ")),"Exam never exposes bank codes");
  await context.close();
  console.log("PASS Present Simple V2 final section, mastery exam, and grading");
+
+ // Authorized admin report and cohort panels must render diagnostics without exposing raw data publicly.
+ const adminContext=await browser.newContext({viewport:{width:390,height:844}}),adminPage=await adminContext.newPage(),adminErrors=[];
+ adminPage.on("pageerror",error=>adminErrors.push(String(error)));
+ await adminPage.route("https://cdn.jsdelivr.net/npm/@supabase/**",r=>r.fulfill({contentType:"text/javascript",body:fakeAuth}));
+ await adminPage.route("https://fonts.googleapis.com/**",r=>r.abort());
+ await adminPage.route("https://fonts.gstatic.com/**",r=>r.abort());
+ const studentId="11111111-1111-4111-8111-111111111111";
+ const sectionInsights=dataset.sections.map((sec,i)=>({
+  index:i,title:sec.titleAr,answers:i===2?8:1,correct:i===2?3:1,
+  unique_questions:i===2?3:1,accuracy:i===2?38:100,avg_seconds:i===2?43:18,
+  timed_answers:i===2?8:1,status:i===2?"تحتاج متابعة":"بيانات غير كافية",
+  recommendation:i===2?"راجع قاعدة s / es / ies":"نحتاج أسئلة أكثر"
+ }));
+ await adminPage.route("https://funltjxavowlnnfibhpl.supabase.co/functions/v1/step-admin**",route=>{
+  const path=new URL(route.request().url()).pathname;
+  let data;
+  if(path.endsWith("/me"))data={role:"owner",username:"Pilot Admin"};
+  else if(path.endsWith("/analytics"))data={
+   overview:{students_total:2,students_active:2,students_completed:1,students_exam_taken:1,
+    practice_attempts:16,exam_attempts:1,avg_exam_percent:80},
+   parts:dataset.sections.map((sec,i)=>({part_index:i,title:sec.titleAr,students_tried:1,
+    students_passed:1,attempts:2,avg_score_percent:80})),
+   learning:{sections:sectionInsights,answers:13,timed_answers:13,note:"أزمنة الإجابة تقديرية"}
+  };
+  else if(path.endsWith("/students"))data={students:[],total:0,page:1,page_size:25};
+  else if(path.endsWith("/report"))data={
+   student:{user_id:studentId,username:"Pilot",email:"",phone:"",active:true,joined:"2026-10-21T12:00:00Z"},
+   summary:{passed_parts:2,total_parts:6,practice_attempts:3,exam_attempts:0,
+    best_exam_percent:null,part_history_truncated:false,exam_history_truncated:false},
+   sections:dataset.sections.map((sec,i)=>({index:i,title:sec.titleAr,attempts:0,
+    best_percent:null,passed:false,latest_attempt:null})),
+   attempts:[],exams:[],insights:{sections:sectionInsights,answers:13,correct:8,
+    accuracy:62,timed_answers:13,avg_seconds:34,
+    priority:[{title:"s / es / ies",status:"تحتاج متابعة",action:"راجع القاعدة"}],
+    questions:[{question_text:"He ____ every day.",answers:4,accuracy:25,avg_seconds:45,
+     common_wrong:{letter:"A",option:"go"}}],truncated:false,
+    note:"هذا تحليل للمحاولات الجديدة فقط"}
+  };
+  else data={error:"Unknown admin route"};
+  return route.fulfill({status:data.error?404:200,contentType:"application/json",body:JSON.stringify(data)});
+ });
+ await adminPage.goto(base+"/step-grammar-admin/reports.html?student="+studentId,{waitUntil:"domcontentloaded"});
+ await adminPage.locator("#skill-insights").waitFor({timeout:10000});
+ assert.match(await adminPage.locator("#skill-insights").innerText(),/تحليل المهارات وتوصيات المتابعة/);
+ assert.match(await adminPage.locator("#skill-insights").innerText(),/تحتاج متابعة/);
+ await adminPage.locator("#back").click();
+ await adminPage.getByText("نظرة تعليمية على مهارات المجموعة").waitFor({timeout:10000});
+ assert.equal(await adminPage.locator(".insight-card").count()>=6,true);
+ assert.equal(await adminPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),true,"Admin insights fit mobile");
+ assert.deepEqual(adminErrors,[],"Admin report and cohort JS must not fail");
+ await adminContext.close();
+ console.log("PASS STEP admin skill insights and cohort diagnostics 390px");
 }finally{
  if(browser)await browser.close();
  await new Promise(done=>server.close(done));
