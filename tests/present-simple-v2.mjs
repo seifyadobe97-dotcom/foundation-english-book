@@ -35,7 +35,7 @@ const examIds=dataset.sections.flatMap(s=>s.questionIds).slice(0,10);
 function examQuestions(){
  return examIds.map((id,i)=>({id:"q"+(i+1),text:dataset.questions[id].text,options:dataset.questions[id].options}));
 }
-function setupRoutes(page,initialPassed=0){
+function setupRoutes(page,initialPassed=0,record={}){
  let passed=initialPassed;
  return Promise.all([
   page.route("https://cdn.jsdelivr.net/npm/@supabase/**",r=>r.fulfill({contentType:"text/javascript",body:fakeAuth})),
@@ -47,7 +47,10 @@ function setupRoutes(page,initialPassed=0){
    if(url==="/course")payload=course(passed);
    else if(/^\/parts\/\d+$/.test(url))payload=part(Number(url.split("/").at(-1)),passed);
    else if(/^\/parts\/\d+\/submit$/.test(url)){
-    const index=Number(url.split("/")[2]),qs=part(index,passed).part.questions,answers=JSON.parse(req.postData()).answers;
+    const index=Number(url.split("/")[2]),qs=part(index,passed).part.questions,body=JSON.parse(req.postData()),answers=body.answers;
+    record.practice=body;
+    assert.deepEqual(Object.keys(body.timings||{}).sort(),qs.map(q=>q.id).sort(),"Practice sends item timings");
+    assert(qs.every(q=>Number.isInteger(body.timings[q.id].ms)&&Number.isInteger(body.timings[q.id].changes)));
     const result=qs.map((q,n)=>{
      const item=dataset.questions[dataset.sections[index].questionIds[n]];
      const selected=answers[q.id];
@@ -61,7 +64,9 @@ function setupRoutes(page,initialPassed=0){
     payload={passed:success,correctCount,total:qs.length,results:result,progress:course(passed)};
    }else if(url==="/exam")payload={questions:examQuestions(),total:examIds.length};
    else if(url==="/exam/submit"){
-    const qs=examQuestions(),answers=JSON.parse(req.postData()).answers;
+    const qs=examQuestions(),body=JSON.parse(req.postData()),answers=body.answers;
+    record.exam=body;
+    assert.deepEqual(Object.keys(body.timings||{}).sort(),qs.map(q=>q.id).sort(),"Exam sends item timings");
     const results=qs.map((q,n)=>{
      const correct=dataset.questions[examIds[n]].correct,selected=answers[q.id];
      return {id:q.id,correct,selected,isCorrect:selected===correct,
@@ -81,7 +86,8 @@ try{
  for(const viewport of [{width:1280,height:850},{width:390,height:844}]){
   const context=await browser.newContext({viewport}),page=await context.newPage(),errors=[];
   page.on("pageerror",e=>errors.push(String(e)));
-  await setupRoutes(page);
+  const trace={};
+  await setupRoutes(page,0,trace);
   await page.goto(base+"/step-grammar-student/lesson-v2.html",{waitUntil:"domcontentloaded"});
   try { await page.locator(".lesson-title").waitFor({timeout:7000}); } catch(error){
     console.error("STEP V2 LOAD DEBUG",JSON.stringify({viewport,errors,location:page.url(),html: (await page.locator("body").innerText()).slice(0,1800),scripts:await page.locator("script[src]").evaluateAll(xs=>xs.map(x=>x.src))}));
@@ -131,6 +137,8 @@ try{
   await page.locator('#submit-practice').click();
   await page.locator(".score").waitFor({timeout:10000});
   assert.match(await page.locator(".score").innerText(),/نجحت/);
+  assert.equal(Object.keys(trace.practice.timings).length,3);
+  assert(trace.practice.timings.q1.ms>=0);
   assert.equal(await page.locator(".answer-feedback.is-correct").count(),viewport.width<500?2:3);
   if(viewport.width<500){
    const wrong=page.locator(".answer-feedback.is-wrong");
@@ -182,7 +190,8 @@ try{
  await mediaContext.close();
  console.log("PASS STEP optional TikTok link, video safety, and mobile layout");
  const context=await browser.newContext({viewport:{width:1280,height:800}}),page=await context.newPage();
- await setupRoutes(page,5);
+ const finalTrace={};
+ await setupRoutes(page,5,finalTrace);
  await page.goto(base+"/step-grammar-student/lesson-v2.html?step=5",{waitUntil:"domcontentloaded"});
  await page.locator(".lesson-title").waitFor({timeout:15000});
  assert.match(await page.locator(".lesson-title").innerText(),/الكلمات الدالة/);
@@ -202,6 +211,8 @@ try{
  await page.locator('[data-action="continue"]').click();
  await page.locator('.lesson-title').waitFor({timeout:10000});
  assert.match(await page.locator('.lesson-title').innerText(),/اختبار الإتقان/);
+ assert.equal(await page.locator('#exam-elapsed').count(),1);
+ assert.match(await page.locator('#exam-elapsed').innerText(),/^\\d{2}:\\d{2}$/);
  assert.equal(await page.locator('.question').count(),10);
  assert.equal(await page.locator('#submit-practice').isDisabled(),true);
  // Intentionally miss one answer: the mock must grade it as wrong, not always 100%.
@@ -214,6 +225,8 @@ try{
  await page.locator('#submit-practice').click();
  await page.locator('.score').waitFor({timeout:10000});
  assert.match(await page.locator('.score').innerText(),/9 من 10/);
+ assert.equal(Object.keys(finalTrace.exam.timings).length,10);
+ assert(finalTrace.exam.timings.q1.ms>=0,"Exam captures approximate per-question duration");
  assert.equal(await page.locator('.answer-feedback.is-wrong').count(),1);
  assert.equal(await page.locator('.answer-feedback.is-correct').count(),9);
  assert.match(await page.locator('.answer-feedback.is-wrong').innerText(),/ليه اختيارك غلط/);
