@@ -251,6 +251,7 @@ try{
   timed_answers:i===2?8:1,status:i===2?"تحتاج متابعة":"بيانات غير كافية",
   recommendation:i===2?"راجع قاعدة s / es / ies":"نحتاج أسئلة أكثر"
  }));
+ let adminFollowups=[];
  await adminPage.route("https://funltjxavowlnnfibhpl.supabase.co/functions/v1/step-admin**",route=>{
   const path=new URL(route.request().url()).pathname;
   let data;
@@ -263,6 +264,17 @@ try{
    learning:{sections:sectionInsights,answers:13,timed_answers:13,note:"أزمنة الإجابة تقديرية"}
   };
   else if(path.endsWith("/students"))data={students:[],total:0,page:1,page_size:25};
+  else if(path.endsWith("/followups")&&route.request().method()==="POST"){
+   const p=route.request().postDataJSON();
+   adminFollowups.unshift({...p,id:"22222222-2222-4222-8222-222222222222",
+    title:dataset.sections[p.part_index].titleAr,assigned_at:new Date().toISOString(),
+    reviewed_at:null,cancelled_at:null,status:"pending"});
+   data={followup:adminFollowups[0]};
+  }
+  else if(path.endsWith("/followups"))data={followups:adminFollowups};
+  else if(path.endsWith("/cancel")&&route.request().method()==="POST"){
+   adminFollowups=adminFollowups.map(t=>({...t,status:"cancelled",cancelled_at:new Date().toISOString()}));data={ok:true};
+  }
   else if(path.endsWith("/report"))data={
    student:{user_id:studentId,username:"Pilot",email:"",phone:"",active:true,joined:"2026-10-21T12:00:00Z"},
    summary:{passed_parts:2,total_parts:6,practice_attempts:3,exam_attempts:0,
@@ -283,13 +295,56 @@ try{
  await adminPage.locator("#skill-insights").waitFor({timeout:10000});
  assert.match(await adminPage.locator("#skill-insights").innerText(),/تحليل المهارات وتوصيات المتابعة/);
  assert.match(await adminPage.locator("#skill-insights").innerText(),/تحتاج متابعة/);
+ await adminPage.locator("#followup-form").waitFor();
+ await adminPage.locator('#followup-form [name="part_index"]').selectOption("2");
+ await adminPage.locator('#followup-form [name="kind"]').selectOption("video");
+ await adminPage.locator('#followup-form [name="note"]').fill("راجع الفيديو ثم جرّب أسئلة s / es / ies");
+ await adminPage.locator('#followup-form button[type="submit"]').click();
+ await adminPage.locator('.followup-item').waitFor({timeout:7000});
+ assert.match(await adminPage.locator('.followup-item').innerText(),/راجع الفيديو/);
+ adminPage.on("dialog",d=>d.accept());
+ await adminPage.locator("[data-cancel-followup]").click();
+ await adminPage.getByText("ملغي").waitFor({timeout:7000});
  await adminPage.locator("#back").click();
  await adminPage.getByText("نظرة تعليمية على مهارات المجموعة").waitFor({timeout:10000});
  assert.equal(await adminPage.locator(".insight-card").count()>=6,true);
  assert.equal(await adminPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),true,"Admin insights fit mobile");
  assert.deepEqual(adminErrors,[],"Admin report and cohort JS must not fail");
  await adminContext.close();
- console.log("PASS STEP admin skill insights and cohort diagnostics 390px");
+ console.log("PASS STEP admin skill insights, assignment and cancellation 390px");
+
+ const studentContext=await browser.newContext({viewport:{width:390,height:844}}),
+   studentPage=await studentContext.newPage(),studentErrors=[];
+ studentPage.on("pageerror",e=>studentErrors.push(String(e)));
+ await studentPage.route("https://cdn.jsdelivr.net/npm/@supabase/**",
+  r=>r.fulfill({contentType:"text/javascript",body:fakeAuth}));
+ await studentPage.route("https://fonts.googleapis.com/**",r=>r.abort());
+ await studentPage.route("https://fonts.gstatic.com/**",r=>r.abort());
+ let reviewed=false,reviewCalls=0;
+ await studentPage.route("https://funltjxavowlnnfibhpl.supabase.co/functions/v1/step-course/**",route=>{
+  const u=new URL(route.request().url()).pathname,method=route.request().method();
+  let data;
+  if(u.endsWith("/course"))data=course(2);
+  else if(u.endsWith("/catalog"))data={axes:[],indicators:[]};
+  else if(u.endsWith("/followups")&&method==="GET")data={followups:[{
+   id:"33333333-3333-4333-8333-333333333333",part_index:2,kind:"video",title:"s / es / ies",
+   note:"ركز على قاعدة s مع Does",accessible:true,due_at:null,status:reviewed?"reviewed":"pending"
+  }]};
+  else if(u.endsWith("/review")&&method==="POST"){reviewCalls++;reviewed=true;data={ok:true};}
+  else data={error:"Unknown student route"};
+  return route.fulfill({status:data.error?404:200,contentType:"application/json",body:JSON.stringify(data)});
+ });
+ await studentPage.goto(base+"/step-grammar-student/",{waitUntil:"domcontentloaded"});
+ await studentPage.locator(".student-task").waitFor({timeout:10000});
+ assert.match(await studentPage.locator(".student-task").innerText(),/ركز على قاعدة/);
+ assert.equal(await studentPage.locator(".student-task a").getAttribute("href"),"learn.html?step=2");
+ await studentPage.locator("[data-followup-review]").click();
+ await studentPage.getByText("تمت المراجعة — منتظر التدريب").waitFor({timeout:7000});
+ assert.equal(reviewCalls,1);
+ assert.equal(await studentPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),true,"Student plan fits mobile");
+ assert.deepEqual(studentErrors,[],"Student dashboard JS must not fail");
+ await studentContext.close();
+ console.log("PASS STEP student assigned follow-up and review 390px");
 }finally{
  if(browser)await browser.close();
  await new Promise(done=>server.close(done));
