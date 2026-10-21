@@ -160,8 +160,11 @@ try{
  assert.equal(await tiktokLink.getAttribute("href"),"https://vt.tiktok.com/ZSgyJoEnb/");
  assert.equal(await tiktokLink.getAttribute("target"),"_blank");
  assert.equal(await tiktokLink.getAttribute("rel"),"noopener noreferrer");
- assert.equal(await mediaPage.locator(".step-brand-image").evaluate(img=>img.complete&&img.naturalWidth>400),true,
-  "Responsive STEP with Seify logo should load");
+ const logoStatus=await mediaPage.locator(".step-brand-image").evaluate(async img=>{
+  try{await img.decode();return {ok:img.naturalWidth>400,width:img.naturalWidth,complete:img.complete};}
+  catch(e){return {ok:false,width:img.naturalWidth,complete:img.complete,error:String(e)};}
+ });
+ assert.equal(logoStatus.ok,true,"STEP logo must decode in Chromium: "+JSON.stringify(logoStatus));
  const sources=await mediaPage.evaluate(()=>({
   youtube:videoSource({url:"https://youtu.be/dQw4w9WgXcQ"})?.embed,
   tiktok:videoSource({url:"https://www.tiktok.com/@seify/video/7333333333333333333"})?.embed,
