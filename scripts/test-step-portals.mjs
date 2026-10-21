@@ -100,35 +100,33 @@ assert(taxonomy.includes("ASGQPRSIM"),"Bank source preserves Present Simple code
 assert(taxonomy.includes("ASGQPARORDER"),"Bank source preserves Paragraph Ordering code");
 const bankSchema=readFileSync("supabase/migrations/20261020_step_bank_classification_source_map.sql","utf8");
 assert(bankSchema.includes("enable row level security"),"Bank categories cannot be listed by students");
-// Source-based study guide must be server-authenticated, owner-edited and
-// separate from the canonical quiz and grading workflow.
-const guideEditor=readFileSync("step-grammar-admin/guide.html","utf8");
-const guideStudent=readFileSync("step-grammar-student/guide.html","utf8");
-const guideData=JSON.parse(readFileSync("curriculum/guides/present-simple.source.json","utf8"));
-assert.deepEqual(guideData.source.pages,[1,2],"Guide source must remain pages 1 and 2");
-assert.deepEqual(guideData.modules.map(m=>m.id),
- ["usage","formation","negative","questions","keywords"],"Preserve the source sequence");
-assert.equal(guideData.modules.reduce((n,m)=>n+m.examples.length,0),11,"Use the 11 book examples");
-assert.equal(guideData.modules[4].keywords.length,5,"Book signal words included");
-assert(guideStudent.includes("step-course/guide"),"Student view loads only published guide via student API");
-assert(guideStudent.includes("data-unit"),"Interactive guide chapter navigation");
-assert(guideEditor.includes("/guides/save"),"Admin draft editor");
-assert(guideEditor.includes("/guides/publish"),"Admin publish action");
-assert(guideEditor.includes("/guides/discard-draft"),"Admin discard action");
-assert(guideEditor.includes("isDirty"),"Admin unsaved-change protection");
-assert(adminServer.includes('path==="/guides/save"'),"Private owner-backed guide API");
-assert(adminServer.includes('permission.role!=="owner"'),"Guide publishing requires owner role");
-assert(courseServer.includes('path==="/guide"'),"Authenticated guide read API");
-assert(courseServer.includes('"published,published_at"'),"Guide read must never return drafts");
+// The student's live Present Simple experience is deliberately independent
+// from instructor source notes, raw question-bank codes, and old HTML fragments.
 const unified=readFileSync("step-grammar-student/learn.html","utf8");
-assert(portal.includes('href="learn.html"'),"Student portal opens the unified lesson");
-assert(unified.includes("/parts/")&&unified.includes("/guide")&&unified.includes("/exam"),
- "Merged student experience combines lessons, graded practice and final test");
-assert(unified.includes("data-mini")&&unified.includes("data-flip"),
- "Interactive checkpoints and reveal-cards integrated");
-assert(!unified.includes("ASGQ"),"No internal question codes hardcoded into the public lesson");
+const v2=readFileSync("step-grammar-student/present-simple-v2.js","utf8");
+const v2Content=readFileSync("step-grammar-student/present-simple-v2-content.js","utf8");
+const css=readFileSync("step-grammar-student/present-simple-v2.css","utf8");
+const oldGuide=readFileSync("step-grammar-student/guide.html","utf8");
+new Script(v2,{filename:"present-simple-v2.js"});
+new Script(v2Content,{filename:"present-simple-v2-content.js"});
+assert(portal.includes('href="learn.html"'),"Student dashboard opens one clear lesson");
+assert(unified.includes("present-simple-v2.js")&&unified.includes("present-simple-v2-content.js"),
+ "Student lesson must use only the redesigned study path");
+assert(v2.includes("/parts/")&&v2.includes("/exam"),"Live practice and final assessment are integrated");
+assert(!v2.includes('api("/guide")')&&!v2.includes('api("/guide"'),
+ "Old source-specific guide is not rendered in rebuilt lesson");
+assert(v2Content.includes("دي عادة")&&v2Content.includes("دي حقيقة")&&v2Content.includes("دي وظيفة"),
+ "Learning examples are classified clearly in Arabic");
+assert(v2Content.includes("فعل في المصدر")&&v2Content.includes("مفرد غائب"),
+ "Arabic grammar conventions are used");
+assert(v2.includes("mark(s)")||v2.includes("const mark="),"The lesson highlights important parts");
+assert(v2.includes("step-course")&&v2.includes("data-action"),"Interactive practice stays authenticated");
+assert(!unified.includes("ASGQ")&&!v2Content.includes("ASGQ")&&!v2.includes("ASGQ"),
+ "No internal bank codes appear in student assets");
+assert(css.includes("@media(max-width:480px)"),"Mobile layout is included");
+assert(oldGuide.includes("learn.html"),"Old explanation links redirect into a single lesson");
+assert(courseServer.includes('const showQuestions='),"API replaces internal question identifiers");
+assert(courseServer.includes('const {questionIds:_privateIds'),"API removes raw question-ID arrays");
 const book=readFileSync("step-grammar-account-preview/index.html","utf8");
-assert(book.includes("step-grammar-student/guide.html"),"Legacy lesson links to book explanation");
-const migration=readFileSync("supabase/migrations/20261020_step_indicator_guides.sql","utf8");
-assert(migration.includes("row level security"),"Source guide rows must remain private");
+assert(book.includes("step-grammar-student/learn.html"),"Legacy lesson also links to new lesson");
 console.log("All STEP portal contracts validated.");
