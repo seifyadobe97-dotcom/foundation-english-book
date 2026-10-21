@@ -153,7 +153,7 @@ try{
  await setupRoutes(mediaPage,2);
  await mediaPage.goto(base+"/step-grammar-student/lesson-v2.html?step=2",{waitUntil:"domcontentloaded"});
  await mediaPage.locator(".lesson-title").waitFor({timeout:10000});
- assert.match(await mediaPage.locator(".lesson-title").innerText(),/s \\/ es \\/ ies/);
+ assert.match(await mediaPage.locator(".lesson-title").innerText(),/s \/ es \/ ies/);
  const videoCard=mediaPage.locator(".lesson-video");
  assert.equal(await videoCard.count(),1,"Only the video-enabled stage has a video card");
  const tiktokLink=videoCard.locator("a.video-open");
