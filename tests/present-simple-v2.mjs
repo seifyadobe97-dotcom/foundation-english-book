@@ -69,7 +69,10 @@ try{
   page.on("pageerror",e=>errors.push(String(e)));
   await setupRoutes(page);
   await page.goto(base+"/step-grammar-student/lesson-v2.html",{waitUntil:"domcontentloaded"});
-  await page.locator(".lesson-title").waitFor({timeout:15000});
+  try { await page.locator(".lesson-title").waitFor({timeout:7000}); } catch(error){
+    console.error("STEP V2 LOAD DEBUG",JSON.stringify({viewport,errors,location:page.url(),html: (await page.locator("body").innerText()).slice(0,1800),scripts:await page.locator("script[src]").evaluateAll(xs=>xs.map(x=>x.src))}));
+    throw error;
+  }
   assert.match(await page.locator(".lesson-title").innerText(),/استخدمه إمتى/);
   assert.equal(await page.locator(".path-button").count(),6);
   assert.equal(await page.locator(".example").count(),4);
