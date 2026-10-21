@@ -28,6 +28,38 @@ function sectionStatus(attempts:{part_index:number;correct_count:number;passed:b
  return {sections:a.map(s=>({...s,locked:s.index>next})),next,completed:next===a.length};
 }
 const safeBody=async(r:Request)=>{const txt=await r.text();if(txt.length>16000)throw Error("request too large");return JSON.parse(txt)};
+// Browser measurements are advisory and cannot change grading or access control.
+function safeTiming(input:unknown,publicId:string){
+ const all=(input as {timings?:Record<string,unknown>})?.timings;
+ const value=all&&Object.hasOwn(all,publicId)?all[publicId]:null;
+ if(!value||typeof value!=="object"||Array.isArray(value))
+  return {elapsed_ms:null,choice_changes:null};
+ const v=value as {ms?:unknown;changes?:unknown};
+ return {
+  elapsed_ms:Number.isInteger(v.ms)&&Number(v.ms)>=0&&Number(v.ms)<=3600000?Number(v.ms):null,
+  choice_changes:Number.isInteger(v.changes)&&Number(v.changes)>=0&&Number(v.changes)<=100?Number(v.changes):null
+ };
+}
+async function saveItemTelemetry(db:ReturnType<typeof createClient>,info:{
+ userId:string;courseCode:string;kind:"practice"|"exam";attemptId:number;partIndex:number|null;
+ ids:string[];answers:Record<string,string>;questions:typeof originalQuestions;timings:unknown;
+}){
+ const rows=info.ids.map((id,i)=>{
+  const publicId="q"+(i+1),selected=info.answers[publicId]??info.answers[id];
+  return {user_id:info.userId,course_code:info.courseCode,attempt_kind:info.kind,
+   attempt_id:info.attemptId,part_index:info.partIndex,question_id:id,
+   selected,is_correct:selected===info.questions[id].correct,
+   ...safeTiming(info.timings,publicId)};
+ });
+ try{
+  const {error}=await db.from("step_question_attempt_details").insert(rows);
+  if(error)throw error;
+ }catch(e){
+  // Grade was committed already: telemetry cannot make a valid exam submit look failed.
+  console.error("STEP item telemetry write failed",e);
+ }
+}
+
 Deno.serve(async(request)=>{
  const origin=request.headers.get("origin")??"";
  const send=(status:number,value:unknown)=>reply(origin,status,value);
@@ -132,8 +164,12 @@ Deno.serve(async(request)=>{
     const results=s.questionIds.map((id:string,i:number)=>{const q=questions[id],selected=answers["q"+(i+1)]??answers[id];return {id:"q"+(i+1),selected,correct:q.correct,isCorrect:selected===q.correct,
       wrongReason:selected===q.correct?null:(q.wrongReasons?.[selected]??null),explanation:q.explanation};});
     const correctCount=results.filter((x:{isCorrect:boolean})=>x.isCorrect).length,passed=correctCount>=passRequired;
-    const {error}=await admin.from("step_part_attempts").insert({user_id:user.id,course_code:courseCode,part_index:index,correct_count:correctCount,total_questions:results.length,passed});
-    if(error)throw error;
+    const {data:saved,error}=await admin.from("step_part_attempts")
+     .insert({user_id:user.id,course_code:courseCode,part_index:index,correct_count:correctCount,total_questions:results.length,passed})
+     .select("id").single();
+    if(error||!saved)throw error??Error("Attempt was not stored");
+    await saveItemTelemetry(admin,{userId:user.id,courseCode,kind:"practice",attemptId:saved.id,
+     partIndex:index,ids:s.questionIds,answers,questions,timings:input.timings});
     // Update the in-memory status before computing the response.
     (partRows??[]).push({part_index:index,correct_count:correctCount,passed});
     const fresh=sectionStatus(partRows??[],effectiveLesson);
@@ -164,8 +200,12 @@ Deno.serve(async(request)=>{
       wrongReason:selected===q.correct?null:(q.wrongReasons?.[selected]??null),explanation:q.explanation};});
    const score=results.filter(x=>x.isCorrect).length;
    const record={score,total:results.length,percentage:Math.round(score/results.length*100),date:new Date().toISOString()};
-   const {error:saveErr}=await admin.from("step_exam_attempts").insert({user_id:user.id,course_code:courseCode,correct_count:score,total_questions:results.length});
-   if(saveErr)throw saveErr;
+   const {data:saved,error:saveErr}=await admin.from("step_exam_attempts")
+    .insert({user_id:user.id,course_code:courseCode,correct_count:score,total_questions:results.length})
+    .select("id").single();
+   if(saveErr||!saved)throw saveErr??Error("Exam was not stored");
+   await saveItemTelemetry(admin,{userId:user.id,courseCode,kind:"exam",attemptId:saved.id,
+    partIndex:null,ids,answers,questions,timings:input.timings});
    await admin.from("step_active_exams").delete().eq("user_id",user.id).eq("course_code",courseCode);
    return send(200,{result:record,results,progress:await getCourse()});
   }
