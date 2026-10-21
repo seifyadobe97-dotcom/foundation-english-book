@@ -77,6 +77,64 @@ Deno.serve(async(req)=>{
  if(roleError)return reply(500,{error:"تعذر فحص الصلاحيات"});
  if(!permission)return reply(403,{error:"الحساب الحالي غير مخوّل لفتح لوحة الأدمن"});
  const path=new URL(req.url).pathname.replace(/^\/(?:functions\/v1\/)?step-admin/,"")||"/";
+
+ // Student Success Center: all write operations require the owner role, never JWT user_metadata.
+ const assignmentMatch=path.match(/^\/students\/([0-9a-f-]{36})\/followups$/i);
+ if(assignmentMatch&&(req.method==="GET"||req.method==="POST")){
+  const target=assignmentMatch[1];
+  if(!isUUID(target))return reply(422,{error:"معرّف الطالب غير صالح"});
+  if(req.method==="POST"){
+   if(permission.role!=="owner")return reply(403,{error:"إنشاء المتابعة متاح لمدير المنصة فقط"});
+   let body:any;
+   try{const raw=await req.text();if(raw.length>2500)return reply(413,{error:"حجم الطلب كبير"});body=JSON.parse(raw);}
+   catch{return reply(400,{error:"بيانات التكليف غير صالحة"});}
+   const part=body?.part_index,kind=body?.kind,note=body?.note??"";
+   if(!Number.isInteger(part)||part<0||part>=lesson.sections.length||
+     !["review","practice","video"].includes(kind)||typeof note!=="string"||note.length>350||
+     (kind==="video"&&part!==2))return reply(422,{error:"حدد مهارة ونوع متابعة صالحين"});
+   const due=body?.due_at;
+   const dueDate=due==null||due===""?null:typeof due==="string"?new Date(due):new Date(NaN);
+   if(dueDate&&(Number.isNaN(dueDate.getTime())||dueDate.getTime()<Date.now()-60000||
+    dueDate.getTime()>Date.now()+366*86400000))return reply(422,{error:"موعد المتابعة غير صالح"});
+   const {data:profile,error:profileError}=await admin.from("step_student_profiles")
+    .select("user_id,is_active").eq("user_id",target).maybeSingle();
+   if(profileError)return reply(500,{error:"تعذر التحقق من الطالب"});
+   if(!profile||profile.is_active===false)return reply(404,{error:"الطالب غير موجود أو حسابه موقوف"});
+   const {data:created,error}=await admin.from("step_student_followups")
+    .insert({user_id:target,course_code:lesson.code,part_index:part,kind,
+      note:note.trim(),due_at:dueDate?.toISOString()??null,assigned_by:auth.user.id})
+    .select("id,part_index,kind,note,due_at,assigned_at").single();
+   if(error||!created){console.error("STEP followup create failed",error);return reply(500,{error:"تعذر حفظ المتابعة"});}
+   return reply(201,{followup:created});
+  }
+  try{
+   const {data:rows,error}=await admin.from("step_student_followups")
+    .select("id,part_index,kind,note,due_at,assigned_at,reviewed_at,cancelled_at")
+    .eq("user_id",target).eq("course_code",lesson.code).order("assigned_at",{ascending:false}).limit(150);
+   if(error)throw error;
+   const since=(rows??[]).reduce((a,r)=>r.assigned_at<a?r.assigned_at:a,new Date().toISOString());
+   const {data:passes,error:passError}=await admin.from("step_part_attempts")
+    .select("part_index,attempted_at").eq("user_id",target).eq("course_code",lesson.code)
+    .eq("passed",true).gte("attempted_at",since).order("attempted_at",{ascending:false}).limit(2000);
+   if(passError)throw passError;
+   return reply(200,{followups:(rows||[]).map(row=>{
+    const verified=(passes||[]).some(p=>p.part_index===row.part_index&&p.attempted_at>=row.assigned_at);
+    return {...row,title:lesson.sections[row.part_index]?.titleAr??"مهارة",status:row.cancelled_at?"cancelled":
+      verified?"completed":row.reviewed_at?"reviewed":"pending"};
+   })});
+  }catch(e){console.error("STEP followup list failed",e);return reply(500,{error:"تعذر تحميل التكليفات"});}
+ }
+ const cancelMatch=path.match(/^\/followups\/([0-9a-f-]{36})\/cancel$/i);
+ if(req.method==="POST"&&cancelMatch){
+  if(permission.role!=="owner")return reply(403,{error:"إلغاء المتابعة متاح لمدير المنصة فقط"});
+  const {data,error}=await admin.from("step_student_followups")
+   .update({cancelled_at:new Date().toISOString(),cancelled_by:auth.user.id})
+   .eq("id",cancelMatch[1]).eq("course_code",lesson.code).is("cancelled_at",null).select("id").maybeSingle();
+  if(error)return reply(500,{error:"تعذر إلغاء التكليف"});
+  if(!data)return reply(404,{error:"التكليف غير موجود أو تم إلغاؤه"});
+  return reply(200,{ok:true});
+ }
+
  if(req.method==="GET"&&path==="/me"){
   return reply(200,{role:permission.role,username:auth.user.user_metadata?.username||"Admin"});
  }
