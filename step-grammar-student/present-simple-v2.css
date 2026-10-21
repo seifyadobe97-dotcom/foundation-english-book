@@ -57,3 +57,20 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
 [hidden]{display:none!important}
 @media(max-width:740px){.simple-grid,.simple-grid.three,.examples{grid-template-columns:1fr}.masthead-inner{padding:12px 15px}.shell{padding:18px 13px 50px}.path-button{flex:0 0 145px}.lesson-inner{padding:22px 18px}.practice{padding:22px 18px}.hero .progress-block{text-align:right}.example{min-height:0}}
 @media(max-width:480px){.q-answers,.check-options{grid-template-columns:1fr}.hero h1{font-size:30px}.wordmark small{display:none}.explain{font-size:16px}.chapter-footer .button{flex:1}.path-button{flex-basis:130px}}
+
+/* Optional, deliberately lightweight video lesson: static until a student activates it. */
+.lesson-video{margin:25px 0 2px;padding:19px 21px;border:1px solid #d5e4ef;border-radius:14px;background:linear-gradient(115deg,#f4f9fd,#fff);display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+.video-icon{display:grid;place-items:center;flex:none;width:48px;height:48px;border-radius:14px;color:#fff;background:#173b63;font-size:19px}
+.video-copy{flex:1 1 230px;min-width:0}
+.video-eyebrow{font:800 10px "DM Sans",Arial,sans-serif;letter-spacing:.09em;color:#3f7190;direction:ltr;display:block;text-align:right}
+.video-copy h3{margin:2px 0;font-size:17px;line-height:1.65;color:var(--ink)}
+.video-copy p{margin:2px 0 0;font-size:12px;line-height:1.8;color:#657b83}
+.video-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.video-actions .button{font-size:12px;min-height:41px;padding:9px 13px}
+.video-open{background:#fff;border-color:#c4d9e6;color:#143d5b}
+.video-open:hover,.video-open:focus-visible{background:#eaf3fa;border-color:#8db4d2}
+.video-play{background:#173b63;border-color:#173b63}
+.video-frame{flex:1 0 100%;min-width:0;max-width:720px;margin:9px auto 0;aspect-ratio:16/9;background:#eef2f5;border-radius:12px;overflow:hidden}
+.video-frame:has(iframe[src*="tiktok.com"]){max-width:370px;aspect-ratio:9/16}
+.video-frame iframe{display:block;width:100%;height:100%;border:0}
+@media(max-width:540px){.lesson-video{padding:15px}.video-icon{width:40px;height:40px}.video-actions{width:100%}.video-actions .button{flex:1}.video-frame{aspect-ratio:16/10}}

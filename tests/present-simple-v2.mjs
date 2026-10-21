@@ -147,6 +147,25 @@ try{
   console.log("PASS Present Simple V2 "+viewport.width+"px");
   await context.close();
  }
+ const mediaContext=await browser.newContext({viewport:{width:390,height:844}}),mediaPage=await mediaContext.newPage();
+ const mediaErrors=[];
+ mediaPage.on("pageerror",error=>mediaErrors.push(String(error)));
+ await setupRoutes(mediaPage,2);
+ await mediaPage.goto(base+"/step-grammar-student/lesson-v2.html?step=2",{waitUntil:"domcontentloaded"});
+ await mediaPage.locator(".lesson-title").waitFor({timeout:10000});
+ assert.match(await mediaPage.locator(".lesson-title").innerText(),/s \\/ es \\/ ies/);
+ const videoCard=mediaPage.locator(".lesson-video");
+ assert.equal(await videoCard.count(),1,"Only the video-enabled stage has a video card");
+ const tiktokLink=videoCard.locator("a.video-open");
+ assert.equal(await tiktokLink.getAttribute("href"),"https://vt.tiktok.com/ZSgyJoEnb/");
+ assert.equal(await tiktokLink.getAttribute("target"),"_blank");
+ assert.match(await tiktokLink.innerText(),/TikTok/);
+ assert.equal(await videoCard.locator("iframe").count(),0,"Unresolved TikTok short links should not load a broken iframe");
+ assert.equal(await mediaPage.locator(".question").count(),dataset.sections[2].questionIds.length,"Video does not replace practice");
+ assert.equal((await mediaPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2)),true,"Video must not create horizontal overflow");
+ assert.deepEqual(mediaErrors,[],"Unexpected video lesson client errors");
+ await mediaContext.close();
+ console.log("PASS STEP optional TikTok link, video safety, and mobile layout");
  const context=await browser.newContext({viewport:{width:1280,height:800}}),page=await context.newPage();
  await setupRoutes(page,5);
  await page.goto(base+"/step-grammar-student/lesson-v2.html?step=5",{waitUntil:"domcontentloaded"});

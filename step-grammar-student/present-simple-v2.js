@@ -1,7 +1,7 @@
 "use strict";
 const LESSONS=window.PRESENT_SIMPLE_UNITS;
 const ABC=["A","B","C","D"];
-const state={course:null,part:null,index:0,answers:{},graded:null,quick:{},mode:"lesson",exam:null,examResult:null,busy:false};
+const state={course:null,part:null,index:0,answers:{},graded:null,quick:{},mode:"lesson",exam:null,examResult:null,busy:false,openedVideo:null};
 const root=document.getElementById("lesson-root");
 const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const mark=s=>escapeHtml(s).replace(/\[\[([\s\S]+?)\]\]/g,"<mark>$1</mark>");
@@ -44,7 +44,7 @@ async function openPart(i,scroll=true){
  try{
   const d=await api("/parts/"+i);
   state.course=d.progress;state.part=d.part;state.index=i;state.answers={};state.graded=null;
-  state.mode="lesson";state.exam=null;state.examResult=null;
+  state.mode="lesson";state.exam=null;state.examResult=null;state.openedVideo=null;
   draw();if(scroll)window.scrollTo({top:0,behavior:"smooth"});
  }catch(e){fail(e);}
  finally{state.busy=false;}
@@ -96,11 +96,44 @@ function warningExamples(m){
  '<bdi dir="ltr" lang="en">'+escapeHtml(m.warning.correct)+'</bdi></div></div>'+
  '<p class="tip-why">'+clean(m.warning.why)+'</p>';
 }
+// Videos are supplementary: never block lesson navigation or grading if a provider is unavailable.
+function videoSource(video){
+ try{
+  const url=new URL(video?.url||"");
+  if(url.protocol!=="https:"||url.username||url.password)return null;
+  const host=url.hostname.toLowerCase(),path=url.pathname;
+  if(host==="youtube.com"||host==="www.youtube.com"||host==="m.youtube.com"||host==="youtu.be"){
+   const id=host==="youtu.be"?path.split("/")[1]:path.startsWith("/shorts/")?path.split("/")[2]:url.searchParams.get("v");
+   if(id&&/^[a-zA-Z0-9_-]{11}$/.test(id))return {type:"youtube",external:url.href,embed:"https://www.youtube-nocookie.com/embed/"+id+"?rel=0"};
+  }
+  if(host==="tiktok.com"||host==="www.tiktok.com"){
+   const match=path.match(/\\/video\\/(\\d{12,22})(?:\\/|$)/)||path.match(/^\\/player\\/v1\\/(\\d{12,22})(?:\\/|$)/);
+   if(match)return {type:"tiktok",external:url.href,embed:"https://www.tiktok.com/player/v1/"+match[1]};
+  }
+  if(host==="vt.tiktok.com"||host==="vm.tiktok.com")return {type:"tiktok",external:url.href,embed:null};
+ }catch(_){}
+ return null;
+}
+function lessonVideo(m){
+ const video=m.video,source=videoSource(video);
+ if(!source)return "";
+ const open=source.embed&&state.openedVideo===state.index;
+ return '<section class="lesson-video" aria-label="شرح الفيديو">'+
+ '<div class="video-icon" aria-hidden="true">▶</div><div class="video-copy"><span class="video-eyebrow">VIDEO LESSON · '+(source.type==="tiktok"?"TIKTOK":"YOUTUBE")+'</span>'+
+ '<h3>'+escapeHtml(video.title||"شوف الشرح بالفيديو")+'</h3><p>'+escapeHtml(video.note||"فيديو اختياري قبل ما تبدأ التدريب.")+'</p></div>'+
+ '<div class="video-actions">'+
+ (source.embed?'<button type="button" class="button video-play" data-action="video" aria-expanded="'+(open?"true":"false")+'">'+(open?"إخفاء الفيديو":"شغّل الفيديو هنا")+'</button>':"")+
+ '<a class="button video-open" href="'+escapeHtml(source.external)+'" target="_blank" rel="noopener noreferrer">افتح الفيديو على '+(source.type==="tiktok"?"TikTok":"YouTube")+' ↗</a>'+
+ '</div>'+
+ (open?'<div class="video-frame"><iframe loading="lazy" title="'+escapeHtml(video.title||"فيديو الشرح")+'" src="'+escapeHtml(source.embed)+'" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>':"")+
+ '</section>';
+}
 function chapter(){
  const m=LESSONS[state.index],number=state.index+1;
  return '<div class="lesson-inner"><div class="eyebrow">المرحلة '+number+' من '+LESSONS.length+'</div>'+
  '<h2 class="lesson-title">'+escapeHtml(m.title)+'</h2><p class="explain">'+mark(m.detail)+'</p>'+
  concepts(m)+words(m)+examples(m)+
+ lessonVideo(m)+
  '<div class="tip"><strong>خد بالك:</strong> '+mark(m.tip)+warningExamples(m)+'</div>'+
  (m.extra?'<details class="optional"><summary>'+escapeHtml(m.extra.heading)+'</summary><div class="optional-content">'+m.extra.paragraphs.map(p=>'<p>'+escapeHtml(p)+'</p>').join("")+'</div></details>':'')+
  quick(m)+'<div class="chapter-footer">'+(number>1?'<button class="button secondary" data-action="part" data-index="'+(number-2)+'">المرحلة السابقة</button>':'<span></span>')+
@@ -190,6 +223,11 @@ root.addEventListener("click",async ev=>{
  if(action==="reload"){init();return;}
  if(action==="part"){await openPart(n);return;}
  if(action==="practice"){document.getElementById("practice")?.scrollIntoView({behavior:"smooth"});return;}
+ if(action==="video"){
+  if(!videoSource(LESSONS[state.index]?.video)?.embed)return;
+  state.openedVideo=state.openedVideo===state.index?null:state.index;
+  draw();document.querySelector(".lesson-video")?.scrollIntoView({behavior:"smooth",block:"nearest"});return;
+ }
  if(action==="mini"){state.quick[state.index]=n;draw();document.querySelector(".check")?.scrollIntoView({behavior:"smooth",block:"nearest"});return;}
  if(action==="answer"){
   const qs=state.mode==="exam"?state.exam.questions:state.part.questions;

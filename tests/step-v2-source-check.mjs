@@ -35,5 +35,10 @@ for(const id of publishedIds){
 assert.equal(distractors,60,"Every bank distractor has an individual explanation");
 assert(api.includes("wrongReason:selected===q.correct?null"),"Never return wrong explanations before grading");
 assert(script.includes('dir="ltr"'),"English and answer choices are isolated LTR");
+assert(script.includes("function lessonVideo("),"Lesson should support optional video content");
+assert(script.includes("www.youtube-nocookie.com/embed/"),"Safe YouTube embed template");
+assert(script.includes("tiktok.com/player/v1/"),"Safe full TikTok embed template");
+assert(content.includes("https://vt.tiktok.com/ZSgyJoEnb/"),"Pilot TikTok link must be configured in lesson data");
+
 assert(css.includes(".answer-feedback.is-wrong")&&css.includes(".check-option.incorrect"),"Clear error colors for graded and quick checks");
 console.log("PASS STEP pilot source checks: 6 steps, 20 questions, 60 distinct distractor explanations, safe JS, mobile styles");
