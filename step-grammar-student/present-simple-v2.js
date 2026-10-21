@@ -1,7 +1,40 @@
 "use strict";
 const LESSONS=window.PRESENT_SIMPLE_UNITS;
 const ABC=["A","B","C","D"];
-const state={course:null,part:null,index:0,answers:{},graded:null,quick:{},mode:"lesson",exam:null,examResult:null,busy:false,openedVideo:null};
+// Browser timings are advisory, not a grading or cheating-detection signal.
+function newTiming(){
+ return {started:performance.now(),lastAction:performance.now(),pauseMs:0,pausedAt:null,
+  perQuestion:{},changes:{}};
+}
+function elapsedMs(){
+ const t=state.timing;if(!t)return 0;
+ const now=performance.now(),hidden=t.pausedAt==null?0:now-t.pausedAt;
+ return Math.max(0,Math.round(now-t.started-t.pauseMs-hidden));
+}
+function timeLabel(ms){
+ const seconds=Math.floor(ms/1000);
+ return String(Math.floor(seconds/60)).padStart(2,"0")+":"+String(seconds%60).padStart(2,"0");
+}
+function recordAnswerTime(id,alreadyChosen){
+ const t=state.timing;if(!t)return;
+ const now=performance.now();
+ t.perQuestion[id]=(t.perQuestion[id]||0)+Math.max(0,Math.round(now-t.lastAction));
+ if(alreadyChosen)t.changes[id]=(t.changes[id]||0)+1;
+ t.lastAction=now;
+}
+document.addEventListener("visibilitychange",()=>{
+ const t=state.timing;if(!t)return;
+ const now=performance.now();
+ if(document.hidden && t.pausedAt===null)t.pausedAt=now;
+ else if(!document.hidden&&t.pausedAt!==null){
+  t.pauseMs+=now-t.pausedAt;t.pausedAt=null;t.lastAction=now;
+ }
+});
+setInterval(()=>{
+ const el=document.getElementById("exam-elapsed");
+ if(el&&state.mode==="exam"&&!state.examResult)el.textContent=timeLabel(elapsedMs());
+},1000);
+const state={course:null,part:null,index:0,answers:{},graded:null,quick:{},mode:"lesson",exam:null,examResult:null,busy:false,openedVideo:null,timing:null};
 const root=document.getElementById("lesson-root");
 const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const mark=s=>escapeHtml(s).replace(/\[\[([\s\S]+?)\]\]/g,"<mark>$1</mark>");
@@ -44,7 +77,7 @@ async function openPart(i,scroll=true){
  try{
   const d=await api("/parts/"+i);
   state.course=d.progress;state.part=d.part;state.index=i;state.answers={};state.graded=null;
-  state.mode="lesson";state.exam=null;state.examResult=null;state.openedVideo=null;
+  state.mode="lesson";state.exam=null;state.examResult=null;state.openedVideo=null;state.timing=newTiming();
   draw();if(scroll)window.scrollTo({top:0,behavior:"smooth"});
  }catch(e){fail(e);}
  finally{state.busy=false;}
@@ -182,6 +215,9 @@ function examView(){
  const f=state.examResult;
  return '<section class="lesson"><div class="lesson-inner"><div class="eyebrow">FINAL ASSESSMENT</div>'+
  '<h2 class="lesson-title">اختبار الإتقان</h2><p class="explain">فكّر في معنى الجملة، وحدد الفاعل، وبعدين اختار.</p>'+
+ '<div class="exam-clock" role="timer" aria-live="off"><span>⏱ زمن الاختبار</span>'+
+ '<strong id="exam-elapsed">'+timeLabel(state.examResult?.elapsedMs??elapsedMs())+'</strong>'+
+ '<small>عداد تصاعدي مش حد زمني. الوقت تقديري ويتوقف لما تسيب التبويب.</small></div>'+
  (f?'<div class="score" role="status"><strong>نتيجتك: '+f.result.score+' من '+f.result.total+'</strong>'+
  '<p>'+f.result.percentage+'% · النتيجة محفوظة في حسابك.</p></div>':'')+
  state.exam.questions.map((q,i)=>question(q,i,f)).join("")+
@@ -203,7 +239,12 @@ async function submit(isExam){
  const button=document.getElementById("submit-practice");
  if(button){button.disabled=true;button.textContent="بنصحّح إجاباتك…";}
  try{
-  const d=await api(isExam?"/exam/submit":"/parts/"+state.index+"/submit",{answers:state.answers});
+  const timings=Object.fromEntries(questions.map(q=>[q.id,{
+   ms:Math.min(3600000,Math.max(0,state.timing?.perQuestion[q.id]||0)),
+   changes:Math.min(100,state.timing?.changes[q.id]||0)}]));
+  const elapsedBeforeSubmit=elapsedMs();
+  const d=await api(isExam?"/exam/submit":"/parts/"+state.index+"/submit",{answers:state.answers,timings});
+  if(isExam)d.elapsedMs=elapsedBeforeSubmit;
   if(isExam){state.examResult=d;state.course=d.progress;}else{state.graded=d;state.course=d.progress;}
   draw();document.getElementById(isExam?"lesson-root":"practice")?.scrollIntoView({behavior:"smooth",block:"start"});
  }catch(e){alert(e.message);if(button){button.disabled=false;button.textContent="صحّح إجاباتي ←";}}
@@ -212,7 +253,7 @@ async function submit(isExam){
 async function openExam(){
  if(!state.course?.completed||state.busy)return;
  state.busy=true;loading("بنجهز اختبار الإتقان…");
- try{state.exam=await api("/exam");state.mode="exam";state.examResult=null;state.answers={};draw();window.scrollTo({top:0,behavior:"smooth"});}
+ try{state.exam=await api("/exam");state.mode="exam";state.examResult=null;state.answers={};state.timing=newTiming();draw();window.scrollTo({top:0,behavior:"smooth"});}
  catch(e){fail(e);}
  finally{state.busy=false;}
 }
@@ -232,9 +273,10 @@ root.addEventListener("click",async ev=>{
  if(action==="answer"){
   const qs=state.mode==="exam"?state.exam.questions:state.part.questions;
   if((state.mode==="exam"?state.examResult:state.graded)||!qs[n])return;
+  recordAnswerTime(qs[n].id,Boolean(state.answers[qs[n].id]));
   state.answers[qs[n].id]=b.dataset.value;draw();return;
  }
- if(action==="retry"){state.answers={};state.graded=null;draw();document.getElementById("practice")?.scrollIntoView({behavior:"smooth"});return;}
+ if(action==="retry"){state.answers={};state.graded=null;state.timing=newTiming();draw();document.getElementById("practice")?.scrollIntoView({behavior:"smooth"});return;}
  if(action==="continue"){if(state.index===5)await openExam();else await openPart(state.index+1);return;}
  if(action==="submit"){await submit(false);return;}
  if(action==="submit-exam"){await submit(true);return;}
