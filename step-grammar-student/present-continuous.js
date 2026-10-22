@@ -102,7 +102,7 @@ async function openPart(i,scroll=true){
 }
 function renderLessonHeader(){
  const list=state.course.sections,passed=list.filter(s=>s.passed).length,pct=Math.round(passed/list.length*100);
- return '<section class="hero"><div><div class="kicker">STEP · GRAMMAR</div><h1>Subject–Verb Agreement</h1><p class="lead">حدد الفاعل الحقيقي، وبعدها اختار الفعل الصح.</p></div>'+
+ return '<section class="hero"><div><div class="kicker">STEP · GRAMMAR</div><h1>Present Continuous</h1><p class="lead">افهم اللي بيحصل دلوقتي، وتعلّم am / is / are + ing مع أمثلة خطوة بخطوة.</p></div>'+
  '<div class="progress-block"><div class="progress-number">'+pct+'%</div><div class="progress-caption">تقدمك في الدرس</div><div class="progress-track"><span style="width:'+pct+'%"></span></div></div></section>'+
  '<nav class="path" aria-label="مراحل الدرس">'+LESSONS.map((m,i)=>{
  const done=list[i]?.passed,locked=list[i]?.locked,active=state.mode==="lesson"&&i===state.index;
@@ -129,7 +129,7 @@ function words(m){
 function explainTable(m){
  if(!m.table)return "";
  const t=m.table;
- return '<section class="agreement-table-box" aria-label="جدول تطابق الفاعل والفعل">'+
+ return '<section class="agreement-table-box" aria-label="جدول المضارع المستمر">'+
  '<h3 class="section-label">جدول للمقارنة والحفظ</h3><div class="agreement-table-scroll">'+
  '<table class="agreement-table"><thead><tr>'+t.headers.map(h=>'<th dir="rtl">'+escapeHtml(h)+'</th>').join("")+'</tr></thead><tbody>'+
  t.rows.map(row=>'<tr>'+row.map((value,i)=>'<td data-label="'+escapeHtml(t.headers[i])+'"><span dir="auto">'+escapeHtml(value)+'</span></td>').join("")+'</tr>').join("")+
@@ -251,7 +251,7 @@ function examBanner(){
 function examView(){
  const f=state.examResult;
  return '<section class="lesson"><div class="lesson-inner"><div class="eyebrow">FINAL ASSESSMENT</div>'+
- '<h2 class="lesson-title">اختبار الإتقان</h2><p class="explain">فكّر في معنى الجملة، وحدد الفاعل، وبعدين اختار.</p>'+
+ '<h2 class="lesson-title">اختبار الإتقان</h2><p class="explain">حدّد الزمن من السياق، ثم اختار الفعل المساعد وشكل ing الصحيح.</p>'+
  '<div class="exam-clock" role="timer" aria-live="off"><span>⏱ زمن الاختبار</span>'+
  '<strong id="exam-elapsed">'+timeLabel(state.examResult?.elapsedMs??elapsedMs())+'</strong>'+
  '<small>عداد تصاعدي مش حد زمني. الوقت تقديري ويتوقف لما تسيب التبويب.</small></div>'+
