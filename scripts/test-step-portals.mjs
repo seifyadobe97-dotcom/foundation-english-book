@@ -112,6 +112,14 @@ assert(courseServer.includes('const isContinuous=')&&
 assert(adminServer.includes('path==="/continuous/audit"')&&
  adminServer.includes('continuousLesson'),
  "Lesson 3 source review and later instructor analytics must be admin-authorized");
+assert(courseServer.includes("dynamicMatch")&&courseServer.includes('dynamicIndicator?.legacy_course_code'),
+ "Generic authenticated lesson route must load future published lessons dynamically");
+assert(adminServer.includes('path==="/past/audit"'),
+ "Past Simple register must remain behind admin JWT and role authorization");
+assert(readFileSync("step-grammar-admin/past-audit.html","utf8").includes("/past/audit"),
+ "Past Simple instructor audit must use the private authenticated endpoint");
+assert(readFileSync("step-grammar-admin/sources.html","utf8").includes("ASGQPASIM"),
+ "Lesson 4 editorial draft and audit must be visible only from admin hub");
 const studentSkin=readFileSync("step-grammar-student/student-experience.js","utf8");
 const dynamicLesson=readFileSync("step-grammar-student/lesson-player.js","utf8");
 const studentStyle=readFileSync("step-grammar-student/student-experience.css","utf8");
