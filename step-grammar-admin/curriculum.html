@@ -37,7 +37,7 @@ h1{font-size:clamp(27px,4vw,37px);margin:6px 0}h2{margin:0 0 10px;font-size:21px
 @media(max-width:950px){.axes{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}
 @media(max-width:440px){.axes{gap:8px}.axis{padding:13px 10px}.axis b{font-size:14px}}
 .step-brand-image{display:block;width:206px;max-width:100%;height:auto;flex:none}@media(max-width:480px){.step-brand-image{width:158px}}</style><link rel="icon" type="image/svg+xml" href="../step-brand/mark.svg"></head><body>
-<header><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"><div><a href="agreement-audit.html">تدقيق أسئلة الدرس الثاني</a> · <a href="./">← لوحة الأدمن</a></div></header>
+<header><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"><div><a href="agreement-audit.html">تدقيق أسئلة الدرس الأول</a> · <a href="./">← لوحة الأدمن</a></div></header>
 <main id="content"><p>جاري تحميل المحاور والمؤشرات…</p></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
 <script>
@@ -59,7 +59,7 @@ async function request(path,body){
 }
 function fail(e){root.innerHTML='<h1>المحاور والمؤشرات</h1><div class="panel">'+escapeHtml(e.message||"تعذر التحميل")+'</div><a href="./">العودة للوحة الأدمن</a>'}
 async function load(){
- try{const data=await request("/curriculum");state.axes=data.axes||[];state.indicators=data.indicators||[];state.bank=data.classifications||[];paint();}
+ try{const data=await request("/curriculum");state.axes=data.axes||[];state.indicators=(data.indicators||[]).slice().sort((a,b)=>Number(a.position)-Number(b.position)||String(a.title_ar).localeCompare(String(b.title_ar),'ar'));state.bank=data.classifications||[];paint();}
  catch(e){fail(e);}
 }
 function paint(){
@@ -69,13 +69,13 @@ function paint(){
   (x.title_ar+" "+x.title_en).toLowerCase().includes(state.search.toLowerCase()));
  const current=state.indicators.find(x=>x.id===state.item&&x.axis_code===state.axis)||null;
  const isIndicatorAxis=axis?.content_model==="indicators";
- root.innerHTML='<div class="eyebrow">STEP LEARNING STRUCTURE</div><h1>المحاور والمؤشرات</h1><p>هيكل منهج STEP. المؤشر المنشور الوحيد حاليًا هو Present Simple، وباقي المؤشرات مسودات تحتاج محتوى معتمدًا.</p><div class="axes">'+
+ root.innerHTML='<div class="eyebrow">STEP LEARNING STRUCTURE</div><h1>المحاور والمؤشرات</h1><p>هيكل منهج STEP مرتب حسب التدرّج التعليمي. الدروس المنشورة متاحة للطلاب، والمسودات غير متاحة. جزء التأسيس محفوظ للتطوير لاحقًا.</p><div class="axes">'+
  state.axes.map(x=>{const total=state.indicators.filter(i=>i.axis_code===x.code).length;
  return '<button class="axis '+(state.axis===x.code?"active":"")+'" data-axis="'+escapeHtml(x.code)+'"><span>AXIS 0'+x.position+'</span><b>'+escapeHtml(x.title_ar)+'</b><small>'+escapeHtml(x.title_en)+'</small><small>'+(x.content_model==="indicators"?total+' مؤشر':'محور مستقل')+'</small></button>';
  }).join("")+'</div><section class="layout"><div class="panel"><h2>'+escapeHtml(axis?.title_ar||"")+'</h2>'+
  (isIndicatorAxis?'<input id="indicator-search" class="filter" placeholder="بحث عن مؤشر…" value="'+escapeHtml(state.search)+'">'+
  (canEdit?'<button class="btn" id="new-indicator">+ إضافة مؤشر</button>':'')+
- '<div id="indicators-list">'+filtered.map(i=>'<button class="indicator '+(i.id===state.item?"active":"")+'" data-indicator="'+escapeHtml(i.id)+'"><small class="status '+(i.status==="published"?"published":"")+'">'+(i.status==="published"?"منشور":i.status==="archived"?"مؤرشف":"مسودة")+'</small><strong>'+escapeHtml(i.title_ar)+'</strong><small>'+escapeHtml(i.title_en)+'</small><small>تصنيفات بنك الأسئلة: '+state.bank.filter(b=>b.indicator_slug===i.slug).length+'</small></button>').join("")+'</div>':
+ '<div id="indicators-list">'+filtered.map(i=>'<button class="indicator '+(i.id===state.item?"active":"")+'" data-indicator="'+escapeHtml(i.id)+'"><small class="status '+(i.status==="published"?"published":"")+'">'+(i.status==="published"?"منشور":i.status==="archived"?"مؤرشف":"مسودة")+'</small>'+(i.axis_code==="grammar"&&i.slug!=="sentence-elements"&&i.position>=101&&i.position<=141?'<small>الدرس '+(i.position-100)+'</small>':'')+'<strong>'+escapeHtml(i.title_ar)+'</strong><small>'+escapeHtml(i.title_en)+'</small><small>تصنيفات بنك الأسئلة: '+state.bank.filter(b=>b.indicator_slug===i.slug).length+'</small></button>').join("")+'</div>':
  '<div class="note">المحور مستقل، وهنربط محتواه وتدريباته به مباشرة.</div>')+
  '</div><div class="panel">'+(isIndicatorAxis?form(current,canEdit):
  '<h2>'+escapeHtml(axis?.title_ar||"")+'</h2><p>مكان المحور جاهز. إدخال المحتوى الفعلي هيبدأ بعد اعتماد المواد والأسئلة.</p>')+
@@ -148,7 +148,7 @@ function form(item,canEdit){
  '<div class="actions"><a class="btn" href="reports.html?indicator='+encodeURIComponent(item.slug)+'">تقرير المؤشر ←</a>'+
  '<a class="btn alt" href="videos.html?indicator='+encodeURIComponent(item.slug)+'">▶ إدارة فيديوهات الدرس</a>'+
  (item.slug==='present-simple'?'<a class="btn alt" href="../step-grammar-student/learn.html">عاين درس المضارع البسيط الجديد ←</a>':
- item.slug==='subject-verb-agreement'?'<a class="btn alt" href="../step-grammar-student/subject-verb-agreement.html">عاين الدرس الثاني التفاعلي ←</a>':
+ item.slug==='subject-verb-agreement'?'<a class="btn alt" href="../step-grammar-student/subject-verb-agreement.html">عاين الدرس الأول التفاعلي ←</a>':
  item.slug==='sentence-elements'?'<span class="note">ملف التأسيس محفوظ للتطوير الداخلي وموقوف عن عرض الطلاب مؤقتًا</span>':
  '<a class="btn alt" href="guide.html?indicator='+encodeURIComponent(item.slug)+'">محرر الشرح ←</a>')+'</div>':'')+'<div class="note">'+(immutable?
  'المؤشر ده منشور بالفعل، ومحتواه ودرجاته محفوظة في نظام الدروس.': 
