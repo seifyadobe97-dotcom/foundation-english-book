@@ -192,7 +192,7 @@ Deno.serve(async(request)=>{
   if(method==="GET"&&path==="/videos"){
    const {data:rows,error:videoError}=await admin.from("step_indicator_videos")
     .select("part_index,title,description,video_url")
-    .eq("indicator_slug",isContinuous?"present-continuous":isAgreement?"subject-verb-agreement":"present-simple").eq("published",true).order("part_index");
+    .eq("indicator_slug",dynamicIndicator?.slug||(isContinuous?"present-continuous":isAgreement?"subject-verb-agreement":"present-simple")).eq("published",true).order("part_index");
    if(videoError)throw videoError;
    return send(200,{videos:(rows||[]).filter(r=>
     Number.isInteger(r.part_index)&&r.part_index>=0&&r.part_index<effectiveLesson.sections.length)
