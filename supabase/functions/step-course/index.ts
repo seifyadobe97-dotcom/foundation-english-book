@@ -1,16 +1,15 @@
 // STEP Present Simple learning API. Requires JWT from Supabase Auth.
 // Only this function (service-role credentials) can write grades to database.
 import { createClient } from "npm:@supabase/supabase-js@2.57.0";
-import presentSimpleLesson from "./lesson-data.json" with { type: "json" };
-import agreementLesson from "./agreement-data.json" with { type: "json" };
+// The source-verified question banks and grading keys live only in service-role-only Supabase storage.
+type LessonData=any;
+type QuestionMap=Record<string,{id:string;text:string;options:Record<string,string>;correct:string;explanation:string;wrongReasons?:Record<string,string>}>;
 
 const allowedOrigins = new Set(["https://seifyadobe97-dotcom.github.io","http://localhost:3000","http://127.0.0.1:3000"]);
 const supaUrl=Deno.env.get("SUPABASE_URL")??"";
 const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
 const apiKey=Deno.env.get("SUPABASE_ANON_KEY")??"";
-const total=presentSimpleLesson.sections.length;
 const defaultExamCount=10;
-const originalQuestions=presentSimpleLesson.questions as Record<string,{id:string;text:string;options:Record<string,string>;correct:string;explanation:string;wrongReasons?:Record<string,string>}>;
 type AnswerMap=Record<string,string>;
 const reply=(origin:string,status:number,body:unknown)=>new Response(JSON.stringify(body),{
  status,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store",
@@ -18,9 +17,9 @@ const reply=(origin:string,status:number,body:unknown)=>new Response(JSON.string
  "Access-Control-Allow-Methods":"GET,POST,OPTIONS",
  "Access-Control-Allow-Headers":"authorization, x-client-info, apikey, content-type",Vary:"Origin"}
 });
-const serializeQ=(id:string,questions:typeof originalQuestions,publicId:string)=>({id:publicId,text:questions[id].text,options:questions[id].options});
+const serializeQ=(id:string,questions:QuestionMap,publicId:string)=>({id:publicId,text:questions[id].text,options:questions[id].options});
 function randomIds(pool:string[]){const ids=[...pool];for(let i=ids.length-1;i>0;i--){const bytes=new Uint32Array(1);crypto.getRandomValues(bytes);const j=bytes[0]%(i+1);[ids[i],ids[j]]=[ids[j],ids[i]];}return ids.slice(0,defaultExamCount);}
-function sectionStatus(attempts:{part_index:number;correct_count:number;passed:boolean}[],effectiveLesson:typeof presentSimpleLesson){
+function sectionStatus(attempts:{part_index:number;correct_count:number;passed:boolean}[],effectiveLesson:LessonData){
  const a=effectiveLesson.sections.map((s,i)=>{const list=attempts.filter(r=>r.part_index===i);
  return {index:i,id:s.id,title:s.title,titleAr:s.titleAr,tag:s.tag,short:s.short,duration:s.duration,questionCount:s.questionIds.length,
  required:Math.ceil(s.questionIds.length*effectiveLesson.requiredPassRate),
@@ -43,7 +42,7 @@ function safeTiming(input:unknown,publicId:string){
 }
 async function saveItemTelemetry(db:ReturnType<typeof createClient>,info:{
  userId:string;courseCode:string;kind:"practice"|"exam";attemptId:number;partIndex:number|null;
- ids:string[];answers:Record<string,string>;questions:typeof originalQuestions;timings:unknown;
+ ids:string[];answers:Record<string,string>;questions:QuestionMap;timings:unknown;
 }){
  const rows=info.ids.map((id,i)=>{
   const publicId="q"+(i+1),selected=info.answers[publicId]??info.answers[id];
@@ -79,9 +78,15 @@ Deno.serve(async(request)=>{
  let path=new URL(request.url).pathname.replace(/^\/(?:functions\/v1\/)?step-course/,"");
  const isAgreement=path==="/agreement"||path.startsWith("/agreement/");
  if(isAgreement)path=path.slice("/agreement".length)||"/course";
- const lesson=isAgreement?agreementLesson:presentSimpleLesson;
+ const requestedCourseCode=isAgreement?"ASGQAGREE":"ASGQPRSIM";
+ const {data:privateBank,error:bankError}=await admin.from("step_private_course_banks")
+  .select("payload").eq("course_code",requestedCourseCode).maybeSingle();
+ if(bankError||!privateBank?.payload)return send(503,{error:"محتوى الدرس غير متاح مؤقتًا"});
+ const lesson=privateBank.payload as LessonData;
+ if(lesson.code!==requestedCourseCode||!Array.isArray(lesson.sections)||!lesson.questions
+  ||typeof lesson.requiredPassRate!=="number")return send(503,{error:"بيانات الدرس تحتاج مراجعة"});
  const total=lesson.sections.length;
- const originalQuestions=lesson.questions as Record<string,{id:string;text:string;options:Record<string,string>;correct:string;explanation:string;wrongReasons?:Record<string,string>}>;
+ const originalQuestions=lesson.questions as QuestionMap;
  const method=request.method;
  const courseCode=lesson.code;
  try{

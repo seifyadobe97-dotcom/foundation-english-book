@@ -7,12 +7,13 @@ import {Script} from "node:vm";
 import {chromium} from "playwright";
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
-const data=JSON.parse(await readFile(path.join(root,"supabase/functions/step-course/agreement-data.json"),"utf8"));
+const data=JSON.parse(await readFile(path.join(root,"tests/fixtures/private-banks/agreement-data.json"),"utf8"));
 const front=await readFile(path.join(root,"step-grammar-student/subject-verb-agreement-content.js"),"utf8");
 const script=await readFile(path.join(root,"step-grammar-student/subject-verb-agreement.js"),"utf8");
 const html=await readFile(path.join(root,"step-grammar-student/subject-verb-agreement.html"),"utf8");
 new Script(front);new Script(script);
-assert.equal(data.code,"ASGQAGREE");assert.equal(data.sections.length,5);
+assert.equal(data.code,"ASGQAGREE");
+assert((await readFile(path.join(root,"supabase/functions/step-course/index.ts"),"utf8")).includes("step_private_course_banks"),"Canonical answer bank must stay server-only");assert.equal(data.sections.length,5);
 const allIds=data.sections.flatMap(s=>s.questionIds),ids=new Set(allIds);
 assert.equal(allIds.length,17);assert.equal(ids.size,17,"Unique source exercise IDs");
 for(const id of ids){

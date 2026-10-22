@@ -6,7 +6,8 @@ import {fileURLToPath} from "node:url";
 import {chromium} from "playwright";
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
-const dataset=JSON.parse(await readFile(path.join(root,"supabase/functions/step-course/lesson-data.json"),"utf8"));
+// Only fabricated A/B/C/D choices are used for browser tests; canonical keys remain in private Supabase.
+const dataset=JSON.parse(await readFile(path.join(root,"tests/fixtures/private-banks/lesson-data.json"),"utf8"));
 const server=createServer(async(req,res)=>{
  const f=path.resolve(root,"."+decodeURIComponent(new URL(req.url,"http://localhost").pathname));
  if(!f.startsWith(root+path.sep)){res.writeHead(403);res.end();return;}

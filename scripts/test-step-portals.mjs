@@ -78,6 +78,8 @@ assert(admin.includes('href="courses.html"'),"Admin navigation must link course 
 assert(adminServer.includes('path==="/course-drafts"'),"Server course draft route");
 assert(adminServer.includes('permission.role!=="owner"'),"Only owner can create courses");
 assert(courseServer.includes('const courseCode=lesson.code;'),"Student course remains safely pinned");
+assert(courseServer.includes('requestedCourseCode')&&adminServer.includes('step_private_course_banks'),
+ "Both authorized Edge Functions must resolve original question banks from private storage");
 const curriculum=readFileSync("step-grammar-admin/curriculum.html","utf8");
 assert(curriculum.includes('"/curriculum"'),"Admin curriculum must load axes from backend");
 assert(curriculum.includes("/curriculum/indicators/save"),"Admin indicators must save to backend");
@@ -134,22 +136,17 @@ new Function("window",foundationData)(foundationWindow);
 const foundation=foundationWindow.STEP_FOUNDATION_STAGES;
 assert.equal(foundation.length,7,"Foundation is scaffolded into seven brief stages");
 assert.equal(foundation.reduce((n,g)=>n+g.checks.length,0),15,"Foundation has 15 source-linked MCQs");
-const referenceBank=Object.values(JSON.parse(readFileSync("supabase/functions/step-course/lesson-data.json","utf8")).questions);
+// Foundation is paused, and source-authentic graded banks are never included in CI fixtures.
 const stems=new Set();
 for(const stage of foundation)for(const question of stage.checks){
  assert(!Object.hasOwn(question,"source")&&!Object.hasOwn(question,"bankId"),
-  "Internal provenance and editorial bank IDs must never ship in student JS");
- assert(!stems.has(question.en),"Duplicate original STEP question in foundation");
+  "Internal source locators must not appear in student foundation JS");
+ assert(!stems.has(question.en),"Duplicate question inside paused foundation");
  stems.add(question.en);
- const originals=referenceBank.filter(x=>x.text===question.en);
- assert.equal(originals.length,1,"Source-traced bank question stem must match uniquely");
- const original=originals[0];
- assert.deepEqual(question.choices,["A","B","C","D"].map(l=>original.options[l]),
-  "Answer choices must match editorial source bank");
- assert.equal(question.correct,["A","B","C","D"].indexOf(original.correct),"Answer key changed");
- assert.equal(question.why,original.explanation,"Reviewed explanation changed");
- assert.deepEqual(question.wrong,["A","B","C","D"].map(l=>l===original.correct?"":original.wrongReasons[l]),
-  "Distractor feedback must match reviewed source register");
+ assert.equal(question.choices.length,4,"Paused foundation items retain four answer choices");
+ assert(Number.isInteger(question.correct)&&question.correct>=0&&question.correct<4,
+  "Paused foundation records must have a valid original answer index");
+ assert(question.why&&question.wrong?.length===4,"Paused foundation rationale record must be complete");
 }
 const foundationMastery=readFileSync("step-grammar-student/foundation-sentence-elements-mastery.js","utf8");
 new Script(foundationMastery,{filename:"foundation-sentence-elements-mastery.js"});
@@ -244,11 +241,11 @@ assert(adminServer.includes('path==="/indicators"')&&adminServer.includes("indic
  "Per-indicator report API must verify published course mapping on the server");
 assert(readFileSync("step-grammar-admin/curriculum.html","utf8").includes('reports.html?indicator='),
  "Curriculum indicators must deep-link to separate reports");
-const agreementData=JSON.parse(readFileSync("supabase/functions/step-course/agreement-data.json","utf8"));
+const agreementData=JSON.parse(readFileSync("tests/fixtures/private-banks/agreement-data.json","utf8"));
 assert.equal(agreementData.code,"ASGQAGREE");
 assert.equal(agreementData.sections.length,5);
 assert.equal(agreementData.sections.flatMap(s=>s.questionIds).length,17);
-assert(courseServer.includes('const isAgreement=')&&courseServer.includes('agreementLesson'),
+assert(courseServer.includes('const isAgreement=')&&courseServer.includes('step_private_course_banks'),
  "Student course endpoint routes independent agreement progress and grading");
 assert(adminServer.includes('buildLearningInsights((detailRows.data||[]) as AnswerEvent[],reportLesson)'),
  "Per-indicator question timing and misconception reports need agreement-specific course data");

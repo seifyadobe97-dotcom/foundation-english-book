@@ -1,8 +1,8 @@
 // Private administrative API for STEP Grammar, authenticated with Supabase JWT.
 // The service-role key is available only inside this Edge Function, never in public HTML.
 import { createClient } from "npm:@supabase/supabase-js@2.57.0";
-import lesson from "./lesson-data.json" with { type: "json" };
-import agreementLesson from "./agreement-data.json" with { type: "json" };
+// Question banks are resolved through service-role-only Supabase storage after admin auth.
+type LessonData=any;
 const url=Deno.env.get("SUPABASE_URL")??"";
 const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
 const allow=new Set(["https://seifyadobe97-dotcom.github.io","http://localhost:3000","http://127.0.0.1:3000"]);
@@ -11,7 +11,7 @@ type AnswerEvent={question_id:string;part_index:number|null;attempt_kind:string;
 
 const rate=(a:number,b:number)=>b?Math.round(100*a/b):null;
 const seconds=(ms:number,n:number)=>n?Math.round(ms/100/n)/10:null;
-function buildLearningInsights(items:AnswerEvent[],activeLesson:typeof lesson=lesson){
+function buildLearningInsights(items:AnswerEvent[],activeLesson:LessonData){
  const lessonSource=activeLesson.questions as Record<string,{text:string;options:Record<string,string>}>;
  const sectionForQuestion=new Map(activeLesson.sections.flatMap((sec,i)=>sec.questionIds.map(id=>[id,i] as const)));
  const groups=activeLesson.sections.map((section,index)=>{
@@ -60,7 +60,7 @@ function buildLearningInsights(items:AnswerEvent[],activeLesson:typeof lesson=le
 }
 
 type FollowupEvent={id:string;part_index:number;kind:string;assigned_at:string;cancelled_at:string|null};
-function compareFollowups(tasks:FollowupEvent[],events:AnswerEvent[],activeLesson:typeof lesson=lesson){
+function compareFollowups(tasks:FollowupEvent[],events:AnswerEvent[],activeLesson:LessonData){
  return tasks.filter(t=>!t.cancelled_at).map(task=>{
   const data=events.filter(e=>e.part_index===task.part_index&&e.attempt_kind==="practice"&&e.recorded_at);
   const before=data.filter(e=>e.recorded_at!<task.assigned_at);
@@ -99,6 +99,13 @@ Deno.serve(async(req)=>{
   .eq("user_id",auth.user.id).maybeSingle();
  if(roleError)return reply(500,{error:"تعذر فحص الصلاحيات"});
  if(!permission)return reply(403,{error:"الحساب الحالي غير مخوّل لفتح لوحة الأدمن"});
+ const {data:bankRows,error:bankError}=await admin.from("step_private_course_banks")
+  .select("course_code,payload").in("course_code",["ASGQPRSIM","ASGQAGREE"]);
+ if(bankError)return reply(503,{error:"تعذر تحميل مصادر الأسئلة الخاصة"});
+ const lesson=bankRows?.find(x=>x.course_code==="ASGQPRSIM")?.payload as LessonData|undefined;
+ const agreementLesson=bankRows?.find(x=>x.course_code==="ASGQAGREE")?.payload as LessonData|undefined;
+ if(!lesson||!agreementLesson||lesson.code!=="ASGQPRSIM"||agreementLesson.code!=="ASGQAGREE")
+  return reply(503,{error:"محتوى الدروس الخاصة غير متاح"});
  let path=new URL(req.url).pathname.replace(/^\/(?:functions\/v1\/)?step-admin/,"")||"/";
  // Source and answer keys are available only to authenticated admin accounts.
  if(req.method==="GET"&&path==="/agreement/audit"){
@@ -387,7 +394,7 @@ Deno.serve(async(req)=>{
     .eq("course_code",lesson.code).eq("attempt_kind","practice")
     .order("recorded_at",{ascending:false}).limit(5000);
    if(itemError)throw itemError;
-   const cohort=buildLearningInsights((itemRows||[]) as AnswerEvent[]);
+   const cohort=buildLearningInsights((itemRows||[]) as AnswerEvent[],lesson);
    return reply(200,{overview:overview.data,parts:(parts.data||[]).map(s=>({
      ...s,title:lesson.sections[s.part_index]?.titleAr||"جزء "+(s.part_index+1)
    })),learning:{sections:cohort.sections,answers:cohort.answers,

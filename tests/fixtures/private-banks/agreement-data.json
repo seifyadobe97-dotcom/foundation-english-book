@@ -1,0 +1,514 @@
+{
+  "id": "subject-verb-agreement",
+  "code": "ASGQAGREE",
+  "title": "Subject–Verb Agreement",
+  "titleAr": "تطابق الفاعل والفعل",
+  "subtitle": "حدّد الفاعل الحقيقي، وبعدها اختار الفعل المناسب — من الصفر لتدريبات STEP",
+  "requiredPassRate": 0.6,
+  "sections": [
+    {
+      "id": "subject",
+      "title": "حدّد الفاعل الحقيقي",
+      "short": "الاسم الأساسي مش أقرب كلمة للفراغ",
+      "questionIds": [
+        "AG-B08",
+        "AG-C01",
+        "AG-C10"
+      ],
+      "tag": "01 · STEP",
+      "subtitle": "الاسم الأساسي مش أقرب كلمة للفراغ",
+      "duration": "6 دقائق",
+      "description": "الاسم الأساسي مش أقرب كلمة للفراغ",
+      "rule": [
+        "Subject",
+        "→",
+        "Verb",
+        "→",
+        "Complement"
+      ],
+      "tiles": [],
+      "gold": {
+        "title": "ركز",
+        "body": "الاسم الأساسي مش أقرب كلمة للفراغ"
+      },
+      "examples": [],
+      "mistake": {
+        "wrong": "",
+        "right": "",
+        "why": ""
+      }
+    },
+    {
+      "id": "singular-plural",
+      "title": "المفرد والجمع مع الفعل",
+      "short": "He/She/It مقابل I/You/We/They",
+      "questionIds": [
+        "AG-B02",
+        "AG-B03",
+        "AG-B07",
+        "AG-B09",
+        "AG-B10",
+        "AG-B06"
+      ],
+      "tag": "02 · STEP",
+      "subtitle": "He/She/It مقابل I/You/We/They",
+      "duration": "6 دقائق",
+      "description": "He/She/It مقابل I/You/We/They",
+      "rule": [
+        "Subject",
+        "→",
+        "Verb",
+        "→",
+        "Complement"
+      ],
+      "tiles": [],
+      "gold": {
+        "title": "ركز",
+        "body": "He/She/It مقابل I/You/We/They"
+      },
+      "examples": [],
+      "mistake": {
+        "wrong": "",
+        "right": "",
+        "why": ""
+      }
+    },
+    {
+      "id": "tricky-subjects",
+      "title": "كلمات بتخدعك",
+      "short": "Physics وMathematics وEverybody",
+      "questionIds": [
+        "AG-B01",
+        "AG-B04",
+        "AG-C07"
+      ],
+      "tag": "03 · STEP",
+      "subtitle": "Physics وMathematics وEverybody",
+      "duration": "6 دقائق",
+      "description": "Physics وMathematics وEverybody",
+      "rule": [
+        "Subject",
+        "→",
+        "Verb",
+        "→",
+        "Complement"
+      ],
+      "tiles": [],
+      "gold": {
+        "title": "ركز",
+        "body": "Physics وMathematics وEverybody"
+      },
+      "examples": [],
+      "mistake": {
+        "wrong": "",
+        "right": "",
+        "why": ""
+      }
+    },
+    {
+      "id": "be-agreement",
+      "title": "تطابق am / is / are",
+      "short": "الفاعل أولًا ثم الفعل الرابط والمجهول",
+      "questionIds": [
+        "AG-B05",
+        "AG-C05",
+        "AG-C09"
+      ],
+      "tag": "04 · STEP",
+      "subtitle": "الفاعل أولًا ثم الفعل الرابط والمجهول",
+      "duration": "6 دقائق",
+      "description": "الفاعل أولًا ثم الفعل الرابط والمجهول",
+      "rule": [
+        "Subject",
+        "→",
+        "Verb",
+        "→",
+        "Complement"
+      ],
+      "tiles": [],
+      "gold": {
+        "title": "ركز",
+        "body": "الفاعل أولًا ثم الفعل الرابط والمجهول"
+      },
+      "examples": [],
+      "mistake": {
+        "wrong": "",
+        "right": "",
+        "why": ""
+      }
+    },
+    {
+      "id": "does-base",
+      "title": "Do / Does والفعل المصدر",
+      "short": "Does بياخد الـ s والفعل يرجع V1",
+      "questionIds": [
+        "AG-C04",
+        "AG-C08"
+      ],
+      "tag": "05 · STEP",
+      "subtitle": "Does بياخد الـ s والفعل يرجع V1",
+      "duration": "6 دقائق",
+      "description": "Does بياخد الـ s والفعل يرجع V1",
+      "rule": [
+        "Subject",
+        "→",
+        "Verb",
+        "→",
+        "Complement"
+      ],
+      "tiles": [],
+      "gold": {
+        "title": "ركز",
+        "body": "Does بياخد الـ s والفعل يرجع V1"
+      },
+      "examples": [],
+      "mistake": {
+        "wrong": "",
+        "right": "",
+        "why": ""
+      }
+    }
+  ],
+  "questions": {
+    "AG-B01": {
+      "id": "AG-B01",
+      "text": "SYNTHETIC TEST FIXTURE AG-B01 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-B02": {
+      "id": "AG-B02",
+      "text": "SYNTHETIC TEST FIXTURE AG-B02 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-B03": {
+      "id": "AG-B03",
+      "text": "SYNTHETIC TEST FIXTURE AG-B03 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-B04": {
+      "id": "AG-B04",
+      "text": "SYNTHETIC TEST FIXTURE AG-B04 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-B05": {
+      "id": "AG-B05",
+      "text": "SYNTHETIC TEST FIXTURE AG-B05 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-B06": {
+      "id": "AG-B06",
+      "text": "SYNTHETIC TEST FIXTURE AG-B06 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-B07": {
+      "id": "AG-B07",
+      "text": "SYNTHETIC TEST FIXTURE AG-B07 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-B08": {
+      "id": "AG-B08",
+      "text": "SYNTHETIC TEST FIXTURE AG-B08 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-B09": {
+      "id": "AG-B09",
+      "text": "SYNTHETIC TEST FIXTURE AG-B09 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-B10": {
+      "id": "AG-B10",
+      "text": "SYNTHETIC TEST FIXTURE AG-B10 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-C01": {
+      "id": "AG-C01",
+      "text": "SYNTHETIC TEST FIXTURE AG-C01 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-C04": {
+      "id": "AG-C04",
+      "text": "SYNTHETIC TEST FIXTURE AG-C04 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-C05": {
+      "id": "AG-C05",
+      "text": "SYNTHETIC TEST FIXTURE AG-C05 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-C07": {
+      "id": "AG-C07",
+      "text": "SYNTHETIC TEST FIXTURE AG-C07 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-C08": {
+      "id": "AG-C08",
+      "text": "SYNTHETIC TEST FIXTURE AG-C08 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-C09": {
+      "id": "AG-C09",
+      "text": "SYNTHETIC TEST FIXTURE AG-C09 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    },
+    "AG-C10": {
+      "id": "AG-C10",
+      "text": "SYNTHETIC TEST FIXTURE AG-C10 — choose the sample label.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic mock explanation — not a STEP source item.",
+      "wrongReasons": {
+        "B": "Synthetic wrong-choice reason B.",
+        "C": "Synthetic wrong-choice reason C.",
+        "D": "Synthetic wrong-choice reason D."
+      },
+      "source": {
+        "type": "course_book"
+      }
+    }
+  }
+}

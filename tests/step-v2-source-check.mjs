@@ -7,7 +7,7 @@ const script=readFileSync(base+"present-simple-v2.js","utf8");
 const content=readFileSync(base+"present-simple-v2-content.js","utf8");
 const css=readFileSync(base+"present-simple-v2.css","utf8");
 const api=readFileSync("supabase/functions/step-course/index.ts","utf8");
-const questionBank=JSON.parse(readFileSync("supabase/functions/step-course/lesson-data.json","utf8"));
+const questionBank=JSON.parse(readFileSync("tests/fixtures/private-banks/lesson-data.json","utf8"));
 
 new Function(script);
 new Function("window",content);
@@ -18,6 +18,7 @@ assert(!/\bASGQ[A-Z0-9]+/.test(lesson+script+content),"No private bank codes exp
 assert(!/\<\/?bdi\>/i.test(content),"No raw formatting tags in student copy");
 assert(content.includes("دي عادة")&&content.includes("دي حقيقة")&&content.includes("دي وظيفة"));
 assert(css.includes("@media(max-width:480px)"),"Responsive mobile support");
+assert(api.includes("step_private_course_banks")&&!api.includes('import presentSimpleLesson from'),"Question keys must be resolved privately from Supabase");
 assert(api.includes("showQuestions"),"Student API obscures bank question identifiers");
 assert(questionBank.sections.length===6,"Six learning steps");
 const publishedIds=[...new Set(questionBank.sections.flatMap(section=>section.questionIds))];
