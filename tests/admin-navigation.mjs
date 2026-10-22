@@ -24,9 +24,10 @@ const sdk='window.supabase={createClient(){return {auth:{getSession:async()=>({d
 const indicators=[
  {slug:"subject-verb-agreement",status:"published"},
  {slug:"present-simple",status:"published"},
- {slug:"present-continuous",status:"published"}
+ {slug:"present-continuous",status:"published"},
+  {slug:"past-simple",status:"published"}
 ];
-const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous"};
+const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple"};
 try{
  for(const width of [1280,390]){
   const page=await browser.newPage({viewport:{width,height:850}});
@@ -44,7 +45,8 @@ try{
      body={courses:[
       {slug:"subject-verb-agreement",code:"ASGQAGREE",title:"Subject–Verb Agreement",titleAr:"تطابق الفاعل والفعل",status:"published",position:101},
       {slug:"present-simple",code:"ASGQPRSIM",title:"Present Simple",titleAr:"المضارع البسيط",status:"published",position:102},
-      {slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",titleAr:"المضارع المستمر",status:"published",position:103}
+      {slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",titleAr:"المضارع المستمر",status:"published",position:103},
+       {slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",titleAr:"الماضي البسيط",status:"published",position:104}
      ],can_edit:true};
     }else if(endpoint==="/studio"){
     const code=url.searchParams.get("course")||"ASGQAGREE";
@@ -64,6 +66,7 @@ try{
   assert.equal(await page.locator(".admin-global-nav a").count(),8,"Admin pages use eight unambiguous destinations");
   assert.equal(await page.locator('.admin-global-nav a[aria-current="page"]').innerText().then(x=>x.includes("الرئيسية")),true);
   const lesson3Link=page.locator('a[href="studio.html?course=ASGQPRCONT&tab=questions"]').first();
+  assert.equal(await page.locator('a[href="studio.html?course=ASGQPASIM&tab=questions"]').count(),1,"Past Simple has its own Studio editing button");
   assert.equal(await lesson3Link.count(),1,"Lesson 3 answer-edit button deep-links to the correct course");
   const links=await page.locator(".admin-global-nav a").evaluateAll(xs=>xs.map(x=>new URL(x.getAttribute("href"),location.href).pathname));
   assert(links.every(x=>x.includes("step-grammar-admin")),"All admin navigation stays inside admin workspace");

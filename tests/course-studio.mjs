@@ -48,7 +48,8 @@ try{
     data={courses:[
      {slug:"subject-verb-agreement",code:"ASGQAGREE",title:"Agreement",titleAr:"تطابق الفاعل والفعل",position:101,status:"published"},
      {slug:"present-simple",code:"ASGQPRSIM",title:"Present Simple",titleAr:"المضارع البسيط",position:102,status:"published"},
-     {slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",titleAr:"المضارع المستمر",position:103,status:"published"}
+     {slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",titleAr:"المضارع المستمر",position:103,status:"published"},
+     {slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",titleAr:"الماضي البسيط",position:104,status:"published"}
     ],can_edit:true};
    }else if(endpoint==="/studio"){
     data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:"published"},

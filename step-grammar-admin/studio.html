@@ -39,7 +39,7 @@ p{margin:6px 0 14px;color:var(--muted)}.panel{border:1px solid var(--line);borde
 <select class="lesson-select" id="course" aria-label="اختيار الدرس">
 <option value="ASGQAGREE">الدرس 1 — Subject–Verb Agreement</option>
 <option value="ASGQPRSIM">الدرس 2 — Present Simple</option>
-<option value="ASGQPRCONT">الدرس 3 — Present Continuous</option><option value="ASGQPASIM">الدرس 4 — Past Simple (مسودة)</option></select></div>
+<option value="ASGQPRCONT">الدرس 3 — Present Continuous</option><option value="ASGQPASIM">الدرس 4 — Past Simple</option></select></div>
 <div class="tabs" id="tabs">
 <button class="btn active" data-tab="visual">الشرح والأمثلة والجداول</button>
 <button class="btn" data-tab="sections">عناوين ومراحل التدريب</button>
@@ -55,6 +55,7 @@ p{margin:6px 0 14px;color:var(--muted)}.panel{border:1px solid var(--line);borde
 <script src="../step-grammar-student/subject-verb-agreement-content.js"></script>
 <script src="../step-grammar-student/present-simple-v2-content.js"></script>
 <script src="../step-grammar-student/present-continuous-content.js"></script>
+ <script src="../step-grammar-student/past-simple-content.js"></script>
 <script>
 "use strict";
 const SUPA="https://funltjxavowlnnfibhpl.supabase.co";
@@ -65,10 +66,10 @@ const safe=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"
 const clone=x=>JSON.parse(JSON.stringify(x));
 let courseCatalog=[];
 const sourceUnits=()=>({"ASGQAGREE":window.STEP_SUBJECT_VERB_UNITS,"ASGQPRSIM":window.PRESENT_SIMPLE_UNITS,
- "ASGQPRCONT":window.STEP_PRESENT_CONTINUOUS_UNITS}[courseSelect.value]||
+ "ASGQPRCONT":window.STEP_PRESENT_CONTINUOUS_UNITS,"ASGQPASIM":window.STEP_PAST_SIMPLE_UNITS}[courseSelect.value]||
  state.data?.sections?.map(s=>s.visual_base)||[]);
 const courseSlug=()=>courseCatalog.find(x=>x.code===courseSelect.value)?.slug||
- ({"ASGQAGREE":"subject-verb-agreement","ASGQPRSIM":"present-simple","ASGQPRCONT":"present-continuous"}[courseSelect.value]||"");
+ ({"ASGQAGREE":"subject-verb-agreement","ASGQPRSIM":"present-simple","ASGQPRCONT":"present-continuous","ASGQPASIM":"past-simple"}[courseSelect.value]||"");
 const params=new URLSearchParams(location.search);
 const allowedCourses=["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM"];
 const allowedTabs=["visual","sections","questions","course","history"];

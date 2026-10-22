@@ -182,7 +182,7 @@ Deno.serve(async(req)=>{
   return reply(200,{indicators:(data||[]).map(i=>({
    slug:i.slug,axis_code:i.axis_code,title_ar:i.title_ar,title_en:i.title_en,
    status:i.status,position:i.position,
-   report_ready:i.status==="published"&&[lesson.code,agreementLesson.code,continuousLesson.code].includes(i.legacy_course_code)
+   report_ready:i.status==="published"&&allCourseBanks.some(bank=>bank.code===i.legacy_course_code)
   }))});
  }
  if(req.method==="GET"&&indicatorReportRoute){
@@ -192,10 +192,9 @@ Deno.serve(async(req)=>{
    .eq("slug",slug).maybeSingle();
   if(error){console.error("Indicator route lookup",error);return reply(500,{error:"تعذر تحميل المؤشر"});}
   if(!indicator)return reply(404,{error:"المؤشر غير موجود"});
-  const selectedLesson=indicator.legacy_course_code===continuousLesson.code?continuousLesson:
-    indicator.legacy_course_code===agreementLesson.code?agreementLesson:lesson;
+  const selectedLesson=allCourseBanks.find(bank=>bank.code===indicator.legacy_course_code)||lesson;
   const ready=indicator.status==="published"&&indicator.legacy_course_code===selectedLesson.code
-   &&[lesson.code,agreementLesson.code,continuousLesson.code].includes(indicator.legacy_course_code);
+   &&allCourseBanks.some(bank=>bank.code===indicator.legacy_course_code);
   if(ready)reportLesson=selectedLesson;
   if(!section)return reply(200,{indicator:{...indicator,report_ready:ready}});
   if(!ready)return reply(200,{indicator:{...indicator,report_ready:false},available:false,
@@ -242,10 +241,9 @@ Deno.serve(async(req)=>{
    .select("slug,title_ar,title_en,status,legacy_course_code").eq("slug",indicatorSlug).maybeSingle();
   if(indicatorError)return reply(500,{error:"تعذر التحقق من المؤشر"});
   if(!indicator)return reply(404,{error:"المؤشر غير موجود"});
-  const slotLesson=indicator.legacy_course_code===continuousLesson.code?continuousLesson:
-    indicator.legacy_course_code===agreementLesson.code?agreementLesson:lesson;
+  const slotLesson=allCourseBanks.find(bank=>bank.code===indicator.legacy_course_code)||lesson;
   const publishedCourse=indicator.status==="published"&&indicator.legacy_course_code===slotLesson.code
-   &&[lesson.code,agreementLesson.code,continuousLesson.code].includes(indicator.legacy_course_code);
+   &&allCourseBanks.some(bank=>bank.code===indicator.legacy_course_code);
   const slots=publishedCourse?slotLesson.sections.map((x,i)=>({part_index:i,title:x.titleAr})):
    [{part_index:0,title:"فيديو مقدمة المؤشر (يظهر عند تجهيز الدرس)"}];
   if(req.method==="GET"){
