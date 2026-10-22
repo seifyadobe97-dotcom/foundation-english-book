@@ -1,5 +1,5 @@
 "use strict";
-const LESSONS=window.PRESENT_SIMPLE_UNITS;
+let LESSONS=window.PRESENT_SIMPLE_UNITS;
 const ABC=["A","B","C","D"];
 // Browser timings are advisory, not a grading or cheating-detection signal.
 function newTiming(forExam=false){
@@ -80,6 +80,18 @@ async function init(){
  loading("بنجهز درسك…");
  try{
   state.course=await api("/course");
+  // Approved visual teaching edits are loaded from the server; local copy is the immutable fallback.
+  const teaching=await api("/teaching").catch(()=>({units:[]}));
+  for(const revision of teaching.units||[]){
+   if(Number.isInteger(revision.index)&&revision.index>=0&&revision.index<LESSONS.length
+      &&revision.content&&typeof revision.content==="object"&&!Array.isArray(revision.content)){
+    const allowed=["title","detail","tip","cards","examples","keywords","warning",
+     "formulas","table","extra"];
+    const content={};
+    for(const key of allowed)if(Object.hasOwn(revision.content,key))content[key]=revision.content[key];
+    LESSONS[revision.index]={...LESSONS[revision.index],...content};
+   }
+  }
   // Optional media must never prevent a beginner from opening the lesson.
   state.videos=(await api("/videos").catch(()=>({videos:[]}))).videos||[];
   const requested=new URLSearchParams(location.search).get("step");
