@@ -1,6 +1,7 @@
 "use strict";
 (() => {
  const stages=window.STEP_FOUNDATION_STAGES;
+ const mastery=window.STEP_FOUNDATION_MASTERY||{};
  const root=document.getElementById("foundation-root");
  if(!root||!Array.isArray(stages)||stages.length!==7){
   if(root)root.textContent="تعذر تحميل الدرس التأسيسي. حدّث الصفحة وجرب مرة تانية.";
@@ -42,7 +43,7 @@
     return '<button type="button" class="stage-link '+(i===current?"active ":"")+(done?"done":"")+
       '" data-stage="'+i+'" '+(i===current?'aria-current="step"':'')+'>'+
       '<span class="stage-n">'+(done?"✓":i+1)+'</span><span>'+esc(m.title)+
-      '<small>'+(m.checks.length?count(i)+' / '+m.checks.length+' أسئلة من المصدر':'بدون أسئلة موثقة حاليًا')+'</small></span></button>';
+      '<small>'+(m.checks.length?count(i)+' / '+m.checks.length+' أسئلة تدريب':'الشرح متاح')+'</small></span></button>';
    }).join("")+'</nav>'+
    '<div class="sidebar-note">الهدف إنك تفهم قبل ما تحفظ. مفيش وقت محدد ولا رسوب في التدريب ده.</div></aside>';
  }
@@ -55,6 +56,75 @@
    '<p class="map-ar">'+esc(row[3])+'</p>'+
    '<div class="map-example"><span class="map-example-label">مثال بالإنجليزي</span>'+
    '<div class="map-example-en" dir="ltr" lang="en">'+esc(row[4])+'</div></div></article>';
+ }
+ function teachText(value){
+  // Instructor text supports highlighted keywords only, not arbitrary HTML.
+  return String(value||"").split(/(<mark>.*?<\\/mark>)/g).map(part=>
+   part.startsWith("<mark>")&&part.endsWith("</mark>")?
+    '<mark class="teaching-highlight">'+esc(part.slice(6,-7))+'</mark>':esc(part)).join("");
+ }
+ function sentence(tokens){
+  if(!Array.isArray(tokens))return "";
+  return '<div class="model-sentence" dir="ltr" lang="en" aria-label="الجملة الإنجليزية بالألوان">'+
+   tokens.map(([role,word],i)=>{
+    const known=["subject","main","aux","modal","neg","object","complement","time","punct"].includes(role)?role:"time";
+    return (i&&role!=="punct"?" ":"")+'<span class="word role-'+known+'">'+esc(word)+'</span>';
+   }).join("")+'</div>';
+ }
+ function formula(pattern){
+  return '<article class="pattern-card"><h4>'+esc(pattern.title)+'</h4>'+
+   '<div class="formula-flow" dir="ltr">'+pattern.parts.map(([role,en,ar],i)=>
+    (i?'<span class="formula-plus" aria-hidden="true">+</span>':"")+
+    '<div class="formula-piece role-'+esc(role)+'"><strong dir="ltr" lang="en">'+esc(en)+'</strong>'+
+    '<small dir="rtl">'+esc(ar)+'</small></div>').join("")+'</div>'+
+   sentence(pattern.tokens)+'<p>'+esc(pattern.note)+'</p></article>';
+ }
+ function teachingTable(data){
+  if(!data)return "";
+  return '<section class="reference-block"><h3>'+esc(data.title)+'</h3>'+
+   '<div class="table-wrap"><table class="teaching-table"><thead><tr>'+
+   data.headers.map(head=>'<th scope="col" dir="rtl">'+esc(head)+'</th>').join("")+'</tr></thead><tbody>'+
+   data.rows.map(row=>'<tr>'+row.map((cell,i)=>{
+    const parts=String(cell).split(" — ");
+    const value=parts.length===2&&/[A-Za-z]/.test(parts[0])?
+     '<span class="table-english" dir="ltr" lang="en">'+esc(parts[0])+'</span>'+
+      '<span class="table-arabic" dir="rtl">'+esc(parts[1])+'</span>':
+     '<span class="table-value" dir="auto">'+esc(cell)+'</span>';
+    return '<td data-label="'+esc(data.headers[i])+'">'+value+'</td>';
+   }).join("")+'</tr>').join("")+'</tbody></table></div></section>';
+ }
+ function contrasts(pitfalls){
+  if(!pitfalls?.length)return "";
+  return '<section class="reference-block"><h3>قارن بين الغلط والصح</h3><div class="contrast-list">'+
+   pitfalls.map(item=>'<article class="contrast-card">'+
+    '<div class="contrast-examples"><div class="contrast-case is-wrong"><b>✕ غلط</b>'+sentence(item.bad)+'</div>'+
+    '<div class="contrast-case is-correct"><b>✓ صح</b>'+sentence(item.good)+'</div></div>'+
+    '<p>'+esc(item.why)+'</p></article>').join("")+'</div></section>';
+ }
+ function deepDive(m){
+  const d=mastery[m.id];if(!d)return "";
+  return '<section class="panel mastery-panel" aria-label="شرح وتطبيق متقدم">'+
+   '<div class="mastery-heading"><span class="eyebrow">UNDERSTAND THE RULE</span>'+
+   '<h2 class="subhead">افهمها بنفسك — خطوة بخطوة</h2><p>'+esc(d.goal)+'</p></div>'+
+   '<div class="color-legend" aria-label="دليل الألوان">'+
+    '<span><i class="legend-dot role-subject"></i> الفاعل</span>'+
+    '<span><i class="legend-dot role-aux"></i> الفعل الرابط / المساعد</span>'+
+    '<span><i class="legend-dot role-main"></i> الفعل الأساسي</span>'+
+    '<span><i class="legend-dot role-neg"></i> النفي</span>'+
+    '<span><i class="legend-dot role-modal"></i> الفعل الناقص</span>'+
+    '<span><i class="legend-dot role-object"></i> تكملة الجملة</span></div>'+
+   '<div class="teaching-cards">'+d.cards.map((card,i)=>
+    '<article class="teaching-card"><span class="teaching-num">'+String(i+1).padStart(2,"0")+'</span>'+
+    '<h3>'+esc(card.title)+'</h3><p>'+teachText(card.body)+'</p>'+
+    sentence(card.tokens)+'<small>'+esc(card.detail)+'</small></article>').join("")+'</div>'+
+   '<section class="reference-block"><h3>تركيب الجملة من الشمال لليمين</h3>'+
+   '<p class="formula-intro">اقرأ الترتيب الإنجليزي من <b>الشمال لليمين</b>، والشرح العربي تحت كل جزء.</p>'+
+   '<div class="pattern-list">'+d.patterns.map(formula).join("")+'</div></section>'+
+   teachingTable(d.table)+
+   (d.modal?'<section class="modal-deep"><h3>'+esc(d.modal.title)+'</h3>'+
+    '<p>'+esc(d.modal.intro)+'</p>'+teachingTable({title:"معاني الأفعال الناقصة واستخدامها",headers:d.modal.headers,rows:d.modal.rows})+
+    '<div class="modal-rules">'+d.modal.rules.map((rule,i)=>'<div><span>'+String(i+1).padStart(2,"0")+'</span><p>'+esc(rule)+'</p></div>').join("")+'</div></section>':"")+
+   contrasts(d.pitfalls)+'</section>';
  }
  function examples(m){
   return '<section class="panel" aria-labelledby="examples-title"><h2 class="subhead" id="examples-title">شوف أمثلة واضحة</h2>'+
@@ -73,34 +143,24 @@
    '<p class="why-correct"><b>ليه دي صح؟</b> '+esc(q.why)+'</p>'+
    '<button type="button" class="retry" data-retry="1">أجرّب السؤال تاني</button></div>';
  }
- function sourceLabel(q){
-  const src=q.source||{};
-  if(src.type==="course_book")
-   return "STEP course book · صفحة PDF "+esc(src.pdf_page);
-  if(src.type==="original_compilation")
-   return "تجميعات STEP · النموذج "+esc(src.model)+" · السؤال "+esc(src.number)+" · الصفحة "+esc(src.page);
-  return "مصدر غير موثّق";
- }
  function questionCard(q,qi){
   const picked=selected(current,qi);
   return '<article class="question" data-question="'+qi+'">'+
-   '<span class="q-number">SOURCE MCQ '+String(qi+1).padStart(2,"0")+'</span>'+
-   '<p class="q-label">اختار الإجابة الصحيحة (سؤال من بنك المصادر)</p>'+
+   '<span class="q-number">PRACTICE '+String(qi+1).padStart(2,"0")+'</span>'+
+   '<p class="q-label">اختار الإجابة الصحيحة</p>'+
    '<div class="q-english" dir="ltr" lang="en">'+esc(q.en)+'</div>'+
    '<div class="options" dir="ltr">'+q.choices.map((choice,idx)=>{
     const tone=picked===null?"":idx===q.correct?"correct":picked===idx?"wrong":"";
     return '<button class="option '+tone+'" type="button" data-answer="'+idx+'"'+(picked!==null?" disabled":"")+
      '><span class="letter">'+ABC[idx]+'</span><span class="choice" dir="auto">'+esc(choice)+'</span></button>';
-   }).join("")+'</div>'+(picked===null?"":feedback(q,picked))+
-   '<p class="question-source">المصدر: '+sourceLabel(q)+'</p></article>';
+   }).join("")+'</div>'+(picked===null?"":feedback(q,picked))+'</article>';
  }
  function practice(m){
   if(!m.checks.length)return '<section class="panel" id="practice">'+
-   '<h2 class="subhead">التدريبات من المصادر فقط</h2>'+
-   '<p class="source-pending">لسه مفيش سؤال موثّق من المصادر اللي اتقدمتلنا بيقيس الجزء ده تحديدًا. '+
-   'عشان كده مش هنحط سؤال مؤلّف مكانه. راجع الأمثلة وافتح المحطة التالية؛ وهنضيف التدريبات بعد توثيق أصلها.</p></section>';
+   '<h2 class="subhead">اتعلم القاعدة الأول</h2>'+
+   '<p class="source-pending">المحطة دي للشرح والفهم. راجع الخرائط والأمثلة وبعدها كمّل على المحطة التالية عشان تتدرّب على أسئلة الاختيار من متعدد.</p></section>';
   return '<section class="panel" id="practice" aria-labelledby="practice-title"><div class="quiz-head">'+
-   '<h2 id="practice-title">اختبر فهمك من بنك المصادر</h2><small>كل الأسئلة اختيار من 4 إجابات، وسبب كل اختيار هيتشرح لك</small></div>'+
+   '<h2 id="practice-title">جرّب حل سؤال STEP</h2><small>اختيار من 4 إجابات، وتصحيح يساعدك تفهم القاعدة</small></div>'+
    m.checks.map(questionCard).join("")+'</section>';
  }
  function stageContent(){
@@ -112,11 +172,11 @@
    '<p class="explain">'+m.intro+'</p></section>'+
    '<section class="panel"><h2 class="subhead">الفكرة في خريطة بسيطة</h2><div class="map-grid">'+
    m.map.map(mapCell).join("")+'</div></section>'+
-   examples(m)+'<section class="panel"><div class="tip"><strong>✦ افتكر:</strong> '+m.tip+'</div></section>'+
+   deepDive(m)+examples(m)+'<section class="panel"><div class="tip"><strong>✦ افتكر:</strong> '+m.tip+'</div></section>'+
    practice(m)+
    '<nav class="stage-footer" aria-label="التنقل بين المحطات">'+
    '<button type="button" data-go="'+(current-1)+'" '+(current===0?"disabled":"")+'>→ المحطة السابقة</button>'+
-   '<span class="stage-summary">'+(size?done+' من '+size+' أسئلة من المصدر':'بانتظار أسئلة موثّقة لهذا الجزء')+' · تدريب غير رسمي</span>'+
+   '<span class="stage-summary">'+(size?done+' من '+size+' أسئلة تدريب':'محطة شرح تأسيسي')+' · تدريب غير رسمي</span>'+
    '<button type="button" class="primary" data-go="'+(current+1)+'" '+(current===stages.length-1?"disabled":"")+'>'+
    'المحطة التالية ←</button></nav>'+
    '<p class="privacy">محتوى تأسيسي تجريبي. إجاباتك هنا للتعلّم فقط، ومش بتضاف لدرجات STEP أو تقرير الأدمن.</p></div>';
@@ -158,9 +218,9 @@
   const progressText=root.querySelector(".progress-box small");
   if(progressText)progressText.textContent=pct+"% · محفوظ على الجهاز ده فقط";
   const active=root.querySelector('.stage-link[data-stage="'+current+'"] small');
-  if(active)active.textContent=count(current)+" / "+stages[current].checks.length+" أسئلة من المصدر";
+  if(active)active.textContent=count(current)+" / "+stages[current].checks.length+" أسئلة تدريب";
   const summary=root.querySelector(".stage-summary");
-  if(summary)summary.textContent=count(current)+" من "+stages[current].checks.length+" أسئلة من المصدر · تدريب غير رسمي";
+  if(summary)summary.textContent=count(current)+" من "+stages[current].checks.length+" أسئلة تدريب · تدريب غير رسمي";
   const nextCard=root.querySelector('[data-question="'+qi+'"]');
   const focusTarget=nextCard?.querySelector(".feedback")||nextCard?.querySelector(".option:not(:disabled)");
   focusTarget?.focus?.({preventScroll:true});
