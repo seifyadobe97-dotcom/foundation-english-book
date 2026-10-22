@@ -135,6 +135,16 @@ const foundation=foundationWindow.STEP_FOUNDATION_STAGES;
 assert.equal(foundation.length,7,"Foundation is scaffolded into seven brief stages");
 assert.equal(foundation.reduce((n,g)=>n+g.checks.length,0),22,"Foundation has 22 immediate formative checks");
 assert(foundation.every(g=>g.map.length>=4&&g.examples.length>=3),"Every foundation step has an explanatory map and examples");
+assert.equal(foundation.reduce((n,g)=>n+g.map.length,0),32,"All 32 teaching map cards are present");
+for(const stage of foundation)for(const card of stage.map){
+ assert.equal(card.length,5,"Map cards include code, English, Arabic title, Arabic explanation and separate English example");
+ assert(card[2].trim()&&card[3].trim()&&card[4].trim(),"Every map card contains a beginner-friendly Arabic explanation and example");
+ assert(/[\u0600-\u06ff]/.test(card[2])&&/[\u0600-\u06ff]/.test(card[3]),"Arabic title and explanation required on every card");
+}
+assert(foundationScript.includes('class="map-title"')&&foundationScript.includes('class="map-example-en" dir="ltr"'),
+ "Maps must display Arabic-first headings and directionally isolated English examples");
+assert(foundationCss.includes('.map-title{')&&foundationCss.includes('.map-example-en{'),
+ "Arabic-first map typography must be styled");
 for(const stage of foundation)for(const q of stage.checks){
  assert.equal(q.wrong.length,q.choices.length,"Reason is assigned per answer");
  assert(q.why.trim(),"Correct selection must also be explained");
