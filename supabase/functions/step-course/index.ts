@@ -103,7 +103,7 @@ Deno.serve(async(request)=>{
   }
   // Published edits are read at request-time. Drafts never affect student questions.
   const {data:editRows,error:editError}=await admin.from("step_question_edits")
-    .select("id,part_index,question_text,options,correct,explanation,status")
+    .select("id,part_index,question_text,options,correct,explanation,wrong_reasons,status")
     .eq("course_code",courseCode).limit(1000);
   if(editError)throw editError;
   const questions={...originalQuestions};
@@ -130,7 +130,8 @@ Deno.serve(async(request)=>{
      &&edit.correct===originalQuestions[edit.id].correct
      &&["A","B","C","D"].every(k=>edit.options?.[k]===originalQuestions[edit.id].options[k]);
    const entry={id:edit.id,text:edit.question_text,options:edit.options,correct:edit.correct,
-     explanation:edit.explanation,wrongReasons:sameOriginal?originalQuestions[edit.id].wrongReasons:undefined};
+     explanation:edit.explanation,wrongReasons:edit.wrong_reasons||(
+      sameOriginal?originalQuestions[edit.id].wrongReasons:undefined)};
    // Retain archived custom question text for exams started before it was archived.
    if(!canonical)questions[edit.id]=entry;
    if(edit.status!=="published")continue;
@@ -157,6 +158,15 @@ Deno.serve(async(request)=>{
   };
 
   // Publish boundary: a student never sees video drafts, unapproved URLs or admin metadata.
+  // Teaching copy is never answer-bearing; only published owner-reviewed overrides reach students.
+  if(method==="GET"&&path==="/teaching"){
+   const {data:teachingRows,error:teachingError}=await admin.from("step_teaching_unit_edits")
+    .select("part_index,published").eq("course_code",courseCode).not("published","is",null);
+   if(teachingError)return send(503,{error:"تعذر تحميل تحديثات الشرح"});
+   return send(200,{units:(teachingRows||[]).filter(x=>Number.isInteger(x.part_index)&&
+    x.part_index>=0&&x.part_index<effectiveLesson.sections.length)
+    .map(x=>({index:x.part_index,content:x.published}))});
+  }
   if(method==="GET"&&path==="/videos"){
    const {data:rows,error:videoError}=await admin.from("step_indicator_videos")
     .select("part_index,title,description,video_url")
