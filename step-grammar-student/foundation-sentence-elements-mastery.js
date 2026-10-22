@@ -101,7 +101,7 @@ window.STEP_FOUNDATION_MASTERY={
             "فاعل"
           ],
           [
-            "aux",
+            "link",
             "Be",
             "فعل رابط"
           ],
@@ -117,7 +117,7 @@ window.STEP_FOUNDATION_MASTERY={
             "Mona"
           ],
           [
-            "aux",
+            "link",
             "is"
           ],
           [
@@ -212,7 +212,7 @@ window.STEP_FOUNDATION_MASTERY={
             "The students"
           ],
           [
-            "aux",
+            "link",
             "are"
           ],
           [
@@ -235,7 +235,7 @@ window.STEP_FOUNDATION_MASTERY={
             "The box of pencils"
           ],
           [
-            "aux",
+            "link",
             "is"
           ],
           [
@@ -260,7 +260,7 @@ window.STEP_FOUNDATION_MASTERY={
             "فاعل مفرد"
           ],
           [
-            "aux",
+            "link",
             "is",
             "مع be"
           ]
@@ -271,7 +271,7 @@ window.STEP_FOUNDATION_MASTERY={
             "The student"
           ],
           [
-            "aux",
+            "link",
             "is"
           ],
           [
@@ -294,7 +294,7 @@ window.STEP_FOUNDATION_MASTERY={
             "فاعل جمع"
           ],
           [
-            "aux",
+            "link",
             "are",
             "مع be"
           ]
@@ -305,7 +305,7 @@ window.STEP_FOUNDATION_MASTERY={
             "The students"
           ],
           [
-            "aux",
+            "link",
             "are"
           ],
           [
@@ -819,7 +819,7 @@ window.STEP_FOUNDATION_MASTERY={
             "She"
           ],
           [
-            "aux",
+            "link",
             "is"
           ],
           [
@@ -947,6 +947,56 @@ window.STEP_FOUNDATION_MASTERY={
           ]
         ],
         "detail": "has مساعد للمضارع التام؛ finished هو الحدث."
+      },
+      {
+        "title": "DO المساعد في الإثبات للتوكيد",
+        "body": "في الجملة العادية نقول <mark>She works</mark>. ولو عايزين نؤكد بقوة، ممكن نقول <mark>She does work</mark>. هنا does مساعد للتوكيد، وwork مصدر.",
+        "tokens": [
+          [
+            "subject",
+            "She"
+          ],
+          [
+            "aux",
+            "does"
+          ],
+          [
+            "main",
+            "work"
+          ],
+          [
+            "punct",
+            "."
+          ]
+        ],
+        "detail": "does هنا مش معناها تعمل؛ دورها توكيد الفعل work. الاستخدام ده مختلف عن She does her homework."
+      },
+      {
+        "title": "BE في المبني للمجهول",
+        "body": "المساعد be ييجي مع <mark>V3</mark> علشان نركّز على الشيء اللي وقع عليه الحدث، مش اللي عمله: <mark>The letter was written by Ali</mark>.",
+        "tokens": [
+          [
+            "subject",
+            "The letter"
+          ],
+          [
+            "aux",
+            "was"
+          ],
+          [
+            "main",
+            "written"
+          ],
+          [
+            "time",
+            "by Ali"
+          ],
+          [
+            "punct",
+            "."
+          ]
+        ],
+        "detail": "was مساعد مبني للمجهول، وwritten تصريف ثالث من write."
       }
     ],
     "patterns": [
@@ -1070,6 +1120,45 @@ window.STEP_FOUNDATION_MASTERY={
           ]
         ],
         "note": "بعد Does وDid الفعل يرجع للمصدر."
+      },
+      {
+        "title": "BE كرابط أساسي: السؤال",
+        "parts": [
+          [
+            "link",
+            "Is / Are",
+            "فعل رابط"
+          ],
+          [
+            "subject",
+            "Subject",
+            "فاعل"
+          ],
+          [
+            "complement",
+            "Description",
+            "وصف/هوية"
+          ]
+        ],
+        "tokens": [
+          [
+            "link",
+            "Is"
+          ],
+          [
+            "subject",
+            "she"
+          ],
+          [
+            "complement",
+            "happy"
+          ],
+          [
+            "punct",
+            "?"
+          ]
+        ],
+        "note": "في جملة وصف، نبدأ بـ is/are مباشرة؛ مش Do/Does."
       }
     ],
     "table": {
@@ -1205,7 +1294,7 @@ window.STEP_FOUNDATION_MASTERY={
             "she"
           ],
           [
-            "aux",
+            "link",
             "is"
           ],
           [
@@ -1219,7 +1308,7 @@ window.STEP_FOUNDATION_MASTERY={
         ],
         "good": [
           [
-            "aux",
+            "link",
             "Is"
           ],
           [
@@ -1236,6 +1325,49 @@ window.STEP_FOUNDATION_MASTERY={
           ]
         ],
         "why": "مع be كرابط بوصف نعمل السؤال بتقديم is مباشرة، من غير do."
+      },
+      {
+        "bad": [
+          [
+            "subject",
+            "She"
+          ],
+          [
+            "neg",
+            "doesn't"
+          ],
+          [
+            "link",
+            "is"
+          ],
+          [
+            "complement",
+            "happy"
+          ],
+          [
+            "punct",
+            "."
+          ]
+        ],
+        "good": [
+          [
+            "subject",
+            "She"
+          ],
+          [
+            "link",
+            "isn't"
+          ],
+          [
+            "complement",
+            "happy"
+          ],
+          [
+            "punct",
+            "."
+          ]
+        ],
+        "why": "لو be فعل رابط أساسي، ننفيه مباشرة بـ isn't، من غير doesn't."
       }
     ]
   },
@@ -1601,7 +1733,7 @@ window.STEP_FOUNDATION_MASTERY={
         "body": "لو لقيت <mark>is/are</mark> كفعل رابط أو مساعد، متدخلش do/does من غير سبب. ولو لقيت <mark>has + V3</mark> يبقى عندك زمن تام.",
         "tokens": [
           [
-            "aux",
+            "link",
             "Is"
           ],
           [
@@ -1880,6 +2012,24 @@ window.STEP_FOUNDATION_MASTERY={
           "She can swim.",
           "She cannot swim.",
           "Can she swim?"
+        ],
+        [
+          "ماضي بسيط (فعل عادي)",
+          "She played.",
+          "She didn't play.",
+          "Did she play?"
+        ],
+        [
+          "BE في الماضي",
+          "She was ready.",
+          "She wasn't ready.",
+          "Was she ready?"
+        ],
+        [
+          "HAVE تام في الماضي",
+          "She had finished.",
+          "She hadn't finished.",
+          "Had she finished?"
         ]
       ]
     },
@@ -2031,7 +2181,9 @@ window.STEP_FOUNDATION_MASTERY={
         "السؤال: Modal + Subject + V1 ? مثل Can she swim? والنفي: Subject + Modal + not + V1 مثل She cannot swim.",
         "mustn't معناها ممنوع؛ لكن don't have to معناها مش ضروري. الاتنين مش نفس المعنى.",
         "تعبيرات have to و need to مهمة لكنها مش من مجموعة modals الأساسية بنفس القاعدة. مثل She has to go. / She doesn't have to go.",
-        "في مستويات أعلى: modal + have + V3 للماضي مثل She should have studied؛ دي قاعدة متقدمة، ومش معناها إن should لوحدها زمن ماضي."
+        "في مستويات أعلى: modal + have + V3 للماضي مثل She should have studied؛ دي قاعدة متقدمة، ومش معناها إن should لوحدها زمن ماضي.",
+        "فرق مهم: She must not go = ممنوع تروح؛ She doesn't have to go = مش ملزَمة تروح، لكنها ممكن تروح.",
+        "الأفعال الناقصة الأساسية لا تتحول إلى cans أو shoulds مع he/she/it؛ ولا نضيف do/does قبلها في السؤال العادي."
       ]
     }
   }
