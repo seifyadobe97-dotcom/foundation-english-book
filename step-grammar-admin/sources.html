@@ -1,0 +1,45 @@
+<!doctype html><html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>تدقيق المصادر | STEP with Seify</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin-nav.css">
+<meta name="step-anon-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg">
+<style>
+:root{--ink:#193947;--muted:#567079;--line:#dce7e1;--good:#267765}
+*{box-sizing:border-box}body{margin:0;background:#f6f9f7;color:var(--ink);font:15px/1.85 Cairo,Tahoma,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:16px max(15px,calc((100vw - 1100px)/2));background:white;border-bottom:1px solid var(--line)}
+header img{width:175px;max-width:42vw;height:auto}a{color:inherit;text-decoration:none}a:focus-visible{outline:3px solid #c79b61}
+main{max-width:1120px;margin:auto;padding:26px 20px 80px}h1{font-size:clamp(24px,3.6vw,35px);margin:0 0 5px}p{color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:22px 0}
+.card{border:1px solid var(--line);border-radius:17px;padding:22px;background:white;box-shadow:0 8px 24px #15394707;display:flex;flex-direction:column;gap:8px}
+.card h2{font-size:18px;margin:0}.card small{font-size:12px;color:var(--muted)}.card p{margin:0;flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;background:#193947;color:white;border-radius:10px;font-size:13px;font-weight:800;margin-top:10px;text-align:center}
+.btn.alt{background:#eaf5ef;color:#216957}.note{background:#eaf5ef;padding:14px 17px;border-radius:12px;font-size:13px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}main{padding:22px 14px}.card{padding:18px}}
+</style></head><body>
+<header><a href="./"><img src="../step-brand/logo.svg" alt="STEP with Seify"></a><b>مراجعة بنك الأسئلة</b></header>
+<main><h1>تدقيق المصادر والأسئلة</h1><p>من هنا تراجع سجل مطابقة الأسئلة بالمصادر. لتعديل أي سؤال فعليًا افتح استوديو الدروس، وبعد حفظ المسودة اختار «نشر».</p>
+<div id="auth" role="status">جاري التحقق من حساب الأدمن…</div>
+<div id="cards" hidden>
+<section class="grid" aria-label="مصادر الدروس المنشورة">
+ <article class="card"><small>الدرس 01</small><h2>Subject–Verb Agreement</h2><p>سجل مراجعة الأسئلة الأصلية والمستبعدة وأسباب استبعادها.</p><a class="btn" href="agreement-audit.html">افتح سجل تدقيق الدرس 1 ←</a><a class="btn alt" href="studio.html?course=ASGQAGREE&tab=questions">تعديل أسئلة الدرس 1</a></article>
+ <article class="card"><small>الدرس 02</small><h2>Present Simple</h2><p>راجع الأسئلة المعتمدة والنصوص والتفسير داخل استوديو التحرير، مع إبقاء المصادر الأصلية خاصة.</p><a class="btn" href="studio.html?course=ASGQPRSIM&tab=questions">مراجعة بنك الدرس 2 ←</a></article>
+ <article class="card"><small>الدرس 03</small><h2>Present Continuous</h2><p>سجل تدقيق 24 موضع سؤال، بما فيها المعتمد والمكرر والمعلّق.</p><a class="btn" href="continuous-audit.html">افتح سجل تدقيق الدرس 3 ←</a><a class="btn alt" href="studio.html?course=ASGQPRCONT&tab=questions">تعديل أسئلة الدرس 3</a></article>
+</section>
+<div class="note">المصدر الأصلي وبيانات التصنيف محفوظين داخل نظام الإدارة. أي سؤال جديد لازم يتراجع ويتوثّق قبل دخوله إلى تدريبات STEP المنشورة.</div>
+</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script src="admin-nav.js" defer></script>
+<script>
+"use strict";
+(async()=>{const area=document.getElementById("auth");try{
+ const sb=window.supabase.createClient("https://funltjxavowlnnfibhpl.supabase.co",
+ document.querySelector('meta[name="step-anon-key"]').content);
+ const {data:{session}}=await sb.auth.getSession();
+ if(!session)throw Error("سجّل دخولك من لوحة الأدمن أولًا.");
+ const r=await fetch("https://funltjxavowlnnfibhpl.supabase.co/functions/v1/step-admin/me",{headers:{"apikey":document.querySelector('meta[name="step-anon-key"]').content,"Authorization":"Bearer "+session.access_token}});
+ if(!r.ok)throw Error("الحساب الحالي غير مخوّل لعرض تدقيق المصادر.");
+ area.textContent="أنت داخل مساحة التدقيق الخاصة بالأدمن.";
+ document.getElementById("cards").hidden=false;
+}catch(e){area.textContent=e.message;}})();
+</script></body></html>
