@@ -259,7 +259,7 @@ async function report(id,slug=activeIndicator?.slug||"present-simple"){
   if(!indicator?.report_ready)throw Error("مفيش تقرير متاح للمؤشر ده");
   activeIndicator=indicator;
   const [r,followupData]=await Promise.all([api("/indicators/"+encodeURIComponent(slug)+"/students/"+encodeURIComponent(id)+"/report"),
-    api("/students/"+encodeURIComponent(id)+"/followups")]);
+    slug==="present-simple"?api("/students/"+encodeURIComponent(id)+"/followups"):Promise.resolve({followups:[]})]);
   const s=r.student,x=r.summary;
   const sectionRows=r.sections.map(p=>'<tr><td>'+esc((p.index+1)+". "+p.title)+'</td><td>'+p.attempts+'</td><td>'+(p.best_percent==null?"—":p.best_percent+"%")+'</td><td>'+(p.passed?"ناجح":"لم يجتز")+'</td><td>'+date(p.latest_attempt)+'</td></tr>').join("");
   const attemptRows=r.attempts.map(a=>'<tr><td>'+date(a.attempted_at)+'</td><td>'+esc(a.section_title)+'</td><td>'+a.correct_count+'/'+a.total_questions+'</td><td>'+a.percentage+'%</td><td>'+(a.passed?"ناجح":"غير ناجح")+'</td></tr>').join("");
@@ -269,8 +269,10 @@ async function report(id,slug=activeIndicator?.slug||"present-simple"){
    '</section><section class="panel"><h2>الأداء في كل جزء</h2><div class="table-wrap"><table><thead><tr><th>الجزء</th><th>المحاولات المعروضة</th><th>أفضل درجة</th><th>الحالة</th><th>آخر محاولة</th></tr></thead><tbody>'+sectionRows+'</tbody></table></div></section><section class="panel"><h2>محاولات التدريب</h2>'+(x.part_history_truncated?'<p class="small">يتم عرض أحدث 300 محاولة.</p>':'')+
    '<div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الجزء</th><th>الدرجة</th><th>النسبة</th><th>النتيجة</th></tr></thead><tbody>'+(attemptRows||'<tr><td colspan="5">لم يبدأ الطالب التدريبات.</td></tr>')+'</tbody></table></div></section><section class="panel"><h2>نتائج الاختبار النهائي</h2>'+(x.exam_history_truncated?'<p class="small">يتم عرض أحدث 150 محاولة.</p>':'')+
    '<div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الدرجة</th><th>النسبة</th></tr></thead><tbody>'+(exams||'<tr><td colspan="3">لا توجد اختبارات نهائية.</td></tr>')+'</tbody></table></div></section>';
-  pageRoot.insertAdjacentHTML("beforeend",renderLearningInsights(r.insights)+renderBeforeAfter(r.followup_impact,r.impact_history_limited)+followupPanel(id,followupData.followups||[]));
-  wireFollowups(id);
+  pageRoot.insertAdjacentHTML("beforeend",renderLearningInsights(r.insights)+renderBeforeAfter(r.followup_impact,r.impact_history_limited)+
+   (slug==="present-simple"?followupPanel(id,followupData.followups||[]):
+   '<section class="panel"><h2>خطة متابعة هذا المؤشر</h2><p class="small">المتابعات الفردية للدرس الثاني هتتفعّل بعد أول بيانات حقيقية من الطلاب. تقارير درجاته وأزمنة أسئلته مستقلة بالفعل.</p></section>'));
+  if(slug==="present-simple")wireFollowups(id);
   document.getElementById("back").onclick=()=>{history.pushState({},"",indicatorLink(slug));analytics(slug);};
   document.getElementById("export").onclick=()=>{
    const head=["النوع","التاريخ","الجزء","الإجابات الصحيحة","إجمالي الأسئلة","النسبة","ناجح"];
