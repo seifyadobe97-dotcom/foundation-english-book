@@ -6,7 +6,7 @@
   if(root)root.textContent="تعذر تحميل الدرس التأسيسي. حدّث الصفحة وجرب مرة تانية.";
   return;
  }
- const KEY="step-with-seify-foundation-practice-v1",ABC=["A","B","C","D"];
+ const KEY="step-with-seify-foundation-sourced-v2",ABC=["A","B","C","D"];
  const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  let answers={};
  try{
@@ -16,7 +16,7 @@
  const n=Number(new URLSearchParams(location.search).get("stage"));
  let current=Number.isInteger(n)&&n>=0&&n<stages.length?n:0;
  const total=stages.reduce((n,s)=>n+s.checks.length,0);
- const id=(index,q)=>stages[index].id+"#"+q;
+ const id=(index,q)=>stages[index].checks[q].bankId;
  const isValid=(stageIndex,qi,choice)=>Number.isInteger(choice)&&choice>=0&&choice<stages[stageIndex].checks[qi].choices.length;
  function selected(stageIndex,qi){
   const value=answers[id(stageIndex,qi)];
@@ -38,11 +38,11 @@
  function side(){
   return '<aside class="sidebar" aria-label="محطات التأسيس"><h2>رحلة التأسيس · 7 محطات</h2>'+
    '<nav class="side-list">'+stages.map((m,i)=>{
-    const done=count(i)===m.checks.length;
+    const done=m.checks.length>0&&count(i)===m.checks.length;
     return '<button type="button" class="stage-link '+(i===current?"active ":"")+(done?"done":"")+
       '" data-stage="'+i+'" '+(i===current?'aria-current="step"':'')+'>'+
       '<span class="stage-n">'+(done?"✓":i+1)+'</span><span>'+esc(m.title)+
-      '<small>'+count(i)+' / '+m.checks.length+' سؤال</small></span></button>';
+      '<small>'+(m.checks.length?count(i)+' / '+m.checks.length+' أسئلة من المصدر':'بدون أسئلة موثقة حاليًا')+'</small></span></button>';
    }).join("")+'</nav>'+
    '<div class="sidebar-note">الهدف إنك تفهم قبل ما تحفظ. مفيش وقت محدد ولا رسوب في التدريب ده.</div></aside>';
  }
@@ -73,21 +73,34 @@
    '<p class="why-correct"><b>ليه دي صح؟</b> '+esc(q.why)+'</p>'+
    '<button type="button" class="retry" data-retry="1">أجرّب السؤال تاني</button></div>';
  }
+ function sourceLabel(q){
+  const src=q.source||{};
+  if(src.type==="course_book")
+   return "STEP course book · صفحة PDF "+esc(src.pdf_page);
+  if(src.type==="original_compilation")
+   return "تجميعات STEP · النموذج "+esc(src.model)+" · السؤال "+esc(src.number)+" · الصفحة "+esc(src.page);
+  return "مصدر غير موثّق";
+ }
  function questionCard(q,qi){
   const picked=selected(current,qi);
   return '<article class="question" data-question="'+qi+'">'+
-   '<span class="q-number">QUICK CHECK '+String(qi+1).padStart(2,"0")+'</span>'+
-   '<p class="q-label">'+esc(q.q)+'</p>'+
-   (q.en?'<div class="q-english" dir="ltr" lang="en">'+esc(q.en)+'</div>':'')+
+   '<span class="q-number">SOURCE MCQ '+String(qi+1).padStart(2,"0")+'</span>'+
+   '<p class="q-label">اختار الإجابة الصحيحة (سؤال من بنك المصادر)</p>'+
+   '<div class="q-english" dir="ltr" lang="en">'+esc(q.en)+'</div>'+
    '<div class="options" dir="ltr">'+q.choices.map((choice,idx)=>{
     const tone=picked===null?"":idx===q.correct?"correct":picked===idx?"wrong":"";
     return '<button class="option '+tone+'" type="button" data-answer="'+idx+'"'+(picked!==null?" disabled":"")+
      '><span class="letter">'+ABC[idx]+'</span><span class="choice" dir="auto">'+esc(choice)+'</span></button>';
-   }).join("")+'</div>'+(picked===null?"":feedback(q,picked))+'</article>';
+   }).join("")+'</div>'+(picked===null?"":feedback(q,picked))+
+   '<p class="question-source">المصدر: '+sourceLabel(q)+'</p></article>';
  }
  function practice(m){
+  if(!m.checks.length)return '<section class="panel" id="practice">'+
+   '<h2 class="subhead">التدريبات من المصادر فقط</h2>'+
+   '<p class="source-pending">لسه مفيش سؤال موثّق من المصادر اللي اتقدمتلنا بيقيس الجزء ده تحديدًا. '+
+   'عشان كده مش هنحط سؤال مؤلّف مكانه. راجع الأمثلة وافتح المحطة التالية؛ وهنضيف التدريبات بعد توثيق أصلها.</p></section>';
   return '<section class="panel" id="practice" aria-labelledby="practice-title"><div class="quiz-head">'+
-   '<h2 id="practice-title">جرّب بنفسك</h2><small>اختار إجابة — هنعرفك ليه صح أو غلط</small></div>'+
+   '<h2 id="practice-title">اختبر فهمك من بنك المصادر</h2><small>كل الأسئلة اختيار من 4 إجابات، وسبب كل اختيار هيتشرح لك</small></div>'+
    m.checks.map(questionCard).join("")+'</section>';
  }
  function stageContent(){
@@ -103,7 +116,7 @@
    practice(m)+
    '<nav class="stage-footer" aria-label="التنقل بين المحطات">'+
    '<button type="button" data-go="'+(current-1)+'" '+(current===0?"disabled":"")+'>→ المحطة السابقة</button>'+
-   '<span class="stage-summary">'+done+' من '+size+' أسئلة جربتها · التدريب مش اختبار رسمي</span>'+
+   '<span class="stage-summary">'+(size?done+' من '+size+' أسئلة من المصدر':'بانتظار أسئلة موثّقة لهذا الجزء')+' · تدريب غير رسمي</span>'+
    '<button type="button" class="primary" data-go="'+(current+1)+'" '+(current===stages.length-1?"disabled":"")+'>'+
    'المحطة التالية ←</button></nav>'+
    '<p class="privacy">محتوى تأسيسي تجريبي. إجاباتك هنا للتعلّم فقط، ومش بتضاف لدرجات STEP أو تقرير الأدمن.</p></div>';
@@ -145,9 +158,9 @@
   const progressText=root.querySelector(".progress-box small");
   if(progressText)progressText.textContent=pct+"% · محفوظ على الجهاز ده فقط";
   const active=root.querySelector('.stage-link[data-stage="'+current+'"] small');
-  if(active)active.textContent=count(current)+" / "+stages[current].checks.length+" سؤال";
+  if(active)active.textContent=count(current)+" / "+stages[current].checks.length+" أسئلة من المصدر";
   const summary=root.querySelector(".stage-summary");
-  if(summary)summary.textContent=count(current)+" من "+stages[current].checks.length+" أسئلة جربتها · التدريب مش اختبار رسمي";
+  if(summary)summary.textContent=count(current)+" من "+stages[current].checks.length+" أسئلة من المصدر · تدريب غير رسمي";
   const nextCard=root.querySelector('[data-question="'+qi+'"]');
   const focusTarget=nextCard?.querySelector(".feedback")||nextCard?.querySelector(".option:not(:disabled)");
   focusTarget?.focus?.({preventScroll:true});
