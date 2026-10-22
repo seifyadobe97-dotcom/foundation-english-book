@@ -63,9 +63,10 @@ try{
   await page.locator("#v-title").waitFor({timeout:12000});
   assert.equal(await page.locator("aside button").count(),5);
   await page.locator("#v-title").fill("شرح جديد من الأدمن");
+  assert.equal(await page.locator("#v-title").inputValue(),"شرح جديد من الأدمن","DOM title field must retain the text");
   await page.locator('[data-act="save"]').click();
   await page.getByText("اتحفظت المسودة").waitFor({timeout:12000});
-  assert.equal(draft.title,"شرح جديد من الأدمن");
+  assert.equal(draft?.title,"شرح جديد من الأدمن","Actual saved draft was: "+JSON.stringify(draft));
   await page.locator('[data-act="publish"]').click({force:true});
   await page.getByText("التعديل اتنشر").waitFor({timeout:12000});
   assert.equal(published.title,"شرح جديد من الأدمن");
