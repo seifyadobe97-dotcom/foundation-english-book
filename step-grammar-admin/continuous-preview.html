@@ -51,7 +51,7 @@ return '<article><small>المرحلة '+n+' من 5</small><h2>'+esc(u.title)+'<
  if(!r.ok)throw Error("هذا الحساب لا يملك صلاحية الأدمن.");
  const stages=window.STEP_PRESENT_CONTINUOUS_UNITS;
  if(!Array.isArray(stages)||stages.length!==5)throw Error("محتوى المراحل غير مكتمل.");
- document.getElementById("status").textContent="مسودة خاصة — 5 مراحل شرح، والأسئلة المصححة مخزّنة على السيرفر فقط.";
+ document.getElementById("status").textContent="معاينة خاصة بالمدرّس — 5 مراحل شرح، والأسئلة المصححة مخزّنة على السيرفر فقط.";
  document.getElementById("lessons").innerHTML=stages.map((u,i)=>renderStage(u,i+1)).join("");
 }catch(e){document.getElementById("status").textContent=e.message;}})();
 </script></body></html>
