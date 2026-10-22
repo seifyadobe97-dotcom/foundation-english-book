@@ -59,6 +59,9 @@ a{text-decoration:none;color:var(--teal);font-weight:800}
 .question{padding:19px 0;border-top:1px solid var(--line)}
 .question:first-of-type{border-top:0}
 .q-number{font:800 11px 'DM Sans',Arial;color:var(--teal);letter-spacing:.06em}
+.question-source{font:700 10px/1.8 Cairo,Tahoma,sans-serif;color:#5c7878;background:#f3f8f6;display:inline-block;padding:5px 9px;border-radius:7px;margin:12px 0 0}
+.source-pending{border:1px solid #dce8e0;background:#f6faf7;border-radius:10px;padding:13px 16px;line-height:2.05;color:#395d58;font-size:13px}
+
 .q-label{font-size:15px;font-weight:800;color:#283c47;margin:5px 0 6px}
 .q-english{font:700 17px/1.7 'DM Sans',Arial,sans-serif;direction:ltr;text-align:left;unicode-bidi:isolate;color:#294c5b;margin:7px 0 13px}
 .options{direction:ltr;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:13px}
