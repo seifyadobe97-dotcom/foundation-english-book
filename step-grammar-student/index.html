@@ -46,7 +46,11 @@ async function course(){
   headers:{"Content-Type":"application/json","apikey":config.anonKey,"Authorization":"Bearer "+session.access_token}
  });
  const followupData=await followupResponse.json().catch(()=>({}));
- return {...result,catalog,followups:followupResponse.ok?(followupData.followups||[]):[],
+ const agreementResponse=await fetch(config.url+"/functions/v1/step-course/agreement/course",{
+  headers:{"Content-Type":"application/json","apikey":config.anonKey,"Authorization":"Bearer "+session.access_token}
+ }).catch(()=>null);
+ const agreementData=agreementResponse?.ok?await agreementResponse.json().catch(()=>null):null;
+ return {...result,catalog,agreement:agreementData,followups:followupResponse.ok?(followupData.followups||[]):[],
   followupError:followupResponse.ok?"":"تعذر تحميل خطة المتابعة؛ اضغط تحديث للمحاولة مرة تانية."};
 }
 const taskKind={review:"مراجعة الشرح",practice:"حل تدريب",video:"فيديو مع Seify"};
@@ -95,12 +99,25 @@ function paint(x){
  const icons={"reading-comprehension":"📖",listening:"🎧",grammar:"✍️","writing-analysis":"📝"};
  const axes=Array.isArray(catalog.axes)?catalog.axes:[];
  const indicators=Array.isArray(catalog.indicators)?catalog.indicators:[];
+ const agreement=x.agreement,agreementListed=indicators.some(i=>i.slug==="subject-verb-agreement");
+ const agreementSections=agreement?.sections||[],agreementPassed=agreementSections.filter(i=>i.passed).length;
+ const agreementPercent=agreementSections.length?Math.round(agreementPassed/agreementSections.length*100):0;
+ const agreementCard=agreementListed&&agreement?'<article class="course-card"><div><div class="eyebrow">GRAMMAR · INDICATOR 02</div>'+
+  '<h3>Subject–Verb Agreement — تطابق الفاعل والفعل</h3>'+
+  '<p>الدرس التاني: افهم الفاعل الحقيقي وتطابق الأفعال، وحل من أسئلة المصادر بأربعة اختيارات.</p>'+
+  '<div class="bar"><span style="width:'+agreementPercent+'%"></span></div>'+
+  '<p style="margin-top:11px">'+agreementPassed+' من '+agreementSections.length+' مراحل مكتملة</p>'+
+  '<div class="study-actions"><a class="button" href="subject-verb-agreement.html">'+
+  (agreementPassed===agreementSections.length?'راجع الدرس والاختبار':'ابدأ الدرس التاني أو كمّله')+' ←</a></div></div>'+
+  '<div class="course-side"><strong>'+agreementPercent+'%</strong><span>LESSON 02 PROGRESS</span>'+
+  '<div class="bar"><span style="width:'+agreementPercent+'%"></span></div>'+
+  '<span>'+(agreement.exam?.unlocked?'الاختبار متاح':'الاختبار بعد المراحل')+'</span></div></article>':'';
  const axisHtml='<div class="section-head"><h2>محاور STEP الأربعة</h2></div><div class="axis-grid">'+
   axes.map(axis=>{
    const count=indicators.filter(i=>i.axis_code===axis.code).length;
    return '<div class="axis-card"><span class="axis-icon">'+(icons[axis.code]||"📚")+'</span><span class="axis-order">AXIS '+String(axis.position).padStart(2,"0")+'</span><h3>'+esc(axis.title_ar)+'</h3><p>'+esc(axis.title_en)+'</p><span class="axis-status">'+(count?count+' مؤشر متاح':'المحتوى قيد الإعداد')+'</span></div>';
   }).join("")+'</div>';
- app.innerHTML='<div class="hero"><div><div class="eyebrow">YOUR LEARNING SPACE</div><h1>أهلًا بيك، '+name+'</h1><p>كمّل من آخر خطوة وصلت لها، وخلّي تقدمك معاك في أي جهاز.</p></div><div class="hero-symbol">✦</div></div><div class="metrics"><div class="metric"><strong>'+passed+'/'+sections.length+'</strong><span>أجزاء مكتملة</span></div><div class="metric"><strong>'+percent+'%</strong><span>نسبة التقدم</span></div><div class="metric"><strong>'+(exam.best||0)+'%</strong><span>أفضل اختبار نهائي</span></div></div>'+followupCards(x)+axisHtml+'<div class="section-head"><h2>مؤشرات الجرامر</h2><span style="color:var(--muted);font-size:12px">COURSE LIBRARY</span></div><article class="course-card"><div><div class="eyebrow">GRAMMAR · INDICATOR 01</div><h3>Present Simple — المضارع البسيط</h3><p>'+esc(x.course?.subtitle||"")+'</p><div class="bar"><span style="width:'+percent+'%"></span></div><p style="margin-top:11px">'+passed+' من '+sections.length+' أجزاء منتهية</p><div class="study-actions"><a class="button" href="learn.html">'+(passed===sections.length?"راجع الدرس والاختبار":"ابدأ أو كمّل الدرس التفاعلي")+' ←</a></div></div><div class="course-side"><strong>'+percent+'%</strong><span>COURSE PROGRESS</span><div class="bar"><span style="width:'+percent+'%"></span></div><span>'+(exam.unlocked?"الاختبار النهائي متاح":"الاختبار النهائي بعد إكمال الأجزاء")+'</span></div></article><div class="section-head"><h2>خطوات الدرس</h2></div><section class="lesson-grid">'+sections.map(s=>'<div class="lesson '+(s.locked?"locked":"")+'"><span class="num">STEP '+String(s.index+1).padStart(2,"0")+'</span><h3>'+esc(s.titleAr)+'</h3><p>'+esc(s.short||s.title||"")+'</p><small class="'+(s.passed?"done":s.locked?"locked-icon":"")+'">'+(s.passed?"✓ تم اجتياز الجزء":s.locked?"🔒 مقفول":"← جاهز للمذاكرة")+'</small></div>').join("")+'</section><div class="lower"><span>عايز تستفسر عن الدراسة أو التسجيل؟</span><a href="https://wa.me/966544149974?text='+encodeURIComponent("السلام عليكم، عندي استفسار عن دراسة STEP Grammar بمنصة STEP with Seify.")+'" target="_blank" rel="noopener noreferrer">تواصل واتساب ↗</a></div>';
+ app.innerHTML='<div class="hero"><div><div class="eyebrow">YOUR LEARNING SPACE</div><h1>أهلًا بيك، '+name+'</h1><p>كمّل من آخر خطوة وصلت لها، وخلّي تقدمك معاك في أي جهاز.</p></div><div class="hero-symbol">✦</div></div><div class="metrics"><div class="metric"><strong>'+passed+'/'+sections.length+'</strong><span>أجزاء مكتملة</span></div><div class="metric"><strong>'+percent+'%</strong><span>نسبة التقدم</span></div><div class="metric"><strong>'+(exam.best||0)+'%</strong><span>أفضل اختبار نهائي</span></div></div>'+followupCards(x)+axisHtml+'<div class="section-head"><h2>مؤشرات الجرامر</h2><span style="color:var(--muted);font-size:12px">COURSE LIBRARY</span></div><article class="course-card"><div><div class="eyebrow">GRAMMAR · INDICATOR 01</div><h3>Present Simple — المضارع البسيط</h3><p>'+esc(x.course?.subtitle||"")+'</p><div class="bar"><span style="width:'+percent+'%"></span></div><p style="margin-top:11px">'+passed+' من '+sections.length+' أجزاء منتهية</p><div class="study-actions"><a class="button" href="learn.html">'+(passed===sections.length?"راجع الدرس والاختبار":"ابدأ أو كمّل الدرس التفاعلي")+' ←</a></div></div><div class="course-side"><strong>'+percent+'%</strong><span>COURSE PROGRESS</span><div class="bar"><span style="width:'+percent+'%"></span></div><span>'+(exam.unlocked?"الاختبار النهائي متاح":"الاختبار النهائي بعد إكمال الأجزاء")+'</span></div></article>'+agreementCard+'<div class="section-head"><h2>خطوات الدرس</h2></div><section class="lesson-grid">'+sections.map(s=>'<div class="lesson '+(s.locked?"locked":"")+'"><span class="num">STEP '+String(s.index+1).padStart(2,"0")+'</span><h3>'+esc(s.titleAr)+'</h3><p>'+esc(s.short||s.title||"")+'</p><small class="'+(s.passed?"done":s.locked?"locked-icon":"")+'">'+(s.passed?"✓ تم اجتياز الجزء":s.locked?"🔒 مقفول":"← جاهز للمذاكرة")+'</small></div>').join("")+'</section><div class="lower"><span>عايز تستفسر عن الدراسة أو التسجيل؟</span><a href="https://wa.me/966544149974?text='+encodeURIComponent("السلام عليكم، عندي استفسار عن دراسة STEP Grammar بمنصة STEP with Seify.")+'" target="_blank" rel="noopener noreferrer">تواصل واتساب ↗</a></div>';
 }
 async function init(){
  try{const result=await course();if(result)paint(result);}
