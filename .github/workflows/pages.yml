@@ -63,6 +63,8 @@ jobs:
         run: node tests/present-simple-v2.mjs
       - name: Test Subject–Verb Agreement on desktop and mobile
         run: node tests/subject-verb-agreement.mjs
+      - name: Test Present Continuous on desktop and mobile (synthetic questions only)
+        run: node tests/present-continuous.mjs
 
   deploy:
     name: Deploy verified static book
