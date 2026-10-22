@@ -77,8 +77,10 @@ Deno.serve(async(request)=>{
  if(studentAccount.is_active===false)return send(403,{error:"الحساب موقوف مؤقتًا، تواصل مع إدارة المنصة"});
  let path=new URL(request.url).pathname.replace(/^\/(?:functions\/v1\/)?step-course/,"");
  const isAgreement=path==="/agreement"||path.startsWith("/agreement/");
+ const isContinuous=path==="/continuous"||path.startsWith("/continuous/");
  if(isAgreement)path=path.slice("/agreement".length)||"/course";
- const requestedCourseCode=isAgreement?"ASGQAGREE":"ASGQPRSIM";
+ if(isContinuous)path=path.slice("/continuous".length)||"/course";
+ const requestedCourseCode=isContinuous?"ASGQPRCONT":isAgreement?"ASGQAGREE":"ASGQPRSIM";
  const {data:privateBank,error:bankError}=await admin.from("step_private_course_banks")
   .select("payload").eq("course_code",requestedCourseCode).maybeSingle();
  if(bankError||!privateBank?.payload)return send(503,{error:"محتوى الدرس غير متاح مؤقتًا"});
@@ -90,13 +92,14 @@ Deno.serve(async(request)=>{
  const method=request.method;
  const courseCode=lesson.code;
  try{
-  // An Agreement draft is not a student-facing release, regardless of its static HTML.
-  if(isAgreement){
+  // Every supplemental grammar course requires a published indicator, not merely a static HTML file.
+  if(isAgreement||isContinuous){
+   const indicatorSlug=isAgreement?"subject-verb-agreement":"present-continuous";
    const {data:release,error:releaseError}=await admin.from("step_curriculum_indicators")
-    .select("status,legacy_course_code").eq("slug","subject-verb-agreement").maybeSingle();
+    .select("status,legacy_course_code").eq("slug",indicatorSlug).maybeSingle();
    if(releaseError)throw releaseError;
    if(release?.status!=="published"||release.legacy_course_code!==courseCode)
-    return send(403,{error:"الدرس الثاني تحت المراجعة. هيتفتح بعد اعتماد الأسئلة والمصادر."});
+    return send(403,{error:"الدرس ده تحت المراجعة، ومش متاح للطلاب قبل الاعتماد."});
   }
   // Published edits are read at request-time. Drafts never affect student questions.
   const {data:editRows,error:editError}=await admin.from("step_question_edits")
@@ -157,7 +160,7 @@ Deno.serve(async(request)=>{
   if(method==="GET"&&path==="/videos"){
    const {data:rows,error:videoError}=await admin.from("step_indicator_videos")
     .select("part_index,title,description,video_url")
-    .eq("indicator_slug",isAgreement?"subject-verb-agreement":"present-simple").eq("published",true).order("part_index");
+    .eq("indicator_slug",isContinuous?"present-continuous":isAgreement?"subject-verb-agreement":"present-simple").eq("published",true).order("part_index");
    if(videoError)throw videoError;
    return send(200,{videos:(rows||[]).filter(r=>
     Number.isInteger(r.part_index)&&r.part_index>=0&&r.part_index<effectiveLesson.sections.length)
