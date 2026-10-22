@@ -26,7 +26,8 @@ window.StepStudentExperience={
    const stages=item.data.sections||[];
    const passed=stages.filter(s=>s.passed).length;
    const next=stages.find(s=>!s.passed&&!s.locked);
-   return {...item,index,passed,total:stages.length,ready:next?.index??item.data.nextIndex??0,
+   const nextPosition=next?stages.indexOf(next):Math.min(Math.max(Number(item.data.nextIndex)||0,0),Math.max(0,stages.length-1));
+   return {...item,index,passed,total:stages.length,ready:nextPosition,
     percent:stages.length?Math.round(passed/stages.length*100):0,
     finished:stages.length>0&&passed===stages.length};
   });
@@ -47,11 +48,11 @@ window.StepStudentExperience={
     const ar=item.data.course?.titleAr||item.title_ar||"";
     const url=link(item.slug,item.ready);
     const stage=item.data.sections[item.ready];
-    const button=item.finished?"راجع الدرس واختبار الإتقان":"كمّل من مرحلتك";
+    const button=item.finished?"راجع الدرس واختبار الإتقان":item.passed?"كمّل من مرحلتك":"ابدأ الدرس";
     return '<article class="student-course-tile '+(item.finished?"is-complete":"")+'">'+
      '<div class="student-course-number">LESSON '+String(item.index+1).padStart(2,"0")+'</div>'+
      '<div class="student-course-info"><div class="student-course-head"><h3>'+esc(title)+'</h3>'+
-     '<span class="student-course-state">'+(item.finished?"✓ مكتمل":"قيد التعلّم")+'</span></div>'+
+     '<span class="student-course-state">'+(item.finished?"✓ مكتمل":item.passed?"بدأت فيه":"جاهز تبدأ")+'</span></div>'+
      '<p class="student-course-ar">'+esc(ar)+'</p>'+
      '<div class="student-stage-meta">'+item.passed+' من '+item.total+' مراحل مكتملة'+
      (stage&&!item.finished?' · التالية: '+esc(stage.titleAr||stage.title||"المرحلة التالية"):"")+'</div>'+
@@ -79,12 +80,16 @@ window.StepStudentExperience={
   }
   const shortcut=document.createElement("nav");shortcut.className="student-quicknav";
   shortcut.setAttribute("aria-label","تنقل بين أقسام رحلتك");
-  shortcut.innerHTML='<a href="#student-learning-path">دروسي</a>'+
+  shortcut.innerHTML='<a href="#student-learning-path" aria-label="انتقل لقائمة دروسي">دروسي</a>'+
    '<a href="#student-followups">خطة متابعتي</a><a href="#student-axes">محاور STEP</a>';
   hero?.insertAdjacentElement("beforebegin",shortcut);
   const tasks=app.querySelector(".student-followups");
-  if(tasks)tasks.id="student-followups";
-  else shortcut.querySelector('a[href="#student-followups"]')?.remove();
+  if(tasks){
+   tasks.id="student-followups";
+   // Keep the core lessons immediately after the welcome area;
+   // follow-up tasks remain reachable without hiding or discarding them.
+   home.insertAdjacentElement("afterend",tasks);
+  }else shortcut.querySelector('a[href="#student-followups"]')?.remove();
   const axes=app.querySelector(".axis-grid");
   if(axes){
    const axesHead=Array.from(app.querySelectorAll(".section-head")).find(el=>el.textContent.includes("محاور STEP الأربعة"));

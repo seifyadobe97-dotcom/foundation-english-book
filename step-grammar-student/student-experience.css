@@ -43,3 +43,24 @@ html{scroll-behavior:smooth}body{background:linear-gradient(180deg,#edf5f0 0,#f8
 @media(max-width:840px){.student-course-tile{grid-template-columns:78px minmax(0,1fr);gap:14px}.student-course-go{grid-column:2;flex-direction:row;align-items:center;justify-content:space-between}.student-course-go a{flex:1;max-width:215px}}
 @media(max-width:550px){.wrap{padding:15px 13px 55px}.student-hero{padding:22px 18px}.student-hero-cta{width:100%;min-width:0}.metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.metric{padding:14px 11px}.metric strong{font-size:21px}.metric span{font-size:10px}.student-course-tile{grid-template-columns:1fr;padding:17px;gap:8px}.student-course-number{text-align:right;justify-self:start;padding:7px 10px}.student-course-go{grid-column:1;gap:10px}.student-course-head h3{font-size:19px}.student-quicknav a{min-width:65px;font-size:12px;padding:8px 4px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.student-course-tile,.student-hero-cta{transition:none}}
+
+/* Final polish: softer learning rhythm, generous tap areas, clear keyboard focus. */
+.student-course-tile{scroll-margin-top:24px}
+.student-course-go a{min-height:46px}
+.student-course-head{row-gap:5px}
+.student-quicknav a[aria-current="location"]{background:#eaf6ee;color:#195848}
+.student-course-tile:focus-within{border-color:#74af95;box-shadow:0 0 0 3px #a8d8c052}
+.student-course-go a:focus-visible,.student-hero-cta:focus-visible,.student-quicknav a:focus-visible,
+.student-axes-disclosure summary:focus-visible,.student-stages-disclosure summary:focus-visible{outline:3px solid #caa579;outline-offset:3px}
+.student-followups{margin-top:22px}
+.student-axes-disclosure summary,.student-stages-disclosure summary{min-height:55px;align-items:center}
+@media(max-width:550px){
+ .student-hero{gap:17px}
+ .student-course-go{flex-direction:row;align-items:center}
+ .student-course-go a{max-width:none}
+ .student-course-go strong{min-width:60px;text-align:center}
+ .student-quicknav{position:relative;gap:4px}
+ .student-quicknav a{min-height:43px;display:flex;align-items:center;justify-content:center}
+ .student-course-tile{border-radius:16px}
+ .student-followups{margin-top:17px}
+}
