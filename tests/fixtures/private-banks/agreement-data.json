@@ -172,7 +172,7 @@
   "questions": {
     "AG-B01": {
       "id": "AG-B01",
-      "text": "SYNTHETIC TEST FIXTURE AG-B01 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 1.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -192,7 +192,7 @@
     },
     "AG-B02": {
       "id": "AG-B02",
-      "text": "SYNTHETIC TEST FIXTURE AG-B02 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 2.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -212,7 +212,7 @@
     },
     "AG-B03": {
       "id": "AG-B03",
-      "text": "SYNTHETIC TEST FIXTURE AG-B03 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 3.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -232,7 +232,7 @@
     },
     "AG-B04": {
       "id": "AG-B04",
-      "text": "SYNTHETIC TEST FIXTURE AG-B04 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 4.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -252,7 +252,7 @@
     },
     "AG-B05": {
       "id": "AG-B05",
-      "text": "SYNTHETIC TEST FIXTURE AG-B05 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 5.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -272,7 +272,7 @@
     },
     "AG-B06": {
       "id": "AG-B06",
-      "text": "SYNTHETIC TEST FIXTURE AG-B06 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 6.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -292,7 +292,7 @@
     },
     "AG-B07": {
       "id": "AG-B07",
-      "text": "SYNTHETIC TEST FIXTURE AG-B07 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 7.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -312,7 +312,7 @@
     },
     "AG-B08": {
       "id": "AG-B08",
-      "text": "SYNTHETIC TEST FIXTURE AG-B08 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 8.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -332,7 +332,7 @@
     },
     "AG-B09": {
       "id": "AG-B09",
-      "text": "SYNTHETIC TEST FIXTURE AG-B09 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 9.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -352,7 +352,7 @@
     },
     "AG-B10": {
       "id": "AG-B10",
-      "text": "SYNTHETIC TEST FIXTURE AG-B10 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 10.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -372,7 +372,7 @@
     },
     "AG-C01": {
       "id": "AG-C01",
-      "text": "SYNTHETIC TEST FIXTURE AG-C01 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 11.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -392,7 +392,7 @@
     },
     "AG-C04": {
       "id": "AG-C04",
-      "text": "SYNTHETIC TEST FIXTURE AG-C04 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 12.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -412,7 +412,7 @@
     },
     "AG-C05": {
       "id": "AG-C05",
-      "text": "SYNTHETIC TEST FIXTURE AG-C05 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 13.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -432,7 +432,7 @@
     },
     "AG-C07": {
       "id": "AG-C07",
-      "text": "SYNTHETIC TEST FIXTURE AG-C07 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 14.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -452,7 +452,7 @@
     },
     "AG-C08": {
       "id": "AG-C08",
-      "text": "SYNTHETIC TEST FIXTURE AG-C08 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 15.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -472,7 +472,7 @@
     },
     "AG-C09": {
       "id": "AG-C09",
-      "text": "SYNTHETIC TEST FIXTURE AG-C09 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 16.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -492,7 +492,7 @@
     },
     "AG-C10": {
       "id": "AG-C10",
-      "text": "SYNTHETIC TEST FIXTURE AG-C10 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 17.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",

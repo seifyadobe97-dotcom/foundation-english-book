@@ -356,7 +356,7 @@
   "questions": {
     "ASGQPRSIM-AGG-01": {
       "id": "ASGQPRSIM-AGG-01",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-AGG-01 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 1.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -376,7 +376,7 @@
     },
     "ASGQPRSIM-AGG-04": {
       "id": "ASGQPRSIM-AGG-04",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-AGG-04 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 2.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -396,7 +396,7 @@
     },
     "ASGQPRSIM-AGG-09": {
       "id": "ASGQPRSIM-AGG-09",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-AGG-09 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 3.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -416,7 +416,7 @@
     },
     "ASGQPRSIM-AGG-02": {
       "id": "ASGQPRSIM-AGG-02",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-AGG-02 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 4.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -436,7 +436,7 @@
     },
     "ASGQPRSIM-BOOK-01": {
       "id": "ASGQPRSIM-BOOK-01",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-BOOK-01 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 5.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -456,7 +456,7 @@
     },
     "ASGQPRSIM-BOOK-09": {
       "id": "ASGQPRSIM-BOOK-09",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-BOOK-09 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 6.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -476,7 +476,7 @@
     },
     "ASGQPRSIM-AGG-10": {
       "id": "ASGQPRSIM-AGG-10",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-AGG-10 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 7.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -496,7 +496,7 @@
     },
     "ASGQPRSIM-BOOK-02": {
       "id": "ASGQPRSIM-BOOK-02",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-BOOK-02 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 8.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -516,7 +516,7 @@
     },
     "ASGQPRSIM-BOOK-03": {
       "id": "ASGQPRSIM-BOOK-03",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-BOOK-03 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 9.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -536,7 +536,7 @@
     },
     "ASGQPRSIM-BOOK-04": {
       "id": "ASGQPRSIM-BOOK-04",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-BOOK-04 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 10.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -556,7 +556,7 @@
     },
     "ASGQPRSIM-BOOK-05": {
       "id": "ASGQPRSIM-BOOK-05",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-BOOK-05 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 11.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -576,7 +576,7 @@
     },
     "ASGQPRSIM-AGG-06": {
       "id": "ASGQPRSIM-AGG-06",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-AGG-06 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 12.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -596,7 +596,7 @@
     },
     "ASGQPRSIM-BOOK-06": {
       "id": "ASGQPRSIM-BOOK-06",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-BOOK-06 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 13.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -616,7 +616,7 @@
     },
     "ASGQPRSIM-BOOK-07": {
       "id": "ASGQPRSIM-BOOK-07",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-BOOK-07 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 14.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -636,7 +636,7 @@
     },
     "ASGQPRSIM-BOOK-08": {
       "id": "ASGQPRSIM-BOOK-08",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-BOOK-08 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 15.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -656,7 +656,7 @@
     },
     "ASGQPRSIM-AGG-05": {
       "id": "ASGQPRSIM-AGG-05",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-AGG-05 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 16.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -676,7 +676,7 @@
     },
     "ASGQPRSIM-AGG-07": {
       "id": "ASGQPRSIM-AGG-07",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-AGG-07 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 17.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -696,7 +696,7 @@
     },
     "ASGQPRSIM-AGG-03": {
       "id": "ASGQPRSIM-AGG-03",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-AGG-03 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 18.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -716,7 +716,7 @@
     },
     "ASGQPRSIM-AGG-08": {
       "id": "ASGQPRSIM-AGG-08",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-AGG-08 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 19.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -736,7 +736,7 @@
     },
     "ASGQPRSIM-BOOK-10": {
       "id": "ASGQPRSIM-BOOK-10",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-BOOK-10 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 20.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
@@ -756,7 +756,7 @@
     },
     "ASGQPRSIM-BOOK-11": {
       "id": "ASGQPRSIM-BOOK-11",
-      "text": "SYNTHETIC TEST FIXTURE ASGQPRSIM-BOOK-11 — choose the sample label.",
+      "text": "This is synthetic UI-test question number 21.",
       "options": {
         "A": "sample alpha",
         "B": "sample bravo",
