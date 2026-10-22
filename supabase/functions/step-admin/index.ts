@@ -560,10 +560,11 @@ Deno.serve(async(req)=>{
     if(Object.keys(v).some(k=>!allowedVisual.includes(k)))return false;
     if(typeof v.title!=="string"||!v.title.trim()||v.title.length>160
      ||typeof v.detail!=="string"||v.detail.trim().length<10||v.detail.length>6000
-     ||typeof v.tip!=="string"||v.tip.length>4000)return false;
-    if(!Array.isArray(v.cards)||v.cards.length>12||!Array.isArray(v.examples)||v.examples.length>24
-      ||!Array.isArray(v.formulas)||v.formulas.length>12)return false;
-    if([...v.cards,...v.examples,...v.formulas].some(row=>!Array.isArray(row)||
+     ||(v.tip!==undefined&&(typeof v.tip!=="string"||v.tip.length>4000)))return false;
+    if(v.cards!==undefined&&(!Array.isArray(v.cards)||v.cards.length>12))return false;
+    if(v.examples!==undefined&&(!Array.isArray(v.examples)||v.examples.length>24))return false;
+    if(v.formulas!==undefined&&(!Array.isArray(v.formulas)||v.formulas.length>12))return false;
+    if([...(v.cards||[]),...(v.examples||[]),...(v.formulas||[])].some(row=>!Array.isArray(row)||
       row.length<2||row.length>5||row.some(x=>typeof x!=="string"||x.length>1500)))return false;
     if(v.keywords!==undefined&&(!Array.isArray(v.keywords)||v.keywords.length>30||
       v.keywords.some((row:any)=>!Array.isArray(row)||row.length!==2||row.some((x:any)=>typeof x!=="string"||x.length>400))))return false;
