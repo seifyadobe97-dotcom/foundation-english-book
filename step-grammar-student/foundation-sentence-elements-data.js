@@ -1,6 +1,6 @@
 "use strict";
 // Foundation MCQs are sourced verbatim from the already-audited STEP course bank. Explanatory examples may be authored.
-// Source pages/models are tied to each question. No unverified item is shown as practice.
+// Question provenance remains in the protected Supabase ledger and separate editorial bank.
 window.STEP_FOUNDATION_STAGES=[
   {
     "id": "sentence",
@@ -136,7 +136,6 @@ window.STEP_FOUNDATION_STAGES=[
     "tip": "مش كل كلمة آخرها s تبقى جمع، ومش كل جمع لازم ينتهي بـ s. بص على <strong>المعنى والاسم الأساسي</strong>: news اسم غير معدود، وpeople غالبًا جمع.",
     "checks": [
       {
-        "bankId": "ASGQPRSIM-AGG-02",
         "en": "When the students ...... hard, they pass their exams.",
         "choices": [
           "study",
@@ -151,17 +150,9 @@ window.STEP_FOUNDATION_STAGES=[
           "studied ماضي، لكن pass في الجزء التاني مضارع بسيط والجملة بتشرح علاقة عامة.",
           "will study للمستقبل، لكن الكلام هنا عن قاعدة عامة متكررة، مش توقع لحدث جاي.",
           "would study غالبًا محتاج سياق شرطي أو افتراضي، وهو مش موجود هنا."
-        ],
-        "source": {
-          "type": "original_compilation",
-          "model": "4",
-          "number": "071",
-          "page": "22",
-          "editorial_status": "individually_checked_for_pilot"
-        }
+        ]
       },
       {
-        "bankId": "ASGQPRSIM-BOOK-09",
         "en": "They always _____ late for school.",
         "choices": [
           "coming",
@@ -176,12 +167,7 @@ window.STEP_FOUNDATION_STAGES=[
           "comes للمفرد الغائب، لكن They فاعل جمع.",
           "",
           "to come مصدر بـ to، لكن بعد They في الجملة المثبتة نحتاج الفعل المباشر."
-        ],
-        "source": {
-          "type": "course_book",
-          "pdf_page": 3,
-          "status": "rechecked"
-        }
+        ]
       }
     ]
   },
@@ -329,7 +315,6 @@ window.STEP_FOUNDATION_STAGES=[
     "tip": "he/she/it ضمائر فاعل مفرد غائب. وفي إنجليزي العصر الحديث ممكن they تُستخدم لشخص واحد غير محدد النوع؛ هنا الفعل بعدها يفضل بصيغة they are / they work.",
     "checks": [
       {
-        "bankId": "ASGQPRSIM-AGG-01",
         "en": "When I go to King Saud University Library, I usually ………………",
         "choices": [
           "am studying",
@@ -344,17 +329,9 @@ window.STEP_FOUNDATION_STAGES=[
           "will study للمستقبل، بينما الجملة بتتكلم عن حاجة بتحصل عادة.",
           "studied للماضي، ومفيش سياق بيحكي عن مرة انتهت.",
           ""
-        ],
-        "source": {
-          "type": "original_compilation",
-          "model": "2",
-          "number": "063",
-          "page": "9",
-          "editorial_status": "individually_checked_for_pilot"
-        }
+        ]
       },
       {
-        "bankId": "ASGQPRSIM-BOOK-01",
         "en": "We usually _____ to school by bus.",
         "choices": [
           "goes",
@@ -369,15 +346,9 @@ window.STEP_FOUNDATION_STAGES=[
           "went ماضي، وكلمة usually هنا بتوضح عادة في الحاضر.",
           "going صيغة ing، ومفيش فعل مساعد زي are يكملها.",
           ""
-        ],
-        "source": {
-          "type": "course_book",
-          "pdf_page": 3,
-          "status": "rechecked"
-        }
+        ]
       },
       {
-        "bankId": "ASGQPRSIM-BOOK-08",
         "en": "I never _________ up late.",
         "choices": [
           "woke",
@@ -392,12 +363,7 @@ window.STEP_FOUNDATION_STAGES=[
           "waking صيغة ing، ومفيش فعل مساعد يكملها.",
           "wakes فيها s للمفرد الغائب، لكن الفاعل I بياخد wake.",
           ""
-        ],
-        "source": {
-          "type": "course_book",
-          "pdf_page": 3,
-          "status": "rechecked"
-        }
+        ]
       }
     ]
   },
@@ -489,7 +455,6 @@ window.STEP_FOUNDATION_STAGES=[
     "tip": "بص على وظيفة الكلمة جوّه الجملة مش شكلها بس. مثال: is happy = is فعل رابط أساسي؛ is studying = is مساعد قبل studying.",
     "checks": [
       {
-        "bankId": "ASGQPRSIM-BOOK-10",
         "en": "He _______ his homework every day at 7 p.m.",
         "choices": [
           "do",
@@ -504,15 +469,9 @@ window.STEP_FOUNDATION_STAGES=[
           "",
           "doing صيغة ing من غير فعل مساعد ومش مناسبة لعادة every day.",
           "did ماضي، لكن every day هنا بيوصف عادة مستمرة."
-        ],
-        "source": {
-          "type": "course_book",
-          "pdf_page": 3,
-          "status": "rechecked"
-        }
+        ]
       },
       {
-        "bankId": "ASGQPRSIM-BOOK-07",
         "en": "Does he always ___ his homework?",
         "choices": [
           "do",
@@ -527,12 +486,7 @@ window.STEP_FOUNDATION_STAGES=[
           "does تكرار لعلامة المفرد؛ بعد Does في أول السؤال نستخدم do.",
           "did ماضي، ومينفعش بعد Does؛ الفعل الرئيسي يكون في المصدر.",
           "doing صيغة ing، ومش المصدر المطلوب بعد Does."
-        ],
-        "source": {
-          "type": "course_book",
-          "pdf_page": 3,
-          "status": "rechecked"
-        }
+        ]
       }
     ]
   },
@@ -624,7 +578,6 @@ window.STEP_FOUNDATION_STAGES=[
     "tip": "الإضافة s على الفعل مع he/she/it تخص المضارع البسيط المثبت، ومش هي نفسها s جمع الاسم. مثال: The boys play / The boy plays.",
     "checks": [
       {
-        "bankId": "ASGQPRSIM-BOOK-02",
         "en": "She ________ to school every day.",
         "choices": [
           "go",
@@ -639,15 +592,9 @@ window.STEP_FOUNDATION_STAGES=[
           "",
           "going صيغة ing، ومش فعل مضارع بسيط مكتمل لوحدها.",
           "gone التصريف الثالث، وبيحتاج فعل مساعد زي has."
-        ],
-        "source": {
-          "type": "course_book",
-          "pdf_page": 3,
-          "status": "rechecked"
-        }
+        ]
       },
       {
-        "bankId": "ASGQPRSIM-BOOK-03",
         "en": "Physics is the science which ______ light and heat.",
         "choices": [
           "studies",
@@ -662,15 +609,9 @@ window.STEP_FOUNDATION_STAGES=[
           "studying صيغة ing من غير فعل مساعد؛ ومش مناسبة لتعريف علمي ثابت.",
           "study من غير ies، لكن which راجعة على science المفرد.",
           "is studying بتصور دراسة جارية حاليًا، بينما الجملة بتعرّف مجال علمي وصفته العامة."
-        ],
-        "source": {
-          "type": "course_book",
-          "pdf_page": 8,
-          "status": "rechecked"
-        }
+        ]
       },
       {
-        "bankId": "ASGQPRSIM-BOOK-04",
         "en": "He does not usually ______ coffee.",
         "choices": [
           "drank",
@@ -685,12 +626,7 @@ window.STEP_FOUNDATION_STAGES=[
           "",
           "drinks فيها s زيادة؛ does أخدت علامة المفرد بالفعل.",
           "having صيغة ing ومش مصدر الفعل drink المطلوب بعد does not."
-        ],
-        "source": {
-          "type": "course_book",
-          "pdf_page": 3,
-          "status": "rechecked"
-        }
+        ]
       }
     ]
   },
@@ -770,7 +706,6 @@ window.STEP_FOUNDATION_STAGES=[
     "tip": "في الامتحان اسأل 4 أسئلة: مين الفاعل؟ مفرد ولا جمع؟ هل عندنا مساعد؟ وإيه شكل الفعل بعده؟ السرعة تيجي بعد ما تتقن الدقة.",
     "checks": [
       {
-        "bankId": "ASGQPRSIM-BOOK-06",
         "en": "______ your brother play football every week?",
         "choices": [
           "Does",
@@ -785,15 +720,9 @@ window.STEP_FOUNDATION_STAGES=[
           "Did بتسأل عن الماضي؛ كل أسبوع هنا يقصد عادة حالية من غير إطار زمني ماضي.",
           "Do مع I وYou والجمع، لكن your brother مفرد غائب.",
           "Doing مش فعل مساعد نبدأ به السؤال ده؛ المطلوب Does."
-        ],
-        "source": {
-          "type": "course_book",
-          "pdf_page": 3,
-          "status": "rechecked"
-        }
+        ]
       },
       {
-        "bankId": "ASGQPRSIM-BOOK-05",
         "en": "My father _____ work on Sundays.",
         "choices": [
           "don’t",
@@ -808,15 +737,9 @@ window.STEP_FOUNDATION_STAGES=[
           "",
           "isn't مينفعش قبل الفعل work في المضارع البسيط؛ النفي هنا بـ doesn't.",
           "aren't مع الجمع في فعل be، ومش مساعد النفي المناسب قبل work."
-        ],
-        "source": {
-          "type": "course_book",
-          "pdf_page": 3,
-          "status": "rechecked"
-        }
+        ]
       },
       {
-        "bankId": "ASGQPRSIM-AGG-10",
         "en": "Dave always……... the watch that was given to him by his father.",
         "choices": [
           "wears",
@@ -831,17 +754,9 @@ window.STEP_FOUNDATION_STAGES=[
           "will wear مستقبل، لكن always هنا بيوصف عادة معتادة لِـ Dave.",
           "was to wear بتشير لخطة أو ترتيب في الماضي، مش عادة حالية.",
           "has been wearing بتركز على الاستمرار من الماضي للحاضر؛ السؤال هنا يقصد عادة عامة، فالأبسط والأدق wears."
-        ],
-        "source": {
-          "type": "original_compilation",
-          "model": "6",
-          "number": "078",
-          "page": "34",
-          "editorial_status": "individually_checked_for_pilot"
-        }
+        ]
       },
       {
-        "bankId": "ASGQPRSIM-AGG-03",
         "en": "Take a break when you …………. feeling tired from all the reading.",
         "choices": [
           "started",
@@ -856,17 +771,9 @@ window.STEP_FOUNDATION_STAGES=[
           "",
           "starts مع المفرد الغائب، لكن الفاعل you.",
           "starting صيغة ing، ومش الفعل الكامل المطلوب بعد you."
-        ],
-        "source": {
-          "type": "original_compilation",
-          "model": "14",
-          "number": "076",
-          "page": "75",
-          "editorial_status": "individually_checked_for_pilot"
-        }
+        ]
       },
       {
-        "bankId": "ASGQPRSIM-AGG-05",
         "en": "Ali is fixing his brother's bicycle, and he…….... some help. Can you help him?",
         "choices": [
           "is needing",
@@ -881,14 +788,7 @@ window.STEP_FOUNDATION_STAGES=[
           "needed ماضي، بينما Ali محتاج المساعدة دلوقتي حسب السياق.",
           "",
           "need من غير s، لكن he مفرد غائب، فنختار needs."
-        ],
-        "source": {
-          "type": "original_compilation",
-          "model": "25",
-          "number": "068",
-          "page": "142",
-          "editorial_status": "individually_checked_for_pilot"
-        }
+        ]
       }
     ]
   }
