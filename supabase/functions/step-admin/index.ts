@@ -353,7 +353,7 @@ Deno.serve(async(req)=>{
       avg_exam_percent:allExams.length?Math.round(1000*allExams.reduce((a,x)=>a+x.correct_count/x.total_questions,0)/allExams.length)/10:null
      },parts:totals,student_metrics:[...participants].map(([user_id,metric])=>({user_id,...metric})),
      learning:{sections:insight.sections,answers:insight.answers,timed_answers:insight.timed_answers,
-       limited_to_latest:5000,note:insight.note}};
+       limited_to_latest:5000,note:insight.note}});
    }
    const [overview,parts]=await Promise.all([
      admin.from("step_admin_overview").select("*").single(),
