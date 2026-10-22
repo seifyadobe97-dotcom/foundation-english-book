@@ -1,5 +1,6 @@
 "use strict";
-// Foundation practice is formative and client-side; never a validated or official STEP score.
+// Foundation MCQs are sourced verbatim from the already-audited STEP course bank. Explanatory examples may be authored.
+// Source pages/models are tied to each question. No unverified item is shown as practice.
 window.STEP_FOUNDATION_STAGES=[
   {
     "id": "sentence",
@@ -67,56 +68,7 @@ window.STEP_FOUNDATION_STAGES=[
       ]
     ],
     "tip": "اسأل نفسك بالترتيب: مين؟ بيعمل إيه أو حالته إيه؟ وبعدين: هل فيه شيء وقع عليه الفعل أو وصف بيكمل المعنى؟",
-    "checks": [
-      {
-        "q": "في جملة: “The children play.” — إيه الفاعل؟",
-        "en": "The children play.",
-        "choices": [
-          "The children",
-          "play",
-          "children play"
-        ],
-        "correct": 0,
-        "why": "The children هي مجموعة الأشخاص اللي بيعملوا الفعل؛ يبقى ده الفاعل.",
-        "wrong": [
-          "",
-          "play هو الفعل اللي الأطفال بيعملوه، مش الفاعل.",
-          "children play جزء فيه الاسم والفعل مع بعض؛ الفاعل هو The children فقط."
-        ]
-      },
-      {
-        "q": "في “Sara drinks water.” — إيه المفعول به؟",
-        "en": "Sara drinks water.",
-        "choices": [
-          "Sara",
-          "drinks",
-          "water"
-        ],
-        "correct": 2,
-        "why": "water هو الشيء اللي سارة بتشربه؛ الفعل واقع عليه.",
-        "wrong": [
-          "Sara هي الفاعل لأنها اللي بتشرب.",
-          "drinks هو الفعل نفسه، مش الشيء اللي بنتكلم عنه.",
-          ""
-        ]
-      },
-      {
-        "q": "في “He is happy.” — كلمة happy دورها إيه؟",
-        "en": "He is happy.",
-        "choices": [
-          "مفعول به",
-          "تكملة بتوصف الفاعل",
-          "فاعل جديد"
-        ],
-        "correct": 1,
-        "why": "happy بتوصف He بعد is، فهي تكملة للمعنى (Subject Complement).",
-        "wrong": [
-          "happy مش شيء وقع عليه فعل؛ دي صفة بتوصف الفاعل.",
-          "",
-          "He هو الفاعل، وhappy وصف له مش فاعل تاني."
-        ]
-      }
-    ]
+    "checks": []
   },
   {
     "id": "noun-number",
@@ -184,51 +136,52 @@ window.STEP_FOUNDATION_STAGES=[
     "tip": "مش كل كلمة آخرها s تبقى جمع، ومش كل جمع لازم ينتهي بـ s. بص على <strong>المعنى والاسم الأساسي</strong>: news اسم غير معدود، وpeople غالبًا جمع.",
     "checks": [
       {
-        "q": "اختار الفعل المناسب: “The students ____ tired.”",
-        "en": "The students ____ tired.",
+        "bankId": "ASGQPRSIM-AGG-02",
+        "en": "When the students ...... hard, they pass their exams.",
         "choices": [
-          "is",
-          "are",
-          "am"
+          "study",
+          "studied",
+          "will study",
+          "would study"
         ],
-        "correct": 1,
-        "why": "students جمع؛ مع فعل be في الحاضر نستخدم are.",
+        "correct": 0,
+        "why": "الجملة بتوصف علاقة عامة متكررة: لما الطلاب يذاكروا بجد بينجحوا. الفاعل `the students` جمع، فنقول `study` من غير `s`. وجود `when` هنا مش معناه إننا نستخدم الماضي.",
         "wrong": [
-          "is مع الاسم المفرد أو he/she/it، مش students الجمع.",
           "",
-          "am مع I فقط."
-        ]
+          "studied ماضي، لكن pass في الجزء التاني مضارع بسيط والجملة بتشرح علاقة عامة.",
+          "will study للمستقبل، لكن الكلام هنا عن قاعدة عامة متكررة، مش توقع لحدث جاي.",
+          "would study غالبًا محتاج سياق شرطي أو افتراضي، وهو مش موجود هنا."
+        ],
+        "source": {
+          "type": "original_compilation",
+          "model": "4",
+          "number": "071",
+          "page": "22",
+          "editorial_status": "individually_checked_for_pilot"
+        }
       },
       {
-        "q": "الفاعل الحقيقي في “The bag of books is new.” هو …",
-        "en": "The bag of books is new.",
+        "bankId": "ASGQPRSIM-BOOK-09",
+        "en": "They always _____ late for school.",
         "choices": [
-          "books",
-          "The bag",
-          "new"
+          "coming",
+          "comes",
+          "come",
+          "to come"
         ],
-        "correct": 1,
-        "why": "رأس العبارة The bag مفرد؛ of books بتوضح محتوى الشنطة، مش بتغيّر عدد الفاعل.",
+        "correct": 2,
+        "why": "`They` جمع، فنستخدم `come` مباشرة. وظرف التكرار `always` بيجي قبل الفعل الرئيسي في الجملة المثبتة.",
         "wrong": [
-          "books بعد of مش الاسم الأساسي للفاعل.",
+          "coming صيغة ing، ومينفعش تجي كفعل رئيسي لوحدها بعد They.",
+          "comes للمفرد الغائب، لكن They فاعل جمع.",
           "",
-          "new صفة بتوصف الشنطة."
-        ]
-      },
-      {
-        "q": "اختار الجملة السليمة:",
-        "choices": [
-          "The informations are useful.",
-          "The information is useful.",
-          "An information is useful."
+          "to come مصدر بـ to، لكن بعد They في الجملة المثبتة نحتاج الفعل المباشر."
         ],
-        "correct": 1,
-        "why": "information اسم غير معدود؛ بنعامله كمفرد في الفعل، ومنستخدمش informations أو an information في المعنى ده.",
-        "wrong": [
-          "information لا يُجمع عادةً بإضافة s؛ الجملة دي غلط.",
-          "",
-          "an بتستخدم قبل اسم مفرد معدود، وinformation غير معدود."
-        ]
+        "source": {
+          "type": "course_book",
+          "pdf_page": 3,
+          "status": "rechecked"
+        }
       }
     ]
   },
@@ -308,54 +261,7 @@ window.STEP_FOUNDATION_STAGES=[
       ]
     ],
     "tip": "في نهايات زي f/fe وo فيه استثناءات: knife → knives لكن roof → roofs، وpotato → potatoes لكن photo → photos. نحفظ الكلمات الشائعة وما نعمّمش قاعدة غلط.",
-    "checks": [
-      {
-        "q": "جمع كلمة city هو …",
-        "choices": [
-          "citys",
-          "cities",
-          "cityes"
-        ],
-        "correct": 1,
-        "why": "city: قبل y حرف ساكن t، فنحذف y ونضيف ies → cities.",
-        "wrong": [
-          "citys مش الصيغة الصحيحة في الجمع.",
-          "",
-          "cityes مش قاعدة جمع الاسم المنتهي بحرف ساكن + y."
-        ]
-      },
-      {
-        "q": "جمع كلمة boy هو …",
-        "choices": [
-          "boys",
-          "boies",
-          "boyes"
-        ],
-        "correct": 0,
-        "why": "boy: قبل y حرف متحرك o؛ بنضيف s فقط → boys.",
-        "wrong": [
-          "",
-          "boies بتطبق ies على كلمة قبل y فيها حرف متحرك؛ غلط.",
-          "boyes مش الصيغة الصحيحة؛ نضيف s فقط."
-        ]
-      },
-      {
-        "q": "“Two children ____ playing.” — الاختيار الصحيح؟",
-        "en": "Two children ____ playing.",
-        "choices": [
-          "is",
-          "are",
-          "am"
-        ],
-        "correct": 1,
-        "why": "children هي جمع child حتى من غير s، وبالتالي نستخدم are.",
-        "wrong": [
-          "is للمفرد؛ children جمع.",
-          "",
-          "am مع I فقط."
-        ]
-      }
-    ]
+    "checks": []
   },
   {
     "id": "pronouns",
@@ -423,51 +329,75 @@ window.STEP_FOUNDATION_STAGES=[
     "tip": "he/she/it ضمائر فاعل مفرد غائب. وفي إنجليزي العصر الحديث ممكن they تُستخدم لشخص واحد غير محدد النوع؛ هنا الفعل بعدها يفضل بصيغة they are / they work.",
     "checks": [
       {
-        "q": "“Sara and Laila are friends.” نستبدل الاسمين بإيه؟",
-        "en": "Sara and Laila are friends.",
+        "bankId": "ASGQPRSIM-AGG-01",
+        "en": "When I go to King Saud University Library, I usually ………………",
         "choices": [
-          "She",
-          "They",
-          "It"
+          "am studying",
+          "will study",
+          "studied",
+          "study"
         ],
-        "correct": 1,
-        "why": "Sara and Laila شخصين، فضمير الفاعل المناسب They.",
+        "correct": 3,
+        "why": "وجود `usually` يدل على عادة متكررة. الفاعل `I` يأخذ الفعل في المصدر من غير `s`؛ لذلك الإجابة `study`. ولا نستخدم المضارع المستمر لمجرد إن الشخص يذاكر في الوقت الحالي؛ السياق هنا عادة.",
         "wrong": [
-          "She لشخص واحد مؤنث، لكن هنا شخصين.",
-          "",
-          "It لشيء/حيوان/موقف غالبًا، ومش لشخصين."
-        ]
+          "am studying بتصف مذاكرة جارية دلوقتي، لكن usually هنا معناها عادة متكررة.",
+          "will study للمستقبل، بينما الجملة بتتكلم عن حاجة بتحصل عادة.",
+          "studied للماضي، ومفيش سياق بيحكي عن مرة انتهت.",
+          ""
+        ],
+        "source": {
+          "type": "original_compilation",
+          "model": "2",
+          "number": "063",
+          "page": "9",
+          "editorial_status": "individually_checked_for_pilot"
+        }
       },
       {
-        "q": "“I know ____.” اختار ضمير المفعول المناسب لشخص مذكر.",
-        "en": "I know ____.",
+        "bankId": "ASGQPRSIM-BOOK-01",
+        "en": "We usually _____ to school by bus.",
         "choices": [
-          "he",
-          "him",
-          "his"
+          "goes",
+          "went",
+          "going",
+          "go"
         ],
-        "correct": 1,
-        "why": "بعد know نحتاج ضمير مفعول؛ he يتحول لـ him.",
+        "correct": 3,
+        "why": "`We` فاعل جمع، والمضارع البسيط معه يكون بالفعل الأساسي `go` بدون `s`. كلمة `usually` دليل على عادة.",
         "wrong": [
-          "he ضمير فاعل، وهنا مكان المفعول.",
-          "",
-          "his يدل على الملكية، ومش ضمير المفعول المطلوب."
-        ]
+          "goes فيها s للمفرد الغائب، لكن الفاعل We جمع.",
+          "went ماضي، وكلمة usually هنا بتوضح عادة في الحاضر.",
+          "going صيغة ing، ومفيش فعل مساعد زي are يكملها.",
+          ""
+        ],
+        "source": {
+          "type": "course_book",
+          "pdf_page": 3,
+          "status": "rechecked"
+        }
       },
       {
-        "q": "اختار الجملة الصحيحة:",
+        "bankId": "ASGQPRSIM-BOOK-08",
+        "en": "I never _________ up late.",
         "choices": [
-          "I am ready.",
-          "I is ready.",
-          "I are ready."
+          "woke",
+          "waking",
+          "wakes",
+          "wake"
         ],
-        "correct": 0,
-        "why": "I مع فعل be في الحاضر بياخد am.",
+        "correct": 3,
+        "why": "`never` ظرف تكرار بمعنى «أبدًا»، ويوضع قبل الفعل الرئيسي. ومع `I` نستخدم `wake` بدون `s`.",
         "wrong": [
-          "",
-          "is مع he/she/it والاسم المفرد، مش I.",
-          "are مع you/we/they والجمع، مش I."
-        ]
+          "woke ماضي، لكن I never هنا بتوصف عادة حالية.",
+          "waking صيغة ing، ومفيش فعل مساعد يكملها.",
+          "wakes فيها s للمفرد الغائب، لكن الفاعل I بياخد wake.",
+          ""
+        ],
+        "source": {
+          "type": "course_book",
+          "pdf_page": 3,
+          "status": "rechecked"
+        }
       }
     ]
   },
@@ -559,52 +489,50 @@ window.STEP_FOUNDATION_STAGES=[
     "tip": "بص على وظيفة الكلمة جوّه الجملة مش شكلها بس. مثال: is happy = is فعل رابط أساسي؛ is studying = is مساعد قبل studying.",
     "checks": [
       {
-        "q": "في “He has finished.” كلمة has هنا …",
-        "en": "He has finished.",
+        "bankId": "ASGQPRSIM-BOOK-10",
+        "en": "He _______ his homework every day at 7 p.m.",
         "choices": [
-          "فعل أساسي بمعنى يمتلك",
-          "فعل مساعد",
-          "اسم"
+          "do",
+          "does",
+          "doing",
+          "did"
         ],
         "correct": 1,
-        "why": "has بتساعد finished عشان نكوّن المضارع التام؛ معنى الحدث في finished.",
+        "why": "الفاعل He مفرد غائب، ولأن الجملة بتوصف عادة يومية، نستخدم does. كلمة every day بتوضح التكرار.",
         "wrong": [
-          "في He has a car تكون has أساسية، لكن هنا بعدها finished (V3) فمساعدة.",
+          "do من غير es، لكن He مفرد غائب في المضارع البسيط.",
           "",
-          "has فعل، مش اسم."
-        ]
+          "doing صيغة ing من غير فعل مساعد ومش مناسبة لعادة every day.",
+          "did ماضي، لكن every day هنا بيوصف عادة مستمرة."
+        ],
+        "source": {
+          "type": "course_book",
+          "pdf_page": 3,
+          "status": "rechecked"
+        }
       },
       {
-        "q": "في “Mona does homework.” كلمة does هنا …",
-        "en": "Mona does homework.",
+        "bankId": "ASGQPRSIM-BOOK-07",
+        "en": "Does he always ___ his homework?",
         "choices": [
-          "فعل أساسي",
-          "فعل مساعد للسؤال",
-          "حرف جر"
+          "do",
+          "does",
+          "did",
+          "doing"
         ],
         "correct": 0,
-        "why": "does هنا معناها تعمل الواجب، ومفيش فعل أساسي تاني؛ لذلك هي الفعل الأساسي.",
+        "why": "بعد `Does` في السؤال يكون الفعل الرئيسي في المصدر `do`؛ لأن `Does` وحدها تحمل علامة المضارع مع الفاعل المفرد.",
         "wrong": [
           "",
-          "مفيش سؤال أو فعل آخر يحتاج مساعدة هنا؛ does هي الفعل الأساسي.",
-          "does مش حرف جر؛ هي فعل."
-        ]
-      },
-      {
-        "q": "في “They are playing.” الفعل الأساسي هو …",
-        "en": "They are playing.",
-        "choices": [
-          "They",
-          "are",
-          "playing"
+          "does تكرار لعلامة المفرد؛ بعد Does في أول السؤال نستخدم do.",
+          "did ماضي، ومينفعش بعد Does؛ الفعل الرئيسي يكون في المصدر.",
+          "doing صيغة ing، ومش المصدر المطلوب بعد Does."
         ],
-        "correct": 2,
-        "why": "playing يحمل معنى اللعب، وare هو المساعد المستخدم مع -ing.",
-        "wrong": [
-          "They ضمير الفاعل مش فعل.",
-          "are فعل مساعد هنا، وplaying هو الفعل الأساسي.",
-          ""
-        ]
+        "source": {
+          "type": "course_book",
+          "pdf_page": 3,
+          "status": "rechecked"
+        }
       }
     ]
   },
@@ -696,51 +624,73 @@ window.STEP_FOUNDATION_STAGES=[
     "tip": "الإضافة s على الفعل مع he/she/it تخص المضارع البسيط المثبت، ومش هي نفسها s جمع الاسم. مثال: The boys play / The boy plays.",
     "checks": [
       {
-        "q": "التصريف الثالث (V3) من go هو …",
+        "bankId": "ASGQPRSIM-BOOK-02",
+        "en": "She ________ to school every day.",
         "choices": [
-          "went",
+          "go",
+          "goes",
           "going",
           "gone"
         ],
-        "correct": 2,
-        "why": "go فعل غير منتظم: go (V1) / went (V2) / gone (V3).",
+        "correct": 1,
+        "why": "الفاعل `She` مفرد غائب. الفعل `go` بينتهي بـ`o`، ولذلك نضيف `es` فيصبح `goes`، و`every day` بتوضح إنها عادة.",
         "wrong": [
-          "went هو الماضي البسيط V2، مش التصريف الثالث.",
-          "going هو شكل ing، مش V3.",
-          ""
-        ]
+          "go من غير es، لكن She مفرد غائب والفعل go بيأخد es.",
+          "",
+          "going صيغة ing، ومش فعل مضارع بسيط مكتمل لوحدها.",
+          "gone التصريف الثالث، وبيحتاج فعل مساعد زي has."
+        ],
+        "source": {
+          "type": "course_book",
+          "pdf_page": 3,
+          "status": "rechecked"
+        }
       },
       {
-        "q": "“Does Ali ____ English?”",
-        "en": "Does Ali ____ English?",
+        "bankId": "ASGQPRSIM-BOOK-03",
+        "en": "Physics is the science which ______ light and heat.",
         "choices": [
           "studies",
+          "studying",
           "study",
-          "studied"
+          "is studying"
         ],
-        "correct": 1,
-        "why": "بعد Does نرجّع الفعل الأساسي للمصدر V1: study.",
+        "correct": 0,
+        "why": "`which` هنا فاعل في جملة الوصل وبيعود على `the science` المفرد. لذلك الفعل `study` يتغير إلى `studies`: نحذف `y` بعد الحرف الساكن ونضيف `ies`.",
         "wrong": [
-          "studies فيها ies زيادة؛ Does شايلة علامة المفرد.",
           "",
-          "studied صيغة الماضي؛ بعد Does نحتاج المصدر."
-        ]
+          "studying صيغة ing من غير فعل مساعد؛ ومش مناسبة لتعريف علمي ثابت.",
+          "study من غير ies، لكن which راجعة على science المفرد.",
+          "is studying بتصور دراسة جارية حاليًا، بينما الجملة بتعرّف مجال علمي وصفته العامة."
+        ],
+        "source": {
+          "type": "course_book",
+          "pdf_page": 8,
+          "status": "rechecked"
+        }
       },
       {
-        "q": "“She has ____.” (الفعل: finish)",
-        "en": "She has ____.",
+        "bankId": "ASGQPRSIM-BOOK-04",
+        "en": "He does not usually ______ coffee.",
         "choices": [
-          "finish",
-          "finished",
-          "finishes"
+          "drank",
+          "drink",
+          "drinks",
+          "having"
         ],
         "correct": 1,
-        "why": "has هنا مساعد للمضارع التام وبعده V3: finished.",
+        "why": "النفي بـ`does not` بيحمل علامة الزمن والشخص. لذلك الفعل الرئيسي يرجع للمصدر `drink`، وما نضيفش `s` مرة تانية.",
         "wrong": [
-          "finish هو V1، لكن has المساعدة تحتاج V3 هنا.",
+          "drank ماضي، لكن بعد does not لازم الفعل يرجع للمصدر.",
           "",
-          "finishes مضارع مفرد غائب؛ بعد has المساعدة نستخدم V3."
-        ]
+          "drinks فيها s زيادة؛ does أخدت علامة المفرد بالفعل.",
+          "having صيغة ing ومش مصدر الفعل drink المطلوب بعد does not."
+        ],
+        "source": {
+          "type": "course_book",
+          "pdf_page": 3,
+          "status": "rechecked"
+        }
       }
     ]
   },
@@ -820,67 +770,125 @@ window.STEP_FOUNDATION_STAGES=[
     "tip": "في الامتحان اسأل 4 أسئلة: مين الفاعل؟ مفرد ولا جمع؟ هل عندنا مساعد؟ وإيه شكل الفعل بعده؟ السرعة تيجي بعد ما تتقن الدقة.",
     "checks": [
       {
-        "q": "اختار الجملة الصحيحة عن بنت واحدة:",
+        "bankId": "ASGQPRSIM-BOOK-06",
+        "en": "______ your brother play football every week?",
         "choices": [
-          "The girl play tennis.",
-          "The girl plays tennis.",
-          "The girl playing tennis."
+          "Does",
+          "Did",
+          "Do",
+          "Doing"
         ],
-        "correct": 1,
-        "why": "The girl مفرد غائب، وفي المضارع البسيط المثبت نستخدم plays.",
+        "correct": 0,
+        "why": "السؤال عن عادة أسبوعية، والفاعل `your brother` مفرد غائب، فنبدأ بـ`Does` ثم يأتي `play` في المصدر.",
         "wrong": [
-          "play بدون s يناسب الجمع أو I/you، لكن The girl مفرد غائب.",
           "",
-          "playing وحدها محتاجة فعل مساعد عشان تكون فعلًا كاملًا."
-        ]
+          "Did بتسأل عن الماضي؛ كل أسبوع هنا يقصد عادة حالية من غير إطار زمني ماضي.",
+          "Do مع I وYou والجمع، لكن your brother مفرد غائب.",
+          "Doing مش فعل مساعد نبدأ به السؤال ده؛ المطلوب Does."
+        ],
+        "source": {
+          "type": "course_book",
+          "pdf_page": 3,
+          "status": "rechecked"
+        }
       },
       {
-        "q": "حوّل “The boys play.” لسؤال:",
-        "en": "The boys play.",
+        "bankId": "ASGQPRSIM-BOOK-05",
+        "en": "My father _____ work on Sundays.",
         "choices": [
-          "Does the boys play?",
-          "Do the boys plays?",
-          "Do the boys play?"
+          "don’t",
+          "doesn’t",
+          "isn’t",
+          "aren’t"
+        ],
+        "correct": 1,
+        "why": "`My father` مفرد غائب، والنفي هنا لفعل حركي هو `work`. نستخدم `doesn’t + work` وليس `isn’t`.",
+        "wrong": [
+          "don't مع I وYou والجمع، لكن My father مفرد غائب.",
+          "",
+          "isn't مينفعش قبل الفعل work في المضارع البسيط؛ النفي هنا بـ doesn't.",
+          "aren't مع الجمع في فعل be، ومش مساعد النفي المناسب قبل work."
+        ],
+        "source": {
+          "type": "course_book",
+          "pdf_page": 3,
+          "status": "rechecked"
+        }
+      },
+      {
+        "bankId": "ASGQPRSIM-AGG-10",
+        "en": "Dave always……... the watch that was given to him by his father.",
+        "choices": [
+          "wears",
+          "will wear",
+          "was to wear",
+          "has been wearing"
+        ],
+        "correct": 0,
+        "why": "`Dave` مفرد غائب، وفي المضارع البسيط المثبت بنضيف `s` للفعل: `wears`. كلمة `always` بتوضح إنها عادة متكررة. لا توجد حاجة لاستخدام المستقبل أو صيغة الاستمرار.",
+        "wrong": [
+          "",
+          "will wear مستقبل، لكن always هنا بيوصف عادة معتادة لِـ Dave.",
+          "was to wear بتشير لخطة أو ترتيب في الماضي، مش عادة حالية.",
+          "has been wearing بتركز على الاستمرار من الماضي للحاضر؛ السؤال هنا يقصد عادة عامة، فالأبسط والأدق wears."
+        ],
+        "source": {
+          "type": "original_compilation",
+          "model": "6",
+          "number": "078",
+          "page": "34",
+          "editorial_status": "individually_checked_for_pilot"
+        }
+      },
+      {
+        "bankId": "ASGQPRSIM-AGG-03",
+        "en": "Take a break when you …………. feeling tired from all the reading.",
+        "choices": [
+          "started",
+          "start",
+          "starts",
+          "starting"
+        ],
+        "correct": 1,
+        "why": "الجملة أمر: خد استراحة لما تبدأ تحس بالتعب. بعد `when` في هذا السياق المستقبلي نستخدم المضارع البسيط `start`، مش `will start`. و`you` يأخذ الفعل في المصدر.",
+        "wrong": [
+          "started ماضي، لكن Take a break توجيه عام وفي when نستخدم المضارع البسيط.",
+          "",
+          "starts مع المفرد الغائب، لكن الفاعل you.",
+          "starting صيغة ing، ومش الفعل الكامل المطلوب بعد you."
+        ],
+        "source": {
+          "type": "original_compilation",
+          "model": "14",
+          "number": "076",
+          "page": "75",
+          "editorial_status": "individually_checked_for_pilot"
+        }
+      },
+      {
+        "bankId": "ASGQPRSIM-AGG-05",
+        "en": "Ali is fixing his brother's bicycle, and he…….... some help. Can you help him?",
+        "choices": [
+          "is needing",
+          "needed",
+          "needs",
+          "need"
         ],
         "correct": 2,
-        "why": "The boys جمع؛ نستخدم Do، وبعدها play في المصدر.",
+        "why": "الفعل `need` هنا يعبّر عن احتياج أو حالة، وفي الاستعمال المعتاد لا نقول `is needing`. وبما إن الفاعل `he` مفرد غائب، نختار `needs`، حتى لو الجملة الأولى في المضارع المستمر.",
         "wrong": [
-          "Does مع مفرد غائب، بينما boys جمع.",
-          "بعد Do الفعل الأساسي يكون في المصدر play، مش plays.",
-          ""
-        ]
-      },
-      {
-        "q": "“Mona ____ at home every day.”",
-        "en": "Mona ____ at home every day.",
-        "choices": [
-          "study",
-          "studies",
-          "studying"
-        ],
-        "correct": 1,
-        "why": "Mona اسم مفرد غائب، وevery day عادة؛ نستخدم studies.",
-        "wrong": [
-          "study من غير ies مش مناسب للمفرد الغائب في الجملة المثبتة.",
+          "is needing صيغة مستمرة؛ need هنا فعل حالة، وعادة مش بنستخدمه في المستمر بالمعنى ده.",
+          "needed ماضي، بينما Ali محتاج المساعدة دلوقتي حسب السياق.",
           "",
-          "studying وحدها محتاجة مساعد، وevery day هنا بتوصف عادة."
-        ]
-      },
-      {
-        "q": "أي سؤال مناسب لوصف “She is happy.”؟",
-        "en": "She is happy.",
-        "choices": [
-          "Does she is happy?",
-          "Is she happy?",
-          "Do she happy?"
+          "need من غير s، لكن he مفرد غائب، فنختار needs."
         ],
-        "correct": 1,
-        "why": "في جملة She is happy، is فعل رابط نقدر نقدمه قبل الفاعل: Is she happy?",
-        "wrong": [
-          "مينفعش نستخدم Does مع is بالشكل ده في السؤال العادي.",
-          "",
-          "Do مش بتيجي هنا قبل happy؛ عندنا is بالفعل."
-        ]
+        "source": {
+          "type": "original_compilation",
+          "model": "25",
+          "number": "068",
+          "page": "142",
+          "editorial_status": "individually_checked_for_pilot"
+        }
       }
     ]
   }
