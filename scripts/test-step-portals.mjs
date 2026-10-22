@@ -238,10 +238,24 @@ assert(courseServer.includes('path==="/followups"')&&courseServer.includes('revi
 assert(reports.includes("indicatorLink(")&&reports.includes("openIndicator(")&&reports.includes("findIndicator("),
  "Admin reports must route by indicator slug and show drafts without scores");
 assert(adminServer.includes('path==="/indicators"')&&adminServer.includes("indicatorReportRoute")&&
- adminServer.includes("indicator.legacy_course_code===lesson.code"),
+ adminServer.includes("indicator.legacy_course_code===selectedLesson.code")&&
+ adminServer.includes("agreementLesson.code")&&
+ adminServer.includes("reportLesson.code"),
  "Per-indicator report API must verify published course mapping on the server");
 assert(readFileSync("step-grammar-admin/curriculum.html","utf8").includes('reports.html?indicator='),
  "Curriculum indicators must deep-link to separate reports");
+const agreementData=JSON.parse(readFileSync("supabase/functions/step-course/agreement-data.json","utf8"));
+assert.equal(agreementData.code,"ASGQAGREE");
+assert.equal(agreementData.sections.length,5);
+assert.equal(agreementData.sections.flatMap(s=>s.questionIds).length,17);
+assert(courseServer.includes('const isAgreement=')&&courseServer.includes('agreementLesson'),
+ "Student course endpoint routes independent agreement progress and grading");
+assert(adminServer.includes('buildLearningInsights((detailRows.data||[]) as AnswerEvent[],reportLesson)'),
+ "Per-indicator question timing and misconception reports need agreement-specific course data");
+assert(portal.includes("subject-verb-agreement.html")&&curriculum.includes("subject-verb-agreement.html"),
+ "Lesson 2 must be reachable from student portal and curriculum admin");
+assert(readFileSync("step-grammar-student/subject-verb-agreement.html","utf8").includes('subject-verb-agreement.js'),
+ "Agreement page must load interactive lesson UI");
 assert(reports.includes("followupPanel(")&&reports.includes("wireFollowups("),
  "Admin report must manage a student's learning plan");
 assert(portal.includes("followupCards(")&&portal.includes("markFollowupReviewed("),
