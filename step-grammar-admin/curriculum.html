@@ -146,6 +146,7 @@ function form(item,canEdit){
  '<input id="'+id+'" value="'+escapeHtml(content??"")+'" '+(opts.ltr?'class="ltr"':'')+disabled+' required>')+'</div>';
  return '<h2>'+(item?'بيانات المؤشر':'إضافة مؤشر جديد')+'</h2>'+(item?
  '<div class="actions"><a class="btn" href="reports.html?indicator='+encodeURIComponent(item.slug)+'">تقرير المؤشر ←</a>'+
+ '<a class="btn alt" href="videos.html?indicator='+encodeURIComponent(item.slug)+'">▶ إدارة فيديوهات الدرس</a>'+
  (item.slug==='present-simple'?'<a class="btn alt" href="../step-grammar-student/learn.html">عاين درس المضارع البسيط الجديد ←</a>':
  '<a class="btn alt" href="guide.html?indicator='+encodeURIComponent(item.slug)+'">محرر الشرح ←</a>')+'</div>':'')+'<div class="note">'+(immutable?
  'المؤشر ده منشور بالفعل، ومحتواه ودرجاته محفوظة في نظام الدروس.': 
