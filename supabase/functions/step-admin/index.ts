@@ -2,17 +2,19 @@
 // The service-role key is available only inside this Edge Function, never in public HTML.
 import { createClient } from "npm:@supabase/supabase-js@2.57.0";
 import lesson from "./lesson-data.json" with { type: "json" };
+import agreementLesson from "./agreement-data.json" with { type: "json" };
 const url=Deno.env.get("SUPABASE_URL")??"";
 const serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
 const allow=new Set(["https://seifyadobe97-dotcom.github.io","http://localhost:3000","http://127.0.0.1:3000"]);
 const isUUID=(v:unknown)=>typeof v==="string"&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
 type AnswerEvent={question_id:string;part_index:number|null;attempt_kind:string;is_correct:boolean;elapsed_ms:number|null;choice_changes:number|null;selected:string;recorded_at?:string};
-const lessonSource=lesson.questions as Record<string,{text:string;options:Record<string,string>}>;
-const sectionForQuestion=new Map(lesson.sections.flatMap((sec,i)=>sec.questionIds.map(id=>[id,i] as const)));
+
 const rate=(a:number,b:number)=>b?Math.round(100*a/b):null;
 const seconds=(ms:number,n:number)=>n?Math.round(ms/100/n)/10:null;
-function buildLearningInsights(items:AnswerEvent[]){
- const groups=lesson.sections.map((section,index)=>{
+function buildLearningInsights(items:AnswerEvent[],activeLesson:typeof lesson=lesson){
+ const lessonSource=activeLesson.questions as Record<string,{text:string;options:Record<string,string>}>;
+ const sectionForQuestion=new Map(activeLesson.sections.flatMap((sec,i)=>sec.questionIds.map(id=>[id,i] as const)));
+ const groups=activeLesson.sections.map((section,index)=>{
   const records=items.filter(row=>sectionForQuestion.get(row.question_id)===index);
   const answered=records.length,correct=records.filter(row=>row.is_correct).length;
   const unique_questions=new Set(records.map(row=>row.question_id)).size;
@@ -58,7 +60,7 @@ function buildLearningInsights(items:AnswerEvent[]){
 }
 
 type FollowupEvent={id:string;part_index:number;kind:string;assigned_at:string;cancelled_at:string|null};
-function compareFollowups(tasks:FollowupEvent[],events:AnswerEvent[]){
+function compareFollowups(tasks:FollowupEvent[],events:AnswerEvent[],activeLesson:typeof lesson=lesson){
  return tasks.filter(t=>!t.cancelled_at).map(task=>{
   const data=events.filter(e=>e.part_index===task.part_index&&e.attempt_kind==="practice"&&e.recorded_at);
   const before=data.filter(e=>e.recorded_at!<task.assigned_at);
@@ -68,10 +70,10 @@ function compareFollowups(tasks:FollowupEvent[],events:AnswerEvent[]){
    correct:rows.filter(r=>r.is_correct).length,accuracy:rate(rows.filter(r=>r.is_correct).length,rows.length)
   });
   const a=summarize(before),b=summarize(after);
-  const required=Math.min(3,lesson.sections[task.part_index]?.questionIds.length??3);
+  const required=Math.min(3,activeLesson.sections[task.part_index]?.questionIds.length??3);
   const sufficient=a.answers>=5&&b.answers>=5&&a.unique_questions>=required&&b.unique_questions>=required;
   const change=sufficient&&a.accuracy!==null&&b.accuracy!==null?b.accuracy-a.accuracy:null;
-  return {id:task.id,part_index:task.part_index,title:lesson.sections[task.part_index]?.titleAr||"مهارة",
+  return {id:task.id,part_index:task.part_index,title:activeLesson.sections[task.part_index]?.titleAr||"مهارة",
    kind:task.kind,assigned_at:task.assigned_at,before:a,after:b,
    delta:change,
    status:change===null?"بيانات غير كافية":change>=10?"تحسن مبدئي":change<=-10?"تراجع يحتاج متابعة":"مستوى شبه ثابت",
@@ -98,6 +100,7 @@ Deno.serve(async(req)=>{
  if(roleError)return reply(500,{error:"تعذر فحص الصلاحيات"});
  if(!permission)return reply(403,{error:"الحساب الحالي غير مخوّل لفتح لوحة الأدمن"});
  let path=new URL(req.url).pathname.replace(/^\/(?:functions\/v1\/)?step-admin/,"")||"/";
+ let reportLesson=lesson;
  // All indicator reports are resolved by the server, never by client-supplied course codes.
  const indicatorReportRoute=path.match(/^\/indicators\/([a-z][a-z0-9-]{2,39})(?:\/(analytics|students\/([0-9a-f-]{36})\/report))?$/i);
  if(req.method==="GET"&&path==="/indicators"){
@@ -108,7 +111,7 @@ Deno.serve(async(req)=>{
   return reply(200,{indicators:(data||[]).map(i=>({
    slug:i.slug,axis_code:i.axis_code,title_ar:i.title_ar,title_en:i.title_en,
    status:i.status,position:i.position,
-   report_ready:i.status==="published"&&i.legacy_course_code===lesson.code
+   report_ready:i.status==="published"&&[lesson.code,agreementLesson.code].includes(i.legacy_course_code)
   }))});
  }
  if(req.method==="GET"&&indicatorReportRoute){
@@ -118,7 +121,10 @@ Deno.serve(async(req)=>{
    .eq("slug",slug).maybeSingle();
   if(error){console.error("Indicator route lookup",error);return reply(500,{error:"تعذر تحميل المؤشر"});}
   if(!indicator)return reply(404,{error:"المؤشر غير موجود"});
-  const ready=indicator.status==="published"&&indicator.legacy_course_code===lesson.code;
+  const selectedLesson=indicator.legacy_course_code===agreementLesson.code?agreementLesson:lesson;
+  const ready=indicator.status==="published"&&indicator.legacy_course_code===selectedLesson.code
+   &&[lesson.code,agreementLesson.code].includes(indicator.legacy_course_code);
+  if(ready)reportLesson=selectedLesson;
   if(!section)return reply(200,{indicator:{...indicator,report_ready:ready}});
   if(!ready)return reply(200,{indicator:{...indicator,report_ready:false},available:false,
    message:"المؤشر لم ينشر له تدريب قابل للقياس بعد. لا توجد نتائج طلاب لهذا المؤشر."});
@@ -164,8 +170,10 @@ Deno.serve(async(req)=>{
    .select("slug,title_ar,title_en,status,legacy_course_code").eq("slug",indicatorSlug).maybeSingle();
   if(indicatorError)return reply(500,{error:"تعذر التحقق من المؤشر"});
   if(!indicator)return reply(404,{error:"المؤشر غير موجود"});
-  const publishedCourse=indicator.status==="published"&&indicator.legacy_course_code===lesson.code;
-  const slots=publishedCourse?lesson.sections.map((x,i)=>({part_index:i,title:x.titleAr})):
+  const slotLesson=indicator.legacy_course_code===agreementLesson.code?agreementLesson:lesson;
+  const publishedCourse=indicator.status==="published"&&indicator.legacy_course_code===slotLesson.code
+   &&[lesson.code,agreementLesson.code].includes(indicator.legacy_course_code);
+  const slots=publishedCourse?slotLesson.sections.map((x,i)=>({part_index:i,title:x.titleAr})):
    [{part_index:0,title:"فيديو مقدمة المؤشر (يظهر عند تجهيز الدرس)"}];
   if(req.method==="GET"){
    const {data,error}=await admin.from("step_indicator_videos")
@@ -301,6 +309,52 @@ Deno.serve(async(req)=>{
 
  if(req.method==="GET"&&path==="/analytics"){
   try{
+   if(reportLesson.code===agreementLesson.code){
+    const [profiles,parts,exams,items]=await Promise.all([
+     admin.from("step_student_profiles").select("user_id,is_active").limit(10000),
+     admin.from("step_part_attempts").select("user_id,part_index,correct_count,total_questions,passed")
+      .eq("course_code",reportLesson.code).limit(10000),
+     admin.from("step_exam_attempts").select("user_id,correct_count,total_questions")
+      .eq("course_code",reportLesson.code).limit(10000),
+     admin.from("step_question_attempt_details")
+      .select("question_id,part_index,attempt_kind,is_correct,elapsed_ms,choice_changes,selected")
+      .eq("course_code",reportLesson.code).eq("attempt_kind","practice")
+      .order("recorded_at",{ascending:false}).limit(5000)
+    ]);
+    if(profiles.error||parts.error||exams.error||items.error)
+     throw(profiles.error||parts.error||exams.error||items.error);
+    const attempts=parts.data||[],allExams=exams.data||[],users=profiles.data||[];
+    const passes=new Map<string,Set<number>>();
+    for(const row of attempts)if(row.passed){
+     if(!passes.has(row.user_id))passes.set(row.user_id,new Set());
+     passes.get(row.user_id)!.add(row.part_index);
+    }
+    const participants=new Map<string,{parts_passed:number;exam_best:number|null}>();
+    for(const [id,set] of passes)participants.set(id,{parts_passed:set.size,exam_best:null});
+    for(const exam of allExams){
+     const x=participants.get(exam.user_id)||{parts_passed:0,exam_best:null};
+     const pct=Math.round(100*exam.correct_count/exam.total_questions);
+     x.exam_best=Math.max(x.exam_best??0,pct);participants.set(exam.user_id,x);
+    }
+    const totals=reportLesson.sections.map((section,i)=>{
+     const matches=attempts.filter(a=>a.part_index===i),tried=new Set(matches.map(a=>a.user_id)),
+      successful=new Set(matches.filter(a=>a.passed).map(a=>a.user_id));
+     return {part_index:i,title:section.titleAr,students_tried:tried.size,
+      students_passed:successful.size,attempts:matches.length,
+      avg_score_percent:matches.length?
+       Math.round(1000*matches.reduce((sum,a)=>sum+a.correct_count/a.total_questions,0)/matches.length)/10:null};
+    });
+    const insight=buildLearningInsights((items.data||[]) as AnswerEvent[],reportLesson);
+    const examUsers=new Set(allExams.map(e=>e.user_id));
+    return reply(200,{overview:{
+      students_total:users.length,students_active:users.filter(x=>x.is_active).length,
+      students_completed:[...passes.values()].filter(x=>x.size===reportLesson.sections.length).length,
+      students_exam_taken:examUsers.size,practice_attempts:attempts.length,exam_attempts:allExams.length,
+      avg_exam_percent:allExams.length?Math.round(1000*allExams.reduce((a,x)=>a+x.correct_count/x.total_questions,0)/allExams.length)/10:null
+     },parts:totals,student_metrics:[...participants].map(([user_id,metric])=>({user_id,...metric})),
+     learning:{sections:insight.sections,answers:insight.answers,timed_answers:insight.timed_answers,
+       limited_to_latest:5000,note:insight.note}};
+   }
    const [overview,parts]=await Promise.all([
      admin.from("step_admin_overview").select("*").single(),
      admin.from("step_admin_part_statistics").select("*").order("part_index")
@@ -327,26 +381,26 @@ Deno.serve(async(req)=>{
    const [profile,partRows,examRows,partCount,examCount,detailRows,detailCount,followupRows]=await Promise.all([
     admin.from("step_student_profiles").select("user_id,username,email,phone_e164,is_active,created_at").eq("user_id",studentId).maybeSingle(),
     admin.from("step_part_attempts").select("id,part_index,correct_count,total_questions,passed,attempted_at")
-      .eq("user_id",studentId).eq("course_code",lesson.code).order("attempted_at",{ascending:false}).limit(300),
+      .eq("user_id",studentId).eq("course_code",reportLesson.code).order("attempted_at",{ascending:false}).limit(300),
     admin.from("step_exam_attempts").select("id,correct_count,total_questions,attempted_at")
-      .eq("user_id",studentId).eq("course_code",lesson.code).order("attempted_at",{ascending:false}).limit(150),
-    admin.from("step_part_attempts").select("id",{count:"exact",head:true}).eq("user_id",studentId).eq("course_code",lesson.code),
-    admin.from("step_exam_attempts").select("id",{count:"exact",head:true}).eq("user_id",studentId).eq("course_code",lesson.code),
+      .eq("user_id",studentId).eq("course_code",reportLesson.code).order("attempted_at",{ascending:false}).limit(150),
+    admin.from("step_part_attempts").select("id",{count:"exact",head:true}).eq("user_id",studentId).eq("course_code",reportLesson.code),
+    admin.from("step_exam_attempts").select("id",{count:"exact",head:true}).eq("user_id",studentId).eq("course_code",reportLesson.code),
     admin.from("step_question_attempt_details")
      .select("question_id,part_index,attempt_kind,is_correct,elapsed_ms,choice_changes,selected,recorded_at")
-     .eq("user_id",studentId).eq("course_code",lesson.code)
+     .eq("user_id",studentId).eq("course_code",reportLesson.code)
      .order("recorded_at",{ascending:false}).limit(1500),
     admin.from("step_question_attempt_details").select("id",{count:"exact",head:true})
-     .eq("user_id",studentId).eq("course_code",lesson.code),
+     .eq("user_id",studentId).eq("course_code",reportLesson.code),
     admin.from("step_student_followups").select("id,part_index,kind,assigned_at,cancelled_at")
-     .eq("user_id",studentId).eq("course_code",lesson.code)
+     .eq("user_id",studentId).eq("course_code",reportLesson.code)
      .order("assigned_at",{ascending:false}).limit(50)
    ]);
    if(profile.error||partRows.error||examRows.error||partCount.error||examCount.error||detailRows.error||detailCount.error||followupRows.error)
      throw(profile.error||partRows.error||examRows.error||partCount.error||examCount.error||detailRows.error||detailCount.error||followupRows.error);
    if(!profile.data)return reply(404,{error:"الطالب غير موجود"});
    const attempts=partRows.data||[],exams=examRows.data||[];
-   const sections=lesson.sections.map((s,index)=>{
+   const sections=reportLesson.sections.map((s,index)=>{
     const matching=attempts.filter(r=>r.part_index===index);
     return {index,title:s.titleAr,source_questions:s.questionIds.length,
       attempts:matching.length,passed:matching.some(r=>r.passed),
@@ -363,13 +417,13 @@ Deno.serve(async(req)=>{
       part_history_truncated:(partCount.count||0)>attempts.length,
       exam_history_truncated:(examCount.count||0)>exams.length},
     sections,
-    insights:{...buildLearningInsights((detailRows.data||[]) as AnswerEvent[]),
+    insights:{...buildLearningInsights((detailRows.data||[]) as AnswerEvent[],reportLesson),
      truncated:(detailCount.count||0)>(detailRows.data||[]).length},
     followup_impact:compareFollowups((followupRows.data||[]) as FollowupEvent[],
-      (detailRows.data||[]) as AnswerEvent[]),
+      (detailRows.data||[]) as AnswerEvent[],reportLesson),
     impact_history_limited:(detailCount.count||0)>(detailRows.data||[]).length,
     attempts:attempts.map(r=>({...r,percentage:Math.round(100*r.correct_count/r.total_questions),
-      section_title:lesson.sections[r.part_index]?.titleAr||"جزء غير معروف"})),
+      section_title:reportLesson.sections[r.part_index]?.titleAr||"جزء غير معروف"})),
     exams:exams.map(r=>({...r,percentage:Math.round(100*r.correct_count/r.total_questions)}))
    });
   }catch(error){console.error("STEP student report failed",error);return reply(500,{error:"تعذر تحميل تقرير الطالب"});}
