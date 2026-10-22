@@ -76,7 +76,7 @@ Deno.serve(async(request)=>{
  const {data:studentAccount,error:studentError}=await admin.from("step_student_profiles").select("is_active").eq("user_id",user.id).maybeSingle();
  if(studentError||!studentAccount)return send(403,{error:"لا يوجد ملف طالب مرتبط بالحساب"});
  if(studentAccount.is_active===false)return send(403,{error:"الحساب موقوف مؤقتًا، تواصل مع إدارة المنصة"});
- let path=new URL(request.url).pathname.replace(/^\\/(?:functions\\/v1\\/)?step-course/,"");
+ let path=new URL(request.url).pathname.replace(/^\/(?:functions\/v1\/)?step-course/,"");
  const isAgreement=path==="/agreement"||path.startsWith("/agreement/");
  if(isAgreement)path=path.slice("/agreement".length)||"/course";
  const lesson=isAgreement?agreementLesson:presentSimpleLesson;
