@@ -52,7 +52,32 @@ const courseServer=readFileSync("supabase/functions/step-course/index.ts","utf8"
 assert(courseServer.includes('edit.status!=="published"'),"Draft questions must not go live");
 // Lesson content editing must be gated by owner authorization and
 // must keep canonical IDs, questions and pass rates untouched.
-assert(admin.includes('id="nav-lessons"'),"Admin lesson editor tab");
+const adminHome=readFileSync("step-grammar-admin/admin-home.js","utf8");
+const adminNav=readFileSync("step-grammar-admin/admin-nav.js","utf8");
+const adminCss=readFileSync("step-grammar-admin/admin-nav.css","utf8");
+const studio=readFileSync("step-grammar-admin/studio.html","utf8");
+new Script(adminHome,{filename:"admin-home.js"});
+new Script(adminNav,{filename:"admin-nav.js"});
+assert(admin.includes("await loadOverview()")&&admin.includes('location.hash==="#students"'),
+ "Admin must open a task-first home and keep students under their own route");
+assert(admin.includes('src="admin-home.js"')&&adminHome.includes('id="nav-lessons"'),
+ "Admin homepage must show one clearly labeled Studio link");
+for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT"])
+ assert(adminHome.includes(code)&&studio.includes('value="'+code+'"'),
+  "Every published lesson must have its own direct editor route: "+code);
+for(const tab of ["visual","sections","questions","course"])
+ assert(studio.includes('data-tab="'+tab+'"')&&studio.includes('allowedTabs.includes(params.get("tab"))'),
+  "Studio must open each editing tab directly");
+for(const label of ["الرئيسية","تعديل الدروس","الطلاب","التقارير","ترتيب المنهج","الفيديوهات","تدقيق المصادر","مسودات جديدة"])
+ assert(adminNav.includes(label),"Admin nav missing "+label);
+assert(adminCss.includes("aria-current")&&adminNav.includes('aria-current="page"'),
+ "Active admin page needs a clear selected state");
+for(const pageName of ["index.html","studio.html","curriculum.html","reports.html","courses.html","videos.html","guide.html","agreement-audit.html","continuous-audit.html","continuous-preview.html","sources.html"]){
+ const adminPath="step-grammar-admin/"+pageName,html=readFileSync(adminPath,"utf8");
+ assert(html.includes("admin-nav.js")&&html.includes("admin-nav.css"),adminPath+" must share navigation");
+}
+assert(readFileSync("step-grammar-admin/sources.html","utf8").includes('/functions/v1/step-admin/me'),
+ "Source audit hub must require admin authentication");
 assert(admin.includes('function renderLessonEditor('),"Admin lesson editor form");
 assert(admin.includes('/lessons/save'),"Admin lesson draft save");
 assert(admin.includes('/lessons/publish'),"Admin lesson publish");
@@ -67,14 +92,14 @@ assert(reports.includes('"/indicators/"+encodeURIComponent(slug)+"/analytics"'),
 assert(reports.includes('"/report"') || reports.includes('+"/report"'),"Per-student reports must be authenticated");
 assert(reports.includes('reportCsvValue') || reports.includes('function download('),"Student report export");
 assert(admin.includes('reports.html?indicator=present-simple&student='),"Directory links to the specific published indicator report");
-assert(admin.includes('href="reports.html"'),"Admin has analytics navigation");
+assert(adminHome.includes('href="reports.html"'),"Admin home has analytics navigation");
 assert(adminServer.includes('path==="/analytics"'),"Server analytics endpoint");
 assert(adminServer.includes('reportMatch'),"Server per-student report endpoint");
 const courses=readFileSync("step-grammar-admin/courses.html","utf8");
 assert(courses.includes('/course-drafts/save'),"Course planning must save as draft");
 assert(courses.includes('/course-drafts/status'),"Course planning must archive/restore drafts");
 assert(courses.includes('غير متاحة للطلاب'),"Drafts must not claim to be published");
-assert(admin.includes('href="courses.html"'),"Admin navigation must link course builder");
+assert(adminHome.includes('href="courses.html"'),"Admin home links course drafts separately");
 assert(adminServer.includes('path==="/course-drafts"'),"Server course draft route");
 assert(adminServer.includes('permission.role!=="owner"'),"Only owner can create courses");
 assert(courseServer.includes('const courseCode=lesson.code;'),"Student course remains safely pinned");
@@ -125,7 +150,7 @@ assert(adminServer.includes('permission.role!=="owner"')&&adminServer.includes('
  "Publishing videos requires server-side owner authorization");
 assert(courseServer.includes('path==="/videos"')&&courseServer.includes('.eq("published",true)'),
  "Only approved video links may be shown to students");
-assert(admin.includes('href="curriculum.html"'),"Admin navigation includes axes and indicators");
+assert(adminHome.includes('href="curriculum.html"'),"Admin home links curriculum ordering");
 assert(adminServer.includes('path==="/curriculum"'),"Admin server includes authorized curriculum API");
 assert(courseServer.includes('path==="/catalog"'),"Student service provides published curriculum catalog");
 assert(portal.includes('step-course/catalog'),"Student portal loads backend catalog");

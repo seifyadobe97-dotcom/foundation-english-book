@@ -15,9 +15,9 @@ p{margin:9px 0}mark{background:#ffeda2;padding:1px 4px;border-radius:4px}article
 table{width:100%;border-collapse:collapse}td,th{border:1px solid var(--line);padding:8px;text-align:right}th{background:#eaf5ee}.tablewrap{overflow-x:auto}
 .status{padding:14px;border-radius:10px;background:#fff4df;margin-top:15px}
 @media(max-width:680px){.grid{grid-template-columns:1fr}article{padding:15px}header img{width:130px}}
-</style></head><body>
+</style><link rel="stylesheet" href="admin-nav.css"></head><body>
 <header><a href="curriculum.html"><img src="../step-brand/logo.svg" alt="STEP with Seify"></a>
-<div><a href="continuous-audit.html">تدقيق الأسئلة</a> · <a href="curriculum.html">المنهج</a></div></header>
+<div><a href="studio.html?course=ASGQPRCONT&tab=visual">تعديل الدرس 3</a> · <a href="continuous-audit.html">المصادر</a></div></header>
 <main><h1>الدرس 3 — Present Continuous</h1>
 <p>معاينة محتوى الشرح للمدرّس فقط. الأسئلة الأصلية وإجاباتها لا تُعرض هنا؛ الطلاب يستخدمون النسخة التفاعلية المنشورة.</p>
 <div id="status" class="status">جاري التحقق من صلاحية الأدمن…</div><div id="lessons"></div></main>
@@ -54,4 +54,4 @@ return '<article><small>المرحلة '+n+' من 5</small><h2>'+esc(u.title)+'<
  document.getElementById("status").textContent="معاينة خاصة بالمدرّس — 5 مراحل شرح، والأسئلة المصححة مخزّنة على السيرفر فقط.";
  document.getElementById("lessons").innerHTML=stages.map((u,i)=>renderStage(u,i+1)).join("");
 }catch(e){document.getElementById("status").textContent=e.message;}})();
-</script></body></html>
+</script><script src="admin-nav.js" defer></script></body></html>

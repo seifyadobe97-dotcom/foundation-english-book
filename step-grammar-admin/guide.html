@@ -42,8 +42,8 @@ p{color:var(--muted);margin:5px 0 15px}.panel{background:#fff;border:1px solid v
 .error{color:#a44949;background:#fff0ef;padding:12px;border-radius:9px}
 [hidden]{display:none!important}
 @media(max-width:700px){.fields{grid-template-columns:1fr}.panel{padding:16px}.module-content{padding:13px}header{padding:12px 15px}nav a{font-size:12px}.editor-action{position:static}}
-.step-brand-image{display:block;width:206px;max-width:100%;height:auto;flex:none}@media(max-width:480px){.step-brand-image{width:158px}}</style><link rel="icon" type="image/svg+xml" href="../step-brand/mark.svg"></head><body>
-<header><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"><nav><a href="./">لوحة الأدمن</a><a href="curriculum.html">المحاور والمؤشرات</a></nav></header>
+.step-brand-image{display:block;width:206px;max-width:100%;height:auto;flex:none}@media(max-width:480px){.step-brand-image{width:158px}}</style><link rel="icon" type="image/svg+xml" href="../step-brand/mark.svg"><link rel="stylesheet" href="admin-nav.css"></head><body>
+<header><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"><nav><a href="curriculum.html">← ترتيب المنهج</a></nav></header>
 <main id="root"><p>جاري فتح محرر شرح المؤشر…</p></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
 <script>
@@ -210,4 +210,4 @@ async function discardDraft(){
  catch(e){alert(e.message);}
 }
 load();
-</script></body></html>
+</script><script src="admin-nav.js" defer></script></body></html>

@@ -23,7 +23,7 @@ main{max-width:1200px;padding:28px 18px 70px;margin:auto}.eyebrow{font:800 11px 
 .impact-list{display:grid;gap:12px}.impact-item{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fcfdfc}.impact-item h3{font-size:15px;margin:0}.impact-numbers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}.impact-numbers>div{background:#f4f8f6;padding:10px;border-radius:9px}.impact-numbers strong,.impact-numbers small{display:block}.impact-numbers strong{font:800 22px "DM Sans",Arial;color:var(--navy)}.impact-numbers small{font-size:11px;color:var(--muted)}@media(max-width:620px){.impact-numbers{grid-template-columns:1fr 1fr}.impact-numbers>div:last-child{grid-column:1/-1}}
 .followup-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0;padding:16px;border:1px solid #dbe7e2;border-radius:12px;background:#f8fbf9}.followup-form label{font-size:12px;font-weight:800;display:grid;gap:5px}.followup-form select,.followup-form input,.followup-form textarea{font:inherit;background:white;border:1px solid #cfdbd6;border-radius:8px;padding:10px;width:100%;min-width:0}.followup-wide{grid-column:1/-1}.followup-item{border-top:1px solid var(--line);padding:13px 0;display:flex;justify-content:space-between;align-items:center;gap:12px}.followup-item p{margin:4px 0;color:#4b6062}.followup-item small{color:var(--muted)}.followup-pill{font-size:11px;display:inline-block;margin-inline-start:7px;border-radius:20px;background:#e9f5ef;color:#16674f;padding:3px 9px;font-weight:800}@media(max-width:780px){.followup-form{grid-template-columns:1fr}.followup-item{align-items:flex-start}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.sectionbar{grid-template-columns:1fr;gap:4px}.panel{padding:15px}}
 .step-brand-image{display:block;width:206px;max-width:100%;height:auto;flex:none}@media(max-width:480px){.step-brand-image{width:158px}}</style>
-<link rel="icon" type="image/svg+xml" href="../step-brand/mark.svg"></head>
+<link rel="icon" type="image/svg+xml" href="../step-brand/mark.svg"><link rel="stylesheet" href="admin-nav.css"></head>
 <body>
 <header><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"><div class="tabs"><a class="btn alt" href="./">لوحة الأدمن</a><button id="logout" class="btn alt" hidden>خروج</button></div></header>
 <main id="main"><p>جاري التأكد من صلاحية الدخول…</p></main>
@@ -307,4 +307,4 @@ async function init(){
 logoutButton.onclick=async()=>{await client.auth.signOut();location.assign("./");};
 init();
 </script>
-</body></html>
+<script src="admin-nav.js" defer></script></body></html>

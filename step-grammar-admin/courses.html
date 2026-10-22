@@ -27,9 +27,9 @@ main{max-width:1160px;margin:auto;padding:28px 20px 80px}h1{font-size:34px;line-
 .notice{border:1px solid #f0dfbf;background:#fff9eb;padding:12px 15px;border-radius:10px;margin:17px 0;color:#6e582e}
 .error{background:#fff1f0;border-color:#eecfcc;color:#934e4a}
 @media(max-width:800px){.grid{grid-template-columns:1fr}.panel{padding:16px}}
-.step-brand-image{display:block;width:206px;max-width:100%;height:auto;flex:none}@media(max-width:480px){.step-brand-image{width:158px}}</style><link rel="icon" type="image/svg+xml" href="../step-brand/mark.svg"></head>
+.step-brand-image{display:block;width:206px;max-width:100%;height:auto;flex:none}@media(max-width:480px){.step-brand-image{width:158px}}</style><link rel="icon" type="image/svg+xml" href="../step-brand/mark.svg"><link rel="stylesheet" href="admin-nav.css"></head>
 <body>
-<header><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"><a class="btn alt" href="./">لوحة الأدمن</a></header>
+<header><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"><a class="btn alt" href="studio.html">تعديل الدروس المنشورة ←</a></header>
 <main id="main"><p>جاري تحميل قائمة الدروس…</p></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
 <script>
@@ -67,7 +67,7 @@ function render(){
  const canEdit=state.role==="owner";
  const active=state.courses.find(x=>x.id===state.selected)||null;
  const live=state.live||{};
- root.innerHTML='<div class="eyebrow">CURRICULUM MANAGEMENT</div><h1>تنظيم الدروس الجديدة</h1><p class="intro">جهّز قائمة الدروس ووصفها وترتيبها، ثم نبني المحتوى والأسئلة قبل فتحها للطلاب.</p><div class="grid"><section class="panel"><h2>قائمة الدروس</h2><div class="course"><span class="badge">منشور</span><strong>'+escapeHtml(live.title_en||"Present Simple")+'</strong><small>'+escapeHtml(live.title_ar||"المضارع البسيط")+' · '+(live.parts||6)+' أجزاء</small></div>'+
+ root.innerHTML='<div class="eyebrow">CURRICULUM MANAGEMENT</div><h1>تنظيم الدروس الجديدة</h1><p class="intro">جهّز قائمة الدروس ووصفها وترتيبها، ثم نبني المحتوى والأسئلة قبل فتحها للطلاب.</p><div class="grid"><section class="panel"><h2>قائمة الدروس</h2><div class="notice">الدروس 1 و2 و3 منشورة ويتم تعديلها من <a href="studio.html" style="font-weight:800;color:#246e63">استوديو الدروس الموحد ←</a>. هنا بنجهّز مسودات دروس جديدة فقط.</div>'+
   state.courses.map(x=>'<button type="button" data-course="'+escapeHtml(x.id)+'" class="course '+(state.selected===x.id?'active':'')+'"><span class="badge '+(x.status==="draft"?"draft":"archive")+'">'+(x.status==="draft"?"مسودة":"مؤرشف")+'</span><strong>'+escapeHtml(x.title_ar)+'</strong><small><span class="ltr">'+escapeHtml(x.slug)+'</span> · ترتيب '+x.position+'</small></button>').join("")+
   (canEdit?'<div class="actions"><button id="add-new" class="btn">+ إضافة درس جديد</button></div>':'')+'</section><section class="panel"><h2>'+(active?"تعديل بيانات الدرس":"إنشاء مسودة درس")+'</h2><span class="badge draft">مسودة إعداد · غير متاحة للطلاب</span><form id="course-form"><div class="field"><label for="ar">اسم الدرس بالعربي</label><input id="ar" required maxlength="140" value="'+escapeHtml(active?.title_ar||"")+'"></div><div class="field"><label for="en">اسم الدرس بالإنجليزي</label><input id="en" class="ltr" required maxlength="140" value="'+escapeHtml(active?.title_en||"")+'"></div><div class="field"><label for="slug">الكود الإنجليزي الفريد</label><input id="slug" class="ltr" required maxlength="40" pattern="[a-z][a-z0-9-]{2,39}" placeholder="present-continuous" value="'+escapeHtml(active?.slug||"")+'"></div><div class="field"><label for="position">ترتيب الدرس في المنهج</label><input id="position" class="ltr" type="number" required min="1" max="9999" value="'+(active?.position??2)+'"></div><div class="field"><label for="description">وصف الدرس</label><textarea id="description" maxlength="1500">'+escapeHtml(active?.description||"")+'</textarea></div>'+
    (canEdit?'<div class="actions"><button id="save" class="btn" type="submit">حفظ بيانات المسودة</button>'+(active?'<button id="change-status" class="btn '+(active.status==="draft"?"danger":"alt")+'" type="button">'+(active.status==="draft"?"أرشفة الدرس":"استعادة المسودة")+'</button>':'')+'</div>':'')+
@@ -111,4 +111,4 @@ async function init(){
  }catch(error){failure(error);}
 }
 init();
-</script></body></html>
+</script><script src="admin-nav.js" defer></script></body></html>

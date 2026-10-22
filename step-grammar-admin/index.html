@@ -33,11 +33,14 @@
 .lesson-status.draft{background:#fff1d7;color:#95652e}
 @media(max-width:650px){.lesson-edit-row{grid-template-columns:1fr}}
 .step-brand-image{display:block;width:206px;max-width:100%;height:auto;flex:none}@media(max-width:480px){.step-brand-image{width:158px}}</style>
+<link rel="stylesheet" href="admin-nav.css"><link rel="stylesheet" href="admin-home.css">
 <link rel="icon" type="image/svg+xml" href="../step-brand/mark.svg"></head>
-<body>
+<body class="admin-login-page">
 <header class="top"><div class="brand"><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"></div><div class="nav-actions"><a href="../step-grammar-account-preview/" target="_blank" rel="noopener">صفحة الطلاب ↗</a><button id="logout" class="btn btn-outline btn-small" hidden>تسجيل الخروج</button></div></header>
 <div id="root"><main class="shell"><p>جاري التحقق من صلاحية الدخول…</p></main></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script src="admin-nav.js" defer></script>
+<script src="admin-home.js"></script>
 <script>
 "use strict";
 const SUPABASE_URL="https://funltjxavowlnnfibhpl.supabase.co";
@@ -63,6 +66,7 @@ async function api(path,opts={}){
  return data;
 }
 function showLogin(msg=""){
+ document.body.classList.remove("admin-is-authenticated");
  logoutButton.hidden=true;
  root.innerHTML='<div class="auth-layout shell"><form id="login-form" class="panel login"><div class="eyebrow">SECURE ADMIN ACCESS</div><h1>لوحة إدارة طلاب STEP</h1><p>سجّل دخولك بالحساب اللي مُنحت له صلاحية الأدمن. إنشاء حساب طالب لوحده لا يمنح صلاحيات الإدارة.</p>'+(msg?'<div class="notice error">'+escapeHtml(msg)+'</div>':'')+'<div class="field"><label for="username">اسم المستخدم</label><input id="username" autocomplete="username" required minlength="3" dir="ltr"></div><div class="field"><label for="password">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required minlength="10" dir="ltr"></div><button id="login" class="btn btn-main" type="submit">تسجيل الدخول للوحة</button></form></div>';
  document.getElementById("login-form").onsubmit=async e=>{
@@ -85,7 +89,9 @@ function showLogin(msg=""){
 const questionState={list:[],sections:[],currentId:null,filter:"all"};
 async function checkAdmin(){
  try{
-  const info=await api("/me");ui.role=info.role;logoutButton.hidden=false;await loadStudents();
+  const info=await api("/me");ui.role=info.role;logoutButton.hidden=false;
+  document.body.classList.add("admin-is-authenticated");
+  if(location.hash==="#students")await loadStudents();else await loadOverview();
  }catch(error){
   const accessDenied=errorMessage(error).includes("غير مخوّل");
   if(accessDenied){
@@ -102,6 +108,10 @@ function rowHtml(s){
  const phoneHtml=wa.length>=8&&wa.length<=15?'<a href="https://wa.me/'+wa+'" target="_blank" rel="noopener noreferrer" class="ltr">'+escapeHtml(phone)+' ↗</a>':'<span class="ltr">'+escapeHtml(phone||"—")+'</span>';
  const btn=ui.role==="owner"?(s.active?'<button class="btn btn-danger btn-small" data-status="0" data-id="'+escapeHtml(s.user_id)+'">إيقاف</button>':'<button class="btn btn-good btn-small" data-status="1" data-id="'+escapeHtml(s.user_id)+'">تفعيل</button>'):"—";
  return '<tr><td class="name"><span class="ltr">'+escapeHtml(s.username)+'</span></td><td><span class="contact ltr">'+escapeHtml(s.email||"—")+'</span></td><td>'+phoneHtml+'</td><td><strong class="ltr">'+Number(s.parts_passed)+'/6</strong><div class="progress"><div style="width:'+pct+'%"></div></div></td><td>'+(s.exam_best==null?"—":'<strong class="ltr">'+Number(s.exam_best)+'%</strong>')+'</td><td><span class="tag '+(s.active?"active":"inactive")+'">'+label+'</span></td><td>'+niceDate(s.last_activity||s.created_at)+'</td><td><div class="actions"><a class="btn btn-outline btn-small" href="reports.html?indicator=present-simple&student='+encodeURIComponent(s.user_id)+'">التقرير</a>'+btn+'</div></td></tr>';
+}
+async function loadOverview(){
+ logoutButton.hidden=false;
+ await window.StepAdminHome.show({root,api,role:ui.role,esc:escapeHtml});
 }
 function dashboard(){
  logoutButton.hidden=false;
@@ -167,14 +177,8 @@ async function loadStudents(){
 }
 
 function injectAdminNavigation(active){
- const container=document.createElement("nav");
- container.className="admin-tabs";container.setAttribute("aria-label","أقسام لوحة الإدارة");
- container.innerHTML='<button class="admin-tab '+(active==="students"?"is-active":"")+'" id="nav-students">الطلاب والنتائج</button><button class="admin-tab '+(active==="questions"?"is-active":"")+'" id="nav-questions">بنك الأسئلة</button><button class="admin-tab '+(active==="lessons"?"is-active":"")+'" id="nav-lessons">محتوى الدروس</button><a href="reports.html" class="admin-tab">التقارير والإحصائيات</a><a href="studio.html" class="admin-tab" style="background:#e7f5ed;color:#176856">✎ استوديو تعديل كل الدروس</a><a href="curriculum.html" class="admin-tab">المحاور والمؤشرات</a><a href="videos.html?indicator=present-simple" class="admin-tab">▶ فيديوهات الدروس</a><a href="courses.html" class="admin-tab">إضافة دروس جديدة</a>';
- const anchor=root.querySelector(".intro")||root.querySelector(".page-title");
- if(anchor)anchor.after(container);
- document.getElementById("nav-students").onclick=()=>{ui.page=1;loadStudents();};
- document.getElementById("nav-questions").onclick=()=>loadQuestions();
- document.getElementById("nav-lessons").onclick=()=>loadLessonEditor();
+ // One shared navigation is owned by admin-nav.js.
+ // The old single-course editors are not linked; all three courses use Studio.
 }
 async function loadQuestions(preserveId=null){
  root.innerHTML='<main class="shell"><p>جاري تحميل بنك الأسئلة…</p></main>';
@@ -340,8 +344,9 @@ function renderLessonEditor(){
  };
 }
 
-async function logout(){await db.auth.signOut();ui.role=null;ui.rows=[];showLogin();}
+async function logout(){await db.auth.signOut();ui.role=null;ui.rows=[];document.body.classList.remove("admin-is-authenticated");showLogin();}
 logoutButton.onclick=logout;
+window.addEventListener("hashchange",()=>{if(ui.role){if(location.hash==="#students")loadStudents();else loadOverview();}});
 async function init(){try{const {data:{session}}=await db.auth.getSession();if(session)await checkAdmin();else showLogin();}catch(e){showLogin("تعذر الاتصال بالخدمة")}}
 init();
 </script>
