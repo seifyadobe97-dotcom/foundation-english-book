@@ -690,6 +690,19 @@ Deno.serve(async(req)=>{
     if(lookup)throw lookup;
     if(!existing?.draft)return reply(404,{error:"احفظ مسودة السؤال الأول"});
     const d=existing.draft;
+    // Extra questions must be independently verified in the original-source ledger.
+    // Teacher-authored or unsourced drafts never enter a source-only STEP student bank.
+    if(!Object.hasOwn(bank.questions,id)){
+     const {data:review,error:reviewError}=await admin.from("step_source_item_reviews")
+      .select("review_status,original_stem,original_options,printed_key")
+      .eq("candidate_id",id).maybeSingle();
+     if(reviewError)throw reviewError;
+     if(!review||review.review_status!=="approved"||
+       review.original_stem!==d.text||
+       JSON.stringify(review.original_options)!==JSON.stringify(d.options)||
+       review.printed_key!==d.correct)
+      return reply(422,{error:"السؤال الجديد مسودة داخلية فقط حتى تدقيق نصه واختياراته وإجابته من المصدر الأصلي"});
+    }
     if(!Number.isInteger(d.part_index)||d.part_index<0||d.part_index>=bank.sections.length)
      return reply(422,{error:"مرحلة السؤال غير صحيحة"});
     const {error}=await admin.from("step_question_edits").upsert({
