@@ -114,7 +114,7 @@ async function openPart(i,scroll=true){
 }
 function renderLessonHeader(){
  const list=state.course.sections,passed=list.filter(s=>s.passed).length,pct=Math.round(passed/list.length*100);
- return '<section class="hero"><div><div class="kicker">STEP · GRAMMAR</div><h1>Present Continuous</h1><p class="lead">افهم اللي بيحصل دلوقتي، وتعلّم am / is / are + ing مع أمثلة خطوة بخطوة.</p></div>'+
+ return '<section class="hero"><div><div class="kicker">STEP · GRAMMAR</div><h1>'+escapeHtml(state.course.course?.title||"Present Continuous")+'</h1><p class="lead">'+escapeHtml(state.course.course?.subtitle||"افهم اللي بيحصل دلوقتي، وتعلّم am / is / are + ing مع أمثلة خطوة بخطوة.")+'</p></div>'+
  '<div class="progress-block"><div class="progress-number">'+pct+'%</div><div class="progress-caption">تقدمك في الدرس</div><div class="progress-track"><span style="width:'+pct+'%"></span></div></div></section>'+
  '<nav class="path" aria-label="مراحل الدرس">'+LESSONS.map((m,i)=>{
  const done=list[i]?.passed,locked=list[i]?.locked,active=state.mode==="lesson"&&i===state.index;
