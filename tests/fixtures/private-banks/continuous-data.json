@@ -1,0 +1,303 @@
+{
+  "code": "ASGQPRCONT",
+  "title": "Present Continuous",
+  "titleAr": "المضارع المستمر",
+  "subtitle": "Mock only",
+  "requiredPassRate": 0.6,
+  "sections": [
+    {
+      "id": "now",
+      "title": "Subject + auxiliary",
+      "titleAr": "الفاعل والمساعد",
+      "short": "Synthetic browser-test stage",
+      "questionIds": [
+        "SYN-PC-01",
+        "SYN-PC-02",
+        "SYN-PC-03"
+      ]
+    },
+    {
+      "id": "speaking",
+      "title": "Happening now",
+      "titleAr": "ما يحدث الآن",
+      "short": "Synthetic browser-test stage",
+      "questionIds": [
+        "SYN-PC-04",
+        "SYN-PC-05",
+        "SYN-PC-06"
+      ]
+    },
+    {
+      "id": "changing",
+      "title": "Temporary activities",
+      "titleAr": "حالة مؤقتة",
+      "short": "Synthetic browser-test stage",
+      "questionIds": [
+        "SYN-PC-07",
+        "SYN-PC-08",
+        "SYN-PC-09"
+      ]
+    },
+    {
+      "id": "negative",
+      "title": "Negatives and questions",
+      "titleAr": "النفي والسؤال",
+      "short": "Synthetic browser-test stage",
+      "questionIds": [
+        "SYN-PC-10",
+        "SYN-PC-11",
+        "SYN-PC-12"
+      ]
+    },
+    {
+      "id": "arrangements",
+      "title": "Future plans",
+      "titleAr": "ترتيب مستقبلي",
+      "short": "Synthetic browser-test stage",
+      "questionIds": [
+        "SYN-PC-13",
+        "SYN-PC-14"
+      ]
+    }
+  ],
+  "questions": {
+    "SYN-PC-01": {
+      "id": "SYN-PC-01",
+      "text": "Synthetic browser test sentence 1 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-02": {
+      "id": "SYN-PC-02",
+      "text": "Synthetic browser test sentence 2 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-03": {
+      "id": "SYN-PC-03",
+      "text": "Synthetic browser test sentence 3 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-04": {
+      "id": "SYN-PC-04",
+      "text": "Synthetic browser test sentence 4 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-05": {
+      "id": "SYN-PC-05",
+      "text": "Synthetic browser test sentence 5 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-06": {
+      "id": "SYN-PC-06",
+      "text": "Synthetic browser test sentence 6 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-07": {
+      "id": "SYN-PC-07",
+      "text": "Synthetic browser test sentence 7 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-08": {
+      "id": "SYN-PC-08",
+      "text": "Synthetic browser test sentence 8 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-09": {
+      "id": "SYN-PC-09",
+      "text": "Synthetic browser test sentence 9 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-10": {
+      "id": "SYN-PC-10",
+      "text": "Synthetic browser test sentence 10 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-11": {
+      "id": "SYN-PC-11",
+      "text": "Synthetic browser test sentence 11 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-12": {
+      "id": "SYN-PC-12",
+      "text": "Synthetic browser test sentence 12 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-13": {
+      "id": "SYN-PC-13",
+      "text": "Synthetic browser test sentence 13 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    },
+    "SYN-PC-14": {
+      "id": "SYN-PC-14",
+      "text": "Synthetic browser test sentence 14 — select the placeholder.",
+      "options": {
+        "A": "sample alpha",
+        "B": "sample bravo",
+        "C": "sample charlie",
+        "D": "sample delta"
+      },
+      "correct": "A",
+      "explanation": "Synthetic test explanation",
+      "wrongReasons": {
+        "B": "Synthetic reason B",
+        "C": "Synthetic reason C",
+        "D": "Synthetic reason D"
+      }
+    }
+  }
+}
