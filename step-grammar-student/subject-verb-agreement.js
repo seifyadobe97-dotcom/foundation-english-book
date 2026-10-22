@@ -219,7 +219,14 @@ function question(q,i,result){
  clean(feedback.wrongReason||"الاختيار ده مش مناسب للقاعدة المطلوبة في الجملة.")+'</p>'+
  '<p class="feedback-correct"><b>الإجابة الصحيحة:</b> <span class="correct-choice">'+
  escapeHtml(feedback.correct)+' — <bdi dir="auto">'+escapeHtml(correctValue??"")+'</bdi></span></p>')+
- '<p class="feedback-explain"><b>ليه دي صح؟</b> '+clean(feedback.explanation||"راجع القاعدة المرتبطة بالسؤال.")+'</p></div>':'')+'</article>';
+ '<p class="feedback-explain"><b>ليه دي صح؟</b> '+clean(feedback.explanation||"راجع القاعدة المرتبطة بالسؤال.")+'</p>'+
+  (feedback.wrongReasons&&Object.keys(feedback.wrongReasons).length?
+   '<details class="feedback-distractors"><summary>ليه باقي الاختيارات غلط؟</summary><ul>'+
+   ABC.filter(code=>code!==feedback.correct).map(code=>
+    '<li><bdi dir="ltr" lang="en">'+code+' — '+escapeHtml(q.options?.[code]||"")+'</bdi><span>'+
+    clean(feedback.wrongReasons[code]||"غير مناسب للقاعدة في السؤال.")+'</span></li>'
+   ).join("")+'</ul></details>':"")+
+  '</div>':'')+'</article>';
 }
 function practice(){
  const p=state.part,r=state.graded;

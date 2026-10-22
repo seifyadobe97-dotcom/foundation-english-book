@@ -100,6 +100,22 @@ Deno.serve(async(req)=>{
  if(roleError)return reply(500,{error:"تعذر فحص الصلاحيات"});
  if(!permission)return reply(403,{error:"الحساب الحالي غير مخوّل لفتح لوحة الأدمن"});
  let path=new URL(req.url).pathname.replace(/^\/(?:functions\/v1\/)?step-admin/,"")||"/";
+ // Source and answer keys are available only to authenticated admin accounts.
+ if(req.method==="GET"&&path==="/agreement/audit"){
+  const [indicator,items]=await Promise.all([
+   admin.from("step_curriculum_indicators").select("slug,title_ar,title_en,status,legacy_course_code")
+    .eq("slug","subject-verb-agreement").maybeSingle(),
+   admin.from("step_source_item_reviews")
+    .select("candidate_id,document_key,pdf_page,printed_number,original_stem,original_options,printed_key,review_status,reviewer_notes")
+    .eq("original_category_code","ASGQAGREE").order("candidate_id")
+  ]);
+  if(indicator.error||items.error)return reply(500,{error:"تعذر تحميل سجل مراجعة المصادر"});
+  const records=items.data||[];
+  return reply(200,{indicator:indicator.data,
+   summary:{total:records.length,approved:records.filter(x=>x.review_status==="approved").length,
+    withheld:records.filter(x=>x.review_status!=="approved").length},
+   items:records});
+ }
  let reportLesson=lesson;
  // All indicator reports are resolved by the server, never by client-supplied course codes.
  const indicatorReportRoute=path.match(/^\/indicators\/([a-z][a-z0-9-]{2,39})(?:\/(analytics|students\/([0-9a-f-]{36})\/report))?$/i);

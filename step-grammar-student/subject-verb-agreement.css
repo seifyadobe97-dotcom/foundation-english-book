@@ -99,3 +99,11 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
 .agreement-table tbody tr:nth-child(even){background:#fafcfb}
 .agreement-table td span{unicode-bidi:plaintext}
 @media(max-width:550px){.flow-pieces>span:not(.flow-arrow){min-width:108px;flex:none;padding:8px 7px;font-size:12px}.agreement-table{min-width:0;display:block}.agreement-table thead{display:none}.agreement-table tbody,.agreement-table tr,.agreement-table td{display:block;width:100%}.agreement-table tr{padding:11px 13px;border-bottom:1px solid #dce9e3}.agreement-table td{border:0;padding:5px 0;display:grid;grid-template-columns:minmax(88px,35%) 1fr;gap:10px}.agreement-table td::before{content:attr(data-label);font-weight:800;color:#477567}.agreement-table tr:last-child{border:0}}
+
+/* Post-grade rationale for all three distractors; never shown before server grading. */
+.feedback-distractors{margin-top:12px;border-top:1px solid #dbe8e2;padding:12px 0 0}
+.feedback-distractors summary{cursor:pointer;color:#196b60;font-weight:800}
+.feedback-distractors ul{padding:0;margin:12px 0;list-style:none;display:grid;gap:9px}
+.feedback-distractors li{display:flex;flex-wrap:wrap;gap:9px;align-items:start;background:#f7faf8;border:1px solid #e0eae4;border-radius:9px;padding:9px 11px}
+.feedback-distractors li bdi{font-weight:800;min-width:85px;max-width:100%;overflow-wrap:anywhere}
+.feedback-distractors li span{flex:1;min-width:180px}

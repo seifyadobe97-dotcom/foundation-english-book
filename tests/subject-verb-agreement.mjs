@@ -23,6 +23,7 @@ for(const id of ids){
  for(const choice of ["A","B","C","D"])if(choice!==q.correct)
    assert(q.wrongReasons[choice]?.trim(),"Missing reason for "+id+" option "+choice);
 }
+assert((await readFile(path.join(root,"supabase/functions/step-course/index.ts"),"utf8")).includes('release?.status!=="published"'),"Draft lesson is blocked by a server-side publication gate");
 assert(!data.questions["AG-B11"]&&!data.questions["AG-B12"]&&!data.questions["AG-B13"],
  "Typo / misclassified / duplicate bank questions are withheld");
 assert(html.includes("subject-verb-agreement.js")&&html.includes("subject-verb-agreement-content.js"));
@@ -71,7 +72,7 @@ try{
     const i=Number(endpoint.split("/")[3]),s=data.sections[i],body=JSON.parse(req.postData()||"{}");
     const graded=s.questionIds.map((id,n)=>{const q=data.questions[id],selected=body.answers["q"+(n+1)];
      return {id:"q"+(n+1),selected,correct:q.correct,isCorrect:selected===q.correct,
-      wrongReason:selected===q.correct?null:q.wrongReasons[selected],explanation:q.explanation};
+      wrongReason:selected===q.correct?null:q.wrongReasons[selected],wrongReasons:q.wrongReasons,explanation:q.explanation};
     });
     const hits=graded.filter(q=>q.isCorrect).length;
     if(hits>=Math.ceil(s.questionIds.length*.6))passed=Math.max(passed,i+1);
@@ -83,7 +84,7 @@ try{
     const body=JSON.parse(req.postData()||"{}");
     const scored=allIds.slice(0,10).map((id,n)=>{const q=data.questions[id],selected=body.answers["q"+(n+1)];
      return {id:"q"+(n+1),selected,correct:q.correct,isCorrect:selected===q.correct,
-      wrongReason:selected===q.correct?null:q.wrongReasons[selected],explanation:q.explanation};});
+      wrongReason:selected===q.correct?null:q.wrongReasons[selected],wrongReasons:q.wrongReasons,explanation:q.explanation};});
     const hit=scored.filter(x=>x.isCorrect).length;
     value={result:{score:hit,total:10,percentage:hit*10,date:new Date().toISOString()},results:scored,progress:course()};
    }else status=404;
@@ -108,6 +109,9 @@ try{
   assert.equal(await page.locator(".answer-feedback.is-wrong").count(),1);
   assert.match(await page.locator(".answer-feedback.is-wrong").innerText(),/ليه اختيارك غلط/);
   assert.match(await page.locator(".answer-feedback.is-wrong").innerText(),/الإجابة الصحيحة/);
+  await page.locator(".feedback-distractors").first().locator("summary").click();
+  assert.equal(await page.locator(".feedback-distractors").first().locator("li").count(),3);
+  assert.equal(await page.locator(".feedback-distractors").first().locator("li span").count(),3);
   assert.equal(answersViewed,1);
   assert.equal(passed,1,"First stage passes with other correct answers");
   assert.equal(errors.length,0,"No JS errors: "+errors.join("; "));

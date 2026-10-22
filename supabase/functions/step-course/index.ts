@@ -85,6 +85,14 @@ Deno.serve(async(request)=>{
  const method=request.method;
  const courseCode=lesson.code;
  try{
+  // An Agreement draft is not a student-facing release, regardless of its static HTML.
+  if(isAgreement){
+   const {data:release,error:releaseError}=await admin.from("step_curriculum_indicators")
+    .select("status,legacy_course_code").eq("slug","subject-verb-agreement").maybeSingle();
+   if(releaseError)throw releaseError;
+   if(release?.status!=="published"||release.legacy_course_code!==courseCode)
+    return send(403,{error:"الدرس الثاني تحت المراجعة. هيتفتح بعد اعتماد الأسئلة والمصادر."});
+  }
   // Published edits are read at request-time. Drafts never affect student questions.
   const {data:editRows,error:editError}=await admin.from("step_question_edits")
     .select("id,part_index,question_text,options,correct,explanation,status")
@@ -214,7 +222,8 @@ Deno.serve(async(request)=>{
     const input=await safeBody(request),answers=input?.answers as AnswerMap;
     if(!answers||s.questionIds.some((id:string,i:number)=>!["A","B","C","D"].includes(answers["q"+(i+1)]??answers[id])))return send(422,{error:"جاوب كل الأسئلة الأول"});
     const results=s.questionIds.map((id:string,i:number)=>{const q=questions[id],selected=answers["q"+(i+1)]??answers[id];return {id:"q"+(i+1),selected,correct:q.correct,isCorrect:selected===q.correct,
-      wrongReason:selected===q.correct?null:(q.wrongReasons?.[selected]??null),explanation:q.explanation};});
+      wrongReason:selected===q.correct?null:(q.wrongReasons?.[selected]??null),
+      wrongReasons:isAgreement?(q.wrongReasons??{}):undefined,explanation:q.explanation};});
     const correctCount=results.filter((x:{isCorrect:boolean})=>x.isCorrect).length,passed=correctCount>=passRequired;
     const {data:saved,error}=await admin.from("step_part_attempts")
      .insert({user_id:user.id,course_code:courseCode,part_index:index,correct_count:correctCount,total_questions:results.length,passed})
@@ -249,7 +258,8 @@ Deno.serve(async(request)=>{
    const ids=active.question_ids as string[],input=await safeBody(request),answers=input?.answers as AnswerMap;
    if(!answers||ids.some((id,i)=>!["A","B","C","D"].includes(answers["q"+(i+1)]??answers[id])))return send(422,{error:"جاوب كل الأسئلة"});
    const results=ids.map((id,i)=>{const q=questions[id],selected=answers["q"+(i+1)]??answers[id];return{id:"q"+(i+1),text:q.text,selected,correct:q.correct,isCorrect:selected===q.correct,
-      wrongReason:selected===q.correct?null:(q.wrongReasons?.[selected]??null),explanation:q.explanation};});
+      wrongReason:selected===q.correct?null:(q.wrongReasons?.[selected]??null),
+      wrongReasons:isAgreement?(q.wrongReasons??{}):undefined,explanation:q.explanation};});
    const score=results.filter(x=>x.isCorrect).length;
    const record={score,total:results.length,percentage:Math.round(score/results.length*100),date:new Date().toISOString()};
    const {data:saved,error:saveErr}=await admin.from("step_exam_attempts")

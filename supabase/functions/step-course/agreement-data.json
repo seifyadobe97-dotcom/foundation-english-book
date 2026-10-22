@@ -47,7 +47,8 @@
         "AG-B03",
         "AG-B07",
         "AG-B09",
-        "AG-B10"
+        "AG-B10",
+        "AG-B06"
       ],
       "tag": "02 · STEP",
       "subtitle": "He/She/It مقابل I/You/We/They",
@@ -141,7 +142,6 @@
       "title": "Do / Does والفعل المصدر",
       "short": "Does بياخد الـ s والفعل يرجع V1",
       "questionIds": [
-        "AG-B06",
         "AG-C04",
         "AG-C08"
       ],
