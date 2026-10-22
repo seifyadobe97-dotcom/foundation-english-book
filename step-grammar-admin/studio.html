@@ -26,7 +26,11 @@ p{margin:6px 0 14px;color:var(--muted)}.panel{border:1px solid var(--line);borde
 .tag{display:inline-flex;align-items:center;border-radius:100px;padding:3px 11px;font-weight:800;background:#ebf5ee;color:#23745d;font-size:12px}.tag.draft{background:#fff2da;color:#946728}
 #msg{margin:13px 0;padding:12px 15px;background:#edf8f1;border-radius:10px;display:none;color:#1e6953;font-weight:700}
 #msg.error{display:block;background:#fff0ec;color:#983e34}#msg:not(.error)[data-visible="yes"]{display:block}
-.jsonhelp{font-size:12px;color:var(--muted)}.preview{background:#f5f8f6;border-radius:13px;border:1px dashed var(--line);padding:14px;margin-top:14px}
+.jsonhelp{font-size:12px;color:var(--muted)}
+.dirty-label{background:#fff3d8;color:#80591b;border-radius:9px;padding:8px 12px;font-weight:800;font-size:12px;display:none}
+.dirty-label.show{display:inline-flex}.draft-preview{grid-column:1/-1;background:#f2faf5;border:1px solid #b8dec9;border-radius:15px;padding:20px}
+.history-list{grid-column:1/-1;display:grid;gap:10px}.revision{background:white;border:1px solid var(--line);border-radius:12px;padding:15px}
+.revision small{display:block;color:var(--muted);margin:6px 0}.btn.preview-btn{background:#e9f6ef;color:#206c53;border-color:#b9ddcd}.preview{background:#f5f8f6;border-radius:13px;border:1px dashed var(--line);padding:14px;margin-top:14px}
 @media(max-width:760px){.grid{grid-template-columns:1fr}.side{max-height:180px;grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}main{padding:22px 12px}.panel{padding:15px}}
 @media(max-width:460px){.side{grid-template-columns:1fr}header img{width:125px}}
 </style><link rel="stylesheet" href="admin-nav.css"></head><body>
@@ -40,7 +44,9 @@ p{margin:6px 0 14px;color:var(--muted)}.panel{border:1px solid var(--line);borde
 <button class="btn active" data-tab="visual">الشرح والأمثلة والجداول</button>
 <button class="btn" data-tab="sections">عناوين ومراحل التدريب</button>
 <button class="btn" data-tab="questions">الأسئلة والإجابات</button>
-<button class="btn" data-tab="course">بيانات الدرس</button></div>
+<button class="btn" data-tab="course">بيانات الدرس</button>
+<button class="btn" data-tab="history">سجل النسخ والرجوع</button></div>
+<div id="dirty-label" class="dirty-label" role="status">في تعديلات لسه ما اتحفظتش</div>
 <div id="msg" role="status" aria-live="polite"></div>
 <div class="note">المحتوى الأصلي وسجل الأسئلة محفوظين. «حفظ مسودة» لا يغيّر نسخة الطالب؛ «نشر التعديل» يفعّله فورًا. معرّفات الأسئلة وعدد المراحل والدرجات القديمة محمية.</div>
 <section class="grid" id="work"><div class="panel">جاري التحقق من صلاحيات الإدارة وتحميل الدروس…</div></section>
@@ -57,13 +63,37 @@ const db=window.supabase.createClient(SUPA,ANON);
 const work=document.getElementById("work"),msg=document.getElementById("msg"),courseSelect=document.getElementById("course");
 const safe=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const clone=x=>JSON.parse(JSON.stringify(x));
-const sourceUnits=()=>({"ASGQAGREE":window.STEP_SUBJECT_VERB_UNITS,"ASGQPRSIM":window.PRESENT_SIMPLE_UNITS,"ASGQPRCONT":window.STEP_PRESENT_CONTINUOUS_UNITS}[courseSelect.value]||[]);
-const courseSlug=()=>({"ASGQAGREE":"subject-verb-agreement","ASGQPRSIM":"present-simple","ASGQPRCONT":"present-continuous"}[courseSelect.value]);
+let courseCatalog=[];
+const sourceUnits=()=>({"ASGQAGREE":window.STEP_SUBJECT_VERB_UNITS,"ASGQPRSIM":window.PRESENT_SIMPLE_UNITS,
+ "ASGQPRCONT":window.STEP_PRESENT_CONTINUOUS_UNITS}[courseSelect.value]||
+ state.data?.sections?.map(s=>s.visual_base)||[]);
+const courseSlug=()=>courseCatalog.find(x=>x.code===courseSelect.value)?.slug||
+ ({"ASGQAGREE":"subject-verb-agreement","ASGQPRSIM":"present-simple","ASGQPRCONT":"present-continuous"}[courseSelect.value]||"");
 const params=new URLSearchParams(location.search);
 const allowedCourses=["ASGQAGREE","ASGQPRSIM","ASGQPRCONT"];
-const allowedTabs=["visual","sections","questions","course"];
+const allowedTabs=["visual","sections","questions","course","history"];
 if(allowedCourses.includes(params.get("course")))courseSelect.value=params.get("course");
-const state={data:null,tab:allowedTabs.includes(params.get("tab"))?params.get("tab"):"visual",index:0,questionId:null};
+const state={data:null,tab:allowedTabs.includes(params.get("tab"))?params.get("tab"):"visual",index:0,questionId:null,dirty:false};
+function setDirty(value){state.dirty=value;document.getElementById("dirty-label").classList.toggle("show",value);}
+function canNavigate(){return !state.dirty||confirm("في تعديلات ما اتحفظتش. تتجاهلها وتنتقل؟");}
+window.addEventListener("beforeunload",event=>{if(state.dirty){event.preventDefault();event.returnValue="";}});
+work.addEventListener("input",event=>{if(event.target.matches("input,textarea,select"))setDirty(true);});
+work.addEventListener("change",event=>{if(event.target.matches("input,textarea,select"))setDirty(true);});
+async function loadCourseCatalog(){
+ const requested=params.get("course")||courseSelect.value;
+ try{
+  const result=await api("/studio/catalog");
+  courseCatalog=result.courses||[];
+  if(!courseCatalog.length)throw Error("مفيش دروس متاحة حاليًا");
+  courseSelect.innerHTML=courseCatalog.map((course,i)=>
+   '<option value="'+safe(course.code)+'">'+(i+1)+' — '+safe(course.titleAr||course.title)+
+   (course.status==="published"?" · منشور":" · مسودة")+'</option>').join("");
+  courseSelect.value=courseCatalog.some(course=>course.code===requested)?requested:courseCatalog[0].code;
+ }catch(error){
+  notice("تعذر تحميل فهرس الدروس الجديد؛ هنعرض آخر قائمة معروفة.",true);
+  if(allowedCourses.includes(requested))courseSelect.value=requested;
+ }
+}
 function syncStudioLocation(){
  const url=new URL(location.href);
  url.searchParams.set("course",courseSelect.value);
@@ -92,6 +122,7 @@ function actions(kind,hasDraft,isPublished,reset=true){
  const editable=state.data?.can_edit;
  if(!editable)return '<p>حسابك يسمح بالمعاينة فقط. النشر للمدير.</p>';
  return '<div class="actions"><button class="btn primary" type="button" data-act="save">حفظ مسودة</button>'+
+ '<button class="btn preview-btn" type="button" data-preview="yes">معاينة قبل النشر</button>'+
  (hasDraft?'<button class="btn green" type="button" data-act="publish">نشر التعديل للطلاب</button>':'')+
  (reset&&(isPublished||hasDraft)?'<button class="btn danger" type="button" data-act="reset">استعادة الأصل</button>':'')+
  '</div>';
@@ -112,9 +143,9 @@ function sideButtons(list,active){
 function visual(){
  const entry=state.data.sections[state.index];
  if(!entry)return;
- const src=sourceUnits()[entry.index]||{};
+ const src=sourceUnits()[entry.index]||entry.visual_base||{};
  const v=entry.visual_draft||entry.visual_published||src;
- const left=sideButtons(state.data.sections.map(s=>({name:(s.visual_draft||s.visual_published||sourceUnits()[s.index]||{}).title||s.titleAr,
+ const left=sideButtons(state.data.sections.map(s=>({name:(s.visual_draft||s.visual_published||sourceUnits()[s.index]||s.visual_base||{}).title||s.titleAr,
   sub:"المرحلة "+(s.index+1)+(s.visual_draft?" · مسودة":s.visual_published?" · تعديل منشور":" · أصلي")})),state.index);
  const jsonFields=[["cards","البطاقات التعليمية"],["examples","الأمثلة المشروحة"],
   ["formulas","مخططات القاعدة"],["keywords","الكلمات الدالة"],["warning","التصحيح والخطأ الشائع"],
@@ -127,7 +158,7 @@ function visual(){
  jsonFields.map(([key,label])=>field("v-"+key,label,json(v[key]===undefined?null:v[key]),{multi:true,code:true})).join("")+
  '</details>'+
  actions("units",!!entry.visual_draft,!!entry.visual_published)+
- '<div class="preview"><b>النسخة المعروضة في المحرر</b><p>'+safe(v.detail||"")+'</p><a href="../step-grammar-student/'+(courseSelect.value==="ASGQPRSIM"?"learn.html":courseSlug()+".html")+'" target="_blank" rel="noopener">فتح صفحة الطالب ↗</a></div></div>';
+ '<div class="preview"><b>النسخة المحفوظة حاليًا</b><p>'+safe(v.detail||"")+'</p><a href="../step-grammar-student/'+(courseSelect.value==="ASGQPRSIM"?"learn.html":courseSlug()+".html")+'" target="_blank" rel="noopener">فتح صفحة الطالب ↗</a></div></div>';
  wire("units");
 }
 function sections(){
