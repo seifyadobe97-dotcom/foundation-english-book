@@ -135,9 +135,19 @@ Deno.serve(async(req)=>{
   if(!raw)return true;
   try{
    const u=new URL(raw);
-   return u.protocol==="https:"&&!u.username&&!u.password&&!u.port&&
-    ["youtube.com","www.youtube.com","m.youtube.com","youtu.be",
-     "www.tiktok.com","tiktok.com","vt.tiktok.com","vm.tiktok.com"].includes(u.hostname.toLowerCase());
+   if(u.protocol!=="https:"||u.username||u.password||u.port)return false;
+   const host=u.hostname.toLowerCase(),path=u.pathname,id=/^[a-zA-Z0-9_-]{11}$/;
+   if(host==="youtu.be")return id.test(path.split("/")[1]||"");
+   if(["youtube.com","www.youtube.com","m.youtube.com"].includes(host)){
+    const code=path.startsWith("/shorts/")?path.split("/")[2]:u.searchParams.get("v");
+    return Boolean(code&&id.test(code));
+   }
+   if(["tiktok.com","www.tiktok.com"].includes(host))
+    return /\/video\/\d{12,22}(?:\/|$)/.test(path)||
+     /^\/player\/v1\/\d{12,22}(?:\/|$)/.test(path);
+   if(["vt.tiktok.com","vm.tiktok.com"].includes(host))
+    return /^\/[a-zA-Z0-9_-]{5,40}\/?$/.test(path);
+   return false;
   }catch{return false;}
  };
  if((req.method==="GET"&&videoRoute)||(req.method==="POST"&&videoSaveRoute)){
