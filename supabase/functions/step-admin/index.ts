@@ -107,14 +107,20 @@ Deno.serve(async(req)=>{
     .eq("slug","subject-verb-agreement").maybeSingle(),
    admin.from("step_source_item_reviews")
     .select("candidate_id,document_key,pdf_page,printed_number,original_stem,original_options,printed_key,review_status,reviewer_notes")
-    .eq("original_category_code","ASGQAGREE").order("candidate_id")
+    .or("original_category_code.eq.ASGQAGREE,candidate_id.in.(TAJ2026-177,TAJ2026-321,TAJ2026-355)").order("candidate_id")
   ]);
   if(indicator.error||items.error)return reply(500,{error:"تعذر تحميل سجل مراجعة المصادر"});
   const records=items.data||[];
+  const included=new Set(Object.keys(agreementLesson.questions));
+  const inCourse=records.filter(x=>included.has(x.candidate_id)&&x.review_status==="approved");
+  const outOfCourse=records.filter(x=>included.has(x.candidate_id)&&x.review_status!=="approved");
+  // Fail visibly on a future mismatch between the source ledger and the student course.
   return reply(200,{indicator:indicator.data,
    summary:{total:records.length,approved:records.filter(x=>x.review_status==="approved").length,
-    withheld:records.filter(x=>x.review_status!=="approved").length},
-   items:records});
+    withheld:records.filter(x=>x.review_status!=="approved").length,
+    in_course:inCourse.length,invalid_in_course:outOfCourse.map(x=>x.candidate_id),
+    missing_from_ledger:[...included].filter(id=>!records.some(x=>x.candidate_id===id))},
+   items:records.map(x=>({...x,in_course:included.has(x.candidate_id)}))});
  }
  let reportLesson=lesson;
  // All indicator reports are resolved by the server, never by client-supplied course codes.

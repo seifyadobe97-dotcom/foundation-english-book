@@ -26,6 +26,13 @@ for(const id of ids){
 assert((await readFile(path.join(root,"supabase/functions/step-course/index.ts"),"utf8")).includes('release?.status!=="published"'),"Draft lesson is blocked by a server-side publication gate");
 assert(!data.questions["AG-B11"]&&!data.questions["AG-B12"]&&!data.questions["AG-B13"],
  "Typo / misclassified / duplicate bank questions are withheld");
+assert(!data.questions["AG-C02"]&&!data.questions["AG-C03"]&&!data.questions["AG-C06"],
+ "Near-duplicate, duplicate and three-option source-book questions must remain withheld");
+const adminAuditAPI=await readFile(path.join(root,"supabase/functions/step-admin/index.ts"),"utf8");
+assert(adminAuditAPI.includes('candidate_id.in.(TAJ2026-177,TAJ2026-321,TAJ2026-355)'),
+ "Private admin audit includes cross-document duplicated compilation candidates");
+assert(adminAuditAPI.includes("missing_from_ledger")&&adminAuditAPI.includes("invalid_in_course"),
+ "Internal release checklist detects any unreviewed or mismatched live question IDs");
 assert(html.includes("subject-verb-agreement.js")&&html.includes("subject-verb-agreement-content.js"));
 assert(script.includes('const API_PREFIX="/agreement"')&&script.includes("formula-flow")===false);
 assert(script.includes('class="flow-pieces"')&&script.includes('dir="ltr"'));

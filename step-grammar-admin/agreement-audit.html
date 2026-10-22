@@ -31,15 +31,18 @@ const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
   const d=await r.json();if(!r.ok)throw Error(d.error||"لا توجد صلاحية للعرض");
   document.getElementById("status").textContent=d.indicator?.status==="published"?
    "تحذير: المؤشر ظاهر كمنشور. لا تعتمد الأسئلة دون تدقيق الملفات الأصلية.":
-   "مسودة داخلية — الأسئلة غير متاحة للطلاب عبر واجهة التصحيح.";
+   "مراجعة الملفات الأصلية تمت. الدرس ما زال مسودة إلى أن تنجح بوابات الأمان والاختبارات الفعلية.";
   document.getElementById("summary").innerHTML=
    "<span>إجمالي السجلات: <b>"+d.summary.total+"</b></span>"+
-   "<span>معتمد سابقًا: <b>"+d.summary.approved+"</b></span>"+
-   "<span>مستبعد أو معلّق: <b>"+d.summary.withheld+"</b></span>";
+   "<span>معتمد ومضمّن في الدرس: <b>"+d.summary.in_course+"</b></span>"+
+   "<span>مستبعد أو معلّق: <b>"+d.summary.withheld+"</b></span>"+
+   (d.summary.invalid_in_course.length||d.summary.missing_from_ledger.length?
+    "<span>⚠ تعارض يحتاج تدخل: <b>"+esc([...d.summary.invalid_in_course,...d.summary.missing_from_ledger].join(", "))+"</b></span>":"");
   document.getElementById("list").innerHTML=d.items.map(q=>{
    const options=q.original_options||{};
    return '<article><div class="meta"><b>'+esc(q.candidate_id)+'</b><span class="tag '+(q.review_status==="approved"?"approved":"")+'">'+esc(q.review_status)+'</span>'+
-   '<span>'+esc(q.document_key)+' · صفحة '+esc(q.pdf_page)+' · رقم '+esc(q.printed_number)+'</span></div>'+
+   '<span>'+esc(q.document_key)+' · صفحة '+esc(q.pdf_page)+' · رقم '+esc(q.printed_number)+'</span>'+
+   (q.in_course?'<span class="tag approved">في تدريبات الدرس</span>':'<span class="tag">غير مستخدم</span>')+'</div>'+
    '<p class="english" lang="en">'+esc(q.original_stem)+'</p>'+
    '<ul class="options english" lang="en">'+["A","B","C","D"].map(a=>'<li class="'+(a===q.printed_key?"correct":"")+'">'+a+' — '+esc(options[a]??"—")+'</li>').join("")+'</ul>'+
    '<small>'+esc(q.reviewer_notes||"—")+'</small></article>';
