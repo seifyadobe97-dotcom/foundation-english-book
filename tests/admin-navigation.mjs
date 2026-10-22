@@ -25,9 +25,10 @@ const indicators=[
  {slug:"subject-verb-agreement",status:"published"},
  {slug:"present-simple",status:"published"},
  {slug:"present-continuous",status:"published"},
-  {slug:"past-simple",status:"published"}
+  {slug:"past-simple",status:"published"},
+  {slug:"past-continuous",status:"published"}
 ];
-const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple"};
+const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous"};
 try{
  for(const width of [1280,390]){
   const page=await browser.newPage({viewport:{width,height:850}});
@@ -46,7 +47,8 @@ try{
       {slug:"subject-verb-agreement",code:"ASGQAGREE",title:"Subject–Verb Agreement",titleAr:"تطابق الفاعل والفعل",status:"published",position:101},
       {slug:"present-simple",code:"ASGQPRSIM",title:"Present Simple",titleAr:"المضارع البسيط",status:"published",position:102},
       {slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",titleAr:"المضارع المستمر",status:"published",position:103},
-       {slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",titleAr:"الماضي البسيط",status:"published",position:104}
+       {slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",titleAr:"الماضي البسيط",status:"published",position:104},
+       {slug:"past-continuous",code:"ASGQPACONT",title:"Past Continuous",titleAr:"الماضي المستمر",status:"published",position:105}
      ],can_edit:true};
     }else if(endpoint==="/studio"){
     const code=url.searchParams.get("course")||"ASGQAGREE";
@@ -62,7 +64,7 @@ try{
   });
   await page.goto(origin+"/step-grammar-admin/",{waitUntil:"domcontentloaded"});
   await page.locator(".home-hero").waitFor({timeout:12000});
-  assert.equal(await page.locator(".home-card").count(),4,"Three published lessons and a draft Past Simple card");
+  assert.equal(await page.locator(".home-card").count(),5,"Five admin lesson cards from current catalog");
   assert.equal(await page.locator(".admin-global-nav a").count(),8,"Admin pages use eight unambiguous destinations");
   assert.equal(await page.locator('.admin-global-nav a[aria-current="page"]').innerText().then(x=>x.includes("الرئيسية")),true);
   const lesson3Link=page.locator('a[href="studio.html?course=ASGQPRCONT&tab=questions"]').first();
@@ -82,7 +84,8 @@ try{
   assert.equal(await page.locator(".admin-global-nav a[aria-current='page']").innerText().then(x=>x.includes("تعديل الدروس")),true);
   await page.goto(origin+"/step-grammar-admin/sources.html",{waitUntil:"domcontentloaded"});
   await page.locator("#cards:not([hidden])").waitFor();
-  assert.equal(await page.locator(".card").count(),4,"Three published lessons plus the private draft Lesson 4 audit");
+  assert.equal(await page.locator(".card").count(),5,"Five admin source-audit cards");
+  assert.equal(await page.locator('a[href="past-continuous-audit.html"]').count(),1,"Lesson 5 protected review available");
   assert.equal(await page.locator('a[href="past-audit.html"]').count(),1,"Lesson 4 private audit route is linked");
   assert.equal(await page.locator(".admin-global-nav a[aria-current='page']").innerText().then(x=>x.includes("تدقيق المصادر")),true);
   assert.deepEqual(errors,[],"No JavaScript errors at "+width+"px");

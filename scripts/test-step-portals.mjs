@@ -62,7 +62,7 @@ assert(admin.includes("await loadOverview()")&&admin.includes('location.hash==="
  "Admin must open a task-first home and keep students under their own route");
 assert(admin.includes('src="admin-home.js"')&&adminHome.includes('id="nav-lessons"'),
  "Admin homepage must show one clearly labeled Studio link");
-for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM"])
+for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"])
  assert(adminHome.includes(code)&&studio.includes('value="'+code+'"'),
   "Every published lesson must have its own direct editor route: "+code);
 for(const tab of ["visual","sections","questions","course"])
@@ -72,10 +72,14 @@ for(const label of ["الرئيسية","تعديل الدروس","الطلاب",
  assert(adminNav.includes(label),"Admin nav missing "+label);
 assert(adminCss.includes("aria-current")&&adminNav.includes('aria-current="page"'),
  "Active admin page needs a clear selected state");
-for(const pageName of ["index.html","studio.html","curriculum.html","reports.html","courses.html","videos.html","guide.html","agreement-audit.html","continuous-audit.html","continuous-preview.html","sources.html"]){
+for(const pageName of ["index.html","studio.html","curriculum.html","reports.html","courses.html","videos.html","guide.html","agreement-audit.html","continuous-audit.html","continuous-preview.html","past-continuous-audit.html","sources.html"]){
  const adminPath="step-grammar-admin/"+pageName,html=readFileSync(adminPath,"utf8");
  assert(html.includes("admin-nav.js")&&html.includes("admin-nav.css"),adminPath+" must share navigation");
 }
+assert(adminServer.includes('path==="/past-continuous/audit"')&&adminServer.includes('original_category_code","ASGQPACONT"'),
+ "Original Lesson 5 question register must be admin-only");
+assert(courseServer.includes("dynamicMatch")&&courseServer.includes('data.status!=="published"'),
+ "Unpublished generic student lessons must remain inaccessible through the backend");
 assert(readFileSync("step-grammar-admin/sources.html","utf8").includes('/functions/v1/step-admin/me'),
  "Source audit hub must require admin authentication");
 assert(admin.includes('function renderLessonEditor('),"Admin lesson editor form");

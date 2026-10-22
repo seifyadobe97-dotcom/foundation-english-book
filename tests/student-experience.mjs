@@ -34,7 +34,8 @@ const courseBySlug={
  "subject-verb-agreement":makeCourse("Subject–Verb Agreement","تطابق الفاعل والفعل",true),
  "present-simple":makeCourse("Present Simple","المضارع البسيط"),
  "present-continuous":makeCourse("Present Continuous","المضارع المستمر"),
- "past-simple":makeCourse("Past Simple","الماضي البسيط")
+ "past-simple":makeCourse("Past Simple","الماضي البسيط"),
+ "past-continuous":makeCourse("Past Continuous","الماضي المستمر")
 };
 const catalog={axes:[
  {code:"reading-comprehension",position:1,title_ar:"القراءة",title_en:"Reading"},
@@ -61,6 +62,7 @@ try{
    if(api==="/agreement/course")result=courseBySlug["subject-verb-agreement"];
    if(api==="/continuous/course")result=courseBySlug["present-continuous"];
    if(api==="/lesson/past-simple/course")result=courseBySlug["past-simple"];
+   if(api==="/lesson/past-continuous/course")result=courseBySlug["past-continuous"];
    if(api==="/catalog")result=catalog;
    if(api==="/followups")result={followups:[]};
    return route.fulfill({status:result?200:404,contentType:"application/json",
@@ -68,20 +70,20 @@ try{
   });
   await page.goto(origin+"/step-grammar-student/",{waitUntil:"domcontentloaded"});
   await page.locator(".student-learning-path").waitFor({timeout:15000});
-  assert.equal(await page.locator(".student-course-tile").count(),4,
+  assert.equal(await page.locator(".student-course-tile").count(),5,
    "Every published source-approved lesson appears without hardcoded card edits");
   assert.equal(await page.locator(".course-card").count(),0,
    "Legacy duplicate course cards are replaced by the clear learning path");
   assert(await page.locator(".student-hero-cta").count()===1,"Prominent resume action exists");
-  assert.equal(await page.locator('.student-course-tile').last().locator("h3").innerText(),"Past Simple");
+  assert.equal(await page.locator('.student-course-tile').last().locator("h3").innerText(),"Past Continuous");
   assert((await page.locator('.student-course-tile').last().locator("a").getAttribute("href"))
-   .includes("lesson.html?slug=past-simple&step=1"),"New lesson opens via generic player with saved stage");
+   .includes("lesson.html?slug=past-continuous&step=1"),"New lesson opens via generic player with saved stage");
   assert.equal(await page.locator(".student-quicknav a").count(),2,
    "Only meaningful section shortcuts appear when no follow-up tasks exist");
   assert(!(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+3)),
    "The learner dashboard must not overflow at width "+width);
   assert.deepEqual(failures,[],"No browser script errors at "+width+"px");
-  console.log("PASS student dashboard "+width+"px: four dynamic lessons, resume, responsive skin");
+  console.log("PASS student dashboard "+width+"px: five dynamic lessons, resume, responsive skin");
   await page.close();
  }
 }finally{
