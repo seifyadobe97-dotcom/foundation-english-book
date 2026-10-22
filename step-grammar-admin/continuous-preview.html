@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>معاينة الدرس 3: Present Continuous | STEP with Seify</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=DM+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a3644;--muted:#557078;--green:#217665;--line:#dde9e3;--pale:#eff8f4}
+*{box-sizing:border-box}body{margin:0;background:#f5f8f6;color:var(--ink);font:15px/1.9 Cairo,Tahoma,sans-serif}
+header{padding:14px max(16px,calc((100vw - 1080px)/2));background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:15px}
+header img{width:180px;max-width:45vw}a{color:var(--green);font-weight:800;text-decoration:none}main{max-width:1080px;padding:28px 20px 70px;margin:auto}h1{margin:0;color:var(--ink);font-size:clamp(24px,4vw,37px)}
+p{margin:9px 0}mark{background:#ffeda2;padding:1px 4px;border-radius:4px}article{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;margin:20px 0}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.item{border:1px solid var(--line);background:var(--pale);border-radius:12px;padding:14px}
+.item b{display:block}.eng{direction:ltr;unicode-bidi:isolate;text-align:left;font:600 15px/1.7 "DM Sans",Arial,sans-serif;display:block}
+.ex{padding:12px 0;border-bottom:1px solid var(--line)}.ex:last-child{border:0}.ex small{color:var(--muted)}.note{background:#e9f6f1;border-radius:12px;padding:14px;margin:17px 0}
+.warning{background:#fff6f1;border-right:3px solid #cc7553;border-radius:10px;padding:15px}.warning .wrong{color:#934438}.warning .correct{color:#186e4d}
+table{width:100%;border-collapse:collapse}td,th{border:1px solid var(--line);padding:8px;text-align:right}th{background:#eaf5ee}.tablewrap{overflow-x:auto}
+.status{padding:14px;border-radius:10px;background:#fff4df;margin-top:15px}
+@media(max-width:680px){.grid{grid-template-columns:1fr}article{padding:15px}header img{width:130px}}
+</style></head><body>
+<header><a href="curriculum.html"><img src="../step-brand/logo.svg" alt="STEP with Seify"></a>
+<div><a href="continuous-audit.html">تدقيق الأسئلة</a> · <a href="curriculum.html">المنهج</a></div></header>
+<main><h1>الدرس 3 — Present Continuous</h1>
+<p>معاينة محتوى الشرح للمدرّس فقط. الأسئلة الأصلية وإجاباتها لا تُعرض هنا، ولا يُفتح الدرس للطلاب وهو مسودة.</p>
+<div id="status" class="status">جاري التحقق من صلاحية الأدمن…</div><div id="lessons"></div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script src="../step-grammar-student/present-continuous-content.js"></script>
+<script>
+"use strict";
+const base="https://funltjxavowlnnfibhpl.supabase.co";
+const key=document.querySelector('meta[name="not-used"]')?.content||"";
+const anon="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const sb=window.supabase.createClient(base,anon);
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const highlight=x=>esc(x).replace(/\[\[([\s\S]+?)\]\]/g,"<mark>$1</mark>");
+const English=x=>'<span class="eng" lang="en">'+highlight(x)+'</span>';
+function renderStage(u,n){
+const cards=u.cards.map(c=>'<div class="item"><small>'+esc(c[0])+'</small>'+English(c[1])+(c[2]?English(c[2]):"")+'</div>').join("");
+const examples=u.examples.map(e=>'<div class="ex"><b>'+esc(e[0])+'</b>'+English(e[1])+'<small>'+esc(e[2])+'</small></div>').join("");
+const table='<div class="tablewrap"><table><thead><tr>'+u.table.headers.map(h=>'<th>'+esc(h)+'</th>').join("")+'</tr></thead><tbody>'+
+u.table.rows.map(row=>'<tr>'+row.map(x=>'<td>'+esc(x)+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>';
+return '<article><small>المرحلة '+n+' من 5</small><h2>'+esc(u.title)+'</h2><p>'+highlight(u.detail)+'</p>'+
+'<div class="grid">'+cards+'</div><div class="note"><b>نقطة مهمة:</b> '+highlight(u.tip)+'</div>'+
+'<h3>أمثلة مشروحة</h3>'+examples+
+'<div class="warning"><div class="wrong">✕ '+esc(u.warning.wrong)+'</div><div class="correct">✓ '+esc(u.warning.correct)+'</div><p>'+esc(u.warning.why)+'</p></div>'+
+'<h3>الجدول المختصر</h3>'+table+
+'<div class="note"><b>'+esc(u.extra.heading)+'</b>'+u.extra.paragraphs.map(p=>'<p>'+highlight(p)+'</p>').join("")+'</div></article>';
+}
+(async()=>{try{
+ const {data:{session}}=await sb.auth.getSession();
+ if(!session)throw Error("سجّل دخولك كأدمن لمعاينة الدرس.");
+ const r=await fetch(base+"/functions/v1/step-admin/me",{headers:{apikey:anon,Authorization:"Bearer "+session.access_token}});
+ if(!r.ok)throw Error("هذا الحساب لا يملك صلاحية الأدمن.");
+ const stages=window.STEP_PRESENT_CONTINUOUS_UNITS;
+ if(!Array.isArray(stages)||stages.length!==5)throw Error("محتوى المراحل غير مكتمل.");
+ document.getElementById("status").textContent="مسودة خاصة — 5 مراحل شرح، والأسئلة المصححة مخزّنة على السيرفر فقط.";
+ document.getElementById("lessons").innerHTML=stages.map((u,i)=>renderStage(u,i+1)).join("");
+}catch(e){document.getElementById("status").textContent=e.message;}})();
+</script></body></html>
