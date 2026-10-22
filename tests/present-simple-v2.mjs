@@ -107,22 +107,8 @@ try{
   assert(!((await page.locator("body").innerText()).includes("bdi")),"No broken HTML tags");
   assert(!((await page.locator("body").innerText()).includes("ASGQ")),"No internal codes");
   assert(!((await page.locator("body").innerText()).includes("بنك الأسئلة")),"No source labels");
-  const quick=page.locator(".check-option");
-  assert.equal(await quick.count(),2);
-  assert.deepEqual(await page.locator(".option-letter").allInnerTexts(),["A","B"]);
-  assert.equal(await page.locator(".check-desc").evaluate(el=>getComputedStyle(el).direction),"ltr");
-  assert.equal(await page.locator(".check-options").evaluate(el=>getComputedStyle(el).direction),"ltr");
-  const quickBoxes=await Promise.all([quick.first().boundingBox(),quick.nth(1).boundingBox()]);
-  if(viewport.width>480)assert(quickBoxes[0].x<quickBoxes[1].x,"Quick answers should flow A then B from left to right");
-  const wrongQuick=viewport.width<500;
-  await quick.nth(wrongQuick?1:0).click();
-  assert.match(await page.locator(".check-result").innerText(),wrongQuick?/إجابة غير صحيحة/:/إجابة صحيحة/);
-  if(wrongQuick){
-   assert.equal(await page.locator(".check-option.incorrect").count(),1);
-   assert.equal(await page.locator(".check-option.correct").count(),1);
-   assert.match(await page.locator(".feedback-why").first().innerText(),/every day/);
-   assert.match(await page.locator(".feedback-correct").first().innerText(),/الإجابة الصحيحة/);
-  }
+  assert.equal(await page.locator(".check-option").count(),0,
+   "Source-only policy: no assistant-authored quick checks");
   assert.equal(await page.locator(".question").count(),3);
   assert.equal(await page.locator('#submit-practice').isDisabled(),true);
   const ids=dataset.sections[0].questionIds;
