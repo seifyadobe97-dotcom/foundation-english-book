@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Build a strict allowlisted GitHub Pages artifact.
- * Teaching foundation stays in the private development workflow, NOT in student release.
+ * Teaching foundation stays in GitHub source control, NOT in the published student site.
  * Editorial source banks, migrations, docs and test fixtures are never Pages assets.
  */
 import {cp,mkdir,rm,stat,readdir} from "node:fs/promises";
@@ -9,7 +9,7 @@ import path from "node:path";
 import {fileURLToPath} from "node:url";
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const out=path.resolve(process.argv[2]||path.join(root,".step-public-release"));
-if(out===root||!out.startsWith(path.parse(root).root))throw new Error("Invalid output directory");
+if(out===root||out===path.parse(out).root||!path.basename(out).includes("step-public"))throw new Error("Refusing unsafe build destination");
 const files=[".nojekyll","index.html","app.js","data.js","style.css","logo.svg","service-worker.js","manifest.webmanifest"];
 const dirs=["audio","step-brand","step-grammar-account-preview","step-grammar-admin","step-grammar-pilot","step-grammar-student"];
 const forbidden=name=>/^foundation-sentence-elements(?:\.|$)/.test(name);
