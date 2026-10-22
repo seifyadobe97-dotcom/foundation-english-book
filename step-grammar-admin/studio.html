@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#173542">
+<title>استوديو تعديل دروس STEP | STEP with Seify</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=DM+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#173541;--teal:#237565;--ink:#2b434b;--muted:#698087;--pale:#eef7f3;--line:#dce8e2;--bg:#f4f7f5;--gold:#b68842}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:14px/1.8 Cairo,Tahoma,sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:var(--teal);text-decoration:none;font-weight:800}
+header{background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px max(18px,calc((100vw - 1180px)/2))}
+header img{width:190px;max-width:45vw}header nav{display:flex;gap:15px;flex-wrap:wrap}
+main{max-width:1180px;margin:auto;padding:30px 20px 80px}h1{font-size:clamp(26px,3vw,38px);line-height:1.4;margin:0}h2{font-size:21px;margin:0 0 14px}h3{font-size:16px}
+p{margin:6px 0 14px;color:var(--muted)}.panel{border:1px solid var(--line);border-radius:16px;background:#fff;padding:23px}.bar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:18px 0}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}.btn{border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);padding:9px 17px;font-weight:800}
+.btn.active,.btn.primary{background:var(--navy);border-color:var(--navy);color:white}.btn.green{background:var(--teal);border-color:var(--teal);color:white}.btn.danger{color:#a34040;border-color:#e6baba}
+.btn:disabled{opacity:.5}.lesson-select{min-width:250px;max-width:100%;background:white;border:1px solid var(--line);border-radius:9px;padding:10px}
+.grid{display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px;align-items:start}
+.side{display:grid;gap:8px;max-height:76vh;overflow:auto}.side button{text-align:right;background:white;border:1px solid var(--line);border-radius:9px;padding:12px}
+.side button.current{border-color:var(--teal);background:var(--pale)}.side small{display:block;color:var(--muted)}
+.field{margin:13px 0}.field label{display:block;font-weight:800;margin-bottom:4px;font-size:13px}
+.field input,.field textarea,.field select{width:100%;padding:10px;border:1px solid #cadbd3;border-radius:9px;background:#fff}
+.field textarea{min-height:105px;resize:vertical}.field textarea.code{font:13px/1.65 ui-monospace,Consolas,monospace;direction:ltr;text-align:left;min-height:125px}
+.field .hint{display:block;font-size:11px;color:var(--muted)}.latin{direction:ltr;text-align:left;font-family:"DM Sans",Arial,sans-serif}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.actions{display:flex;flex-wrap:wrap;gap:9px;border-top:1px solid var(--line);padding-top:18px;margin-top:20px}
+.note{border:1px solid #e8d7b5;background:#fffaf0;padding:11px 15px;border-radius:10px;color:#815e29;font-size:12px;margin:15px 0}
+.tag{display:inline-flex;align-items:center;border-radius:100px;padding:3px 11px;font-weight:800;background:#ebf5ee;color:#23745d;font-size:12px}.tag.draft{background:#fff2da;color:#946728}
+#msg{margin:13px 0;padding:12px 15px;background:#edf8f1;border-radius:10px;display:none;color:#1e6953;font-weight:700}
+#msg.error{display:block;background:#fff0ec;color:#983e34}#msg:not(.error)[data-visible="yes"]{display:block}
+.jsonhelp{font-size:12px;color:var(--muted)}.preview{background:#f5f8f6;border-radius:13px;border:1px dashed var(--line);padding:14px;margin-top:14px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.side{max-height:180px;grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}main{padding:22px 12px}.panel{padding:15px}}
+@media(max-width:460px){.side{grid-template-columns:1fr}header img{width:125px}}
+</style></head><body>
+<header><a href="./"><img src="../step-brand/logo.svg" alt="STEP with Seify"></a><nav>
+<a href="./">الرئيسية</a><a href="curriculum.html">ترتيب المنهج</a>
+<a href="reports.html">تقارير الطلاب</a><a id="videos-link" href="videos.html?indicator=subject-verb-agreement">الفيديوهات</a>
+</nav></header>
+<main><div class="bar"><div><h1>استوديو تحرير الدروس</h1><p>من هنا تدير الدروس الثلاثة من غير تعديل ملفات GitHub. أي تغيير بيتحفظ مسودة لحد ما تنشره بنفسك.</p></div>
+<select class="lesson-select" id="course" aria-label="اختيار الدرس">
+<option value="ASGQAGREE">الدرس 1 — Subject–Verb Agreement</option>
+<option value="ASGQPRSIM">الدرس 2 — Present Simple</option>
+<option value="ASGQPRCONT">الدرس 3 — Present Continuous</option></select></div>
+<div class="tabs" id="tabs">
+<button class="btn active" data-tab="visual">الشرح والأمثلة والجداول</button>
+<button class="btn" data-tab="sections">عناوين ومراحل التدريب</button>
+<button class="btn" data-tab="questions">الأسئلة والإجابات</button>
+<button class="btn" data-tab="course">بيانات الدرس</button></div>
+<div id="msg" role="status" aria-live="polite"></div>
+<div class="note">المحتوى الأصلي وسجل الأسئلة محفوظين. «حفظ مسودة» لا يغيّر نسخة الطالب؛ «نشر التعديل» يفعّله فورًا. معرّفات الأسئلة وعدد المراحل والدرجات القديمة محمية.</div>
+<section class="grid" id="work"><div class="panel">جاري التحقق من صلاحيات الإدارة وتحميل الدروس…</div></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script src="../step-grammar-student/subject-verb-agreement-content.js"></script>
+<script src="../step-grammar-student/present-simple-v2-content.js"></script>
+<script src="../step-grammar-student/present-continuous-content.js"></script>
+<script>
+"use strict";
+const SUPA="https://funltjxavowlnnfibhpl.supabase.co";
+const ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const db=window.supabase.createClient(SUPA,ANON);
+const work=document.getElementById("work"),msg=document.getElementById("msg"),courseSelect=document.getElementById("course");
+const safe=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const clone=x=>JSON.parse(JSON.stringify(x));
+const sourceUnits=()=>({"ASGQAGREE":window.STEP_SUBJECT_VERB_UNITS,"ASGQPRSIM":window.PRESENT_SIMPLE_UNITS,"ASGQPRCONT":window.STEP_PRESENT_CONTINUOUS_UNITS}[courseSelect.value]||[]);
+const courseSlug=()=>({"ASGQAGREE":"subject-verb-agreement","ASGQPRSIM":"present-simple","ASGQPRCONT":"present-continuous"}[courseSelect.value]);
+const state={data:null,tab:"visual",index:0,questionId:null};
+function notice(s,error=false){msg.textContent=s;msg.className=error?"error":"";msg.dataset.visible="yes";msg.scrollIntoView({behavior:"smooth",block:"nearest"});}
+async function api(path,body){
+ const {data:{session}}=await db.auth.getSession();
+ if(!session)throw Error("سجّل دخولك من لوحة الأدمن أولًا.");
+ const r=await fetch(SUPA+"/functions/v1/step-admin"+path,{method:body?"POST":"GET",
+  headers:{apikey:ANON,Authorization:"Bearer "+session.access_token,"Content-Type":"application/json"},
+  body:body?JSON.stringify(body):undefined});
+ const result=await r.json().catch(()=>({}));if(!r.ok)throw Error(result.error||"تعذر تنفيذ العملية");return result;
+}
+const json=x=>JSON.stringify(x??null,null,2);
+function field(id,title,value,opts={}){
+ return '<div class="field"><label for="'+id+'">'+safe(title)+'</label>'+
+ (opts.multi?'<textarea id="'+id+'" class="'+(opts.code?"code":"")+'" '+(opts.code?'spellcheck="false"':'')+'>'+safe(value??"")+'</textarea>':
+ '<input id="'+id+'" value="'+safe(value??"")+'" '+(opts.en?'class="latin"':'')+'>')+
+ (opts.help?'<small class="hint">'+safe(opts.help)+'</small>':'')+'</div>';
+}
+function txt(id){return document.getElementById(id)?.value??""}
+function parse(id,label){try{return JSON.parse(txt(id))}catch{throw Error("صيغة JSON غير صحيحة في "+label)}}
+function actions(kind,hasDraft,isPublished,reset=true){
+ const editable=state.data?.can_edit;
+ if(!editable)return '<p>حسابك يسمح بالمعاينة فقط. النشر للمدير.</p>';
+ return '<div class="actions"><button class="btn primary" type="button" data-act="save">حفظ مسودة</button>'+
+ (hasDraft?'<button class="btn green" type="button" data-act="publish">نشر التعديل للطلاب</button>':'')+
+ (reset&&(isPublished||hasDraft)?'<button class="btn danger" type="button" data-act="reset">استعادة الأصل</button>':'')+
+ '</div>';
+}
+async function load(){
+ msg.dataset.visible="no";
+ work.innerHTML='<div class="panel">جاري تحميل محتوى الدرس…</div>';
+ try{
+  state.data=await api("/studio?course="+encodeURIComponent(courseSelect.value));
+  state.index=0;state.questionId=null;
+  document.getElementById("videos-link").href="videos.html?indicator="+courseSlug();
+  paint();
+ }catch(e){work.innerHTML='<div class="panel">'+safe(e.message)+'</div>';notice(e.message,true)}
+}
+function sideButtons(list,active){
+ return '<aside class="panel side">'+list.map((v,i)=>'<button type="button" data-index="'+i+'" class="'+(active===i?"current":"")+'"><small>'+safe(v.sub||"")+'</small>'+safe(v.name||"")+'</button>').join("")+'</aside>';
+}
+function visual(){
+ const entry=state.data.sections[state.index];
+ if(!entry)return;
+ const src=sourceUnits()[entry.index]||{};
+ const v=entry.visual_draft||entry.visual_published||src;
+ const left=sideButtons(state.data.sections.map(s=>({name:(s.visual_draft||s.visual_published||sourceUnits()[s.index]||{}).title||s.titleAr,
+  sub:"المرحلة "+(s.index+1)+(s.visual_draft?" · مسودة":s.visual_published?" · تعديل منشور":" · أصلي")})),state.index);
+ const jsonFields=[["cards","البطاقات التعليمية"],["examples","الأمثلة المشروحة"],
+  ["formulas","مخططات القاعدة"],["keywords","الكلمات الدالة"],["warning","التصحيح والخطأ الشائع"],
+  ["table","الجدول"],["extra","المعلومات الإضافية"]];
+ work.innerHTML=left+'<div class="panel"><h2>تحرير الشرح — المرحلة '+(entry.index+1)+'</h2>'+
+ '<p>الشرح، العناوين، الأمثلة، البطاقات والجداول قابلة للتعديل. استخدم [[النص]] لتمييز كلمة مهمة.</p>'+
+ field("v-title","عنوان المرحلة",v.title)+field("v-detail","الشرح الرئيسي",v.detail,{multi:true})+
+ field("v-tip","نصيحة Seify",v.tip||"",{multi:true})+
+ '<details><summary><b>الأمثلة والبطاقات والجداول — تحرير متقدم</b></summary><p class="jsonhelp">مصفوفات JSON للحفاظ على نفس التصميم في الكمبيوتر والموبايل. عدّل النصوص ولا تغيّر شكل الأقواس أو علامات التنصيص.</p>'+
+ jsonFields.map(([key,label])=>field("v-"+key,label,json(v[key]===undefined?null:v[key]),{multi:true,code:true})).join("")+
+ '</details>'+
+ actions("units",!!entry.visual_draft,!!entry.visual_published)+
+ '<div class="preview"><b>النسخة المعروضة في المحرر</b><p>'+safe(v.detail||"")+'</p><a href="../step-grammar-student/'+(courseSelect.value==="ASGQPRSIM"?"learn.html":courseSlug()+".html")+'" target="_blank" rel="noopener">فتح صفحة الطالب ↗</a></div></div>';
+ wire("units");
+}
+function sections(){
+ const entry=state.data.sections[state.index];if(!entry)return;
+ const v=entry.draft||entry.published||entry.base;
+ const left=sideButtons(state.data.sections.map(s=>({name:(s.draft||s.published||s.base).titleAr||s.titleAr,
+  sub:"المرحلة "+(s.index+1)+(s.draft?" · مسودة":"")})),state.index);
+ work.innerHTML=left+'<div class="panel"><h2>بيانات مرحلة التدريب '+(entry.index+1)+'</h2>'+
+ '<p>تعديل عنوان وشروحات بطاقة المرحلة بدون المساس بأرقام الأسئلة أو نتائج الطلاب.</p>'+
+ field("s-title","اسم المرحلة بالعربي",v.titleAr)+
+ field("s-sub","العنوان الفرعي",v.subtitle||"")+
+ field("s-short","وصف قصير",v.short||"")+
+ field("s-duration","الوقت التقريبي",v.duration||"")+
+ field("s-description","وصف المرحلة",v.description||"",{multi:true})+
+ '<details><summary><b>القواعد والملاحظات والبطاقات</b></summary>'+
+ ["rule","alternativeRule","gold","mistake","examples","tiles"].map(key=>
+ field("s-"+key,key,json(v[key]??null),{multi:true,code:true})).join("")+'</details>'+
+ actions("sections",!!entry.draft,!!entry.published)+'</div>';
+ wire("sections");
+}
+function questions(){
+ const list=state.data.questions||[];
+ const active=list.find(q=>q.id===state.questionId);
+ const items=[{name:"＋ إضافة سؤال جديد",sub:"إضافة مسودة جديدة"},...list.map(q=>({
+ name:q.text.length>60?q.text.slice(0,58)+"…":q.text,
+ sub:(q.origin==="source"?"سؤال أصلي":"سؤال مضاف")+(q.draft?" · مسودة":q.published?" · تعديل منشور":q.archived?" · مؤرشف":"")}))];
+ const idx=active?list.findIndex(q=>q.id===active.id)+1:0;
+ const v=active?.draft||active||{part_index:state.index,text:"",options:{A:"",B:"",C:"",D:""},correct:"A",explanation:"",wrongReasons:{}};
+ const options=state.data.sections.map(s=>'<option value="'+s.index+'" '+(Number(v.part_index)===s.index?"selected":"")+'>'+safe("المرحلة "+(s.index+1)+" — "+s.titleAr)+'</option>').join("");
+ const wrong=v.wrongReasons||{};
+ work.innerHTML=sideButtons(items,idx)+'<div class="panel"><h2>'+(active?"تعديل سؤال":"إضافة سؤال للمراجعة")+'</h2>'+
+ (active?'<p>الرقم الداخلي '+safe(active.id)+' · '+(active.origin==="source"?"المصدر الأصلي محفوظ، والتعديل يُسجل كنسخة تحريرية.":"سؤال مضاف من لوحة الإدارة.")+'</p>':"")+
+ '<div class="field"><label for="q-part">مرحلة التدريب</label><select id="q-part" '+(active?.origin==="source"?"disabled":"")+'>'+options+'</select></div>'+
+ field("q-text","نص السؤال",v.text,{multi:true})+
+ '<div class="cols">'+["A","B","C","D"].map(k=>field("q-"+k,"الاختيار "+k,(v.options||{})[k]||"",{multi:true})).join("")+'</div>'+
+ '<div class="field"><label for="q-correct">الإجابة الصحيحة</label><select id="q-correct">'+["A","B","C","D"].map(k=>'<option '+(v.correct===k?"selected":"")+'>'+k+'</option>').join("")+'</select></div>'+
+ field("q-explain","شرح الإجابة الصحيحة",v.explanation||"",{multi:true})+
+ '<h3>ليه كل اختيار تاني غلط؟</h3>'+
+ '<div class="cols">'+["A","B","C","D"].map(k=>field("q-w-"+k,"سبب خطأ الاختيار "+k,wrong[k]||"",{multi:true,help:"سيتم استخدام الأسباب الثلاثة باستثناء الاختيار الصحيح"})).join("")+'</div>'+
+ actions("questions",!!active?.draft,!!active?.published,true)+
+ '<div class="note">أي تغيير على نص سؤال المصدر أو إجابته يعد «نسخة تحريرية» وليست النص الأصلي؛ المصدر والتقييمات السابقة يفضلوا محفوظين.</div></div>';
+ document.querySelectorAll("[data-index]").forEach(b=>b.onclick=()=>{state.questionId=Number(b.dataset.index)===0?null:list[Number(b.dataset.index)-1]?.id||null;paint();});
+ wire("questions");
+}
+function courseInfo(){
+ const d=state.data.course;
+ work.innerHTML='<div class="panel" style="grid-column:1/-1"><h2>بيانات الدرس '+safe(d.titleAr)+'</h2>'+
+ '<span class="tag '+(d.status==="draft"?"draft":"")+'">'+(d.status==="published"?"منشور للطلاب":"مسودة")+'</span>'+
+ '<p>التعديل هنا للاسم والعنوان الفرعي. عدد المراحل والدرجات ومعرّفات بنك المصادر لا تتغير.</p>'+
+ '<div class="cols">'+field("c-ar","اسم الدرس بالعربية",d.titleAr)+field("c-en","اسم الدرس بالإنجليزية",d.title,{en:true})+'</div>'+
+ field("c-sub","العنوان الفرعي للطلاب",d.subtitle,{multi:true})+
+ '<div class="actions">'+(state.data.can_edit?'<button class="btn primary" data-act="save" type="button">حفظ العناوين وتحديث الطلاب</button>':'حسابك للعرض فقط')+
+ '<a href="curriculum.html" class="btn">إدارة ترتيب الدروس</a><a href="videos.html?indicator='+courseSlug()+'" class="btn">إدارة فيديوهات الدرس</a></div></div>';
+ wire("course");
+}
+function paint(){
+ document.querySelectorAll("#tabs [data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===state.tab));
+ if(state.tab==="visual")visual();else if(state.tab==="sections")sections();else if(state.tab==="questions")questions();else courseInfo();
+}
+function wire(kind){
+ if(kind!=="questions"){
+  document.querySelectorAll("[data-index]").forEach(b=>b.onclick=()=>{state.index=Number(b.dataset.index);paint()});
+ }
+ document.querySelectorAll("[data-act]").forEach(b=>b.onclick=async()=>{
+  const action=b.dataset.act;
+  const course=courseSelect.value;
+  let part_index=state.index,content={};
+  if(kind==="visual"){
+   const keys=["cards","examples","formulas","keywords","warning","table","extra"];
+   content={title:txt("v-title"),detail:txt("v-detail"),tip:txt("v-tip")};
+   for(const key of keys){const value=parse("v-"+key,key);if(value!==null)content[key]=value;}
+  }else if(kind==="sections"){
+   content={titleAr:txt("s-title"),subtitle:txt("s-sub"),short:txt("s-short"),
+    duration:txt("s-duration"),description:txt("s-description")};
+   for(const key of ["rule","alternativeRule","gold","mistake","examples","tiles"]){
+    const value=parse("s-"+key,key);if(value!==null)content[key]=value;
+   }
+  }else if(kind==="questions"){
+   const q=state.data.questions.find(x=>x.id===state.questionId);
+   part_index=Number(txt("q-part"));
+   const correct=txt("q-correct");
+   content={text:txt("q-text"),options:Object.fromEntries(["A","B","C","D"].map(k=>[k,txt("q-"+k)])),
+    correct,explanation:txt("q-explain"),
+    wrongReasons:Object.fromEntries(["A","B","C","D"].filter(k=>k!==correct).map(k=>[k,txt("q-w-"+k)]))};
+   if(action!=="save"&&!q){notice("احفظ السؤال كمسودة الأول",true);return;}
+  }else{content={titleAr:txt("c-ar"),title:txt("c-en"),subtitle:txt("c-sub")};}
+  const suffix=kind==="course"?"save":action;
+  const body={course,part_index,content,...(kind==="questions"?{id:state.questionId}:kind==="course"?content:{})};
+  if(action!=="save"&&!confirm(action==="publish"?"نشر التعديل للطلاب دلوقتي؟":"استعادة النسخة الأصلية وحذف مسودة التعديل؟"))return;
+  b.disabled=true;
+  try{
+   const result=await api("/studio/"+kind+"/"+suffix,body);
+   if(result.id&&kind==="questions")state.questionId=result.id;
+   const remember=state.index,rememberQuestion=state.questionId;
+   state.data=await api("/studio?course="+encodeURIComponent(course));
+   state.index=remember;state.questionId=rememberQuestion;
+   paint();notice(action==="save"&&kind!=="course"?"اتحفظت المسودة بدون تغيير الدرس المنشور.":action==="reset"?"رجّعنا النسخة الأصلية.":"التعديل اتنشر بنجاح.");
+  }catch(e){notice(e.message,true);b.disabled=false;}
+ });
+}
+courseSelect.addEventListener("change",load);
+document.querySelectorAll("#tabs [data-tab]").forEach(b=>b.onclick=()=>{
+ state.tab=b.dataset.tab;state.index=0;state.questionId=null;paint();
+});
+load();
+</script></body></html>
