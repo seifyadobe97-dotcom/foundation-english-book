@@ -271,7 +271,7 @@ function examBanner(){
 function examView(){
  const f=state.examResult;
  return '<section class="lesson"><div class="lesson-inner"><div class="eyebrow">FINAL ASSESSMENT</div>'+
- '<h2 class="lesson-title">اختبار الإتقان</h2><p class="explain">حدّد الزمن من السياق، ثم اختار الفعل المساعد وشكل ing الصحيح.</p>'+
+ '<h2 class="lesson-title">اختبار الإتقان</h2><p class="explain">اقرأ السياق كويس، واختار الصيغة الصحيحة، وبعد التصحيح راجع سبب كل إجابة.</p>'+
  '<div class="exam-clock" role="timer" aria-live="off"><span>⏱ زمن الاختبار</span>'+
  '<strong id="exam-elapsed">'+timeLabel(state.examResult?.elapsedMs??elapsedMs())+'</strong>'+
  '<small>عداد تصاعدي مش حد زمني. الوقت تقديري ويتوقف لما تسيب التبويب.</small></div>'+

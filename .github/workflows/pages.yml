@@ -65,6 +65,8 @@ jobs:
         run: node tests/subject-verb-agreement.mjs
       - name: Test Present Continuous on desktop and mobile (synthetic questions only)
         run: node tests/present-continuous.mjs
+      - name: Test generic Past Simple lesson, practice and grading feedback on desktop and mobile
+        run: node tests/past-simple.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
