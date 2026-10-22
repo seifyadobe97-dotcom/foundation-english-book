@@ -30,8 +30,8 @@ const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
   const r=await fetch(base+"/functions/v1/step-admin/agreement/audit",{headers:{"apikey":key,"Authorization":"Bearer "+session.access_token}});
   const d=await r.json();if(!r.ok)throw Error(d.error||"لا توجد صلاحية للعرض");
   document.getElementById("status").textContent=d.indicator?.status==="published"?
-   "تحذير: المؤشر ظاهر كمنشور. لا تعتمد الأسئلة دون تدقيق الملفات الأصلية.":
-   "مراجعة الملفات الأصلية تمت. الدرس ما زال مسودة إلى أن تنجح بوابات الأمان والاختبارات الفعلية.";
+   "تم نشر الدرس الثاني للطلاب بعد مطابقة أسئلته بالمصادر الأصلية. المرفوض والمكرر والمعلّق مستبعد من التدريب.":
+   "الدرس مسودة داخلية حتى اعتماد النشر؛ الأسئلة المرفوضة والمكررة غير مستخدمة.";
   document.getElementById("summary").innerHTML=
    "<span>إجمالي السجلات: <b>"+d.summary.total+"</b></span>"+
    "<span>معتمد ومضمّن في الدرس: <b>"+d.summary.in_course+"</b></span>"+
