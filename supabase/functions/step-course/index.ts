@@ -134,6 +134,16 @@ Deno.serve(async(request)=>{
     exam:{unlocked:status.completed,attempts:attempts.length,best:Math.max(0,...attempts.map(x=>x.percentage)),last:attempts.at(-1)||null}};
   };
 
+  // Publish boundary: a student never sees video drafts, unapproved URLs or admin metadata.
+  if(method==="GET"&&path==="/videos"){
+   const {data:rows,error:videoError}=await admin.from("step_indicator_videos")
+    .select("part_index,title,description,video_url")
+    .eq("indicator_slug","present-simple").eq("published",true).order("part_index");
+   if(videoError)throw videoError;
+   return send(200,{videos:(rows||[]).filter(r=>
+    Number.isInteger(r.part_index)&&r.part_index>=0&&r.part_index<effectiveLesson.sections.length)
+    .map(r=>({part_index:r.part_index,title:r.title,description:r.description,url:r.video_url}))});
+  }
   // Assigned learning follow-ups: the authenticated student can only read/review their own.
   if(method==="GET"&&path==="/followups"){
    const {data:rows,error}=await admin.from("step_student_followups")
