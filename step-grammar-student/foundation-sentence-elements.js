@@ -59,7 +59,7 @@
  }
  function teachText(value){
   // Instructor text supports highlighted keywords only, not arbitrary HTML.
-  return String(value||"").split(/(<mark>.*?<\\/mark>)/g).map(part=>
+  return String(value||"").split(new RegExp("(<mark>.*?</mark>)","g")).map(part=>
    part.startsWith("<mark>")&&part.endsWith("</mark>")?
     '<mark class="teaching-highlight">'+esc(part.slice(6,-7))+'</mark>':esc(part)).join("");
  }
