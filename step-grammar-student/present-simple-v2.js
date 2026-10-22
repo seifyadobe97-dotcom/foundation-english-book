@@ -49,7 +49,7 @@ setInterval(()=>{
  const el=document.getElementById("exam-elapsed");
  if(el&&state.mode==="exam"&&!state.examResult)el.textContent=timeLabel(elapsedMs());
 },1000);
-const state={course:null,part:null,index:0,answers:{},graded:null,quick:{},mode:"lesson",exam:null,examResult:null,busy:false,openedVideo:null,timing:null};
+const state={course:null,part:null,index:0,answers:{},graded:null,quick:{},mode:"lesson",exam:null,examResult:null,busy:false,openedVideo:null,timing:null,videos:[]};
 const root=document.getElementById("lesson-root");
 const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const mark=s=>escapeHtml(s).replace(/\[\[([\s\S]+?)\]\]/g,"<mark>$1</mark>");
@@ -80,6 +80,8 @@ async function init(){
  loading("بنجهز درسك…");
  try{
   state.course=await api("/course");
+  // Optional media must never prevent a beginner from opening the lesson.
+  state.videos=(await api("/videos").catch(()=>({videos:[]}))).videos||[];
   const requested=new URLSearchParams(location.search).get("step");
   const n=requested===null?NaN:Number(requested);
   const ix=Number.isInteger(n)&&n>=0&&n<6&&!state.course.sections[n]?.locked?n:state.course.nextIndex;
@@ -163,8 +165,14 @@ function videoSource(video){
  return null;
 }
 function lessonVideo(m){
- const video=m.video,source=videoSource(video);
- if(!source)return "";
+ const published=state.videos.find(v=>v.part_index===state.index);
+ const video=published?{url:published.url,title:published.title,note:published.description}:null;
+ const source=videoSource(video);
+ if(!source)return '<section class="lesson-video lesson-video-pending" aria-label="مكان فيديو الشرح">'+
+ '<div class="video-icon video-icon-pending" aria-hidden="true">▶</div>'+
+ '<div class="video-copy"><span class="video-eyebrow">VIDEO LESSON</span>'+
+ '<h3>شرح الفيديو — قريبًا</h3><p>هنضيف شرح Seify هنا لاحقًا. كمل الأمثلة والتدريبات عادي من غير فيديو.</p></div>'+
+ '<span class="video-soon">قريبًا</span></section>';
  const open=source.embed&&state.openedVideo===state.index;
  return '<section class="lesson-video" aria-label="شرح الفيديو">'+
  '<div class="video-icon" aria-hidden="true">▶</div><div class="video-copy"><span class="video-eyebrow">VIDEO LESSON · '+(source.type==="tiktok"?"TIKTOK":"YOUTUBE")+'</span>'+
@@ -281,7 +289,7 @@ root.addEventListener("click",async ev=>{
  if(action==="part"){await openPart(n);return;}
  if(action==="practice"){if(state.timing?.lastAction===null)state.timing.lastAction=performance.now();document.getElementById("practice")?.scrollIntoView({behavior:"smooth"});return;}
  if(action==="video"){
-  if(!videoSource(LESSONS[state.index]?.video)?.embed)return;
+  if(!videoSource(state.videos.find(v=>v.part_index===state.index))?.embed)return;
   state.openedVideo=state.openedVideo===state.index?null:state.index;
   draw();document.querySelector(".lesson-video")?.scrollIntoView({behavior:"smooth",block:"nearest"});return;
  }
