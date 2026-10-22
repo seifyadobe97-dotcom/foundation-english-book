@@ -104,6 +104,7 @@ try{
    await page.locator('.q-answer[data-index="'+i+'"][data-value="'+choice+'"]').click();
   }
   await page.locator('button[data-action="submit"]').click();
+  await page.locator(".answer-feedback").first().waitFor({timeout:10000});
   assert.equal(await page.locator(".answer-feedback.is-wrong").count(),1);
   assert.match(await page.locator(".answer-feedback.is-wrong").innerText(),/ليه اختيارك غلط/);
   assert.match(await page.locator(".answer-feedback.is-wrong").innerText(),/الإجابة الصحيحة/);
