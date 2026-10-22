@@ -11,27 +11,37 @@ window.STEP_FOUNDATION_STAGES=[
       [
         "S",
         "Subject",
-        "الفاعل: مين بنتكلم عنه؟"
+        "الفاعل",
+        "هو الشخص أو الشيء اللي الجملة بتتكلم عنه. اسأل نفسك: مين؟",
+        "Mona / the children"
       ],
       [
         "V",
         "Verb",
-        "الفعل: إيه الحدث أو الحالة؟"
+        "الفعل",
+        "بيقول لنا الفاعل بيعمل إيه، أو حالته إيه.",
+        "plays / studies / is"
       ],
       [
         "O",
         "Object",
-        "المفعول: الحدث وقع على مين أو إيه؟"
+        "المفعول به",
+        "الشخص أو الشيء اللي الفعل وقع عليه. مش كل جملة لازم يكون فيها مفعول.",
+        "Mona reads a book. → a book"
       ],
       [
         "C",
         "Complement",
-        "تكملة وصف/هوية الفاعل، مش مفعول"
+        "تكملة المعنى",
+        "اسم أو صفة بتكمل معنى الفاعل بعد فعل رابط، مش مفعول به.",
+        "She is happy. → happy"
       ],
       [
         "A",
         "Adverbial",
-        "زمان أو مكان أو طريقة — بحسب الجملة"
+        "ظرف أو معلومة إضافية",
+        "بتوضح المكان أو الزمان أو الطريقة، وأحيانًا بتكون ضرورية حسب الجملة.",
+        "at home / every day / quickly"
       ]
     ],
     "examples": [
@@ -118,22 +128,30 @@ window.STEP_FOUNDATION_STAGES=[
       [
         "1",
         "Singular",
+        "اسم مفرد",
+        "يعني شخص واحد أو شيء واحد من الأسماء اللي بنقدر نعدّها.",
         "a student / one book / this child"
       ],
       [
         "2+",
         "Plural",
+        "اسم جمع",
+        "يعني اتنين أو أكتر. والجمع مش لازم ينتهي بحرف s.",
         "two students / many books / these children"
       ],
       [
         "U",
         "Uncountable",
+        "اسم غير معدود",
+        "حاجة مش بنعدّها عادة كأفراد، ومش بنزوّد لها s للجمع في المعنى ده.",
         "water / information / advice"
       ],
       [
         "?",
-        "Look for head noun",
-        "في the boxes on the table الكلمة المحورية boxes"
+        "Head noun",
+        "حدّد الاسم الأساسي",
+        "لو العبارة فيها أكتر من اسم، دور على الاسم الرئيسي اللي العبارة بتتكلم عنه.",
+        "the boxes on the table → boxes"
       ]
     ],
     "examples": [
@@ -224,26 +242,36 @@ window.STEP_FOUNDATION_STAGES=[
       [
         "-s",
         "Most nouns",
+        "الجمع العادي",
+        "مع أغلب الأسماء المعدودة بنضيف حرف s.",
         "book → books / car → cars"
       ],
       [
         "-es",
         "Some endings",
-        "box → boxes / bus → buses / watch → watches"
+        "الجمع بإضافة es",
+        "بعض الأسماء اللي بتنتهي بـ s أو x أو ch أو sh بنضيف لها es.",
+        "box → boxes / watch → watches"
       ],
       [
         "-ies",
         "Consonant + y",
+        "ساكن قبل y",
+        "لو قبل حرف y حرف ساكن، غالبًا بنشيل y ونضيف ies.",
         "city → cities / baby → babies"
       ],
       [
         "-s",
         "Vowel + y",
+        "متحرك قبل y",
+        "لو قبل حرف y حرف متحرك، بنسيب y ونضيف s فقط.",
         "boy → boys / key → keys"
       ],
       [
         "!",
-        "Irregular",
+        "Irregular plural",
+        "جمع شاذ",
+        "فيه أسماء بتتغير بشكل مختلف تمامًا؛ بنحفظ جمعها زي ما هو.",
         "child → children / man → men / person → people"
       ]
     ],
@@ -337,24 +365,32 @@ window.STEP_FOUNDATION_STAGES=[
     "intro": "<strong>ضمير الفاعل</strong> بياخد مكان الاسم اللي بيعمل الفعل. و<strong>ضمير المفعول</strong> بييجي غالبًا بعد الفعل أو حرف الجر. وأهم حاجة في الزمن الحاضر تفرّق بين I/you/we/they وبين he/she/it.",
     "map": [
       [
-        "Subject",
-        "فاعل",
-        "I · you · he · she · it · we · they"
+        "S",
+        "Subject pronouns",
+        "ضمائر الفاعل",
+        "بنستخدمها بدل الاسم اللي بيعمل الفعل أو اللي الجملة بتتكلم عنه.",
+        "I / you / he / she / it / we / they"
       ],
       [
-        "Object",
-        "مفعول",
-        "me · you · him · her · it · us · them"
+        "O",
+        "Object pronouns",
+        "ضمائر المفعول",
+        "بنستخدمها لما الشخص أو الشيء يقع عليه الفعل، أو بعد حرف جر.",
+        "me / you / him / her / it / us / them"
       ],
       [
-        "Singular",
+        "1",
+        "Singular third person",
         "مفرد غائب",
-        "he / she / it / اسم مفرد"
+        "شخص واحد غير المتكلم والمخاطب، أو شيء واحد. وده مهم لاختيار شكل الفعل.",
+        "he / she / it / Mona"
       ],
       [
-        "Plural",
-        "جمع",
-        "we / they / أسماء جمع"
+        "2+",
+        "Plural subject",
+        "فاعل جمع",
+        "بنتكلم عن أكتر من واحد. خد بالك إن you ينفع لمفرد أو جمع.",
+        "we / they / the boys"
       ]
     ],
     "examples": [
@@ -444,28 +480,38 @@ window.STEP_FOUNDATION_STAGES=[
     "map": [
       [
         "Main",
-        "معنى الجملة",
-        "play / know / need / have / be"
+        "Main verb",
+        "الفعل الأساسي",
+        "هو اللي شايل معنى الحدث أو الحالة؛ زي يلعب أو يعرف أو يمتلك.",
+        "play / know / have / be"
       ],
       [
         "BE",
-        "be family",
-        "am · is · are · was · were · been · being"
+        "Be family",
+        "مجموعة be",
+        "ممكن تكون فعلًا رابطًا أساسيًا، أو تساعد فعلًا تاني في زمن مستمر أو مبني للمجهول.",
+        "am / is / are / was / were / been / being"
       ],
       [
         "DO",
-        "do family",
-        "do · does · did"
+        "Do family",
+        "مجموعة do",
+        "ممكن تعني يعمل كفعل أساسي، أو تساعدنا نكوّن السؤال والنفي.",
+        "do / does / did"
       ],
       [
         "HAVE",
-        "have family",
-        "have · has · had"
+        "Have family",
+        "مجموعة have",
+        "ممكن تعني يمتلك كفعل أساسي، أو تكون مساعدة في الأزمنة التامة.",
+        "have / has / had"
       ],
       [
         "Modal",
-        "مساعد ناقص",
-        "can · could · will · would · should · must · may · might"
+        "Modal verbs",
+        "الأفعال المساعدة الناقصة",
+        "بتوضح القدرة أو النصيحة أو الاحتمال وغيرها. بعدها غالبًا مصدر من غير to.",
+        "can / could / will / should / must / may / might"
       ]
     ],
     "examples": [
@@ -572,27 +618,37 @@ window.STEP_FOUNDATION_STAGES=[
       [
         "V1",
         "Base form",
-        "play · go · study"
+        "المصدر (الشكل الأساسي)",
+        "ده شكل الفعل اللي بنستخدمه بعد do وdoes وdid، وبعد أغلب المساعدات الناقصة.",
+        "play / go / study"
       ],
       [
         "+s",
-        "3rd-person present",
-        "plays · goes · studies"
+        "Present: he/she/it",
+        "شكل المفرد في المضارع",
+        "مع he أو she أو it في المضارع البسيط المثبت، الفعل بياخد s أو es أو ies.",
+        "plays / goes / studies"
       ],
       [
         "V2",
         "Past simple",
-        "played · went · studied"
+        "تصريف الماضي",
+        "بنستخدمه مع الماضي البسيط في الإثبات، سواء الفعل منتظم أو شاذ.",
+        "played / went / studied"
       ],
       [
         "V3",
         "Past participle",
-        "played · gone · studied"
+        "التصريف الثالث",
+        "بيظهر بعد have المساعدة في الأزمنة التامة، أو بعد be في المبني للمجهول.",
+        "played / gone / studied"
       ],
       [
         "-ing",
-        "Present participle",
-        "playing · going · studying"
+        "-ing form",
+        "صيغة ing",
+        "بنستخدمها مثلًا بعد be المساعدة عشان نكوّن الزمن المستمر.",
+        "playing / going / studying"
       ]
     ],
     "examples": [
@@ -698,22 +754,30 @@ window.STEP_FOUNDATION_STAGES=[
       [
         "1",
         "Find the subject",
+        "حدّد الفاعل",
+        "اسأل: مين اللي بيعمل الفعل أو بنتكلم عنه؟ ومتخترش أي اسم قريب وخلاص.",
         "The student / The students"
       ],
       [
         "2",
         "Check number",
-        "singular / plural"
+        "اعرف مفرد ولا جمع",
+        "عدد الفاعل بيساعدك تختار شكل الفعل أو الفعل المساعد.",
+        "one student / two students"
       ],
       [
         "3",
-        "Choose the structure",
-        "statement / negative / question"
+        "Sentence type",
+        "حدّد نوع الجملة",
+        "هل هي مثبتة ولا منفية ولا سؤال؟ النوع بيغيّر المساعد وترتيب الكلمات.",
+        "She plays. / She doesn't play. / Does she play?"
       ],
       [
         "4",
-        "Apply the verb rule",
-        "plays / play · doesn't / don't · does / do"
+        "Choose verb form",
+        "اختار شكل الفعل",
+        "مع المفرد في الإثبات نضيف s، لكن بعد does أو doesn't بنرجّع الفعل للمصدر.",
+        "She plays. / Does she play?"
       ]
     ],
     "examples": [
