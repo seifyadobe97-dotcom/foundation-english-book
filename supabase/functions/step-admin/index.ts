@@ -100,11 +100,12 @@ Deno.serve(async(req)=>{
  if(roleError)return reply(500,{error:"تعذر فحص الصلاحيات"});
  if(!permission)return reply(403,{error:"الحساب الحالي غير مخوّل لفتح لوحة الأدمن"});
  const {data:bankRows,error:bankError}=await admin.from("step_private_course_banks")
-  .select("course_code,payload").in("course_code",["ASGQPRSIM","ASGQAGREE"]);
+  .select("course_code,payload").in("course_code",["ASGQPRSIM","ASGQAGREE","ASGQPRCONT"]);
  if(bankError)return reply(503,{error:"تعذر تحميل مصادر الأسئلة الخاصة"});
  const lesson=bankRows?.find(x=>x.course_code==="ASGQPRSIM")?.payload as LessonData|undefined;
  const agreementLesson=bankRows?.find(x=>x.course_code==="ASGQAGREE")?.payload as LessonData|undefined;
- if(!lesson||!agreementLesson||lesson.code!=="ASGQPRSIM"||agreementLesson.code!=="ASGQAGREE")
+ const continuousLesson=bankRows?.find(x=>x.course_code==="ASGQPRCONT")?.payload as LessonData|undefined;
+ if(!lesson||!agreementLesson||!continuousLesson||lesson.code!=="ASGQPRSIM"||agreementLesson.code!=="ASGQAGREE"||continuousLesson.code!=="ASGQPRCONT")
   return reply(503,{error:"محتوى الدروس الخاصة غير متاح"});
  let path=new URL(req.url).pathname.replace(/^\/(?:functions\/v1\/)?step-admin/,"")||"/";
  // Source and answer keys are available only to authenticated admin accounts.
@@ -129,6 +130,26 @@ Deno.serve(async(req)=>{
     missing_from_ledger:[...included].filter(id=>!records.some(x=>x.candidate_id===id))},
    items:records.map(x=>({...x,in_course:included.has(x.candidate_id)}))});
  }
+ // Draft audit is admin-only; student routes enforce the publication gate.
+ if(req.method==="GET"&&path==="/continuous/audit"){
+  const [indicator,items]=await Promise.all([
+   admin.from("step_curriculum_indicators").select("slug,title_ar,title_en,status,legacy_course_code")
+    .eq("slug","present-continuous").maybeSingle(),
+   admin.from("step_source_item_reviews")
+    .select("candidate_id,document_key,pdf_page,printed_number,original_stem,original_options,printed_key,review_status,reviewer_notes")
+    .eq("original_category_code","ASGQPRCONT").order("candidate_id")
+  ]);
+  if(indicator.error||items.error)return reply(500,{error:"تعذر تحميل سجل تدقيق المضارع المستمر"});
+  const records=items.data||[];
+  const included=new Set(Object.keys(continuousLesson.questions));
+  const valid=records.filter(x=>included.has(x.candidate_id)&&x.review_status==="approved");
+  return reply(200,{indicator:indicator.data,
+   summary:{total:records.length,approved:records.filter(x=>x.review_status==="approved").length,
+    withheld:records.filter(x=>x.review_status!=="approved").length,
+    in_course:valid.length,invalid_in_course:records.filter(x=>included.has(x.candidate_id)&&x.review_status!=="approved").map(x=>x.candidate_id),
+    missing_from_ledger:[...included].filter(id=>!records.some(x=>x.candidate_id===id))},
+   items:records.map(x=>({...x,in_course:included.has(x.candidate_id)}))});
+ }
  let reportLesson=lesson;
  // All indicator reports are resolved by the server, never by client-supplied course codes.
  const indicatorReportRoute=path.match(/^\/indicators\/([a-z][a-z0-9-]{2,39})(?:\/(analytics|students\/([0-9a-f-]{36})\/report))?$/i);
@@ -140,7 +161,7 @@ Deno.serve(async(req)=>{
   return reply(200,{indicators:(data||[]).map(i=>({
    slug:i.slug,axis_code:i.axis_code,title_ar:i.title_ar,title_en:i.title_en,
    status:i.status,position:i.position,
-   report_ready:i.status==="published"&&[lesson.code,agreementLesson.code].includes(i.legacy_course_code)
+   report_ready:i.status==="published"&&[lesson.code,agreementLesson.code,continuousLesson.code].includes(i.legacy_course_code)
   }))});
  }
  if(req.method==="GET"&&indicatorReportRoute){
@@ -150,9 +171,10 @@ Deno.serve(async(req)=>{
    .eq("slug",slug).maybeSingle();
   if(error){console.error("Indicator route lookup",error);return reply(500,{error:"تعذر تحميل المؤشر"});}
   if(!indicator)return reply(404,{error:"المؤشر غير موجود"});
-  const selectedLesson=indicator.legacy_course_code===agreementLesson.code?agreementLesson:lesson;
+  const selectedLesson=indicator.legacy_course_code===continuousLesson.code?continuousLesson:
+    indicator.legacy_course_code===agreementLesson.code?agreementLesson:lesson;
   const ready=indicator.status==="published"&&indicator.legacy_course_code===selectedLesson.code
-   &&[lesson.code,agreementLesson.code].includes(indicator.legacy_course_code);
+   &&[lesson.code,agreementLesson.code,continuousLesson.code].includes(indicator.legacy_course_code);
   if(ready)reportLesson=selectedLesson;
   if(!section)return reply(200,{indicator:{...indicator,report_ready:ready}});
   if(!ready)return reply(200,{indicator:{...indicator,report_ready:false},available:false,
@@ -199,9 +221,10 @@ Deno.serve(async(req)=>{
    .select("slug,title_ar,title_en,status,legacy_course_code").eq("slug",indicatorSlug).maybeSingle();
   if(indicatorError)return reply(500,{error:"تعذر التحقق من المؤشر"});
   if(!indicator)return reply(404,{error:"المؤشر غير موجود"});
-  const slotLesson=indicator.legacy_course_code===agreementLesson.code?agreementLesson:lesson;
+  const slotLesson=indicator.legacy_course_code===continuousLesson.code?continuousLesson:
+    indicator.legacy_course_code===agreementLesson.code?agreementLesson:lesson;
   const publishedCourse=indicator.status==="published"&&indicator.legacy_course_code===slotLesson.code
-   &&[lesson.code,agreementLesson.code].includes(indicator.legacy_course_code);
+   &&[lesson.code,agreementLesson.code,continuousLesson.code].includes(indicator.legacy_course_code);
   const slots=publishedCourse?slotLesson.sections.map((x,i)=>({part_index:i,title:x.titleAr})):
    [{part_index:0,title:"فيديو مقدمة المؤشر (يظهر عند تجهيز الدرس)"}];
   if(req.method==="GET"){
@@ -338,7 +361,7 @@ Deno.serve(async(req)=>{
 
  if(req.method==="GET"&&path==="/analytics"){
   try{
-   if(reportLesson.code===agreementLesson.code){
+   if(reportLesson.code!==lesson.code){
     const [profiles,parts,exams,items]=await Promise.all([
      admin.from("step_student_profiles").select("user_id,is_active").limit(10000),
      admin.from("step_part_attempts").select("user_id,part_index,correct_count,total_questions,passed")
