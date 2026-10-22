@@ -49,7 +49,7 @@ setInterval(()=>{
  const el=document.getElementById("exam-elapsed");
  if(el&&state.mode==="exam"&&!state.examResult)el.textContent=timeLabel(elapsedMs());
 },1000);
-const state={course:null,part:null,index:0,answers:{},graded:null,quick:{},mode:"lesson",exam:null,examResult:null,busy:false,openedVideo:null,timing:null,videos:[]};
+const state={course:null,part:null,index:0,answers:{},graded:null,mode:"lesson",exam:null,examResult:null,busy:false,openedVideo:null,timing:null,videos:[]};
 const root=document.getElementById("lesson-root");
 const escapeHtml=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const mark=s=>escapeHtml(s).replace(/\[\[([\s\S]+?)\]\]/g,"<mark>$1</mark>");
@@ -125,19 +125,6 @@ function words(m){
  return m.keywords?'<h3 class="section-label">الكلمات الدالة</h3><div class="keywords">'+m.keywords.map(([en,ar])=>
  '<span class="keyword"><b class="en" lang="en">'+escapeHtml(en)+'</b><span>'+escapeHtml(ar)+'</span></span>').join("")+'</div>':'';
 }
-function quick(m){
- const picked=state.quick[state.index],done=picked!==undefined,correct=picked===m.quick.correct;
- const correctValue=m.quick.choices[m.quick.correct],letter=ABC[m.quick.correct];
- return '<section class="check"><div class="check-head">جرّبها بنفسك <span class="chip">QUICK CHECK</span></div>'+
- '<div class="check-desc" dir="ltr" lang="en">'+mark(m.quick.q)+'</div><div class="check-options" dir="ltr">'+m.quick.choices.map((v,i)=>
- '<button type="button" class="check-option '+(done?(i===m.quick.correct?'correct':i===picked?'incorrect':''):'')+
- '" data-action="mini" data-index="'+i+'" '+(done?'disabled':'')+'><span class="option-letter">'+ABC[i]+'</span><span dir="auto">'+escapeHtml(v)+'</span></button>').join("")+'</div>'+
- (done?'<div class="check-result '+(correct?'is-correct':'is-wrong')+'" role="status"><strong>'+
- (correct?'✓ إجابة صحيحة':'✕ إجابة غير صحيحة')+'</strong>'+
- (correct?'':'<p class="feedback-why"><b>ليه اختيارك غلط؟</b> '+clean(m.quick.wrongWhy?.[picked]||"الاختيار ده مش مناسب لمعنى الجملة.")+'</p>'+
- '<p class="feedback-correct"><b>الإجابة الصحيحة:</b> <span class="correct-choice">'+letter+' — <bdi dir="auto">'+escapeHtml(correctValue)+'</bdi></span></p>')+
- '<p class="feedback-explain"><b>ليه دي صح؟</b> '+clean(m.quick.why)+'</p></div>':'')+'</section>';
-}
 function warningExamples(m){
  if(!m.warning)return "";
  return '<div class="tip-examples"><div class="tip-case is-wrong"><span class="tip-case-label">✕ غلط</span>'+
@@ -192,7 +179,7 @@ function chapter(){
  lessonVideo(m)+
  '<div class="tip"><strong>خد بالك:</strong> '+mark(m.tip)+warningExamples(m)+'</div>'+
  (m.extra?'<details class="optional"><summary>'+escapeHtml(m.extra.heading)+'</summary><div class="optional-content">'+m.extra.paragraphs.map(p=>'<p>'+escapeHtml(p)+'</p>').join("")+'</div></details>':'')+
- quick(m)+'<div class="chapter-footer">'+(number>1?'<button class="button secondary" data-action="part" data-index="'+(number-2)+'">المرحلة السابقة</button>':'<span></span>')+
+'<div class="chapter-footer">'+(number>1?'<button class="button secondary" data-action="part" data-index="'+(number-2)+'">المرحلة السابقة</button>':'<span></span>')+
  '<button class="button green" data-action="practice">جاهز؟ حل تدريبات المرحلة ↓</button></div></div>';
 }
 function question(q,i,result){
@@ -293,7 +280,6 @@ root.addEventListener("click",async ev=>{
   state.openedVideo=state.openedVideo===state.index?null:state.index;
   draw();document.querySelector(".lesson-video")?.scrollIntoView({behavior:"smooth",block:"nearest"});return;
  }
- if(action==="mini"){state.quick[state.index]=n;draw();document.querySelector(".check")?.scrollIntoView({behavior:"smooth",block:"nearest"});return;}
  if(action==="answer"){
   const qs=state.mode==="exam"?state.exam.questions:state.part.questions;
   if((state.mode==="exam"?state.examResult:state.graded)||!qs[n])return;
