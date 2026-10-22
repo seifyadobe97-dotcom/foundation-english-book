@@ -106,12 +106,30 @@ assert(courseServer.includes('const courseCode=lesson.code;'),"Student course re
 assert(courseServer.includes('requestedCourseCode')&&adminServer.includes('step_private_course_banks'),
  "Both authorized Edge Functions must resolve original question banks from private storage");
 assert(courseServer.includes('const isContinuous=')&&
- courseServer.includes('requestedCourseCode=isContinuous?"ASGQPRCONT"')&&
- courseServer.includes('if(isAgreement||isContinuous)'),
+ courseServer.includes('isContinuous?"ASGQPRCONT"')&&
+ courseServer.includes('if(isAgreement||isContinuous||dynamicIndicator)'),
  "Lesson 3 course API must be mapped and publication-gated before grades are exposed");
 assert(adminServer.includes('path==="/continuous/audit"')&&
  adminServer.includes('continuousLesson'),
  "Lesson 3 source review and later instructor analytics must be admin-authorized");
+const studentSkin=readFileSync("step-grammar-student/student-experience.js","utf8");
+const dynamicLesson=readFileSync("step-grammar-student/lesson-player.js","utf8");
+const studentStyle=readFileSync("step-grammar-student/student-experience.css","utf8");
+const studioPage=readFileSync("step-grammar-admin/studio.html","utf8");
+new Script(studentSkin,{filename:"student-experience.js"});
+new Script(dynamicLesson,{filename:"lesson-player.js"});
+assert(portal.includes('src="student-experience.js"')&&portal.includes('extraLessons:extraLessons.filter(Boolean)'),
+ "Student dashboard must render any future published grammar lesson automatically");
+assert(studentSkin.includes('student-learning-path')&&studentSkin.includes('student-hero-cta')&&studentStyle.includes('@media(max-width:550px)'),
+ "Learners must have a responsive, calm resume-and-progress experience");
+assert(courseServer.includes('dynamicMatch=')&&courseServer.includes('teachingUnits:visuals'),
+ "Server must accept source-approved future lessons and deliver non-sensitive teaching units");
+assert(studioPage.includes('/studio/catalog')&&studioPage.includes('beforeunload')&&
+ studioPage.includes('/studio/history/restore')&&studioPage.includes('معاينة قبل النشر'),
+ "Studio must auto-list future lessons, protect unsaved changes, preview and restore revisions");
+assert(adminServer.includes('/studio/history')&&adminServer.includes('step_studio_revision_history')&&
+ adminServer.includes('step_restore_studio_revision'),
+ "Revision history and restores must be owner-authorized and server-side");
 const continuousContent=readFileSync("step-grammar-student/present-continuous-content.js","utf8");
 const continuousHtml=readFileSync("step-grammar-student/present-continuous.html","utf8");
 const continuousScript=readFileSync("step-grammar-student/present-continuous.js","utf8");

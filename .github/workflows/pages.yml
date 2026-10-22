@@ -69,6 +69,8 @@ jobs:
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
         run: node tests/course-studio.mjs
+      - name: Test dynamic student dashboard on desktop and mobile
+        run: node tests/student-experience.mjs
 
   deploy:
     name: Deploy verified static book

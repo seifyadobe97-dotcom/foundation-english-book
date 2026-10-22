@@ -200,27 +200,78 @@ function questions(){
  '<div class="cols">'+["A","B","C","D"].map(k=>field("q-w-"+k,"سبب خطأ الاختيار "+k,wrong[k]||"",{multi:true,help:"سيتم استخدام الأسباب الثلاثة باستثناء الاختيار الصحيح"})).join("")+'</div>'+
  actions("questions",!!active?.draft&&active?.origin==="source",!!active?.published,true)+
  '<div class="note">أي تغيير على نص سؤال المصدر أو إجابته يعد «نسخة تحريرية» وليست النص الأصلي؛ المصدر والتقييمات السابقة يفضلوا محفوظين. الأسئلة الجديدة تُحفظ كمسودات ولا تُنشر حتى تدقيق المصدر الأصلي.</div></div>';
- document.querySelectorAll("[data-index]").forEach(b=>b.onclick=()=>{state.questionId=Number(b.dataset.index)===0?null:list[Number(b.dataset.index)-1]?.id||null;paint();});
+ document.querySelectorAll("[data-index]").forEach(b=>b.onclick=()=>{
+ if(!canNavigate())return;setDirty(false);
+ state.questionId=Number(b.dataset.index)===0?null:list[Number(b.dataset.index)-1]?.id||null;paint();
+});
  wire("questions");
 }
 function courseInfo(){
  const d=state.data.course;
+ const displayed=d.metadata_draft||d;
+ const hasMetaDraft=!!d.metadata_draft;
  work.innerHTML='<div class="panel" style="grid-column:1/-1"><h2>بيانات الدرس '+safe(d.titleAr)+'</h2>'+
  '<span class="tag '+(d.status==="draft"?"draft":"")+'">'+(d.status==="published"?"منشور للطلاب":"مسودة")+'</span>'+
  '<p>التعديل هنا للاسم والعنوان الفرعي. عدد المراحل والدرجات ومعرّفات بنك المصادر لا تتغير.</p>'+
- '<div class="cols">'+field("c-ar","اسم الدرس بالعربية",d.titleAr)+field("c-en","اسم الدرس بالإنجليزية",d.title,{en:true})+'</div>'+
- field("c-sub","العنوان الفرعي للطلاب",d.subtitle,{multi:true})+
- '<div class="actions">'+(state.data.can_edit?'<button class="btn primary" data-act="save" type="button">حفظ العناوين وتحديث الطلاب</button>':'حسابك للعرض فقط')+
+ '<div class="cols">'+field("c-ar","اسم الدرس بالعربية",displayed.titleAr)+field("c-en","اسم الدرس بالإنجليزية",displayed.title,{en:true})+'</div>'+
+ field("c-sub","العنوان الفرعي للطلاب",displayed.subtitle,{multi:true})+
+ '<div class="actions">'+(state.data.can_edit?'<button class="btn primary" data-act="save" type="button">حفظ عناوين كمسودة</button><button class="btn preview-btn" type="button" data-preview="yes">معاينة العناوين</button>'+
+ (hasMetaDraft?'<button class="btn green" data-act="publish" type="button">نشر العناوين للطلاب</button>'+
+ '<button class="btn danger" data-act="reset" type="button">إلغاء مسودة العناوين</button>':'')':'حسابك للعرض فقط')+
  '<a href="curriculum.html" class="btn">إدارة ترتيب الدروس</a><a href="videos.html?indicator='+courseSlug()+'" class="btn">إدارة فيديوهات الدرس</a></div></div>';
  wire("course");
 }
+async function showHistory(){
+ work.innerHTML='<div class="panel">جاري تحميل سجل التعديلات…</div>';
+ try{
+  const result=await api("/studio/history?course="+encodeURIComponent(courseSelect.value));
+  const names={units:"شرح المرحلة",sections:"بيانات المرحلة",questions:"سؤال",course:"عنوان الدرس"};
+  const acts={INSERT:"إضافة",UPDATE:"تحديث",DELETE:"حذف التعديل"};
+  work.innerHTML='<section class="panel history-list"><h2>سجل التعديلات والنسخ</h2>'+
+   '<p>تقدر ترجع لأي حالة سابقة للشرح أو السؤال. الرجوع بيتسجل كعملية جديدة ومش بيغيّر درجات الطلاب.</p>'+
+   (result.history||[]).map(entry=>
+    '<article class="revision"><b>'+safe(names[entry.entity_type]||entry.entity_type)+
+    ' — '+safe(entry.entity_id)+'</b><small>'+safe(acts[entry.operation]||entry.operation)+' · '+
+    safe(new Date(entry.occurred_at).toLocaleString("ar-SA"))+' · المحرر: '+
+    safe(entry.actor_name||entry.actor_id||"غير معروف")+'</small>'+
+    '<button type="button" class="btn" data-revision="'+safe(entry.revision_id)+'">استعادة الحالة دي</button></article>'
+   ).join("")+(result.history?.length?"":"<p>السجل جديد، ومفيش تعديلات محفوظة فيه لحد دلوقتي.</p>")+
+   '</section>';
+  document.querySelectorAll("[data-revision]").forEach(button=>button.onclick=async()=>{
+   if(!confirm("هترجع حالة العنصر المحدد للنسخة دي. هيتسجل الرجوع في التاريخ. متأكد؟"))return;
+   button.disabled=true;
+   try{
+    await api("/studio/history/restore",{course:courseSelect.value,revision_id:button.dataset.revision});
+    notice("تمت استعادة الحالة المطلوبة واتسجلت في التاريخ.");await showHistory();
+   }catch(error){notice(error.message,true);button.disabled=false;}
+  });
+ }catch(error){work.innerHTML='<div class="panel">'+safe(error.message)+'</div>';notice(error.message,true);}
+}
 function paint(){
  document.querySelectorAll("#tabs [data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===state.tab));
- if(state.tab==="visual")visual();else if(state.tab==="sections")sections();else if(state.tab==="questions")questions();else courseInfo();
+ if(state.tab==="visual")visual();else if(state.tab==="sections")sections();
+ else if(state.tab==="questions")questions();else if(state.tab==="course")courseInfo();
+ else showHistory();
+}
+function draftPreview(kind){
+ let html="";
+ if(kind==="units")html='<h3>'+safe(txt("v-title"))+'</h3><p>'+safe(txt("v-detail"))+'</p><p>'+safe(txt("v-tip"))+'</p>';
+ else if(kind==="sections")html='<h3>'+safe(txt("s-title"))+'</h3><p>'+safe(txt("s-description"))+'</p>';
+ else if(kind==="questions")html='<h3>سؤال تجريبي</h3><p>'+safe(txt("q-text"))+'</p>'+
+  ["A","B","C","D"].map(k=>'<p><b>'+k+'</b> — '+safe(txt("q-"+k))+'</p>').join("")+
+  '<p>الإجابة الصحيحة: '+safe(txt("q-correct"))+'</p><p>'+safe(txt("q-explain"))+'</p>';
+ else html='<h3>'+safe(txt("c-ar"))+' / '+safe(txt("c-en"))+'</h3><p>'+safe(txt("c-sub"))+'</p>';
+ document.getElementById("draft-preview")?.remove();
+ const preview=document.createElement("section");preview.className="draft-preview";preview.id="draft-preview";
+ preview.innerHTML='<h3>معاينة داخل الأدمن — مش منشورة للطلاب</h3>'+html;
+ work.appendChild(preview);preview.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function wire(kind){
+ document.querySelectorAll("[data-preview]").forEach(b=>b.onclick=()=>draftPreview(kind));
  if(kind!=="questions"){
-  document.querySelectorAll("[data-index]").forEach(b=>b.onclick=()=>{state.index=Number(b.dataset.index);paint()});
+  document.querySelectorAll("[data-index]").forEach(b=>b.onclick=()=>{
+   if(!canNavigate())return;setDirty(false);state.index=Number(b.dataset.index);paint();
+  });
  }
  document.querySelectorAll("[data-act]").forEach(b=>b.onclick=async()=>{
   const action=b.dataset.act;
@@ -245,7 +296,7 @@ function wire(kind){
     wrongReasons:Object.fromEntries(["A","B","C","D"].filter(k=>k!==correct).map(k=>[k,txt("q-w-"+k)]))};
    if(action!=="save"&&!q){notice("احفظ السؤال كمسودة الأول",true);return;}
   }else{content={titleAr:txt("c-ar"),title:txt("c-en"),subtitle:txt("c-sub")};}
-  const suffix=kind==="course"?"save":action;
+  const suffix=action;
   const body={course,part_index,content,...(kind==="questions"?{id:state.questionId}:kind==="course"?content:{})};
   if(action!=="save"&&!confirm(action==="publish"?"نشر التعديل للطلاب دلوقتي؟":"استعادة النسخة الأصلية وحذف مسودة التعديل؟"))return;
   b.disabled=true;
@@ -255,13 +306,18 @@ function wire(kind){
    const remember=state.index,rememberQuestion=state.questionId;
    state.data=await api("/studio?course="+encodeURIComponent(course));
    state.index=remember;state.questionId=rememberQuestion;
-   paint();notice(action==="save"&&kind!=="course"?"اتحفظت المسودة بدون تغيير الدرس المنشور.":action==="reset"?"رجّعنا النسخة الأصلية.":"التعديل اتنشر بنجاح.");
+   setDirty(false);paint();notice(action==="save"&&kind!=="course"?"اتحفظت المسودة بدون تغيير الدرس المنشور.":action==="reset"?"رجّعنا النسخة الأصلية.":"التعديل اتنشر بنجاح.");
   }catch(e){notice(e.message,true);b.disabled=false;}
  });
 }
-courseSelect.addEventListener("change",()=>{syncStudioLocation();load();});
+let previousCourse=courseSelect.value;
+courseSelect.addEventListener("change",()=>{
+ if(!canNavigate()){courseSelect.value=previousCourse;return;}
+ setDirty(false);previousCourse=courseSelect.value;syncStudioLocation();load();
+});
 document.querySelectorAll("#tabs [data-tab]").forEach(b=>b.onclick=()=>{
+ if(!canNavigate())return;setDirty(false);
  state.tab=b.dataset.tab;state.index=0;state.questionId=null;syncStudioLocation();paint();
 });
-load();
+(async()=>{await loadCourseCatalog();previousCourse=courseSelect.value;syncStudioLocation();await load();})();
 </script><script src="admin-nav.js" defer></script></body></html>

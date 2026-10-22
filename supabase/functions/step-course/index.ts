@@ -78,9 +78,21 @@ Deno.serve(async(request)=>{
  let path=new URL(request.url).pathname.replace(/^\/(?:functions\/v1\/)?step-course/,"");
  const isAgreement=path==="/agreement"||path.startsWith("/agreement/");
  const isContinuous=path==="/continuous"||path.startsWith("/continuous/");
+ const dynamicMatch=path.match(/^\/lesson\/([a-z][a-z0-9-]{2,39})(\/.*)?$/);
  if(isAgreement)path=path.slice("/agreement".length)||"/course";
  if(isContinuous)path=path.slice("/continuous".length)||"/course";
- const requestedCourseCode=isContinuous?"ASGQPRCONT":isAgreement?"ASGQAGREE":"ASGQPRSIM";
+ if(dynamicMatch)path=dynamicMatch[2]||"/course";
+ let dynamicIndicator:null|{status:string;legacy_course_code:string|null;slug:string}=null;
+ if(dynamicMatch){
+  const {data,error}=await admin.from("step_curriculum_indicators")
+   .select("slug,status,legacy_course_code").eq("slug",dynamicMatch[1]).eq("axis_code","grammar").maybeSingle();
+  if(error)return send(503,{error:"تعذر تحديد الدرس"});
+  if(!data||data.status!=="published"||!data.legacy_course_code)
+   return send(403,{error:"الدرس ده مش منشور للطلاب"});
+  dynamicIndicator=data;
+ }
+ const requestedCourseCode=dynamicIndicator?.legacy_course_code||
+  (isContinuous?"ASGQPRCONT":isAgreement?"ASGQAGREE":"ASGQPRSIM");
  const {data:privateBank,error:bankError}=await admin.from("step_private_course_banks")
   .select("payload").eq("course_code",requestedCourseCode).maybeSingle();
  if(bankError||!privateBank?.payload)return send(503,{error:"محتوى الدرس غير متاح مؤقتًا"});
@@ -93,8 +105,8 @@ Deno.serve(async(request)=>{
  const courseCode=lesson.code;
  try{
   // Every supplemental grammar course requires a published indicator, not merely a static HTML file.
-  if(isAgreement||isContinuous){
-   const indicatorSlug=isAgreement?"subject-verb-agreement":"present-continuous";
+  if(isAgreement||isContinuous||dynamicIndicator){
+   const indicatorSlug=dynamicIndicator?.slug||(isAgreement?"subject-verb-agreement":"present-continuous");
    const {data:release,error:releaseError}=await admin.from("step_curriculum_indicators")
     .select("status,legacy_course_code").eq("slug",indicatorSlug).maybeSingle();
    if(releaseError)throw releaseError;
@@ -151,7 +163,17 @@ Deno.serve(async(request)=>{
      .eq("user_id",user.id).eq("course_code",courseCode).order("attempted_at",{ascending:true});
    if(error)throw error;
    const attempts=(exams??[]).map(x=>({score:x.correct_count,total:x.total_questions,percentage:Math.round(x.correct_count/x.total_questions*100),date:x.attempted_at}));
+   const {data:teachingRows,error:teachingError}=await admin.from("step_teaching_unit_edits")
+    .select("part_index,published").eq("course_code",courseCode).not("published","is",null);
+   if(teachingError)throw teachingError;
+   const visuals=lesson.sections.map((section:any,i:number)=>
+    teachingRows?.find(x=>x.part_index===i)?.published||section.visual||
+    {title:section.titleAr||section.title,detail:section.description||section.short||section.titleAr||"",
+     tip:section.short||"",cards:[],examples:[],formulas:[],keywords:[],
+     warning:{wrong:"",correct:"",why:""},table:{headers:[],rows:[]},
+     extra:{heading:"",paragraphs:[]}});
    return {student:user.user_metadata?.username||"طالب STEP",
+    teachingUnits:visuals,
     course:{title:lesson.title,titleAr:lesson.titleAr,subtitle:lesson.subtitle,totalQuestions:activeQuestionIds.length},
     sections:status.sections,nextIndex:Math.min(status.next,total-1),completed:status.completed,
     exam:{unlocked:status.completed,attempts:attempts.length,best:Math.max(0,...attempts.map(x=>x.percentage)),last:attempts.at(-1)||null}};

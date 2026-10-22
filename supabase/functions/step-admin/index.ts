@@ -100,11 +100,13 @@ Deno.serve(async(req)=>{
  if(roleError)return reply(500,{error:"تعذر فحص الصلاحيات"});
  if(!permission)return reply(403,{error:"الحساب الحالي غير مخوّل لفتح لوحة الأدمن"});
  const {data:bankRows,error:bankError}=await admin.from("step_private_course_banks")
-  .select("course_code,payload").in("course_code",["ASGQPRSIM","ASGQAGREE","ASGQPRCONT"]);
+  .select("course_code,payload");
  if(bankError)return reply(503,{error:"تعذر تحميل مصادر الأسئلة الخاصة"});
  const lesson=bankRows?.find(x=>x.course_code==="ASGQPRSIM")?.payload as LessonData|undefined;
  const agreementLesson=bankRows?.find(x=>x.course_code==="ASGQAGREE")?.payload as LessonData|undefined;
  const continuousLesson=bankRows?.find(x=>x.course_code==="ASGQPRCONT")?.payload as LessonData|undefined;
+ const allCourseBanks=(bankRows||[]).map(x=>x.payload as LessonData)
+  .filter(x=>x&&typeof x.code==="string"&&Array.isArray(x.sections)&&x.questions);
  if(!lesson||!agreementLesson||!continuousLesson||lesson.code!=="ASGQPRSIM"||agreementLesson.code!=="ASGQAGREE"||continuousLesson.code!=="ASGQPRCONT")
   return reply(503,{error:"محتوى الدروس الخاصة غير متاح"});
  let path=new URL(req.url).pathname.replace(/^\/(?:functions\/v1\/)?step-admin/,"")||"/";
@@ -502,18 +504,49 @@ Deno.serve(async(req)=>{
 
 
  // Unified visual studio: the original source banks remain immutable and owner edits are versioned.
+ if(path==="/studio/catalog"&&req.method==="GET"){
+  const {data:indicators,error}=await admin.from("step_curriculum_indicators")
+   .select("slug,title_ar,title_en,position,status,legacy_course_code").eq("axis_code","grammar")
+   .order("position");
+  if(error)return reply(500,{error:"تعذر تحميل فهرس الدروس"});
+  return reply(200,{courses:(indicators||[]).filter(i=>i.legacy_course_code&&
+   allCourseBanks.some(b=>b.code===i.legacy_course_code)).map(i=>({
+    slug:i.slug,code:i.legacy_course_code,titleAr:i.title_ar,title:i.title_en,
+    position:i.position,status:i.status
+   })),can_edit:permission.role==="owner"});
+ }
+ if(path==="/studio/history"&&req.method==="GET"){
+  if(permission.role!=="owner")return reply(403,{error:"سجل النسخ خاص بمدير المنصة"});
+  const course=new URL(req.url).searchParams.get("course")||"";
+  if(!allCourseBanks.some(b=>b.code===course))return reply(422,{error:"الدرس غير موجود"});
+  const {data,error}=await admin.from("step_studio_revision_history")
+   .select("revision_id,occurred_at,entity_type,entity_id,operation,actor_id")
+   .eq("course_code",course).order("occurred_at",{ascending:false}).limit(100);
+  if(error)return reply(500,{error:"تعذر تحميل سجل النسخ"});
+  const actors=[...new Set((data||[]).map(x=>x.actor_id).filter(Boolean))];
+  let usernames=new Map<string,string>();
+  if(actors.length){
+   const {data:people}=await admin.from("step_student_profiles")
+    .select("user_id,username").in("user_id",actors);
+   usernames=new Map((people||[]).map(p=>[p.user_id,p.username]));
+  }
+  return reply(200,{history:(data||[]).map(x=>({
+   ...x,actor_name:usernames.get(x.actor_id)||("حساب "+String(x.actor_id||"").slice(0,8))
+  }))});
+ }
  if(path==="/studio"&&req.method==="GET"){
   const requested=new URL(req.url).searchParams.get("course")||"ASGQAGREE";
-  const bank=[lesson,agreementLesson,continuousLesson].find(x=>x.code===requested);
+  const bank=allCourseBanks.find(x=>x.code===requested);
   if(!bank)return reply(422,{error:"كود الدرس غير صحيح"});
-  const [questionEdits,questionDrafts,unitEdits,sectionEdits,indicatorResult]=await Promise.all([
+  const [questionEdits,questionDrafts,unitEdits,sectionEdits,indicatorResult,metaDraftResult]=await Promise.all([
    admin.from("step_question_edits").select("id,part_index,question_text,options,correct,explanation,wrong_reasons,status").eq("course_code",requested),
    admin.from("step_question_editor_drafts").select("id,draft,updated_at").eq("course_code",requested),
    admin.from("step_teaching_unit_edits").select("part_index,draft,published,draft_updated_at,published_at").eq("course_code",requested),
    admin.from("step_lesson_content_edits").select("part_index,draft,published").eq("course_code",requested),
-   admin.from("step_curriculum_indicators").select("slug,title_ar,title_en,description,status,position").eq("legacy_course_code",requested).maybeSingle()
+   admin.from("step_curriculum_indicators").select("slug,title_ar,title_en,description,status,position").eq("legacy_course_code",requested).maybeSingle(),
+   admin.from("step_course_metadata_drafts").select("draft").eq("course_code",requested).maybeSingle()
   ]);
-  const err=questionEdits.error||questionDrafts.error||unitEdits.error||sectionEdits.error||indicatorResult.error;
+  const err=questionEdits.error||questionDrafts.error||unitEdits.error||sectionEdits.error||indicatorResult.error||metaDraftResult.error;
   if(err){console.error("STEP studio load",err);return reply(500,{error:"تعذر تحميل محرر الدروس"});}
   const partIds=new Map<string,number>();
   bank.sections.forEach((section:any,i:number)=>section.questionIds.forEach((id:string)=>partIds.set(id,i)));
@@ -531,13 +564,18 @@ Deno.serve(async(req)=>{
     published:!!useEdit,draft,archived:!original&&edit?.status==="archived"};
   });
   return reply(200,{course:{code:bank.code,title:bank.title,titleAr:bank.titleAr,subtitle:bank.subtitle||"",
-   status:indicatorResult.data?.status||"draft",indicator:indicatorResult.data},
+   status:indicatorResult.data?.status||"draft",indicator:indicatorResult.data,
+    metadata_draft:metaDraftResult.data?.draft||null},
    sections:bank.sections.map((section:any,i:number)=>({index:i,titleAr:section.titleAr,
     base:Object.fromEntries(Object.entries(section).filter(([key])=>key!=="questionIds")),
     draft:sectionEdits.data?.find(x=>x.part_index===i)?.draft||null,
     published:sectionEdits.data?.find(x=>x.part_index===i)?.published||null,
     visual_draft:unitEdits.data?.find(x=>x.part_index===i)?.draft||null,
-    visual_published:unitEdits.data?.find(x=>x.part_index===i)?.published||null})),
+    visual_published:unitEdits.data?.find(x=>x.part_index===i)?.published||null,
+     visual_base:section.visual||{title:section.titleAr,detail:section.description||section.short||section.titleAr,
+      tip:section.short||"",cards:[],examples:[],formulas:[],keywords:[],
+      warning:{wrong:"",correct:"",why:""},table:{headers:[],rows:[]},
+      extra:{heading:"",paragraphs:[]}}})),
    questions,can_edit:permission.role==="owner"});
  }
  if(path.startsWith("/studio/")&&req.method==="POST"){
@@ -547,11 +585,26 @@ Deno.serve(async(req)=>{
    if(raw.length>85000)return reply(413,{error:"حجم التعديل كبير"});
    const input=JSON.parse(raw);
    const course=String(input?.course||"");
-   const bank=[lesson,agreementLesson,continuousLesson].find(x=>x.code===course);
+   const bank=allCourseBanks.find(x=>x.code===course);
    if(!bank)return reply(422,{error:"اختار درسًا صحيحًا"});
    const part=Number(input.part_index);
    const currentPart=Number.isInteger(part)&&part>=0&&part<bank.sections.length;
    const time=new Date().toISOString();
+   if(path==="/studio/history/restore"){
+    const revision=String(input.revision_id||"");
+    if(!/^[0-9a-f-]{36}$/i.test(revision))return reply(422,{error:"معرّف النسخة غير صحيح"});
+    const {data:entry,error:entryError}=await admin.from("step_studio_revision_history")
+     .select("course_code,entity_type").eq("revision_id",revision).maybeSingle();
+    if(entryError||!entry||entry.course_code!==course)return reply(404,{error:"النسخة دي غير موجودة في الدرس"});
+    const restoreProcedure=entry.entity_type==="course"?
+     "step_restore_course_metadata_revision":"step_restore_studio_revision";
+    const {data:restored,error:restoreError}=await admin.rpc(restoreProcedure,{
+     p_revision_id:revision,p_actor_id:auth.user.id
+    });
+    if(restoreError){console.error("STEP restore failed",restoreError);
+     return reply(500,{error:"تعذر استعادة النسخة"});}
+    return reply(200,{ok:true,restored});
+   }
    const allowedVisual=["title","detail","tip","cards","examples","keywords","warning","formulas","table","extra"];
    const allowedSection=["titleAr","subtitle","short","duration","description","rule",
     "alternativeRule","gold","mistake","examples","tiles"];
@@ -708,7 +761,7 @@ Deno.serve(async(req)=>{
     const {error}=await admin.from("step_question_edits").upsert({
      id,course_code:course,part_index:d.part_index,question_text:d.text,
      options:d.options,correct:d.correct,explanation:d.explanation,
-     wrong_reasons:d.wrongReasons,status:"published",created_by:auth.user.id,updated_at:time
+     wrong_reasons:d.wrongReasons,status:"published",created_by:auth.user.id,updated_by:auth.user.id,updated_at:time
     },{onConflict:"id"});
     if(error)throw error;
     const {error:discard}=await admin.from("step_question_editor_drafts").delete()
@@ -721,21 +774,44 @@ Deno.serve(async(req)=>{
      subtitle=String(input.subtitle||"").trim();
     if(titleAr.length<3||titleAr.length>140||title.length<3||title.length>140||
      subtitle.length>350)return reply(422,{error:"راجع عناوين الدرس"});
-    const indicatorSlug=course==="ASGQAGREE"?"subject-verb-agreement":
-     course==="ASGQPRSIM"?"present-simple":"present-continuous";
     const {data:indicator,error:indicatorError}=await admin.from("step_curriculum_indicators")
-     .select("slug").eq("slug",indicatorSlug).eq("legacy_course_code",course).maybeSingle();
+     .select("slug").eq("legacy_course_code",course).maybeSingle();
     if(indicatorError||!indicator)return reply(409,{error:"ربط الدرس بالمؤشر غير صحيح"});
-    const updated={...bank,title,titleAr,subtitle};
+    const {error}=await admin.from("step_course_metadata_drafts").upsert({
+     course_code:course,draft:{title,titleAr,subtitle},
+     updated_by:auth.user.id,updated_at:time
+    },{onConflict:"course_code"});
+    if(error)throw error;
+    return reply(200,{ok:true,status:"draft"});
+   }
+   if(path==="/studio/course/publish"){
+    const {data:meta,error:metaError}=await admin.from("step_course_metadata_drafts")
+     .select("draft").eq("course_code",course).maybeSingle();
+    if(metaError)throw metaError;
+    if(!meta?.draft)return reply(404,{error:"احفظ عناوين الدرس كمسودة قبل النشر"});
+    const values=meta.draft;
+    if(typeof values.title!=="string"||typeof values.titleAr!=="string"||
+     values.title.length<3||values.titleAr.length<3)return reply(422,{error:"بيانات المسودة ناقصة"});
+    const {data:indicator,error:indError}=await admin.from("step_curriculum_indicators")
+     .select("slug").eq("legacy_course_code",course).maybeSingle();
+    if(indError||!indicator)return reply(409,{error:"المؤشر غير مربوط بالدرس"});
     const {error:bankError}=await admin.from("step_private_course_banks").update({
-     payload:updated,updated_at:time
+     payload:{...bank,...values},updated_at:time,updated_by:auth.user.id
     }).eq("course_code",course);
     if(bankError)throw bankError;
-    const {error:indError}=await admin.from("step_curriculum_indicators").update({
-     title_ar:titleAr,title_en:title,updated_at:time
-    }).eq("slug",indicatorSlug);
-    if(indError)throw indError;
+    const {error:saveError}=await admin.from("step_curriculum_indicators").update({
+     title_ar:values.titleAr,title_en:values.title,updated_at:time
+    }).eq("slug",indicator.slug);
+    if(saveError)throw saveError;
+    const {error:dropError}=await admin.from("step_course_metadata_drafts").delete()
+     .eq("course_code",course);
+    if(dropError)throw dropError;
     return reply(200,{ok:true,status:"published"});
+   }
+   if(path==="/studio/course/reset"){
+    const {error}=await admin.from("step_course_metadata_drafts").delete().eq("course_code",course);
+    if(error)throw error;
+    return reply(200,{ok:true,status:"original"});
    }
    return reply(404,{error:"عملية تحرير غير موجودة"});
   }catch(error){console.error("STEP studio write",error);return reply(500,{error:"تعذر حفظ التعديل"});}

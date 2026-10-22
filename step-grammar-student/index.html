@@ -17,10 +17,12 @@
 .student-followups{margin:24px 0}.task-count{font-size:12px;color:var(--teal);font-weight:800}.task-intro{color:var(--muted);margin:0 0 14px;font-size:13px}.task-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.student-task{background:#fff;border:1px solid #dbe8e2;border-radius:14px;padding:18px}.student-task.is-done{background:#f2faf4}.student-task h3{color:var(--navy);font-size:17px;margin:10px 0 5px}.student-task p{margin:5px 0;color:#4a6268;font-size:13px}.student-task small{color:var(--muted)}.task-meta{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;color:#207366;font-weight:800;font-size:11px}.task-meta span:last-child{background:#e8f4ee;border-radius:99px;padding:2px 10px}.task-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}.task-actions .button{font-size:12px;padding:8px 12px}.task-locked{color:var(--muted);font-size:12px}@media(max-width:620px){.task-grid{grid-template-columns:1fr}}
 .study-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.study-actions .button:first-child{background:#eaf5ee;color:#195f53;border:1px solid #c6e2d3}
 .step-brand-image{display:block;width:206px;max-width:100%;height:auto;flex:none}@media(max-width:480px){.step-brand-image{width:158px}}</style>
+<link rel="stylesheet" href="student-experience.css">
 <link rel="icon" type="image/svg+xml" href="../step-brand/mark.svg"></head><body>
 <header class="header"><div class="identity"><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"></div><div class="header-tools"><button id="refresh" class="button outline" hidden>تحديث</button><button id="signout" class="button outline" hidden>خروج</button></div></header>
 <main id="app" class="wrap"><p>جاري تحميل بوابة الطالب…</p></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script src="student-experience.js"></script>
 <script>
 "use strict";
 const config={"url":"https://funltjxavowlnnfibhpl.supabase.co","anonKey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg"};
@@ -58,7 +60,18 @@ async function course(){
   }).catch(()=>null);
   if(r?.ok)continuousData=await r.json().catch(()=>null);
  }
- return {...result,catalog,agreement:agreementData,continuous:continuousData,
+ const coreSlugs=new Set(["subject-verb-agreement","present-simple","present-continuous"]);
+ const additional=(catalog.indicators||[]).filter(i=>i.axis_code==="grammar"&&!coreSlugs.has(i.slug));
+ const extraLessons=await Promise.all(additional.map(async indicator=>{
+  if(!/^[a-z][a-z0-9-]{2,39}$/.test(indicator.slug))return null;
+  const response=await fetch(config.url+"/functions/v1/step-course/lesson/"+indicator.slug+"/course",{
+   headers:{"Content-Type":"application/json","apikey":config.anonKey,"Authorization":"Bearer "+session.access_token}
+  }).catch(()=>null);
+  if(!response?.ok)return null;
+  const value=await response.json().catch(()=>null);
+  return value?{slug:indicator.slug,data:value}:null;
+ }));
+ return {...result,catalog,agreement:agreementData,continuous:continuousData,extraLessons:extraLessons.filter(Boolean),
   followups:followupResponse.ok?(followupData.followups||[]):[],
   followupError:followupResponse.ok?"":"تعذر تحميل خطة المتابعة؛ اضغط تحديث للمحاولة مرة تانية."};
 }
@@ -146,6 +159,7 @@ function paint(x){
    return '<div class="axis-card"><span class="axis-icon">'+(icons[axis.code]||"📚")+'</span><span class="axis-order">AXIS '+String(axis.position).padStart(2,"0")+'</span><h3>'+esc(axis.title_ar)+'</h3><p>'+esc(axis.title_en)+'</p><span class="axis-status">'+(count?count+' مؤشر متاح':'المحتوى قيد الإعداد')+'</span></div>';
   }).join("")+'</div>';
  app.innerHTML='<div class="hero"><div><div class="eyebrow">YOUR LEARNING SPACE</div><h1>أهلًا بيك، '+name+'</h1><p>كمّل من آخر خطوة وصلت لها، وخلّي تقدمك معاك في أي جهاز.</p></div><div class="hero-symbol">✦</div></div><div class="metrics"><div class="metric"><strong>'+completedLearningStages+'/'+totalLearningStages+'</strong><span>مراحل مكتملة في الدروس</span></div><div class="metric"><strong>'+overallPercent+'%</strong><span>التقدم في الدروس</span></div><div class="metric"><strong>'+(exam.best||0)+'%</strong><span>أفضل اختبار للدرس 2</span></div></div>'+followupCards(x)+axisHtml+'<div class="section-head"><h2>مؤشرات الجرامر</h2><span style="color:var(--muted);font-size:12px">COURSE LIBRARY</span></div>'+agreementCard+'<article class="course-card"><div><div class="eyebrow">GRAMMAR · INDICATOR 02</div><h3>'+esc(x.course?.title||"Present Simple")+' — '+esc(x.course?.titleAr||"المضارع البسيط")+'</h3><p>'+esc(x.course?.subtitle||"")+'</p><div class="bar"><span style="width:'+percent+'%"></span></div><p style="margin-top:11px">'+passed+' من '+sections.length+' أجزاء منتهية</p><div class="study-actions"><a class="button" href="learn.html">'+(passed===sections.length?"راجع الدرس والاختبار":"ابدأ أو كمّل الدرس التفاعلي")+' ←</a></div></div><div class="course-side"><strong>'+percent+'%</strong><span>LESSON 02 PROGRESS</span><div class="bar"><span style="width:'+percent+'%"></span></div><span>'+(exam.unlocked?"الاختبار النهائي متاح":"الاختبار النهائي بعد إكمال الأجزاء")+'</span></div></article>'+continuousCard+'<div class="section-head"><h2>مراحل الدرس 2 — المضارع البسيط</h2></div><section class="lesson-grid">'+sections.map(s=>'<div class="lesson '+(s.locked?"locked":"")+'"><span class="num">STEP '+String(s.index+1).padStart(2,"0")+'</span><h3>'+esc(s.titleAr)+'</h3><p>'+esc(s.short||s.title||"")+'</p><small class="'+(s.passed?"done":s.locked?"locked-icon":"")+'">'+(s.passed?"✓ تم اجتياز الجزء":s.locked?"🔒 مقفول":"← جاهز للمذاكرة")+'</small></div>').join("")+'</section><div class="lower"><span>عايز تستفسر عن الدراسة أو التسجيل؟</span><a href="https://wa.me/966544149974?text='+encodeURIComponent("السلام عليكم، عندي استفسار عن دراسة STEP Grammar بمنصة STEP with Seify.")+'" target="_blank" rel="noopener noreferrer">تواصل واتساب ↗</a></div>';
+ if(window.StepStudentExperience)window.StepStudentExperience.enhance(app,x,esc);
 }
 async function init(){
  try{const result=await course();if(result)paint(result);}

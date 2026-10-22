@@ -7,6 +7,16 @@ window.StepAdminHome={
    {n:"02",slug:"present-simple",code:"ASGQPRSIM",title:"Present Simple",ar:"المضارع البسيط"},
    {n:"03",slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",ar:"المضارع المستمر"}
   ];
+  // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
+  try{
+   const catalog=await api("/studio/catalog");
+   if(Array.isArray(catalog.courses)&&catalog.courses.length){
+    lessons.splice(0,lessons.length,...catalog.courses.map((c,i)=>({
+     n:String(i+1).padStart(2,"0"),slug:c.slug,code:c.code,
+     title:c.title,ar:c.titleAr,status:c.status
+    })));
+   }
+  }catch(error){/* Keep the three known course cards if the live catalog is temporarily unavailable. */}
   const cards=lessons.map(x=>{
    const editor="studio.html?course="+encodeURIComponent(x.code);
    return '<article class="home-card"><div class="count">LESSON '+x.n+'</div>'+

@@ -30,7 +30,7 @@ assert(data.sections.reduce((n,s)=>n+s.questionIds.length,0)===14,
 assert(script.includes('const API_PREFIX="/continuous"'),
  "Present Continuous must use its own course route");
 const serverSource=await readFile(path.join(root,"supabase/functions/step-course/index.ts"),"utf8");
-assert(serverSource.includes('const isContinuous=')&&serverSource.includes('indicatorSlug=isAgreement?"subject-verb-agreement":"present-continuous"'),
+assert(serverSource.includes('const isContinuous=')&&serverSource.includes('indicatorSlug=dynamicIndicator?.slug||'),
  "Draft lesson must have its own API publication gate");
 const adminAuditAPI=await readFile(path.join(root,"supabase/functions/step-admin/index.ts"),"utf8");
 assert(adminAuditAPI.includes('path==="/continuous/audit"')&&adminAuditAPI.includes('continuousLesson'),
