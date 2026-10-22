@@ -34,6 +34,7 @@ try{
  for(const width of [1280,390]){
   const page=await browser.newPage({viewport:{width,height:850}});
   const jsErrors=[];page.on("pageerror",e=>jsErrors.push(String(e)));
+  page.on("dialog",dialog=>dialog.accept());
   let draft=null,published=null;
   await page.route("https://cdn.jsdelivr.net/npm/@supabase/**",r=>r.fulfill({contentType:"text/javascript",body:fakeSupabase}));
   await page.route("https://fonts.googleapis.com/**",r=>r.abort());
@@ -76,6 +77,7 @@ try{
   await page.locator('[data-tab="course"]').click();
   await page.locator("#c-ar").waitFor();
   await page.locator("#course").selectOption("ASGQPRSIM");
+  await page.locator('[data-tab="visual"]').click();
   await page.locator("#v-title").waitFor();
   assert.equal(await page.locator("aside button").count(),6);
   assert.deepEqual(jsErrors,[],"Admin browser errors "+jsErrors.join("; "));
