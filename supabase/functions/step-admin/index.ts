@@ -500,6 +500,233 @@ Deno.serve(async(req)=>{
   }catch(error){console.error("STEP admin status failed",error);return reply(500,{error:"تعذر تعديل الحساب"});}
  }
 
+
+ // Unified visual studio: the original source banks remain immutable and owner edits are versioned.
+ if(path==="/studio"&&req.method==="GET"){
+  const requested=new URL(req.url).searchParams.get("course")||"ASGQAGREE";
+  const bank=[lesson,agreementLesson,continuousLesson].find(x=>x.code===requested);
+  if(!bank)return reply(422,{error:"كود الدرس غير صحيح"});
+  const [questionEdits,questionDrafts,unitEdits,sectionEdits,indicatorResult]=await Promise.all([
+   admin.from("step_question_edits").select("id,part_index,question_text,options,correct,explanation,wrong_reasons,status").eq("course_code",requested),
+   admin.from("step_question_editor_drafts").select("id,draft,updated_at").eq("course_code",requested),
+   admin.from("step_teaching_unit_edits").select("part_index,draft,published,draft_updated_at,published_at").eq("course_code",requested),
+   admin.from("step_lesson_content_edits").select("part_index,draft,published").eq("course_code",requested),
+   admin.from("step_curriculum_indicators").select("slug,title_ar,title_en,description,status,position").eq("legacy_course_code",requested).maybeSingle()
+  ]);
+  const err=questionEdits.error||questionDrafts.error||unitEdits.error||sectionEdits.error||indicatorResult.error;
+  if(err){console.error("STEP studio load",err);return reply(500,{error:"تعذر تحميل محرر الدروس"});}
+  const partIds=new Map<string,number>();
+  bank.sections.forEach((section:any,i:number)=>section.questionIds.forEach((id:string)=>partIds.set(id,i)));
+  const edits=new Map((questionEdits.data||[]).map(x=>[x.id,x]));
+  const drafts=new Map((questionDrafts.data||[]).map(x=>[x.id,x]));
+  const questionIds=new Set([...Object.keys(bank.questions),...edits.keys(),...drafts.keys()]);
+  const questions=[...questionIds].map(id=>{
+   const original=bank.questions[id],edit=edits.get(id),draft=drafts.get(id)?.draft||null;
+   const useEdit=edit?.status==="published";
+   const visible=useEdit?{text:edit.question_text,options:edit.options,correct:edit.correct,
+    explanation:edit.explanation,wrongReasons:edit.wrong_reasons||original?.wrongReasons||{}}:original;
+   return {id,origin:original?"source":"custom",part_index:original?partIds.get(id):edit?.part_index??draft?.part_index,
+    text:visible?.text||"",options:visible?.options||{},correct:visible?.correct||"A",
+    explanation:visible?.explanation||"",wrongReasons:visible?.wrongReasons||{},
+    published:!!useEdit,draft,archived:!original&&edit?.status==="archived"};
+  });
+  return reply(200,{course:{code:bank.code,title:bank.title,titleAr:bank.titleAr,subtitle:bank.subtitle||"",
+   status:indicatorResult.data?.status||"draft",indicator:indicatorResult.data},
+   sections:bank.sections.map((section:any,i:number)=>({index:i,titleAr:section.titleAr,
+    base:Object.fromEntries(Object.entries(section).filter(([key])=>key!=="questionIds")),
+    draft:sectionEdits.data?.find(x=>x.part_index===i)?.draft||null,
+    published:sectionEdits.data?.find(x=>x.part_index===i)?.published||null,
+    visual_draft:unitEdits.data?.find(x=>x.part_index===i)?.draft||null,
+    visual_published:unitEdits.data?.find(x=>x.part_index===i)?.published||null})),
+   questions,can_edit:permission.role==="owner"});
+ }
+ if(path.startsWith("/studio/")&&req.method==="POST"){
+  if(permission.role!=="owner")return reply(403,{error:"تعديل المنهج ونشر الأسئلة متاح لمدير المنصة فقط"});
+  try{
+   const raw=await req.text();
+   if(raw.length>85000)return reply(413,{error:"حجم التعديل كبير"});
+   const input=JSON.parse(raw);
+   const course=String(input?.course||"");
+   const bank=[lesson,agreementLesson,continuousLesson].find(x=>x.code===course);
+   if(!bank)return reply(422,{error:"اختار درسًا صحيحًا"});
+   const part=Number(input.part_index);
+   const currentPart=Number.isInteger(part)&&part>=0&&part<bank.sections.length;
+   const time=new Date().toISOString();
+   const allowedVisual=["title","detail","tip","cards","examples","keywords","warning","formulas","table","extra"];
+   const allowedSection=["titleAr","subtitle","short","duration","description","rule",
+    "alternativeRule","gold","mistake","examples","tiles"];
+   const checkVisual=(v:any)=>{
+    if(!v||typeof v!=="object"||Array.isArray(v))return false;
+    if(Object.keys(v).some(k=>!allowedVisual.includes(k)))return false;
+    if(typeof v.title!=="string"||!v.title.trim()||v.title.length>160
+     ||typeof v.detail!=="string"||v.detail.trim().length<10||v.detail.length>6000
+     ||typeof v.tip!=="string"||v.tip.length>4000)return false;
+    if(!Array.isArray(v.cards)||v.cards.length>12||!Array.isArray(v.examples)||v.examples.length>24
+      ||!Array.isArray(v.formulas)||v.formulas.length>12)return false;
+    if([...v.cards,...v.examples,...v.formulas].some(row=>!Array.isArray(row)||
+      row.length<2||row.length>5||row.some(x=>typeof x!=="string"||x.length>1500)))return false;
+    if(v.keywords!==undefined&&(!Array.isArray(v.keywords)||v.keywords.length>30||
+      v.keywords.some((row:any)=>!Array.isArray(row)||row.length!==2||row.some((x:any)=>typeof x!=="string"||x.length>400))))return false;
+    if(v.warning&&(["wrong","correct","why"].some(k=>typeof v.warning[k]!=="string"||v.warning[k].length>2000)))return false;
+    if(v.table&&(!Array.isArray(v.table.headers)||!Array.isArray(v.table.rows)||v.table.rows.length>40||
+      v.table.rows.some((row:any)=>!Array.isArray(row)||row.length!==v.table.headers.length)))return false;
+    if(v.extra&&(!Array.isArray(v.extra.paragraphs)||v.extra.paragraphs.length>18||
+      v.extra.paragraphs.some((x:any)=>typeof x!=="string"||x.length>2500)))return false;
+    return true;
+   };
+   if(path==="/studio/units/save"){
+    if(!currentPart||!checkVisual(input.content))return reply(422,{error:"راجع بيانات الشرح والجداول والأمثلة"});
+    const previous=await admin.from("step_teaching_unit_edits").select("published,published_at")
+     .eq("course_code",course).eq("part_index",part).maybeSingle();
+    if(previous.error)throw previous.error;
+    const {error}=await admin.from("step_teaching_unit_edits").upsert({
+     course_code:course,part_index:part,draft:input.content,
+     published:previous.data?.published||null,published_at:previous.data?.published_at||null,
+     draft_updated_at:time,updated_by:auth.user.id
+    },{onConflict:"course_code,part_index"});
+    if(error)throw error;
+    return reply(200,{ok:true,status:"draft"});
+   }
+   if(path==="/studio/units/publish"||path==="/studio/units/reset"){
+    if(!currentPart)return reply(422,{error:"رقم المرحلة غير صحيح"});
+    const table=admin.from("step_teaching_unit_edits");
+    if(path.endsWith("/reset")){
+     const {error}=await table.delete().eq("course_code",course).eq("part_index",part);
+     if(error)throw error;
+     return reply(200,{ok:true,status:"original"});
+    }
+    const {data:existing,error:lookup}=await table.select("draft").eq("course_code",course).eq("part_index",part).maybeSingle();
+    if(lookup)throw lookup;
+    if(!existing?.draft)return reply(404,{error:"احفظ مسودة الشرح قبل النشر"});
+    const {error}=await admin.from("step_teaching_unit_edits").update({
+     published:existing.draft,published_at:time,draft:null,draft_updated_at:null,updated_by:auth.user.id
+    }).eq("course_code",course).eq("part_index",part);
+    if(error)throw error;
+    return reply(200,{ok:true,status:"published"});
+   }
+   if(path==="/studio/sections/save"){
+    if(!currentPart||!input.content||typeof input.content!=="object"||Array.isArray(input.content))
+     return reply(422,{error:"بيانات المرحلة غير صحيحة"});
+    const fields=Object.fromEntries(Object.entries(input.content).filter(([k])=>allowedSection.includes(k)));
+    if(!fields.titleAr||typeof fields.titleAr!=="string"||fields.titleAr.length>150||
+      typeof fields.description!=="string"||fields.description.length>6000)
+     return reply(422,{error:"عنوان المرحلة وشرحها مطلوبان"});
+    const previous=await admin.from("step_lesson_content_edits").select("published,published_at")
+     .eq("course_code",course).eq("part_index",part).maybeSingle();
+    if(previous.error)throw previous.error;
+    const {error}=await admin.from("step_lesson_content_edits").upsert({
+     course_code:course,part_index:part,draft:fields,published:previous.data?.published||null,
+     published_at:previous.data?.published_at||null,draft_updated_at:time,updated_by:auth.user.id
+    },{onConflict:"course_code,part_index"});
+    if(error)throw error;
+    return reply(200,{ok:true,status:"draft"});
+   }
+   if(path==="/studio/sections/publish"||path==="/studio/sections/reset"){
+    if(!currentPart)return reply(422,{error:"رقم المرحلة غير صحيح"});
+    if(path.endsWith("/reset")){
+     const {error}=await admin.from("step_lesson_content_edits").delete()
+      .eq("course_code",course).eq("part_index",part);
+     if(error)throw error;
+     return reply(200,{ok:true,status:"original"});
+    }
+    const {data:previous,error:lookup}=await admin.from("step_lesson_content_edits")
+     .select("draft").eq("course_code",course).eq("part_index",part).maybeSingle();
+    if(lookup)throw lookup;
+    if(!previous?.draft)return reply(404,{error:"احفظ مسودة المرحلة الأول"});
+    const {error}=await admin.from("step_lesson_content_edits").update({
+     published:previous.draft,published_at:time,draft:null,draft_updated_at:null,updated_by:auth.user.id
+    }).eq("course_code",course).eq("part_index",part);
+    if(error)throw error;
+    return reply(200,{ok:true,status:"published"});
+   }
+   if(path==="/studio/questions/save"){
+    const id=String(input.id||"");
+    const isOriginal=Object.hasOwn(bank.questions,id);
+    const custom=!id||/^STEP-NEW-[0-9a-f-]{36}$/i.test(id);
+    if(!isOriginal&&!custom)return reply(422,{error:"معرّف السؤال غير صحيح"});
+    if(!currentPart)return reply(422,{error:"اختار مرحلة صحيحة"});
+    if(isOriginal&&!bank.sections[part].questionIds.includes(id))
+     return reply(422,{error:"معرّف سؤال المصدر مربوط بمرحلته الأصلية"});
+    const q=input.content;
+    const letters=["A","B","C","D"];
+    if(!q||typeof q.text!=="string"||q.text.trim().length<8||q.text.length>2000||
+     typeof q.explanation!=="string"||q.explanation.trim().length<4||q.explanation.length>2500||
+     !q.options||typeof q.options!=="object"||!letters.includes(q.correct)||
+     letters.some(k=>typeof q.options[k]!=="string"||!q.options[k].trim()||q.options[k].length>500)||
+     !q.wrongReasons||typeof q.wrongReasons!=="object"||
+     letters.some(k=>k!==q.correct&&(typeof q.wrongReasons[k]!=="string"||!q.wrongReasons[k].trim()||q.wrongReasons[k].length>1000)))
+     return reply(422,{error:"اكتب السؤال والاختيارات الأربعة والشرح وسبب خطأ كل اختيار غير صحيح"});
+    const questionId=id||"STEP-NEW-"+crypto.randomUUID();
+    const draft={part_index:part,text:q.text.trim(),options:Object.fromEntries(letters.map(k=>[k,q.options[k].trim()])),
+     correct:q.correct,explanation:q.explanation.trim(),
+     wrongReasons:Object.fromEntries(letters.filter(k=>k!==q.correct).map(k=>[k,q.wrongReasons[k].trim()]))};
+    const {error}=await admin.from("step_question_editor_drafts").upsert({
+     course_code:course,id:questionId,draft,updated_at:time,updated_by:auth.user.id
+    },{onConflict:"course_code,id"});
+    if(error)throw error;
+    return reply(200,{ok:true,id:questionId,status:"draft"});
+   }
+   if(path==="/studio/questions/publish"||path==="/studio/questions/reset"){
+    const id=String(input.id||"");
+    if(!Object.hasOwn(bank.questions,id)&&!/^STEP-NEW-[0-9a-f-]{36}$/i.test(id))
+     return reply(422,{error:"معرّف السؤال غير صحيح"});
+    if(path.endsWith("/reset")){
+     const {error:dropError}=await admin.from("step_question_editor_drafts").delete()
+      .eq("course_code",course).eq("id",id);
+     if(dropError)throw dropError;
+     if(Object.hasOwn(bank.questions,id)){
+      const {error}=await admin.from("step_question_edits").delete().eq("course_code",course).eq("id",id);
+      if(error)throw error;
+     }else{
+      const {error}=await admin.from("step_question_edits").update({status:"archived",updated_at:time})
+       .eq("course_code",course).eq("id",id);
+      if(error)throw error;
+     }
+     return reply(200,{ok:true,status:"original"});
+    }
+    const {data:existing,error:lookup}=await admin.from("step_question_editor_drafts")
+     .select("draft").eq("course_code",course).eq("id",id).maybeSingle();
+    if(lookup)throw lookup;
+    if(!existing?.draft)return reply(404,{error:"احفظ مسودة السؤال الأول"});
+    const d=existing.draft;
+    if(!Number.isInteger(d.part_index)||d.part_index<0||d.part_index>=bank.sections.length)
+     return reply(422,{error:"مرحلة السؤال غير صحيحة"});
+    const {error}=await admin.from("step_question_edits").upsert({
+     id,course_code:course,part_index:d.part_index,question_text:d.text,
+     options:d.options,correct:d.correct,explanation:d.explanation,
+     wrong_reasons:d.wrongReasons,status:"published",created_by:auth.user.id,updated_at:time
+    },{onConflict:"id"});
+    if(error)throw error;
+    const {error:discard}=await admin.from("step_question_editor_drafts").delete()
+     .eq("course_code",course).eq("id",id);
+    if(discard)throw discard;
+    return reply(200,{ok:true,id,status:"published"});
+   }
+   if(path==="/studio/course/save"){
+    const titleAr=String(input.titleAr||"").trim(),title=String(input.title||"").trim(),
+     subtitle=String(input.subtitle||"").trim();
+    if(titleAr.length<3||titleAr.length>140||title.length<3||title.length>140||
+     subtitle.length>350)return reply(422,{error:"راجع عناوين الدرس"});
+    const indicatorSlug=course==="ASGQAGREE"?"subject-verb-agreement":
+     course==="ASGQPRSIM"?"present-simple":"present-continuous";
+    const {data:indicator,error:indicatorError}=await admin.from("step_curriculum_indicators")
+     .select("slug").eq("slug",indicatorSlug).eq("legacy_course_code",course).maybeSingle();
+    if(indicatorError||!indicator)return reply(409,{error:"ربط الدرس بالمؤشر غير صحيح"});
+    const updated={...bank,title,titleAr,subtitle};
+    const {error:bankError}=await admin.from("step_private_course_banks").update({
+     payload:updated,updated_at:time
+    }).eq("course_code",course);
+    if(bankError)throw bankError;
+    const {error:indError}=await admin.from("step_curriculum_indicators").update({
+     title_ar:titleAr,title_en:title,updated_at:time
+    }).eq("slug",indicatorSlug);
+    if(indError)throw indError;
+    return reply(200,{ok:true,status:"published"});
+   }
+   return reply(404,{error:"عملية تحرير غير موجودة"});
+  }catch(error){console.error("STEP studio write",error);return reply(500,{error:"تعذر حفظ التعديل"});}
+ }
+
  // Question-editor API. Public students never access these admin routes.
  if(path==="/questions"&&req.method==="GET"){
   try{
