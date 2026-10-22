@@ -186,7 +186,23 @@ assert(foundationScript.includes('dir="ltr"')&&foundationScript.includes("localS
 assert(foundationHtml.includes("foundation-sentence-elements-data.js")&&foundationHtml.includes("foundation-sentence-elements.css"));
 assert(foundationHtml.includes("foundation-sentence-elements-mastery.js"),"Extended course must load");
 assert(foundationCss.includes(".feedback.wrong")&&foundationCss.includes(".option.correct"),"Clear color-coded feedback");
-assert(portal.includes('href="foundation-sentence-elements.html"'),"Foundation precedes Present Simple on student dashboard");
+assert(!portal.includes('foundation-sentence-elements.html'),
+ "Paused foundation must not be linked from the student dashboard");
+assert(!unified.includes('foundation-sentence-elements.html'),
+ "Paused foundation must not be linked from the live lesson");
+assert(!readFileSync("step-grammar-student/lesson-v2.html","utf8").includes('foundation-sentence-elements.html'),
+ "Paused foundation must not be linked from lesson preview");
+assert(!readFileSync("step-grammar-admin/curriculum.html","utf8").includes('href="../step-grammar-student/foundation-sentence-elements.html"'),
+ "Draft foundation must not be linked to publicly visible preview");
+const releaseBuilder=readFileSync("scripts/build-step-public-site.mjs","utf8");
+const releaseWorkflow=readFileSync(".github/workflows/pages.yml","utf8");
+assert(releaseBuilder.includes('const forbidden=name=>')&&releaseBuilder.includes('dir!=="step-grammar-student"'),
+ "Public artifact must not ship paused foundation files");
+assert(releaseWorkflow.includes("node scripts/build-step-public-site.mjs")&&
+ releaseWorkflow.includes('path: ${{ runner.temp }}/step-public'),
+ "GitHub Pages must deploy allowlisted release output rather than full repository");
+assert(readFileSync("service-worker.js","utf8").includes("status:410"),
+ "Service worker must refuse cached copies of the archived foundation lesson");
 assert(readFileSync("step-grammar-admin/curriculum.html","utf8").includes("عاين درس التأسيس التفاعلي"),"Preview foundation from draft curriculum");
 assert(!foundationScript.includes("/exam/submit")&&!foundationScript.includes("/parts/"),"Foundation practice does not impersonate graded bank");
 
