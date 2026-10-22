@@ -45,6 +45,10 @@ function setupRoutes(page,initialPassed=0,record={}){
    const req=route.request(),url=new URL(req.url()).pathname.split("/step-course")[1];
    let payload;
    if(url==="/course")payload=course(passed);
+   else if(url==="/videos")payload={videos:record.publishedVideo?[{
+    part_index:2,title:"شرح s / es / ies مع Seify",
+    description:"شرح اختياري قبل التدريب",url:"https://vt.tiktok.com/ZSgyJoEnb/"
+   }]:[]};
    else if(/^\/parts\/\d+$/.test(url))payload=part(Number(url.split("/").at(-1)),passed);
    else if(/^\/parts\/\d+\/submit$/.test(url)){
     const index=Number(url.split("/")[2]),qs=part(index,passed).part.questions,body=JSON.parse(req.postData()),answers=body.answers;
@@ -158,13 +162,20 @@ try{
  const mediaContext=await browser.newContext({viewport:{width:390,height:844}}),mediaPage=await mediaContext.newPage();
  const mediaErrors=[];
  mediaPage.on("pageerror",error=>mediaErrors.push(String(error)));
- await setupRoutes(mediaPage,2);
+ const mediaRecord={publishedVideo:false};
+ await setupRoutes(mediaPage,2,mediaRecord);
  await mediaPage.goto(base+"/step-grammar-student/lesson-v2.html?step=2",{waitUntil:"domcontentloaded"});
  await mediaPage.locator(".lesson-title").waitFor({timeout:10000});
  assert.match(await mediaPage.locator(".lesson-title").innerText(),/s \/ es \/ ies/);
  const videoCard=mediaPage.locator(".lesson-video");
- assert.equal(await videoCard.count(),1,"Only the video-enabled stage has a video card");
- const tiktokLink=videoCard.locator("a.video-open");
+ assert.equal(await videoCard.count(),1,"There is one reserved video slot per displayed stage");
+ assert.equal(await videoCard.locator(".video-soon").count(),1,"Unpublished video shows a calm placeholder");
+ assert.equal(await videoCard.locator("a").count(),0,"Unpublished videos have no broken links");
+ assert.equal(await videoCard.locator("button").count(),0,"Unpublished videos have no unusable controls");
+ mediaRecord.publishedVideo=true;
+ await mediaPage.reload({waitUntil:"domcontentloaded"});
+ await mediaPage.locator("a.video-open").waitFor({timeout:10000});
+ const tiktokLink=mediaPage.locator("a.video-open");
  assert.equal(await tiktokLink.getAttribute("href"),"https://vt.tiktok.com/ZSgyJoEnb/");
  assert.equal(await tiktokLink.getAttribute("target"),"_blank");
  assert.equal(await tiktokLink.getAttribute("rel"),"noopener noreferrer");
@@ -188,7 +199,7 @@ try{
  assert.equal((await mediaPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2)),true,"Video must not create horizontal overflow");
  assert.deepEqual(mediaErrors,[],"Unexpected video lesson client errors");
  await mediaContext.close();
- console.log("PASS STEP optional TikTok link, video safety, and mobile layout");
+ console.log("PASS STEP unpublished video placeholder, published link, video safety and mobile layout");
  const context=await browser.newContext({viewport:{width:1280,height:800}}),page=await context.newPage();
  const finalTrace={};
  await setupRoutes(page,5,finalTrace);
