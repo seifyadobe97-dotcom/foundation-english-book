@@ -5,7 +5,8 @@ window.StepAdminHome={
   const lessons=[
    {n:"01",slug:"subject-verb-agreement",code:"ASGQAGREE",title:"Subject–Verb Agreement",ar:"تطابق الفاعل والفعل"},
    {n:"02",slug:"present-simple",code:"ASGQPRSIM",title:"Present Simple",ar:"المضارع البسيط"},
-   {n:"03",slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",ar:"المضارع المستمر"}
+   {n:"03",slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",ar:"المضارع المستمر"},
+   {n:"04",slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",ar:"الماضي البسيط",status:"draft"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
@@ -16,7 +17,7 @@ window.StepAdminHome={
      title:c.title,ar:c.titleAr,status:c.status
     })));
    }
-  }catch(error){/* Keep the three known course cards if the live catalog is temporarily unavailable. */}
+  }catch(error){/* Keep the four known course cards if the live catalog is temporarily unavailable. */}
   const cards=lessons.map(x=>{
    const editor="studio.html?course="+encodeURIComponent(x.code);
    return '<article class="home-card"><div class="count">LESSON '+x.n+'</div>'+
@@ -38,7 +39,7 @@ window.StepAdminHome={
    '<p>دليل الطلاب والتقارير منفصلين عن تحرير المحتوى.</p>'+
    '<div class="home-shortcuts">'+
    '<a href="./#students"><strong>إدارة الطلاب والحسابات ←</strong><small>بحث وتفعيل وإيقاف وتصدير، مع بيانات التواصل.</small></a>'+
-   '<a href="reports.html"><strong>تقارير الأداء والاختبارات ←</strong><small>نتائج الدروس الثلاثة، مهارات الطلاب، والتقارير الفردية.</small></a>'+
+   '<a href="reports.html"><strong>تقارير الأداء والاختبارات ←</strong><small>نتائج الدروس المنشورة، مهارات الطلاب، والتقارير الفردية.</small></a>'+
    '</div></section>'+
    '<section class="home-section"><h2>3. المنهج والجودة</h2>'+
    '<p>ترتيب الدروس وتدقيق المصادر وتجهيز الدروس القادمة.</p>'+

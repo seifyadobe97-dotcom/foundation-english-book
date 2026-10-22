@@ -35,11 +35,11 @@ p{margin:6px 0 14px;color:var(--muted)}.panel{border:1px solid var(--line);borde
 @media(max-width:460px){.side{grid-template-columns:1fr}header img{width:125px}}
 </style><link rel="stylesheet" href="admin-nav.css"></head><body>
 <header><a href="./"><img src="../step-brand/logo.svg" alt="STEP with Seify"></a><a href="./">← مركز الإدارة</a><a id="videos-link" href="videos.html?indicator=subject-verb-agreement">فيديوهات الدرس الحالي</a></header>
-<main><div class="bar"><div><h1>استوديو تحرير الدروس</h1><p>من هنا تدير الدروس الثلاثة من غير تعديل ملفات GitHub. أي تغيير بيتحفظ مسودة لحد ما تنشره بنفسك.</p></div>
+<main><div class="bar"><div><h1>استوديو تحرير الدروس</h1><p>من هنا تدير كل دروس STEP من غير تعديل ملفات GitHub. أي تغيير بيتحفظ مسودة لحد ما تنشره بنفسك.</p></div>
 <select class="lesson-select" id="course" aria-label="اختيار الدرس">
 <option value="ASGQAGREE">الدرس 1 — Subject–Verb Agreement</option>
 <option value="ASGQPRSIM">الدرس 2 — Present Simple</option>
-<option value="ASGQPRCONT">الدرس 3 — Present Continuous</option></select></div>
+<option value="ASGQPRCONT">الدرس 3 — Present Continuous</option><option value="ASGQPASIM">الدرس 4 — Past Simple (مسودة)</option></select></div>
 <div class="tabs" id="tabs">
 <button class="btn active" data-tab="visual">الشرح والأمثلة والجداول</button>
 <button class="btn" data-tab="sections">عناوين ومراحل التدريب</button>
@@ -70,7 +70,7 @@ const sourceUnits=()=>({"ASGQAGREE":window.STEP_SUBJECT_VERB_UNITS,"ASGQPRSIM":w
 const courseSlug=()=>courseCatalog.find(x=>x.code===courseSelect.value)?.slug||
  ({"ASGQAGREE":"subject-verb-agreement","ASGQPRSIM":"present-simple","ASGQPRCONT":"present-continuous"}[courseSelect.value]||"");
 const params=new URLSearchParams(location.search);
-const allowedCourses=["ASGQAGREE","ASGQPRSIM","ASGQPRCONT"];
+const allowedCourses=["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM"];
 const allowedTabs=["visual","sections","questions","course","history"];
 if(allowedCourses.includes(params.get("course")))courseSelect.value=params.get("course");
 const state={data:null,tab:allowedTabs.includes(params.get("tab"))?params.get("tab"):"visual",index:0,questionId:null,dirty:false};

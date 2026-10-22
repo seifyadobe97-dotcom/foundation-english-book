@@ -62,7 +62,7 @@ assert(admin.includes("await loadOverview()")&&admin.includes('location.hash==="
  "Admin must open a task-first home and keep students under their own route");
 assert(admin.includes('src="admin-home.js"')&&adminHome.includes('id="nav-lessons"'),
  "Admin homepage must show one clearly labeled Studio link");
-for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT"])
+for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM"])
  assert(adminHome.includes(code)&&studio.includes('value="'+code+'"'),
   "Every published lesson must have its own direct editor route: "+code);
 for(const tab of ["visual","sections","questions","course"])
