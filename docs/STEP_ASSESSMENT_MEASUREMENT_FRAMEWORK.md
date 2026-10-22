@@ -1,9 +1,37 @@
 # STEP with Seify — Scientific Assessment & Measurement Framework
 **Status:** v0.1 — project design standard, **not** external certification.
 **Baseline snapshot:** 2026-10-22. **Owner:** STEP with Seify.
-**Intent:** Make all diagnostic, formative and summative scores interpretable, actionable, auditable and fair.
+**Intent:** Help learners starting from very weak English foundations participate confidently in interactive lessons and improve their performance on the real STEP exam; use measurement to guide teaching, not replace it with testing. Make any diagnostic, formative, or summative scores interpretable, actionable, auditable, and fair.
 
 > This is an independent STEP preparation and learning platform. Alignment to ETEC's STEP and CEFR must be demonstrated with documented content mapping; it must **not** claim official endorsement, score equivalence, or accredited psychometric validity until externally substantiated.
+
+## Non-negotiable product mission — Teaching first, measurement in service of learning
+
+**Primary audience:** Learners who may have severe foundational gaps in English, preparing for STEP under practical score-improvement pressure. The platform must **never** turn into a test-first experience that discourages beginners. It is a student-facing *interactive teaching platform*, with assessment as the engine for personalization.
+
+**Primary success outcome:** Meaningful improvement in STEP-relevant skills and readiness, eventually corroborated by representative secure mock tests and, only where consented and verifiable, actual STEP outcomes. Engagement and practice are leading indicators, not substitutes for score improvement. Do not claim a guaranteed score or equivalence to official STEP scoring.
+
+**Required lesson journey, for every published indicator:**
+1. **Explain simply** — Egyptian/clear Arabic scaffolding where helpful, accessible English terminology, very short chunks; build missing prerequisites instead of presuming grammar literacy.
+2. **Show** — one authentic everyday example and a contrasting trap, with visually correct LTR English and highlighted target words.
+3. **Try with me** — low-stakes, interactive, immediate checks, no punitive timer; show the precise reason for *the chosen wrong option* and the right alternative.
+4. **Practice with support** — graduated help (worked example → hinted question → independent question), repeated opportunities to recover, and no forced lockout that strands weak students.
+5. **Practice for STEP** — exam-style reading/listening/grammar/writing-analysis contexts, time-saving strategies taught *after* correctness is reasonably secure.
+6. **Verify learning** — separate unseen short post-check and spaced retention tasks, plus objective-level teacher follow-up when needed. Explicitly label sample insufficiency.
+
+**Product non-negotiables:**
+- Keep the calm, simple, mobile-first student UI, readable Arabic/English direction, distinct correct/incorrect colors, one main learning action at a time.
+- Every student answer deserves a plain-Arabic explanation of *why*, even after a correct selection; keep the learner in flow.
+- Correctness before speed. A stopwatch can be shown during appropriate test simulations, but never use response time alone to label ability or attention.
+- Never withhold explanations, videos, examples, or foundational material because the learner scored poorly on a diagnostic. Use the result to **add support**.
+- Allow a fast-track path for stronger learners, without making beginners feel behind; accessibility and captions/transcripts are part of the lesson.
+- Use a **weekly active learning + new-item accuracy + unseen mock-readiness** view of outcomes; distinguish learning engagement, practice mastery, and secured exam readiness.
+- Preserve the existing Present Simple lesson experience and its six stages as the teaching template. Do not replace it with dashboards, long assessments, or dense psychometric terminology in the student interface.
+- Judge recommendations by whether they trigger a helpful learning action and lead to better performance on *new* STEP-like tasks, not by number of analytics features.
+
+**Market alignment:** The immediate student promise is *from shaky foundations to practical STEP preparedness*. Admin dashboards exist to help instructors intervene and improve that journey; all scientific validation work is necessary infrastructure, not a reason to delay understandable, actionable teaching content.
+
+---
 
 ## 1. Where the pilot stands
 Verified from the project's live Supabase database (aggregate counts only):
@@ -149,4 +177,4 @@ Use transparent, deterministic rules initially. Any AI-generated intervention or
 - Fairness/accessibility checklists, measurement precision report and validity evidence log.
 - Pilot impact report, revision history and adverse-event handling.
 
-**Next immediate deliverable:** complete the Present Simple `Assessment Blueprint v1` and `Q-matrix v1` from the actual vetted content, then secure answer keys and create independent pre/post items **before** labelling any student's mastery as established.
+**Next immediate deliverable:** preserve and polish the interactive Present Simple journey for weak-foundation learners, map its six stages and 20 active questions in `Assessment Blueprint v1` / `Q-matrix v1`, secure answer keys, and add short unseen pre/post items. Measure comprehension gains without putting a diagnostic barrier in front of the teaching experience; only label mastery as established with sufficient new-item evidence.
