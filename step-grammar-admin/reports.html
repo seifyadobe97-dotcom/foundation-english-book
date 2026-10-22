@@ -224,6 +224,8 @@ async function analytics(slug=activeIndicator?.slug||"present-simple"){
     api("/students?page="+page+"&q="+encodeURIComponent(q))]);
   if(result.available===false)throw Error(result.message||"التقرير لسه مش متاح");
   const a=result.overview,parts=result.parts||[],rows=students.students||[];total=students.total||0;
+  const byStudent=new Map((result.student_metrics||[]).map(x=>[x.user_id,x]));
+  const isAgreement=slug==="subject-verb-agreement";
   const pct=x=>x==null?"—":Number(x).toFixed(1)+"%";
   const max=Math.max(1,...parts.map(x=>Number(x.students_tried||0)));
   pageRoot.innerHTML='<div class="eyebrow">INDICATOR REPORT</div><div class="form-line"><a class="btn alt" href="reports.html">← كل المؤشرات</a><a class="btn alt" href="curriculum.html">المنهج</a></div>'+
@@ -231,14 +233,14 @@ async function analytics(slug=activeIndicator?.slug||"present-simple"){
   '<p class="lead"><span class="ltr">'+esc(indicator.title_en)+'</span> · بيانات تخص المؤشر ده فقط، مش باقي الدروس.</p>'+
   '<div class="report-context"><strong>نطاق التقرير: '+esc(indicator.title_ar)+'</strong> — بعض بيانات الحسابات إجمالي على مستوى المنصة، أما نتائج التدريبات والتحليلات فهي خاصة بالمؤشر.</div><section class="stats">'+
    [["إجمالي حسابات المنصة",a.students_total],["حسابات المنصة المفعّلة",a.students_active],["أكملوا الدرس",a.students_completed],["أدّوا النهائي",a.students_exam_taken],["محاولات التدريب",a.practice_attempts],["محاولات النهائي",a.exam_attempts],["متوسط نتيجة النهائي",pct(a.avg_exam_percent)]].map(x=>'<div class="stat"><b>'+esc(x[1]==null?"—":x[1])+'</b><span>'+x[0]+'</span></div>').join("")+
-   '</section><section class="panel"><h2>أداء أجزاء المضارع البسيط</h2><p class="small">عدد الطلاب اللي حلّوا في كل جزء، ونسبة الطلاب اللي نجحوا فيه.</p>'+
+   '</section><section class="panel"><h2>أداء أجزاء '+esc(indicator.title_ar)+'</h2><p class="small">عدد الطلاب اللي حلّوا في كل جزء، ونسبة الطلاب اللي نجحوا فيه.</p>'+
    parts.map(p=>{const tried=Number(p.students_tried||0),passed=Number(p.students_passed||0);
    return '<div class="sectionbar"><label>'+esc((p.part_index+1)+". "+p.title)+'</label><div class="track"><div class="fill" style="width:'+(100*tried/max)+'%"></div></div><strong>'+num(tried)+' طالب · '+(tried?Math.round(100*passed/tried):0)+'% نجاح</strong></div>';
    }).join("")+
    '<div class="table-wrap"><table><thead><tr><th>الجزء</th><th>الطلاب المجربون</th><th>الطلاب الناجحون</th><th>المحاولات</th><th>متوسط الدرجة</th></tr></thead><tbody>'+
    parts.map(p=>'<tr><td>'+esc(p.title)+'</td><td>'+num(p.students_tried)+'</td><td>'+num(p.students_passed)+'</td><td>'+num(p.attempts)+'</td><td>'+pct(p.avg_score_percent)+'</td></tr>').join("")+'</tbody></table></div></section>'+
    '<section class="panel"><h2>التقارير الفردية</h2><form class="form-line" id="search"><input id="search-q" aria-label="بحث باسم الطالب أو الإيميل أو الهاتف" placeholder="اسم الطالب أو الإيميل أو التليفون" value="'+esc(q)+'"><button class="btn" type="submit">بحث</button><button type="button" class="btn alt" id="reload">تحديث</button></form><div class="table-wrap"><table><thead><tr><th>الطالب</th><th>التواصل</th><th>التقدم</th><th>أفضل اختبار</th><th>التقرير</th></tr></thead><tbody>'+
-   (rows.length?rows.map(s=>'<tr><td><span class="ltr">'+esc(s.username)+'</span></td><td>'+esc(s.email)+'</td><td>'+s.parts_passed+'/6</td><td>'+(s.exam_best==null?"—":s.exam_best+"%")+'</td><td><button class="btn alt" data-open="'+esc(s.user_id)+'">فتح التقرير</button></td></tr>').join(""):'<tr><td colspan="5">لا توجد نتائج.</td></tr>')+
+   (rows.length?rows.map(s=>'<tr><td><span class="ltr">'+esc(s.username)+'</span></td><td>'+esc(s.email)+'</td><td>'+(isAgreement?(byStudent.get(s.user_id)?.parts_passed??0):s.parts_passed)+'/'+(isAgreement?5:6)+'</td><td>'+((isAgreement?byStudent.get(s.user_id)?.exam_best:s.exam_best)==null?"—":(isAgreement?byStudent.get(s.user_id)?.exam_best:s.exam_best)+"%")+'</td><td><button class="btn alt" data-open="'+esc(s.user_id)+'">فتح التقرير</button></td></tr>').join(""):'<tr><td colspan="5">لا توجد نتائج.</td></tr>')+
    '</tbody></table></div><div class="form-line" style="margin-top:15px"><span class="small">الصفحة '+page+' · '+num(total)+' طالب</span><button class="btn alt" id="prev" '+(page===1?'disabled':'')+'>السابق</button><button class="btn alt" id="next" '+(page*25>=total?'disabled':'')+'>التالي</button></div></section>';
   pageRoot.insertAdjacentHTML("afterbegin",renderCohortInsights(result.learning));
   document.getElementById("search").onsubmit=e=>{e.preventDefault();q=document.getElementById("search-q").value.trim();page=1;analytics(slug);};
