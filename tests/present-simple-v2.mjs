@@ -451,6 +451,20 @@ try{
    await learningPage.locator('[data-stage="'+i+'"]').click();
    assert.equal(await learningPage.locator(".question").count(),foundation[i].checks.length);
    assert.equal(await learningPage.locator(".example-en").count(),foundation[i].examples.length);
+   const mapCards=learningPage.locator(".map-cell");
+   assert.equal(await mapCards.count(),foundation[i].map.length,"Each stage shows all map cards");
+   for(let j=0;j<foundation[i].map.length;j++){
+    const row=foundation[i].map[j],card=mapCards.nth(j);
+    assert.equal(await card.locator(".map-title").innerText(),row[2],"Arabic title is primary");
+    assert.equal(await card.locator(".map-en").innerText(),row[1],"English is secondary");
+    assert.equal(await card.locator(".map-ar").innerText(),row[3],"Arabic meaning is visible");
+    assert.equal(await card.locator(".map-example-en").innerText(),row[4],"English examples remain separate");
+    assert.equal(await card.locator(".map-example-en").getAttribute("dir"),"ltr","Examples must read LTR");
+   }
+   if(viewport.width===390){
+    const first=await mapCards.nth(0).boundingBox(),second=await mapCards.nth(1).boundingBox();
+    assert(second.y>first.y,"Map cards stack vertically on a narrow phone");
+   }
    assert.equal(await learningPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),true,
     "Mobile/desktop foundation has no horizontal scroll");
   }
