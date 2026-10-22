@@ -37,7 +37,7 @@ h1{font-size:clamp(27px,4vw,37px);margin:6px 0}h2{margin:0 0 10px;font-size:21px
 @media(max-width:950px){.axes{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}
 @media(max-width:440px){.axes{gap:8px}.axis{padding:13px 10px}.axis b{font-size:14px}}
 .step-brand-image{display:block;width:206px;max-width:100%;height:auto;flex:none}@media(max-width:480px){.step-brand-image{width:158px}}</style><link rel="icon" type="image/svg+xml" href="../step-brand/mark.svg"></head><body>
-<header><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"><div><a href="agreement-audit.html">تدقيق أسئلة الدرس الأول</a> · <a href="./">← لوحة الأدمن</a></div></header>
+<header><img class="step-brand-image" src="../step-brand/logo.svg" alt="STEP with Seify" width="218" height="51"><div><a href="agreement-audit.html">تدقيق الدرس 1</a> · <a href="continuous-audit.html">تدقيق الدرس 3</a> · <a href="./">← لوحة الأدمن</a></div></header>
 <main id="content"><p>جاري تحميل المحاور والمؤشرات…</p></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
 <script>
@@ -149,6 +149,7 @@ function form(item,canEdit){
  '<a class="btn alt" href="videos.html?indicator='+encodeURIComponent(item.slug)+'">▶ إدارة فيديوهات الدرس</a>'+
  (item.slug==='present-simple'?'<a class="btn alt" href="../step-grammar-student/learn.html">عاين درس المضارع البسيط الجديد ←</a>':
  item.slug==='subject-verb-agreement'?'<a class="btn alt" href="../step-grammar-student/subject-verb-agreement.html">عاين الدرس الأول التفاعلي ←</a>':
+ item.slug==='present-continuous'?'<a class="btn alt" href="continuous-preview.html">معاينة شرح الدرس 3 (مسودة)</a> <a class="btn alt" href="continuous-audit.html">تدقيق 24 موضع سؤال</a>':
  item.slug==='sentence-elements'?'<span class="note">ملف التأسيس محفوظ للتطوير الداخلي وموقوف عن عرض الطلاب مؤقتًا</span>':
  '<a class="btn alt" href="guide.html?indicator='+encodeURIComponent(item.slug)+'">محرر الشرح ←</a>')+'</div>':'')+'<div class="note">'+(immutable?
  'المؤشر ده منشور بالفعل، ومحتواه ودرجاته محفوظة في نظام الدروس.': 
