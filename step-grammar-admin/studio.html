@@ -217,7 +217,7 @@ function courseInfo(){
  field("c-sub","العنوان الفرعي للطلاب",displayed.subtitle,{multi:true})+
  '<div class="actions">'+(state.data.can_edit?'<button class="btn primary" data-act="save" type="button">حفظ عناوين كمسودة</button><button class="btn preview-btn" type="button" data-preview="yes">معاينة العناوين</button>'+
  (hasMetaDraft?'<button class="btn green" data-act="publish" type="button">نشر العناوين للطلاب</button>'+
- '<button class="btn danger" data-act="reset" type="button">إلغاء مسودة العناوين</button>':'')':'حسابك للعرض فقط')+
+ '<button class="btn danger" data-act="reset" type="button">إلغاء مسودة العناوين</button>':''):'حسابك للعرض فقط')+
  '<a href="curriculum.html" class="btn">إدارة ترتيب الدروس</a><a href="videos.html?indicator='+courseSlug()+'" class="btn">إدارة فيديوهات الدرس</a></div></div>';
  wire("course");
 }
