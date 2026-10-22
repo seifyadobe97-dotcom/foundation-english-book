@@ -160,8 +160,8 @@ function questions(){
  field("q-explain","شرح الإجابة الصحيحة",v.explanation||"",{multi:true})+
  '<h3>ليه كل اختيار تاني غلط؟</h3>'+
  '<div class="cols">'+["A","B","C","D"].map(k=>field("q-w-"+k,"سبب خطأ الاختيار "+k,wrong[k]||"",{multi:true,help:"سيتم استخدام الأسباب الثلاثة باستثناء الاختيار الصحيح"})).join("")+'</div>'+
- actions("questions",!!active?.draft,!!active?.published,true)+
- '<div class="note">أي تغيير على نص سؤال المصدر أو إجابته يعد «نسخة تحريرية» وليست النص الأصلي؛ المصدر والتقييمات السابقة يفضلوا محفوظين.</div></div>';
+ actions("questions",!!active?.draft&&active?.origin==="source",!!active?.published,true)+
+ '<div class="note">أي تغيير على نص سؤال المصدر أو إجابته يعد «نسخة تحريرية» وليست النص الأصلي؛ المصدر والتقييمات السابقة يفضلوا محفوظين. الأسئلة الجديدة تُحفظ كمسودات ولا تُنشر حتى تدقيق المصدر الأصلي.</div></div>';
  document.querySelectorAll("[data-index]").forEach(b=>b.onclick=()=>{state.questionId=Number(b.dataset.index)===0?null:list[Number(b.dataset.index)-1]?.id||null;paint();});
  wire("questions");
 }
