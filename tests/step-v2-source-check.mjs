@@ -38,7 +38,10 @@ assert(script.includes('dir="ltr"'),"English and answer choices are isolated LTR
 assert(script.includes("function lessonVideo("),"Lesson should support optional video content");
 assert(script.includes("www.youtube-nocookie.com/embed/"),"Safe YouTube embed template");
 assert(script.includes("tiktok.com/player/v1/"),"Safe full TikTok embed template");
-assert(content.includes("https://vt.tiktok.com/ZSgyJoEnb/"),"Pilot TikTok link must be configured in lesson data");
+assert(!content.includes("https://vt.tiktok.com/ZSgyJoEnb/"),"No unpublished example video should be hardcoded into student lessons");
+assert(script.includes('api("/videos")')&&script.includes("lesson-video-pending"),
+ "Lesson shows a video placeholder and loads only published video metadata");
+assert(script.includes('state.videos.find('),"Video URLs come from server-approved video slots");
 
 assert(css.includes(".answer-feedback.is-wrong")&&css.includes(".check-option.incorrect"),"Clear error colors for graded and quick checks");
 
