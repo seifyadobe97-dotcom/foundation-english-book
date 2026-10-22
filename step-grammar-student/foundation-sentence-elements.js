@@ -47,9 +47,14 @@
    '<div class="sidebar-note">الهدف إنك تفهم قبل ما تحفظ. مفيش وقت محدد ولا رسوب في التدريب ده.</div></aside>';
  }
  function mapCell(row){
-  return '<div class="map-cell"><span class="map-code" dir="ltr">'+esc(row[0])+'</span>'+
-   '<div class="map-en" lang="en">'+esc(row[1])+'</div>'+
-   '<div class="map-ar">'+esc(row[2])+'</div></div>';
+  // Arabic explanation leads; English terminology and examples remain directionally isolated.
+  return '<article class="map-cell" dir="rtl">'+
+   '<div class="map-top"><span class="map-code" dir="ltr">'+esc(row[0])+'</span>'+
+   '<div class="map-term"><h3 class="map-title">'+esc(row[2])+'</h3>'+
+   '<span class="map-en" dir="ltr" lang="en">'+esc(row[1])+'</span></div></div>'+
+   '<p class="map-ar">'+esc(row[3])+'</p>'+
+   '<div class="map-example"><span class="map-example-label">مثال بالإنجليزي</span>'+
+   '<div class="map-example-en" dir="ltr" lang="en">'+esc(row[4])+'</div></div></article>';
  }
  function examples(m){
   return '<section class="panel" aria-labelledby="examples-title"><h2 class="subhead" id="examples-title">شوف أمثلة واضحة</h2>'+
