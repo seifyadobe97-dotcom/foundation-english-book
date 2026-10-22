@@ -407,6 +407,58 @@ try{
  assert.deepEqual(studentErrors,[],"Student dashboard JS must not fail");
  await studentContext.close();
  console.log("PASS STEP student assigned follow-up and review 390px");
+
+ // Beginner lesson is open practice, not a server-graded or timed exam.
+ const source=await readFile(path.join(root,"step-grammar-student/foundation-sentence-elements-data.js"),"utf8");
+ const namespace={};
+ new Function("window",source)(namespace);
+ const foundation=namespace.STEP_FOUNDATION_STAGES;
+ assert.equal(foundation.length,7,"Seven foundational stations");
+ assert.equal(foundation.reduce((n,g)=>n+g.checks.length,0),22,"Twenty-two formative check questions");
+ let wrongChoices=0;
+ for(const stage of foundation){
+  assert(stage.map.length>=4&&stage.examples.length>=3&&stage.checks.length>=3,"Full scaffold in "+stage.id);
+  for(const q of stage.checks){
+   assert.equal(q.wrong.length,q.choices.length,"All options get explicit feedback");
+   q.choices.forEach((_,i)=>{if(i!==q.correct){assert(q.wrong[i]?.trim(),"Missing misconception for "+q.q);wrongChoices++;}});
+   assert(q.why?.trim(),"Missing correct-answer explanation");
+  }
+ }
+ assert.equal(wrongChoices,44,"Every distractor has a reason");
+ for(const viewport of [{width:1280,height:900},{width:390,height:844}]){
+  const learningPage=await browser.newPage({viewport}),errors=[];
+  learningPage.on("pageerror",e=>errors.push(String(e)));
+  await learningPage.route("https://fonts.googleapis.com/**",r=>r.abort());
+  await learningPage.route("https://fonts.gstatic.com/**",r=>r.abort());
+  await learningPage.goto(base+"/step-grammar-student/foundation-sentence-elements.html",{waitUntil:"domcontentloaded"});
+  await learningPage.locator(".question").first().waitFor({timeout:10000});
+  assert.equal(await learningPage.locator(".stage-link").count(),7);
+  assert.match(await learningPage.locator(".progress-box strong").innerText(),/0 من 22/);
+  const boxes=await Promise.all([learningPage.locator(".option").first().boundingBox(),learningPage.locator(".option").nth(1).boundingBox()]);
+  assert(boxes[0].x<boxes[1].x,"Answer letters flow left to right");
+  await learningPage.locator('[data-question="0"] [data-answer="1"]').click();
+  assert.equal(await learningPage.locator(".feedback.wrong").count(),1);
+  assert.match(await learningPage.locator(".feedback.wrong").innerText(),/ليه اختيارك غلط/);
+  assert.equal(await learningPage.locator('[data-question="0"] .option.correct').count(),1);
+  assert.equal(await learningPage.locator('[data-question="0"] .option.wrong').count(),1);
+  await learningPage.locator('[data-question="0"] [data-retry]').click();
+  await learningPage.locator('[data-question="0"] [data-answer="0"]').click();
+  assert.equal(await learningPage.locator(".feedback:not(.wrong)").count(),1);
+  await learningPage.reload({waitUntil:"domcontentloaded"});
+  await learningPage.locator(".feedback").waitFor();
+  assert.match(await learningPage.locator(".progress-box strong").innerText(),/1 من 22/);
+  for(let i=0;i<foundation.length;i++){
+   await learningPage.locator('[data-stage="'+i+'"]').click();
+   assert.equal(await learningPage.locator(".question").count(),foundation[i].checks.length);
+   assert.equal(await learningPage.locator(".example-en").count(),foundation[i].examples.length);
+   assert.equal(await learningPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),true,
+    "Mobile/desktop foundation has no horizontal scroll");
+  }
+  assert.deepEqual(errors,[],"Foundation JS has no errors");
+  console.log("PASS STEP foundation seven stages, selected-answer feedback and "+viewport.width+"px");
+  await learningPage.close();
+ }
+
 }finally{
  if(browser)await browser.close();
  await new Promise(done=>server.close(done));
