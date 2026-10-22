@@ -103,7 +103,7 @@ try{
   await page.locator(".question").first().waitFor({timeout:12000});
   assert.equal(await page.locator(".path-button").count(),5);
   assert.equal(await page.locator(".agreement-table").count(),1);
-  assert.equal(await page.locator(".agreement-flow").count(),2);
+  assert.equal(await page.locator(".agreement-flow").count(),3);
   assert.equal(await page.locator(".flow-pieces").first().getAttribute("dir"),"ltr");
   assert.equal(await page.locator(".q-answers").first().getAttribute("dir"),"ltr");
   assert.equal(await page.locator(".q-answer").count(),data.sections[0].questionIds.length*4);
