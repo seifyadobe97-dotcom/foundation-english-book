@@ -420,7 +420,7 @@ try{
   await learningPage.locator(".stage-link").first().waitFor({timeout:10000});
   assert.equal(await learningPage.locator(".stage-link").count(),7);
   assert.equal(await learningPage.locator(".question").count(),0,"No unsourced checks in sentence overview");
-  assert.match(await learningPage.locator(".source-pending").innerText(),/مفيش سؤال موثّق/);
+  assert.match(await learningPage.locator(".source-pending").innerText(),/اتعلم القاعدة الأول|المحطة دي للشرح/);
   assert.match(await learningPage.locator(".progress-box strong").innerText(),/0 من 15/);
   await learningPage.locator('[data-stage="1"]').click();
   await learningPage.locator(".question").first().waitFor({timeout:10000});
@@ -432,7 +432,7 @@ try{
   await learningPage.locator('[data-question="0"] [data-answer="'+wrongOption+'"]').click();
   assert.equal(await learningPage.locator(".feedback.wrong").count(),1);
   assert.match(await learningPage.locator(".feedback.wrong").innerText(),/ليه اختيارك غلط/);
-  assert.match(await learningPage.locator(".question-source").first().innerText(),/المصدر:/);
+  assert.equal(await learningPage.locator(".question-source").count(),0,"No editorial source is visible to students");
   assert.equal(await learningPage.locator(".q-english").first().innerText(),sourcedQuestion.en);
   assert.equal(await learningPage.locator('[data-question="0"] .option.correct').count(),1);
   assert.equal(await learningPage.locator('[data-question="0"] .option.wrong').count(),1);
@@ -446,6 +446,26 @@ try{
    await learningPage.locator('[data-stage="'+i+'"]').click();
    assert.equal(await learningPage.locator(".question").count(),foundation[i].checks.length);
    assert.equal(await learningPage.locator(".example-en").count(),foundation[i].examples.length);
+   assert.equal(await learningPage.locator(".mastery-panel").count(),1,
+    "Every foundation stage has extended self-study content");
+   assert(await learningPage.locator(".teaching-card").count()>=2,"Teaching highlights and examples must exist");
+   assert(await learningPage.locator(".pattern-card").count()>=1,"LTR sentence formulas are required");
+   assert.equal(await learningPage.locator(".teaching-highlight").count()>0,true,
+    "Key grammar meanings are highlighted");
+   assert.equal(await learningPage.locator(".formula-flow").first().getAttribute("dir"),"ltr",
+    "Subject + Verb + Object must read left-to-right");
+   assert.equal(await learningPage.locator(".model-sentence").first().getAttribute("dir"),"ltr",
+    "Colored example sentences must follow English direction");
+   assert.equal(await learningPage.locator(".teaching-table").count()>=1,true,
+    "Every stage contains a reference table");
+   if(i===4){
+    assert.match(await learningPage.locator(".mastery-panel").innerText(),/BE — فعل أساسي/);
+    assert.match(await learningPage.locator(".mastery-panel").innerText(),/HAVE — مساعد/);
+   }
+   if(i===6){
+    assert.equal(await learningPage.locator(".modal-deep").count(),1,"Modals have an independent guide");
+    assert.match(await learningPage.locator(".modal-deep").innerText(),/mustn't/);
+   }
    const mapCards=learningPage.locator(".map-cell");
    assert.equal(await mapCards.count(),foundation[i].map.length,"Each stage shows all map cards");
    for(let j=0;j<foundation[i].map.length;j++){
