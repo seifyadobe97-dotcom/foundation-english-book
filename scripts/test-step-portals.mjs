@@ -15,6 +15,7 @@ const pages = [
   "step-grammar-admin/courses.html",
   "step-grammar-admin/curriculum.html",
   "step-grammar-admin/guide.html",
+  "step-grammar-admin/videos.html",
   "step-grammar-student/guide.html",
 ];
 for (const path of pages) {
@@ -81,6 +82,17 @@ const curriculum=readFileSync("step-grammar-admin/curriculum.html","utf8");
 assert(curriculum.includes('"/curriculum"'),"Admin curriculum must load axes from backend");
 assert(curriculum.includes("/curriculum/indicators/save"),"Admin indicators must save to backend");
 assert(curriculum.includes("/curriculum/indicators/status"),"Admin indicators must archive to backend");
+const videoAdmin=readFileSync("step-grammar-admin/videos.html","utf8");
+const videoMigration=readFileSync("supabase/migrations/20261022_step_indicator_videos.sql","utf8");
+assert(videoAdmin.includes('/videos/save')&&videoAdmin.includes('data-save="publish"')&&videoAdmin.includes('data-save="draft"'),
+ "Admin can save a private draft then publish a video");
+assert(curriculum.includes('videos.html?indicator='),"Every indicator must link to video management");
+assert(videoMigration.includes("enable row level security")&&videoMigration.includes("revoke all"),
+ "Video drafts must be protected from direct public access");
+assert(adminServer.includes('permission.role!=="owner"')&&adminServer.includes('path==="/videos/save"'),
+ "Publishing videos requires server-side owner authorization");
+assert(courseServer.includes('path==="/videos"')&&courseServer.includes('.eq("published",true)'),
+ "Only approved video links may be shown to students");
 assert(admin.includes('href="curriculum.html"'),"Admin navigation includes axes and indicators");
 assert(adminServer.includes('path==="/curriculum"'),"Admin server includes authorized curriculum API");
 assert(courseServer.includes('path==="/catalog"'),"Student service provides published curriculum catalog");
@@ -115,6 +127,8 @@ assert(unified.includes("present-simple-v2.js")&&unified.includes("present-simpl
 assert(v2.includes("/parts/")&&v2.includes("/exam"),"Live practice and final assessment are integrated");
 assert(!v2.includes('api("/guide")')&&!v2.includes('api("/guide"'),
  "Old source-specific guide is not rendered in rebuilt lesson");
+assert(!v2Content.includes("vt.tiktok.com/ZSgyJoEnb"),"No temporary videos are hardcoded into lessons");
+assert(v2.includes("lesson-video-pending")&&v2.includes('api("/videos")'),"A video placeholder is available in every stage");
 assert(v2Content.includes("دي عادة")&&v2Content.includes("دي حقيقة")&&v2Content.includes("دي وظيفة"),
  "Learning examples are classified clearly in Arabic");
 assert(v2Content.includes("فعل في المصدر")&&v2Content.includes("مفرد غائب"),
@@ -154,7 +168,8 @@ const brandedPages=[
  "step-grammar-student/learn.html","step-grammar-student/lesson-v2.html",
  "step-grammar-pilot/index.html","step-grammar-admin/index.html",
  "step-grammar-admin/reports.html","step-grammar-admin/courses.html",
- "step-grammar-admin/curriculum.html","step-grammar-admin/guide.html"];
+ "step-grammar-admin/curriculum.html","step-grammar-admin/guide.html",
+ "step-grammar-admin/videos.html"];
 for(const page of brandedPages){
  const html=readFileSync(page,"utf8");
  assert(!/QUDRAT|TRAINING INSTITUTE|معهد القدرات|إدارة المعهد|مدير المعهد/i.test(html),page+" retains old branding");
