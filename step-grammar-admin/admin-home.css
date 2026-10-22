@@ -1,0 +1,26 @@
+/* STEP admin home: clear task-first control center */
+.admin-home .home-hero{background:linear-gradient(120deg,#193947,#266b60);color:#fff;padding:27px 30px;border-radius:20px;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.admin-home .home-hero h1{color:#fff;margin:3px 0;font-size:clamp(25px,3.5vw,36px)}
+.admin-home .home-hero p{color:#e3efe9;font-size:13px;margin:0}
+.admin-home .home-hero a{background:white;color:#163a45;min-height:45px;white-space:nowrap}
+.admin-home .home-section{margin:29px 0}
+.admin-home .home-section h2{font-size:21px;margin:0 0 4px}
+.admin-home .home-section>p{color:#617881;font-size:13px;margin:0 0 13px}
+.admin-home .home-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.admin-home .home-card{display:flex;flex-direction:column;gap:8px;background:white;border:1px solid #dce7e1;border-radius:16px;padding:20px;min-width:0}
+.admin-home .home-card h3{margin:0;font-size:18px;color:#163847}
+.admin-home .home-card p{margin:0 0 6px;flex:1;font-size:13px;color:#5c757d}
+.admin-home .home-card .count{color:#287569;font:800 12px "DM Sans";direction:ltr;text-align:right}
+.admin-home .home-card .badge{font-size:11px;border-radius:99px;padding:3px 9px;background:#fff2df;color:#795a36}
+.admin-home .home-card .badge.live{background:#e6f5ec;color:#206b4e}
+.admin-home .home-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:7px}
+.admin-home .home-actions a{display:inline-flex;align-items:center;border:1px solid #d7e5dd;color:#225e54;border-radius:9px;padding:8px 10px;font-size:12px;font-weight:800;line-height:1.5}
+.admin-home .home-actions a.main{background:#193947;border-color:#193947;color:white}
+.admin-home .home-shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.admin-home .home-shortcuts a{background:white;border:1px solid #dce7e1;border-radius:14px;padding:18px;display:block}
+.admin-home .home-shortcuts a strong{display:block;font-size:15px;color:#193947}
+.admin-home .home-shortcuts a small{display:block;color:#657a81;font-size:12px;line-height:1.8}
+.admin-home .home-footnote{background:#edf6f2;border-radius:12px;padding:13px 17px;color:#4e6b65;font-size:12px;margin:22px 0}
+.admin-home a:focus-visible{outline:3px solid #c79b61;outline-offset:3px}
+@media(max-width:980px){.admin-home .home-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.admin-home .home-grid,.admin-home .home-shortcuts{grid-template-columns:1fr}.admin-home .home-hero{padding:21px 18px}.admin-home .home-card{padding:16px}}
