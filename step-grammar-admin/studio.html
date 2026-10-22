@@ -188,7 +188,7 @@ function wire(kind){
   const action=b.dataset.act;
   const course=courseSelect.value;
   let part_index=state.index,content={};
-  if(kind==="visual"){
+  if(kind==="units"){
    const keys=["cards","examples","formulas","keywords","warning","table","extra"];
    content={title:txt("v-title"),detail:txt("v-detail"),tip:txt("v-tip")};
    for(const key of keys){const value=parse("v-"+key,key);if(value!==null)content[key]=value;}
