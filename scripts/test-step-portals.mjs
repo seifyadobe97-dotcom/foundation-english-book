@@ -80,6 +80,36 @@ assert(adminServer.includes('permission.role!=="owner"'),"Only owner can create 
 assert(courseServer.includes('const courseCode=lesson.code;'),"Student course remains safely pinned");
 assert(courseServer.includes('requestedCourseCode')&&adminServer.includes('step_private_course_banks'),
  "Both authorized Edge Functions must resolve original question banks from private storage");
+assert(courseServer.includes('const isContinuous=')&&
+ courseServer.includes('requestedCourseCode=isContinuous?"ASGQPRCONT"')&&
+ courseServer.includes('if(isAgreement||isContinuous)'),
+ "Lesson 3 course API must be mapped and publication-gated before grades are exposed");
+assert(adminServer.includes('path==="/continuous/audit"')&&
+ adminServer.includes('continuousLesson'),
+ "Lesson 3 source review and later instructor analytics must be admin-authorized");
+const continuousContent=readFileSync("step-grammar-student/present-continuous-content.js","utf8");
+const continuousHtml=readFileSync("step-grammar-student/present-continuous.html","utf8");
+const continuousScript=readFileSync("step-grammar-student/present-continuous.js","utf8");
+new Script(continuousContent,{filename:"present-continuous-content.js"});
+new Script(continuousScript,{filename:"present-continuous.js"});
+assert(continuousHtml.includes('src="present-continuous.js"')&&
+ continuousHtml.includes('src="present-continuous-content.js"')&&
+ continuousScript.includes('const API_PREFIX="/continuous"'),
+ "Lesson 3 must load its own full interactive interface and server-only questions");
+assert(!/PC-B0[1-9]|PC-C0[1-9]/.test(continuousHtml+continuousContent+continuousScript),
+ "Source register IDs must never be embedded in the student-facing lesson");
+const continuousFixture=JSON.parse(readFileSync("tests/fixtures/private-banks/continuous-data.json","utf8"));
+assert(continuousFixture.code==="ASGQPRCONT"&&continuousFixture.sections.length===5&&
+ continuousFixture.sections.flatMap(s=>s.questionIds).length===14,
+ "Synthetic regression fixture must cover all five stages without copying real STEP MCQs");
+assert(Object.values(continuousFixture.questions).every(q=>q.text.startsWith("Synthetic browser test")),
+ "Browser test questions must be artificial, not source originals");
+const previewPage=readFileSync("step-grammar-admin/continuous-preview.html","utf8");
+const auditPage=readFileSync("step-grammar-admin/continuous-audit.html","utf8");
+assert(previewPage.includes('/functions/v1/step-admin/me')&&
+ auditPage.includes('/functions/v1/step-admin/continuous/audit'),
+ "Lesson 3 instructor preview and original question audit must require admin credentials");
+
 const curriculum=readFileSync("step-grammar-admin/curriculum.html","utf8");
 assert(curriculum.includes('"/curriculum"'),"Admin curriculum must load axes from backend");
 assert(curriculum.includes("/curriculum/indicators/save"),"Admin indicators must save to backend");
