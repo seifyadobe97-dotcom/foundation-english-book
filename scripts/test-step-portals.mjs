@@ -134,18 +134,37 @@ new Function("window",foundationData)(foundationWindow);
 const foundation=foundationWindow.STEP_FOUNDATION_STAGES;
 assert.equal(foundation.length,7,"Foundation is scaffolded into seven brief stages");
 assert.equal(foundation.reduce((n,g)=>n+g.checks.length,0),15,"Foundation has 15 source-linked MCQs");
-const referenceBank=JSON.parse(readFileSync("supabase/functions/step-course/lesson-data.json","utf8")).questions;
-const sourceIds=new Set();
+const referenceBank=Object.values(JSON.parse(readFileSync("supabase/functions/step-course/lesson-data.json","utf8")).questions);
+const stems=new Set();
 for(const stage of foundation)for(const question of stage.checks){
- const original=referenceBank[question.bankId];
- assert(original&&original.source,"Unsourced MCQ in foundation");
- assert(!sourceIds.has(question.bankId),"Duplicate MCQ source ID");
- sourceIds.add(question.bankId);
- assert.equal(question.en,original.text,"Question stem changed from source");
- assert.deepEqual(question.choices,["A","B","C","D"].map(l=>original.options[l]),"Answer options changed from source");
- assert.equal(question.correct,["A","B","C","D"].indexOf(original.correct),"Answer key changed from source");
- assert.deepEqual(question.source,original.source,"Question provenance missing");
+ assert(!Object.hasOwn(question,"source")&&!Object.hasOwn(question,"bankId"),
+  "Internal provenance and editorial bank IDs must never ship in student JS");
+ assert(!stems.has(question.en),"Duplicate original STEP question in foundation");
+ stems.add(question.en);
+ const originals=referenceBank.filter(x=>x.text===question.en);
+ assert.equal(originals.length,1,"Source-traced bank question stem must match uniquely");
+ const original=originals[0];
+ assert.deepEqual(question.choices,["A","B","C","D"].map(l=>original.options[l]),
+  "Answer choices must match editorial source bank");
+ assert.equal(question.correct,["A","B","C","D"].indexOf(original.correct),"Answer key changed");
+ assert.equal(question.why,original.explanation,"Reviewed explanation changed");
+ assert.deepEqual(question.wrong,["A","B","C","D"].map(l=>l===original.correct?"":original.wrongReasons[l]),
+  "Distractor feedback must match reviewed source register");
 }
+const foundationMastery=readFileSync("step-grammar-student/foundation-sentence-elements-mastery.js","utf8");
+new Script(foundationMastery,{filename:"foundation-sentence-elements-mastery.js"});
+const masterWindow={};
+new Function("window",foundationMastery)(masterWindow);
+assert.deepEqual(Object.keys(masterWindow.STEP_FOUNDATION_MASTERY).sort(),foundation.map(g=>g.id).sort());
+assert(masterWindow.STEP_FOUNDATION_MASTERY["verb-roles"].cards.length>=8,
+ "BE/DO/HAVE must distinguish main and auxiliary usages with examples");
+assert(masterWindow.STEP_FOUNDATION_MASTERY.build.modal.rows.length>=8,
+ "Modal auxiliaries require a detailed explanation and usage table");
+assert(foundationScript.includes("function deepDive(")&&foundationScript.includes("formula-flow")&&
+ foundationScript.includes("class=\"model-sentence\""),
+ "Student should see Arabic-first diagrams, LTR sentence sequences and colorful model sentences");
+assert(!foundationScript.includes("sourceLabel(")&&!foundationScript.includes("question-source"),
+ "Student UI must not expose instructor-only source locators");
 assert(foundation.every(g=>g.map.length>=4&&g.examples.length>=3),"Every foundation step has an explanatory map and examples");
 assert.equal(foundation.reduce((n,g)=>n+g.map.length,0),32,"All 32 teaching map cards are present");
 for(const stage of foundation)for(const card of stage.map){
@@ -165,6 +184,7 @@ for(const stage of foundation)for(const q of stage.checks){
 assert(foundationHtml.includes('lang="ar"')&&foundationHtml.includes('dir="rtl"'));
 assert(foundationScript.includes('dir="ltr"')&&foundationScript.includes("localStorage"),"Bidi-safe choices and local practice memory");
 assert(foundationHtml.includes("foundation-sentence-elements-data.js")&&foundationHtml.includes("foundation-sentence-elements.css"));
+assert(foundationHtml.includes("foundation-sentence-elements-mastery.js"),"Extended course must load");
 assert(foundationCss.includes(".feedback.wrong")&&foundationCss.includes(".option.correct"),"Clear color-coded feedback");
 assert(portal.includes('href="foundation-sentence-elements.html"'),"Foundation precedes Present Simple on student dashboard");
 assert(readFileSync("step-grammar-admin/curriculum.html","utf8").includes("عاين درس التأسيس التفاعلي"),"Preview foundation from draft curriculum");
