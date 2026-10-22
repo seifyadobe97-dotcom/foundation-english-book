@@ -149,7 +149,7 @@ function words(m){
 function explainTable(m){
  if(!m.table)return "";
  const t=m.table;
- return '<section class="agreement-table-box" aria-label="جدول المضارع المستمر">'+
+ return '<section class="agreement-table-box" aria-label="جدول قواعد الدرس">'+
  '<h3 class="section-label">جدول للمقارنة والحفظ</h3><div class="agreement-table-scroll">'+
  '<table class="agreement-table"><thead><tr>'+t.headers.map(h=>'<th dir="rtl">'+escapeHtml(h)+'</th>').join("")+'</tr></thead><tbody>'+
  t.rows.map(row=>'<tr>'+row.map((value,i)=>'<td data-label="'+escapeHtml(t.headers[i])+'"><span dir="auto">'+escapeHtml(value)+'</span></td>').join("")+'</tr>').join("")+
