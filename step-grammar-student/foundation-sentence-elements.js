@@ -67,7 +67,7 @@
   if(!Array.isArray(tokens))return "";
   return '<div class="model-sentence" dir="ltr" lang="en" aria-label="الجملة الإنجليزية بالألوان">'+
    tokens.map(([role,word],i)=>{
-    const known=["subject","main","aux","modal","neg","object","complement","time","punct"].includes(role)?role:"time";
+    const known=["subject","main","link","aux","modal","neg","object","complement","time","punct"].includes(role)?role:"time";
     return (i&&role!=="punct"?" ":"")+'<span class="word role-'+known+'">'+esc(word)+'</span>';
    }).join("")+'</div>';
  }
@@ -108,7 +108,7 @@
    '<h2 class="subhead">افهمها بنفسك — خطوة بخطوة</h2><p>'+esc(d.goal)+'</p></div>'+
    '<div class="color-legend" aria-label="دليل الألوان">'+
     '<span><i class="legend-dot role-subject"></i> الفاعل</span>'+
-    '<span><i class="legend-dot role-aux"></i> الفعل الرابط / المساعد</span>'+
+    '<span><i class="legend-dot role-link"></i> فعل ربط أساسي</span>'+ '<span><i class="legend-dot role-aux"></i> الفعل المساعد</span>'+
     '<span><i class="legend-dot role-main"></i> الفعل الأساسي</span>'+
     '<span><i class="legend-dot role-neg"></i> النفي</span>'+
     '<span><i class="legend-dot role-modal"></i> الفعل الناقص</span>'+
