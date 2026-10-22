@@ -43,7 +43,15 @@ assert(script.includes('api("/videos")')&&script.includes("lesson-video-pending"
  "Lesson shows a video placeholder and loads only published video metadata");
 assert(script.includes('state.videos.find('),"Video URLs come from server-approved video slots");
 
-assert(css.includes(".answer-feedback.is-wrong")&&css.includes(".check-option.incorrect"),"Clear error colors for graded and quick checks");
+assert(css.includes(".answer-feedback.is-wrong")&&css.includes(".q-answer.bad"),"Source-bank graded answers have clear error colors");
+assert(!content.includes(" quick:{")&&!script.includes("function quick(m)"),
+ "Present Simple must not offer authored two-choice or three-choice mini-quizzes");
+for(const id of publishedIds){
+ const q=questionBank.questions[id];
+ assert.equal(Object.keys(q.options).length,4,"STEP practice questions require four options: "+id);
+ assert(q.source?.type==="course_book"||q.source?.type==="original_compilation",
+ "Sourced question provenance required: "+id);
+}
 
 const adminApi=readFileSync("supabase/functions/step-admin/index.ts","utf8");
 const reports=readFileSync("step-grammar-admin/reports.html","utf8");
