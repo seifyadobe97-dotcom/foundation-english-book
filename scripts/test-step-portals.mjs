@@ -99,6 +99,21 @@ assert(admin.includes('href="curriculum.html"'),"Admin navigation includes axes 
 assert(adminServer.includes('path==="/curriculum"'),"Admin server includes authorized curriculum API");
 assert(courseServer.includes('path==="/catalog"'),"Student service provides published curriculum catalog");
 assert(portal.includes('step-course/catalog'),"Student portal loads backend catalog");
+assert(portal.includes("GRAMMAR · INDICATOR 01")&&portal.includes("GRAMMAR · INDICATOR 02"),
+ "Learners must see Agreement and Present Simple as lessons 1 and 2");
+const courseCardMarkup=portal.slice(portal.indexOf("app.innerHTML="));
+assert(courseCardMarkup.indexOf("'+agreementCard+'")>=0&&
+ courseCardMarkup.indexOf("'+agreementCard+'")<courseCardMarkup.indexOf("GRAMMAR · INDICATOR 02"),
+ "Agreement must appear before Present Simple in the student dashboard");
+assert(portal.includes("مراحل الدرس 2 — المضارع البسيط"),
+ "Present Simple exercises must carry the revised lesson number");
+assert(curriculum.includes("عاين الدرس الأول التفاعلي")&&
+ curriculum.includes("state.indicators=(data.indicators||[]).slice().sort("),
+ "Admin must display the revised lesson one preview and sort indicators by position");
+const logicalSequence=readFileSync("curriculum/STEP_LOGICAL_GRAMMAR_SEQUENCE_20261022.md","utf8");
+assert(logicalSequence.includes("Present Continuous (Lesson 03)")&&
+ logicalSequence.includes("sentence-elements")&&logicalSequence.includes("position `999`"),
+ "Teaching sequence must keep Foundation deferred and specify lesson 3");
 assert(portal.includes("محاور STEP الأربعة"),"Four axes shown on student dashboard");
 assert(curriculum.includes('function bankSections('),"Bank category review visible in admin");
 assert(curriculum.includes('/curriculum/classifications/link'),"Owner can link bank classifications");
