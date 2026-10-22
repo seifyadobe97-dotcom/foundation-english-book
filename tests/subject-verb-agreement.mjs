@@ -64,10 +64,10 @@ try{
    let value={error:"Missing mock"},status=200;
    if(endpoint==="/agreement/course")value=course();
    else if(endpoint==="/agreement/videos")value={videos:[]};
-   else if(/^\\/agreement\\/parts\\/\\d+$/.test(endpoint)){
+   else if(new RegExp("^/agreement/parts/[0-9]+$").test(endpoint)){
     const i=Number(endpoint.split("/").at(-1)),s=data.sections[i];
     value={part:{...s,questions:publicQuestions(s.questionIds),passRequired:Math.ceil(s.questionIds.length*.6)},progress:course()};
-   }else if(/^\\/agreement\\/parts\\/\\d+\\/submit$/.test(endpoint)){
+   }else if(new RegExp("^/agreement/parts/[0-9]+/submit$").test(endpoint)){
     const i=Number(endpoint.split("/")[3]),s=data.sections[i],body=JSON.parse(req.postData()||"{}");
     const graded=s.questionIds.map((id,n)=>{const q=data.questions[id],selected=body.answers["q"+(n+1)];
      return {id:"q"+(n+1),selected,correct:q.correct,isCorrect:selected===q.correct,
