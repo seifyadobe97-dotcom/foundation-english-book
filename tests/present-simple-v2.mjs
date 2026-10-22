@@ -262,11 +262,20 @@ try{
   timed_answers:i===2?8:1,status:i===2?"تحتاج متابعة":"بيانات غير كافية",
   recommendation:i===2?"راجع قاعدة s / es / ies":"نحتاج أسئلة أكثر"
  }));
- let adminFollowups=[];
+ let adminFollowups=[],adminVideos=[];
  await adminPage.route("https://funltjxavowlnnfibhpl.supabase.co/functions/v1/step-admin**",route=>{
   const path=new URL(route.request().url()).pathname;
   let data;
   if(path.endsWith("/me"))data={role:"owner",username:"Pilot Admin"};
+  else if(path.endsWith("/videos/save")){
+   const item=route.request().postDataJSON();
+   adminVideos=adminVideos.filter(x=>x.part_index!==item.part_index).concat(item);
+   data={video:item};
+  }
+  else if(path.endsWith("/videos")){
+   data={indicator:{slug:"present-simple",title_ar:"المضارع البسيط",status:"published"},
+    can_edit:true,slots:dataset.sections.map((x,i)=>({part_index:i,title:x.titleAr})),videos:adminVideos};
+  }
   else if(path.endsWith("/indicators"))data={indicators:[
    {slug:"present-simple",axis_code:"grammar",title_ar:"المضارع البسيط",
     title_en:"Present Simple",status:"published",report_ready:true},
@@ -345,7 +354,25 @@ try{
  assert.equal(await adminPage.locator(".insight-card").count()>=6,true);
  assert.equal(await adminPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),true,"Admin insights fit mobile");
  assert.deepEqual(adminErrors,[],"Admin report and cohort JS must not fail");
+ await adminPage.goto(base+"/step-grammar-admin/videos.html?indicator=present-simple",{waitUntil:"domcontentloaded"});
+ await adminPage.locator(".video-slot").first().waitFor({timeout:10000});
+ assert.equal(await adminPage.locator(".video-slot").count(),6,"Each Present Simple section has a video slot");
+ assert.equal(await adminPage.locator(".status.live").count(),0,"No videos are published initially");
+ const videoEditor=adminPage.locator('.video-slot[data-part="2"]');
+ await videoEditor.locator('[name="title"]').fill("شرح s / es / ies مع Seify");
+ await videoEditor.locator('[name="url"]').fill("https://youtu.be/dQw4w9WgXcQ");
+ await videoEditor.locator('[data-save="draft"]').click();
+ await videoEditor.locator(".message.ok").waitFor({timeout:7000});
+ assert.equal(adminVideos.find(x=>x.part_index===2)?.published,false,"Draft video is not published");
+ await adminPage.locator('.video-slot[data-part="2"] [data-save="publish"]').click();
+ await adminPage.locator('.video-slot[data-part="2"] .status.live').waitFor({timeout:7000});
+ assert.equal(adminVideos.find(x=>x.part_index===2)?.published,true);
+ await adminPage.locator('.video-slot[data-part="2"] [data-save="unpublish"]').click();
+ await adminPage.locator('.video-slot[data-part="2"] .status:not(.live)').waitFor({timeout:7000});
+ assert.equal(adminVideos.find(x=>x.part_index===2)?.published,false);
+ assert.deepEqual(adminErrors,[],"Video editor must not cause browser errors");
  await adminContext.close();
+ console.log("PASS STEP admin video slots, draft, publish and unpublish 390px");
  console.log("PASS STEP admin skill insights, assignment and cancellation 390px");
 
  const studentContext=await browser.newContext({viewport:{width:390,height:844}}),
