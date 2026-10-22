@@ -21,7 +21,6 @@ window.PRESENT_SIMPLE_UNITS=[
  ["اسم مفرد","My friend [[works]] here.","اسم مفرد = He أو She."]],
  quick:{q:"He ____ football every week.",choices:["play","plays"],correct:1,why:"He مفرد غائب؛ نستخدم plays.",wrongWhy:{"0":"play من غير s ينفع مع I وYou والجمع، لكن He مفرد غائب فنقول plays."}}},
  {title:"s / es / ies",detail:"لما الفاعل يكون [[مفرد غائب]]، بص على نهاية الفعل علشان تعرف هتضيف إيه.",
- video:{provider:"tiktok",url:"https://vt.tiktok.com/ZSgyJoEnb/",title:"فيديو مع Seify",note:"فيديو إضافي للتجربة: افتحه وارجع كمّل الأمثلة والأسئلة من مكانك."},
  cards:[
  ["أغلب الأفعال","play → plays","نضيف s","①"],
  ["نهايات خاصة","watch → watches","sh / ch / ss / x / z / o → es","②"],
