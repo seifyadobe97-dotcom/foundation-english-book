@@ -203,7 +203,7 @@ assert(releaseWorkflow.includes("node scripts/build-step-public-site.mjs")&&
  "GitHub Pages must deploy allowlisted release output rather than full repository");
 assert(readFileSync("service-worker.js","utf8").includes("status:410"),
  "Service worker must refuse cached copies of the archived foundation lesson");
-assert(readFileSync("step-grammar-admin/curriculum.html","utf8").includes("عاين درس التأسيس التفاعلي"),"Preview foundation from draft curriculum");
+assert(readFileSync("step-grammar-admin/curriculum.html","utf8").includes("موقوف عن عرض الطلاب مؤقتًا"),"Admin must display foundation as paused rather than offer a public preview");
 assert(!foundationScript.includes("/exam/submit")&&!foundationScript.includes("/parts/"),"Foundation practice does not impersonate graded bank");
 
 assert(unified.includes("present-simple-v2.js")&&unified.includes("present-simple-v2-content.js"),
