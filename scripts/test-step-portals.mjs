@@ -133,7 +133,19 @@ const foundationWindow={};
 new Function("window",foundationData)(foundationWindow);
 const foundation=foundationWindow.STEP_FOUNDATION_STAGES;
 assert.equal(foundation.length,7,"Foundation is scaffolded into seven brief stages");
-assert.equal(foundation.reduce((n,g)=>n+g.checks.length,0),22,"Foundation has 22 immediate formative checks");
+assert.equal(foundation.reduce((n,g)=>n+g.checks.length,0),15,"Foundation has 15 source-linked MCQs");
+const referenceBank=JSON.parse(readFileSync("supabase/functions/step-course/lesson-data.json","utf8")).questions;
+const sourceIds=new Set();
+for(const stage of foundation)for(const question of stage.checks){
+ const original=referenceBank[question.bankId];
+ assert(original&&original.source,"Unsourced MCQ in foundation");
+ assert(!sourceIds.has(question.bankId),"Duplicate MCQ source ID");
+ sourceIds.add(question.bankId);
+ assert.equal(question.en,original.text,"Question stem changed from source");
+ assert.deepEqual(question.choices,["A","B","C","D"].map(l=>original.options[l]),"Answer options changed from source");
+ assert.equal(question.correct,["A","B","C","D"].indexOf(original.correct),"Answer key changed from source");
+ assert.deepEqual(question.source,original.source,"Question provenance missing");
+}
 assert(foundation.every(g=>g.map.length>=4&&g.examples.length>=3),"Every foundation step has an explanatory map and examples");
 assert.equal(foundation.reduce((n,g)=>n+g.map.length,0),32,"All 32 teaching map cards are present");
 for(const stage of foundation)for(const card of stage.map){
