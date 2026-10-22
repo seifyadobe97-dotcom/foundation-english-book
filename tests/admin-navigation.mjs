@@ -8,8 +8,9 @@ import {chromium} from "playwright";
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const mime=file=>file.endsWith(".html")?"text/html; charset=utf-8":file.endsWith(".css")?"text/css":file.endsWith(".svg")?"image/svg+xml":"text/javascript";
 const server=createServer(async(req,res)=>{
- const safePath=path.resolve(root,"."+decodeURIComponent(new URL(req.url,"http://local").pathname));
- const filename=safePath.endsWith(path.sep)?path.join(safePath,"index.html"):safePath;
+ const requestedPath=decodeURIComponent(new URL(req.url,"http://local").pathname);
+ const safePath=path.resolve(root,"."+requestedPath);
+ const filename=requestedPath.endsWith("/")?path.join(safePath,"index.html"):safePath;
  if(!filename.startsWith(root+path.sep)){res.writeHead(403);res.end();return;}
  try{if(!(await stat(filename)).isFile())throw Error();
   res.writeHead(200,{"Content-Type":mime(filename)});
