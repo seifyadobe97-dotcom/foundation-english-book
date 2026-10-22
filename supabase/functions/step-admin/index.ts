@@ -197,6 +197,13 @@ Deno.serve(async(req)=>{
    if(!Number.isInteger(part)||part<0||part>=lesson.sections.length||
      !["review","practice","video"].includes(kind)||typeof note!=="string"||note.length>350||
      (kind==="video"&&part!==2))return reply(422,{error:"حدد مهارة ونوع متابعة صالحين"});
+   if(kind==="video"){
+    const {data:ready,error:videoLookupError}=await admin.from("step_indicator_videos")
+     .select("part_index").eq("indicator_slug","present-simple").eq("part_index",part)
+     .eq("published",true).maybeSingle();
+    if(videoLookupError)return reply(500,{error:"تعذر التحقق من نشر الفيديو"});
+    if(!ready)return reply(422,{error:"فيديو المرحلة لسه مش منشور. اختار مراجعة الشرح أو تدريب لحد ما تضيف الفيديو."});
+   }
    const due=body?.due_at;
    const dueDate=due==null||due===""?null:typeof due==="string"?new Date(due):new Date(NaN);
    if(dueDate&&(Number.isNaN(dueDate.getTime())||dueDate.getTime()<Date.now()-60000||
