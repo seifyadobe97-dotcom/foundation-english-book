@@ -40,7 +40,13 @@ try{
    if(endpoint==="/me")body={role:"owner",username:"Mock admin"};
    else if(endpoint==="/indicators")body={indicators};
    else if(endpoint==="/students")body={students:[],total:0,page:1,page_size:25,role:"owner"};
-   else if(endpoint==="/studio"){
+   else if(endpoint==="/studio/catalog"){
+     body={courses:[
+      {slug:"subject-verb-agreement",code:"ASGQAGREE",title:"Subject–Verb Agreement",titleAr:"تطابق الفاعل والفعل",status:"published",position:101},
+      {slug:"present-simple",code:"ASGQPRSIM",title:"Present Simple",titleAr:"المضارع البسيط",status:"published",position:102},
+      {slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",titleAr:"المضارع المستمر",status:"published",position:103}
+     ],can_edit:true};
+    }else if(endpoint==="/studio"){
     const code=url.searchParams.get("course")||"ASGQAGREE";
     const units=code==="ASGQPRSIM"?6:5;
     body={course:{code,title:lessonMeta[code],titleAr:"درس تجريبي",subtitle:"",status:"published"},
@@ -66,7 +72,9 @@ try{
   await page.locator("#export-students").waitFor();
   assert.equal(await page.locator('.admin-global-nav a[aria-current="page"]').innerText().then(x=>x.includes("الطلاب")),true);
   await page.goto(origin+"/step-grammar-admin/studio.html?course=ASGQPRCONT&tab=questions",{waitUntil:"domcontentloaded"});
-  await page.locator('#tabs [data-tab="questions"].active').waitFor();
+  await page.locator('#tabs [data-tab="questions"].active').waitFor({timeout:12000})
+    .catch(async error=>{throw Error("Studio route failed; errors="+JSON.stringify(errors)+
+      "; body="+(await page.locator("body").innerText()).slice(-500)+"; "+String(error));});
   assert.equal(await page.locator("#course").inputValue(),"ASGQPRCONT");
   assert.equal(await page.locator(".admin-global-nav a[aria-current='page']").innerText().then(x=>x.includes("تعديل الدروس")),true);
   await page.goto(origin+"/step-grammar-admin/sources.html",{waitUntil:"domcontentloaded"});

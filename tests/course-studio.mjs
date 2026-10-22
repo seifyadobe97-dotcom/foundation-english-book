@@ -44,7 +44,13 @@ try{
    const selected=u.searchParams.get("course")||"ASGQAGREE";
    const stages=selected==="ASGQPRSIM"?6:5;
    let data={error:"No mock"},status=200;
-   if(endpoint==="/studio"){
+   if(endpoint==="/studio/catalog"){
+    data={courses:[
+     {slug:"subject-verb-agreement",code:"ASGQAGREE",title:"Agreement",titleAr:"تطابق الفاعل والفعل",position:101,status:"published"},
+     {slug:"present-simple",code:"ASGQPRSIM",title:"Present Simple",titleAr:"المضارع البسيط",position:102,status:"published"},
+     {slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",titleAr:"المضارع المستمر",position:103,status:"published"}
+    ],can_edit:true};
+   }else if(endpoint==="/studio"){
     data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:"published"},
      sections:Array.from({length:stages},(_,i)=>({index:i,titleAr:"المرحلة "+(i+1),
       base:{titleAr:"المرحلة "+(i+1),subtitle:"مثال",short:"مثال",duration:"5 دقائق",description:"شرح بسيط"},
