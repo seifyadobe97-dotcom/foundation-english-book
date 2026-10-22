@@ -122,6 +122,32 @@ const oldGuide=readFileSync("step-grammar-student/guide.html","utf8");
 new Script(v2,{filename:"present-simple-v2.js"});
 new Script(v2Content,{filename:"present-simple-v2-content.js"});
 assert(portal.includes('href="learn.html"'),"Student dashboard opens one clear lesson");
+
+const foundationHtml=readFileSync("step-grammar-student/foundation-sentence-elements.html","utf8");
+const foundationScript=readFileSync("step-grammar-student/foundation-sentence-elements.js","utf8");
+const foundationData=readFileSync("step-grammar-student/foundation-sentence-elements-data.js","utf8");
+const foundationCss=readFileSync("step-grammar-student/foundation-sentence-elements.css","utf8");
+new Script(foundationScript,{filename:"foundation-sentence-elements.js"});
+new Script(foundationData,{filename:"foundation-sentence-elements-data.js"});
+const foundationWindow={};
+new Function("window",foundationData)(foundationWindow);
+const foundation=foundationWindow.STEP_FOUNDATION_STAGES;
+assert.equal(foundation.length,7,"Foundation is scaffolded into seven brief stages");
+assert.equal(foundation.reduce((n,g)=>n+g.checks.length,0),22,"Foundation has 22 immediate formative checks");
+assert(foundation.every(g=>g.map.length>=4&&g.examples.length>=3),"Every foundation step has an explanatory map and examples");
+for(const stage of foundation)for(const q of stage.checks){
+ assert.equal(q.wrong.length,q.choices.length,"Reason is assigned per answer");
+ assert(q.why.trim(),"Correct selection must also be explained");
+ q.choices.forEach((_,i)=>{if(i!==q.correct)assert(q.wrong[i]?.trim(),"Missing wrong-choice reasoning");});
+}
+assert(foundationHtml.includes('lang="ar"')&&foundationHtml.includes('dir="rtl"'));
+assert(foundationScript.includes('dir="ltr"')&&foundationScript.includes("localStorage"),"Bidi-safe choices and local practice memory");
+assert(foundationHtml.includes("foundation-sentence-elements-data.js")&&foundationHtml.includes("foundation-sentence-elements.css"));
+assert(foundationCss.includes(".feedback.wrong")&&foundationCss.includes(".option.correct"),"Clear color-coded feedback");
+assert(portal.includes('href="foundation-sentence-elements.html"'),"Foundation precedes Present Simple on student dashboard");
+assert(readFileSync("step-grammar-admin/curriculum.html","utf8").includes("عاين درس التأسيس التفاعلي"),"Preview foundation from draft curriculum");
+assert(!foundationScript.includes("/exam/submit")&&!foundationScript.includes("/parts/"),"Foundation practice does not impersonate graded bank");
+
 assert(unified.includes("present-simple-v2.js")&&unified.includes("present-simple-v2-content.js"),
  "Student lesson must use only the redesigned study path");
 assert(v2.includes("/parts/")&&v2.includes("/exam"),"Live practice and final assessment are integrated");
