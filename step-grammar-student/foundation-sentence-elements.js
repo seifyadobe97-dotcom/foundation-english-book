@@ -7,7 +7,7 @@
   if(root)root.textContent="تعذر تحميل الدرس التأسيسي. حدّث الصفحة وجرب مرة تانية.";
   return;
  }
- const KEY="step-with-seify-foundation-sourced-v2",ABC=["A","B","C","D"];
+ const KEY="step-with-seify-foundation-private-v3",ABC=["A","B","C","D"];
  const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  let answers={};
  try{
@@ -17,7 +17,7 @@
  const n=Number(new URLSearchParams(location.search).get("stage"));
  let current=Number.isInteger(n)&&n>=0&&n<stages.length?n:0;
  const total=stages.reduce((n,s)=>n+s.checks.length,0);
- const id=(index,q)=>stages[index].checks[q].bankId;
+ const id=(index,q)=>stages[index].id+"#"+q;
  const isValid=(stageIndex,qi,choice)=>Number.isInteger(choice)&&choice>=0&&choice<stages[stageIndex].checks[qi].choices.length;
  function selected(stageIndex,qi){
   const value=answers[id(stageIndex,qi)];
