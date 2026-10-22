@@ -128,6 +128,61 @@ Deno.serve(async(req)=>{
  }
 
 
+ // Optional video lessons are drafted per indicator and become visible to students only after publishing.
+ const videoRoute=path==="/videos";
+ const videoSaveRoute=path==="/videos/save";
+ const safeVideoUrl=(raw:string)=>{
+  if(!raw)return true;
+  try{
+   const u=new URL(raw);
+   return u.protocol==="https:"&&!u.username&&!u.password&&!u.port&&
+    ["youtube.com","www.youtube.com","m.youtube.com","youtu.be",
+     "www.tiktok.com","tiktok.com","vt.tiktok.com","vm.tiktok.com"].includes(u.hostname.toLowerCase());
+  }catch{return false;}
+ };
+ if((req.method==="GET"&&videoRoute)||(req.method==="POST"&&videoSaveRoute)){
+  if(req.method==="POST"&&permission.role!=="owner")return reply(403,{error:"إدارة نشر الفيديوهات متاحة لمدير المنصة فقط"});
+  let body:Record<string,unknown>={};
+  if(req.method==="POST"){
+   try{const raw=await req.text();if(raw.length>2500)return reply(413,{error:"البيانات كبيرة جدًا"});body=JSON.parse(raw);}
+   catch{return reply(400,{error:"بيانات الفيديو غير صالحة"});}
+  }
+  const indicatorSlug=req.method==="GET"?new URL(req.url).searchParams.get("indicator"):body.indicator_slug;
+  if(typeof indicatorSlug!=="string"||!/^[a-z][a-z0-9-]{2,39}$/.test(indicatorSlug))
+   return reply(422,{error:"اختار مؤشرًا صحيحًا"});
+  const {data:indicator,error:indicatorError}=await admin.from("step_curriculum_indicators")
+   .select("slug,title_ar,title_en,status,legacy_course_code").eq("slug",indicatorSlug).maybeSingle();
+  if(indicatorError)return reply(500,{error:"تعذر التحقق من المؤشر"});
+  if(!indicator)return reply(404,{error:"المؤشر غير موجود"});
+  const publishedCourse=indicator.status==="published"&&indicator.legacy_course_code===lesson.code;
+  const slots=publishedCourse?lesson.sections.map((x,i)=>({part_index:i,title:x.titleAr})):
+   [{part_index:0,title:"فيديو مقدمة المؤشر (يظهر عند تجهيز الدرس)"}];
+  if(req.method==="GET"){
+   const {data,error}=await admin.from("step_indicator_videos")
+    .select("part_index,title,description,video_url,published,updated_at")
+    .eq("indicator_slug",indicatorSlug).order("part_index");
+   if(error)return reply(500,{error:"تعذر تحميل الفيديوهات"});
+   return reply(200,{indicator,slots,videos:data||[],can_edit:permission.role==="owner"});
+  }
+  const part=body.part_index,title=body.title,description=body.description,videoUrl=body.video_url,published=body.published;
+  if(!Number.isInteger(part)||!slots.some(x=>x.part_index===part)||
+   typeof title!=="string"||title.length>120||
+   typeof description!=="string"||description.length>300||
+   typeof videoUrl!=="string"||videoUrl.length>600||!safeVideoUrl(videoUrl.trim())||
+   typeof published!=="boolean"||(published&&!videoUrl.trim()))
+   return reply(422,{error:"راجع بيانات الفيديو، ولا يمكن النشر بدون رابط YouTube أو TikTok صالح"});
+  // Draft indicator videos stay unpublished until there is a live lesson to display them.
+  if(published&&!publishedCourse)return reply(422,{error:"انشر الدرس واعتمد مؤشره قبل نشر الفيديو للطلاب"});
+  const {data:updated,error:saveError}=await admin.from("step_indicator_videos")
+   .upsert({indicator_slug:indicatorSlug,part_index:part,title:title.trim(),
+    description:description.trim(),video_url:videoUrl.trim(),published,
+    updated_at:new Date().toISOString(),updated_by:auth.user.id,
+    published_at:published?new Date().toISOString():null},
+    {onConflict:"indicator_slug,part_index"})
+   .select("part_index,title,description,video_url,published,updated_at").single();
+  if(saveError){console.error("Saving STEP video",saveError);return reply(500,{error:"تعذر حفظ الفيديو"});}
+  return reply(200,{video:updated});
+ }
  // Student Success Center: all write operations require the owner role, never JWT user_metadata.
  const assignmentMatch=path.match(/^\/students\/([0-9a-f-]{36})\/followups$/i);
  if(assignmentMatch&&(req.method==="GET"||req.method==="POST")){
