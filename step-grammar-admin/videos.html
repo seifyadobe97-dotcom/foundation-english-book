@@ -1,0 +1,80 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>فيديوهات الدروس | STEP with Seify</title><link rel="icon" href="../step-brand/mark.svg"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f7f9f7;color:#203d46;font:14px/1.85 Cairo,Tahoma,sans-serif}
+header{padding:15px max(18px,calc((100vw - 1100px)/2));background:white;border-bottom:1px solid #dbe7e1;display:flex;justify-content:space-between;align-items:center;gap:12px}header img{width:180px;max-width:55%}a{color:#216e5c;font-weight:800;text-decoration:none}
+main{max-width:1040px;margin:auto;padding:25px 18px 70px}h1{margin:0 0 7px;font-size:30px;color:#132e41}h2{font-size:18px;margin:0 0 8px;color:#132e41}
+p{color:#647a7e;margin:4px 0 16px}.eyebrow{color:#227765;font-weight:800;letter-spacing:.1em}
+.panel{background:#fff;border:1px solid #dae6e0;border-radius:14px;padding:19px;margin:14px 0}.head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{font-weight:800;font-size:12px;display:grid;gap:5px;margin:12px 0}
+input,textarea{width:100%;padding:11px 13px;border-radius:9px;border:1px solid #cadcd4;font:inherit}textarea{resize:vertical;min-height:60px}
+.ltr{direction:ltr;text-align:left;font-family:Arial,sans-serif}.status{background:#edf2f0;border-radius:30px;padding:3px 11px;font-size:12px;font-weight:800}.status.live{background:#e3f5e7;color:#176849}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-top:12px}button{border:1px solid #193a49;background:#193a49;color:#fff;border-radius:8px;padding:9px 16px;font:800 12px Cairo;cursor:pointer}
+button.secondary{background:#fff;color:#193a49}button:disabled{opacity:.45;cursor:default}.message{font-size:12px;font-weight:800}.ok{color:#176748}.bad{color:#b4322b}
+.note{border-right:3px solid #c3a16a;padding:11px;background:#fffaf0;border-radius:7px;color:#705a36}
+@media(max-width:650px){.fields{grid-template-columns:1fr}header img{width:140px}.panel{padding:14px}}
+</style></head><body>
+<header><img src="../step-brand/logo.svg" alt="STEP with Seify"><a href="curriculum.html">← إدارة المؤشرات</a></header>
+<main><div class="eyebrow">VIDEO MANAGER</div><h1>فيديوهات الدروس</h1>
+<p>جهّز مكان الفيديو دلوقتي، وبعد التسجيل ضيف رابط YouTube أو TikTok واحفظه أو انشره. الشرح والأسئلة شغالين من غير الفيديو.</p>
+<p class="note">حفظ مسودة = مش ظاهر للطالب. انشر = يظهر في مرحلته فقط. تقدر تلغي النشر وقت ما تحب.</p>
+<div id="screen" aria-live="polite">بنحمّل أماكن الفيديوهات…</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+const BASE="https://funltjxavowlnnfibhpl.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const db=window.supabase.createClient(BASE,KEY),screen=document.getElementById("screen");
+const slug=new URLSearchParams(location.search).get("indicator")||"present-simple";
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+async function api(p,body){
+ const {data:{session}}=await db.auth.getSession();
+ if(!session)throw Error("سجّل دخولك بحساب الأدمن.");
+ const r=await fetch(BASE+"/functions/v1/step-admin"+p,{method:body===undefined?"GET":"POST",
+ headers:{"apikey":KEY,"Authorization":"Bearer "+session.access_token,"Content-Type":"application/json"},
+ body:body===undefined?undefined:JSON.stringify(body)});
+ const value=await r.json().catch(()=>({}));
+ if(!r.ok)throw Error(value.error||"تعذر حفظ البيانات");
+ return value;
+}
+function render(data){
+ const videos=new Map((data.videos||[]).map(v=>[v.part_index,v]));
+ screen.innerHTML='<div class="panel"><h2>'+esc(data.indicator.title_ar)+'</h2><p>'+
+ (data.indicator.status==="published"?"الفيديوهات اختيارية، وتظهر فقط بعد نشرها.":"المؤشر مسودة؛ تقدر تجهز الروابط بس النشر محتاج درس منشور.")+'</p></div>'+
+ (data.slots||[]).map(slot=>{
+  const v=videos.get(slot.part_index)||{title:"",description:"",video_url:"",published:false},disabled=data.can_edit?"":" disabled";
+  return '<section class="panel video-slot" data-part="'+slot.part_index+'"><div class="head"><h2>'+
+  (slot.part_index+1)+' — '+esc(slot.title)+'</h2><span class="status '+(v.published?"live":"")+'">'+
+  (v.published?"منشور":"غير منشور")+'</span></div><div class="fields">'+
+  '<label>عنوان الفيديو<input name="title" maxlength="120" value="'+esc(v.title)+'" placeholder="شرح مع Seify"'+disabled+'></label>'+
+  '<label>الرابط<input name="url" class="ltr" type="url" maxlength="600" value="'+esc(v.video_url)+'" placeholder="https://www.youtube.com/watch?v=..."'+disabled+'></label></div>'+
+  '<label>ملاحظة قصيرة<textarea name="description" maxlength="300"'+disabled+'>'+esc(v.description)+'</textarea></label>'+
+  '<div class="actions">'+(data.can_edit?'<button type="button" class="secondary" data-save="draft">حفظ مسودة</button>'+
+  '<button type="button" data-save="publish"'+(!v.video_url?" disabled":"")+'>انشر للطلاب</button>'+
+  (v.published?'<button type="button" class="secondary" data-save="unpublish">إلغاء النشر</button>':""):"صلاحية العرض فقط")+
+  '<span class="message" role="status"></span></div></section>';
+ }).join("");
+ screen.querySelectorAll("[data-save]").forEach(b=>b.onclick=()=>save(b));
+ screen.querySelectorAll('input[name="url"]').forEach(input=>input.oninput=()=>{
+  const publish=input.closest(".video-slot").querySelector('[data-save="publish"]');
+  if(publish)publish.disabled=!input.value.trim();
+ });
+}
+async function save(button){
+ const card=button.closest(".video-slot"),msg=card.querySelector(".message"),kind=button.dataset.save;
+ const payload={indicator_slug:slug,part_index:Number(card.dataset.part),
+ title:card.querySelector('[name="title"]').value.trim(),
+ video_url:card.querySelector('[name="url"]').value.trim(),
+ description:card.querySelector('[name="description"]').value.trim(),published:kind==="publish"};
+ card.querySelectorAll("button").forEach(b=>b.disabled=true);msg.textContent="جاري الحفظ…";
+ try{
+  await api("/videos/save",payload);
+  render(await api("/videos?indicator="+encodeURIComponent(slug)));
+  const fresh=screen.querySelector('.video-slot[data-part="'+payload.part_index+'"] .message');
+  fresh.textContent=payload.published?"تم النشر ✓":"اتحفظ من غير نشر ✓";fresh.className="message ok";
+ }catch(e){msg.textContent=e.message;msg.className="message bad";card.querySelectorAll("button").forEach(b=>b.disabled=false);}
+}
+(async()=>{try{
+ if(!/^[a-z][a-z0-9-]{2,39}$/.test(slug))throw Error("معرّف المؤشر غير صالح");
+ render(await api("/videos?indicator="+encodeURIComponent(slug)));
+}catch(e){screen.innerHTML='<div class="panel bad" role="alert">'+esc(e.message)+'</div>';}})();
+</script></body></html>
