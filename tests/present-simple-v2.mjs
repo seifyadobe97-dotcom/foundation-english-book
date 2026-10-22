@@ -414,39 +414,48 @@ try{
  new Function("window",source)(namespace);
  const foundation=namespace.STEP_FOUNDATION_STAGES;
  assert.equal(foundation.length,7,"Seven foundational stations");
- assert.equal(foundation.reduce((n,g)=>n+g.checks.length,0),22,"Twenty-two formative check questions");
+ assert.equal(foundation.reduce((n,g)=>n+g.checks.length,0),15,"Only fifteen source-traced formative questions");
  let wrongChoices=0;
  for(const stage of foundation){
-  assert(stage.map.length>=4&&stage.examples.length>=3&&stage.checks.length>=3,"Full scaffold in "+stage.id);
+  assert(stage.map.length>=4&&stage.examples.length>=3,"Full explanation scaffold in "+stage.id);
   for(const q of stage.checks){
    assert.equal(q.wrong.length,q.choices.length,"All options get explicit feedback");
    q.choices.forEach((_,i)=>{if(i!==q.correct){assert(q.wrong[i]?.trim(),"Missing misconception for "+q.q);wrongChoices++;}});
    assert(q.why?.trim(),"Missing correct-answer explanation");
   }
  }
- assert.equal(wrongChoices,44,"Every distractor has a reason");
+ assert.equal(wrongChoices,45,"Four-choice source bank items have 45 distractor rationales");
  for(const viewport of [{width:1280,height:900},{width:390,height:844}]){
   const learningPage=await browser.newPage({viewport}),errors=[];
   learningPage.on("pageerror",e=>errors.push(String(e)));
   await learningPage.route("https://fonts.googleapis.com/**",r=>r.abort());
   await learningPage.route("https://fonts.gstatic.com/**",r=>r.abort());
   await learningPage.goto(base+"/step-grammar-student/foundation-sentence-elements.html",{waitUntil:"domcontentloaded"});
-  await learningPage.locator(".question").first().waitFor({timeout:10000});
+  await learningPage.locator(".stage-link").first().waitFor({timeout:10000});
   assert.equal(await learningPage.locator(".stage-link").count(),7);
-  assert.match(await learningPage.locator(".progress-box strong").innerText(),/0 من 22/);
+  assert.equal(await learningPage.locator(".question").count(),0,"No unsourced checks in sentence overview");
+  assert.match(await learningPage.locator(".source-pending").innerText(),/مفيش سؤال موثّق/);
+  assert.match(await learningPage.locator(".progress-box strong").innerText(),/0 من 15/);
+  await learningPage.locator('[data-stage="1"]').click();
+  await learningPage.locator(".question").first().waitFor({timeout:10000});
+  assert.equal(await learningPage.locator(".option").count(),8,"MCQs must have four choices");
   const boxes=await Promise.all([learningPage.locator(".option").first().boundingBox(),learningPage.locator(".option").nth(1).boundingBox()]);
   assert(boxes[0].x<boxes[1].x,"Answer letters flow left to right");
-  await learningPage.locator('[data-question="0"] [data-answer="1"]').click();
+  const sourcedQuestion=foundation[1].checks[0];
+  const wrongOption=sourcedQuestion.choices.findIndex((_,i)=>i!==sourcedQuestion.correct);
+  await learningPage.locator('[data-question="0"] [data-answer="'+wrongOption+'"]').click();
   assert.equal(await learningPage.locator(".feedback.wrong").count(),1);
   assert.match(await learningPage.locator(".feedback.wrong").innerText(),/ليه اختيارك غلط/);
+  assert.match(await learningPage.locator(".question-source").first().innerText(),/المصدر:/);
+  assert.equal(await learningPage.locator(".q-english").first().innerText(),sourcedQuestion.en);
   assert.equal(await learningPage.locator('[data-question="0"] .option.correct').count(),1);
   assert.equal(await learningPage.locator('[data-question="0"] .option.wrong').count(),1);
   await learningPage.locator('[data-question="0"] [data-retry]').click();
-  await learningPage.locator('[data-question="0"] [data-answer="0"]').click();
+  await learningPage.locator('[data-question="0"] [data-answer="'+sourcedQuestion.correct+'"]').click();
   assert.equal(await learningPage.locator(".feedback:not(.wrong)").count(),1);
   await learningPage.reload({waitUntil:"domcontentloaded"});
   await learningPage.locator(".feedback").waitFor();
-  assert.match(await learningPage.locator(".progress-box strong").innerText(),/1 من 22/);
+  assert.match(await learningPage.locator(".progress-box strong").innerText(),/1 من 15/);
   for(let i=0;i<foundation.length;i++){
    await learningPage.locator('[data-stage="'+i+'"]').click();
    assert.equal(await learningPage.locator(".question").count(),foundation[i].checks.length);
