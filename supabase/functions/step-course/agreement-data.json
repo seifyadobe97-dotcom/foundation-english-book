@@ -1,0 +1,463 @@
+{
+  "id": "subject-verb-agreement",
+  "code": "ASGQAGREE",
+  "title": "Subject–Verb Agreement",
+  "titleAr": "تطابق الفاعل والفعل",
+  "subtitle": "حدّد الفاعل الحقيقي، وبعدها اختار الفعل المناسب — من الصفر لتدريبات STEP",
+  "requiredPassRate": 0.6,
+  "sections": [
+    {
+      "id": "subject",
+      "title": "حدّد الفاعل الحقيقي",
+      "short": "الاسم الأساسي مش أقرب كلمة للفراغ",
+      "questionIds": [
+        "AG-B05",
+        "AG-B08",
+        "AG-C01",
+        "AG-C10"
+      ],
+      "tag": "01 · STEP",
+      "subtitle": "الاسم الأساسي مش أقرب كلمة للفراغ",
+      "duration": "6 دقائق",
+      "description": "الاسم الأساسي مش أقرب كلمة للفراغ",
+      "rule": [
+        "Subject",
+        "→",
+        "Verb",
+        "→",
+        "Complement"
+      ],
+      "tiles": [],
+      "gold": {
+        "title": "ركز",
+        "body": "الاسم الأساسي مش أقرب كلمة للفراغ"
+      },
+      "examples": [],
+      "mistake": {
+        "wrong": "",
+        "right": "",
+        "why": ""
+      }
+    },
+    {
+      "id": "singular-plural",
+      "title": "المفرد والجمع مع الفعل",
+      "short": "He/She/It مقابل I/You/We/They",
+      "questionIds": [
+        "AG-B02",
+        "AG-B03",
+        "AG-B07",
+        "AG-B09",
+        "AG-B10"
+      ],
+      "tag": "02 · STEP",
+      "subtitle": "He/She/It مقابل I/You/We/They",
+      "duration": "6 دقائق",
+      "description": "He/She/It مقابل I/You/We/They",
+      "rule": [
+        "Subject",
+        "→",
+        "Verb",
+        "→",
+        "Complement"
+      ],
+      "tiles": [],
+      "gold": {
+        "title": "ركز",
+        "body": "He/She/It مقابل I/You/We/They"
+      },
+      "examples": [],
+      "mistake": {
+        "wrong": "",
+        "right": "",
+        "why": ""
+      }
+    },
+    {
+      "id": "tricky-subjects",
+      "title": "كلمات بتخدعك",
+      "short": "Physics وMathematics وEverybody",
+      "questionIds": [
+        "AG-B01",
+        "AG-B04",
+        "AG-C07"
+      ],
+      "tag": "03 · STEP",
+      "subtitle": "Physics وMathematics وEverybody",
+      "duration": "6 دقائق",
+      "description": "Physics وMathematics وEverybody",
+      "rule": [
+        "Subject",
+        "→",
+        "Verb",
+        "→",
+        "Complement"
+      ],
+      "tiles": [],
+      "gold": {
+        "title": "ركز",
+        "body": "Physics وMathematics وEverybody"
+      },
+      "examples": [],
+      "mistake": {
+        "wrong": "",
+        "right": "",
+        "why": ""
+      }
+    },
+    {
+      "id": "be-agreement",
+      "title": "تطابق am / is / are",
+      "short": "الفاعل أولًا ثم الفعل الرابط والمجهول",
+      "questionIds": [
+        "AG-C05",
+        "AG-C09"
+      ],
+      "tag": "04 · STEP",
+      "subtitle": "الفاعل أولًا ثم الفعل الرابط والمجهول",
+      "duration": "6 دقائق",
+      "description": "الفاعل أولًا ثم الفعل الرابط والمجهول",
+      "rule": [
+        "Subject",
+        "→",
+        "Verb",
+        "→",
+        "Complement"
+      ],
+      "tiles": [],
+      "gold": {
+        "title": "ركز",
+        "body": "الفاعل أولًا ثم الفعل الرابط والمجهول"
+      },
+      "examples": [],
+      "mistake": {
+        "wrong": "",
+        "right": "",
+        "why": ""
+      }
+    },
+    {
+      "id": "does-base",
+      "title": "Do / Does والفعل المصدر",
+      "short": "Does بياخد الـ s والفعل يرجع V1",
+      "questionIds": [
+        "AG-B06",
+        "AG-C04",
+        "AG-C08"
+      ],
+      "tag": "05 · STEP",
+      "subtitle": "Does بياخد الـ s والفعل يرجع V1",
+      "duration": "6 دقائق",
+      "description": "Does بياخد الـ s والفعل يرجع V1",
+      "rule": [
+        "Subject",
+        "→",
+        "Verb",
+        "→",
+        "Complement"
+      ],
+      "tiles": [],
+      "gold": {
+        "title": "ركز",
+        "body": "Does بياخد الـ s والفعل يرجع V1"
+      },
+      "examples": [],
+      "mistake": {
+        "wrong": "",
+        "right": "",
+        "why": ""
+      }
+    }
+  ],
+  "questions": {
+    "AG-B01": {
+      "id": "AG-B01",
+      "text": "Paul is a bad roommate. While I clean the apartment on the weekends, he just……. videogames.",
+      "options": {
+        "A": "is playing",
+        "B": "playing",
+        "C": "is plays",
+        "D": "plays"
+      },
+      "correct": "D",
+      "explanation": "الفاعل he مفرد غائب، و on the weekends بتوضح عادة؛ لذلك plays في المضارع البسيط.",
+      "wrongReasons": {
+        "A": "is playing للموقف الجاري الآن؛ لكن while I clean ... on the weekends هنا بتصف عادة متكررة.",
+        "B": "playing لوحدها من غير is مش فعل كامل للجملة.",
+        "C": "is plays تركيب غير صحيح؛ بعد is في المستمر نستخدم playing مش plays."
+      }
+    },
+    "AG-B02": {
+      "id": "AG-B02",
+      "text": "Female lions …...........…. two thirds of their adult size by the time they are two years old.",
+      "options": {
+        "A": "reach",
+        "B": "reached",
+        "C": "have reach",
+        "D": "are reaching"
+      },
+      "correct": "A",
+      "explanation": "الفاعل Female lions جمع، والجملة حقيقة عامة عن النمو؛ نستخدم reach في المضارع البسيط.",
+      "wrongReasons": {
+        "B": "reached ماضٍ، والسياق يشرح حقيقة عامة متكررة.",
+        "C": "have reach غير صحيح؛ بعد have نحتاج التصريف الثالث reached.",
+        "D": "are reaching مضارع مستمر، لكن الجملة حقيقة عامة مش حدثًا بيحصل الآن."
+      }
+    },
+    "AG-B03": {
+      "id": "AG-B03",
+      "text": "As a rule, my father never……… out in the evenings. He likes to stay at home.",
+      "options": {
+        "A": "went",
+        "B": "goes",
+        "C": "going",
+        "D": "is going"
+      },
+      "correct": "B",
+      "explanation": "my father فاعل مفرد؛ وAs a rule وnever علامات عادة، فالفعل goes.",
+      "wrongReasons": {
+        "A": "went زمن ماضٍ، بينما الكلام عن عادة حالية.",
+        "C": "going وحدها لا تصلح فعلًا رئيسيًا بلا مساعد.",
+        "D": "is going مضارع مستمر لموقف جارٍ أو ترتيب، لكن As a rule تشير للعادة."
+      }
+    },
+    "AG-B04": {
+      "id": "AG-B04",
+      "text": "Physics is the science which………. light, heat, sound and electricity.",
+      "options": {
+        "A": "studies",
+        "B": "studying",
+        "C": "study",
+        "D": "is studying"
+      },
+      "correct": "A",
+      "explanation": "which راجع على the science المفرد؛ لذلك studies. وPhysics اسم مادة دراسية مفرد نحويًا.",
+      "wrongReasons": {
+        "B": "studying وحدها ينقصها فعل مساعد.",
+        "C": "study من غير s لا يطابق which الراجع على science المفرد.",
+        "D": "is studying تصف حدثًا مؤقتًا؛ هنا تعريف عام لما يدرسه العلم."
+      }
+    },
+    "AG-B05": {
+      "id": "AG-B05",
+      "text": "The ancient and long-lost cities of Mexico……. still fascinating to this day.",
+      "options": {
+        "A": "is",
+        "B": "are",
+        "C": "was",
+        "D": "were"
+      },
+      "correct": "B",
+      "explanation": "الرأس الحقيقي للفاعل هو cities (جمع)، وstill ... to this day يدل على الحالة الحالية، لذلك are.",
+      "wrongReasons": {
+        "A": "is للمفرد لكن cities جمع.",
+        "C": "was صيغة ماضية مفردة رغم إن cities جمع والزمن حالي.",
+        "D": "were صيغة ماضية لجمع، لكن still ... to this day يصف الحاضر."
+      }
+    },
+    "AG-B06": {
+      "id": "AG-B06",
+      "text": "Whenever I travel to the United States, I ……... my cousins.",
+      "options": {
+        "A": "visit",
+        "B": "am visiting",
+        "C": "visited",
+        "D": "have visited"
+      },
+      "correct": "A",
+      "explanation": "I في العادة بياخد الفعل من غير s، وWhenever بتدل على تصرف متكرر: visit.",
+      "wrongReasons": {
+        "B": "am visiting يصف حدثًا جاريًا الآن؛ Whenever تدل على عادة.",
+        "C": "visited ماضٍ، بينما الجملة تصف ما يحدث كل مرة.",
+        "D": "have visited مضارع تام للتجربة؛ هنا سياق عادة متكررة."
+      }
+    },
+    "AG-B07": {
+      "id": "AG-B07",
+      "text": "Tom ……... to Italy every year.",
+      "options": {
+        "A": "go.",
+        "B": "goes.",
+        "C": "is goes.",
+        "D": "is going."
+      },
+      "correct": "B",
+      "explanation": "Tom اسم مفرد غائب، وevery year عادة؛ الإجابة goes.",
+      "wrongReasons": {
+        "A": "go من غير s لا يناسب Tom في المضارع البسيط.",
+        "C": "is goes غلط؛ ما بنجمعش is وgoes كده.",
+        "D": "is going يدل على حدث مستمر أو ترتيب قريب، مش عادة every year هنا."
+      }
+    },
+    "AG-B08": {
+      "id": "AG-B08",
+      "text": "The bookseller has many books that……………. outdated.",
+      "options": {
+        "A": "am",
+        "B": "is",
+        "C": "are",
+        "D": "were"
+      },
+      "correct": "C",
+      "explanation": "that راجع على many books الجمع، لذلك are، مش على bookseller المفرد.",
+      "wrongReasons": {
+        "A": "am لازم ييجي مع I، مش books.",
+        "B": "is للمفرد، لكن books جمع.",
+        "D": "were للماضي؛ الجملة بتصف حال الكتب الحالي."
+      }
+    },
+    "AG-B09": {
+      "id": "AG-B09",
+      "text": "I always ……………….. my grandmother on the weekend.",
+      "options": {
+        "A": "visit",
+        "B": "visits",
+        "C": "visiting",
+        "D": "will to visit"
+      },
+      "correct": "A",
+      "explanation": "مع I نستخدم المصدر visit بلا s. always تدل على عادة.",
+      "wrongReasons": {
+        "B": "visits تخص he/she/it أو اسمًا مفردًا غائبًا، مش I.",
+        "C": "visiting محتاجة مساعد ومش مناسبة لعادة هنا.",
+        "D": "will to visit غير صحيح؛ بعد will نستخدم visit بدون to."
+      }
+    },
+    "AG-B10": {
+      "id": "AG-B10",
+      "text": "Our boss ………………. important people every Tuesday.",
+      "options": {
+        "A": "meeting.",
+        "B": "was met",
+        "C": "is meet",
+        "D": "meets"
+      },
+      "correct": "D",
+      "explanation": "Our boss فاعل مفرد، وevery Tuesday عادة؛ therefore meets.",
+      "wrongReasons": {
+        "A": "meeting وحدها بدون مساعد لا تكون فعلًا كاملًا.",
+        "B": "was met مبني للمجهول وماضٍ؛ لا يناسب معنى لقاء المدير للآخرين هنا.",
+        "C": "is meet خطأ؛ بعد is في المستمر meet تتحول meeting."
+      }
+    },
+    "AG-C01": {
+      "id": "AG-C01",
+      "text": "What _____ your father’s job?",
+      "options": {
+        "A": "is",
+        "B": "be",
+        "C": "can",
+        "D": "does"
+      },
+      "correct": "A",
+      "explanation": "الفاعل الحقيقي your father's job مفرد؛ للسؤال عن وظيفته نستخدم What is ...?",
+      "wrongReasons": {
+        "B": "be لا تُستخدم هكذا في سؤال مباشر بالحاضر بدون مساعد.",
+        "C": "can لا تكتمل مع اسم your father's job بدون فعل بعده.",
+        "D": "does لا يلائم What does your father's job? لأننا محتاجين be للسؤال عن الهوية."
+      }
+    },
+    "AG-C04": {
+      "id": "AG-C04",
+      "text": "Does everyone _____ that the exam will be on Thursday?",
+      "options": {
+        "A": "knew",
+        "B": "know",
+        "C": "known",
+        "D": "knowing"
+      },
+      "correct": "B",
+      "explanation": "Does موجودة في بداية السؤال، وبعدها الفعل الأساسي يرجع للمصدر know.",
+      "wrongReasons": {
+        "A": "knew هو الماضي، لكن Does مساعد حاضر واللي بعده مصدر.",
+        "C": "known تصريف ثالث، مش مصدر بعد Does.",
+        "D": "knowing صيغة -ing، مش مصدر بعد Does."
+      }
+    },
+    "AG-C05": {
+      "id": "AG-C05",
+      "text": "Bicycles _____ allowed inside university buildings.",
+      "options": {
+        "A": "will not",
+        "B": "are not",
+        "C": "do not",
+        "D": "not"
+      },
+      "correct": "B",
+      "explanation": "Bicycles جمع، والمبني للمجهول يحتاج are + not + V3: are not allowed.",
+      "wrongReasons": {
+        "A": "will not لازم بعدها be allowed، مش allowed مباشرة.",
+        "C": "do not allowed غير صحيح؛ do not يجب أن يتبعها فعل مصدر، والمقصود مبني للمجهول.",
+        "D": "not وحدها لا تكوّن الفعل؛ محتاجين are not allowed."
+      }
+    },
+    "AG-C07": {
+      "id": "AG-C07",
+      "text": "Mathematics _____ considered one of the most important subjects.",
+      "options": {
+        "A": "am",
+        "B": "is",
+        "C": "are",
+        "D": "were"
+      },
+      "correct": "B",
+      "explanation": "Mathematics اسم مادة مفرد نحويًا رغم s في نهايته؛ لذلك is considered.",
+      "wrongReasons": {
+        "A": "am تخص الضمير I.",
+        "C": "are للجمع، لكن Mathematics مفرد في المعنى النحوي هنا.",
+        "D": "were صيغة ماضٍ للجمع؛ الجملة بصيغتها العامة الحالية تحتاج is."
+      }
+    },
+    "AG-C08": {
+      "id": "AG-C08",
+      "text": "Does the new student _____ how to use the online portal?",
+      "options": {
+        "A": "knew",
+        "B": "know",
+        "C": "known",
+        "D": "knowing"
+      },
+      "correct": "B",
+      "explanation": "Does توافق the new student المفرد، والفعل بعدها مصدر know.",
+      "wrongReasons": {
+        "A": "knew ماضٍ؛ بعد Does بنستخدم المصدر.",
+        "C": "known تصريف ثالث مش المصدر المطلوب بعد Does.",
+        "D": "knowing تحتاج be في المستمر، ومش بنقول Does ... knowing."
+      }
+    },
+    "AG-C09": {
+      "id": "AG-C09",
+      "text": "Smart watches _____ allowed inside the testing room.",
+      "options": {
+        "A": "will not",
+        "B": "are not",
+        "C": "do not",
+        "D": "not"
+      },
+      "correct": "B",
+      "explanation": "Smart watches جمع؛ الجملة في صيغة مبني للمجهول منفي: are not allowed.",
+      "wrongReasons": {
+        "A": "will not لازم بعدها be قبل allowed.",
+        "C": "do not allowed خطأ؛ في المبني للمجهول نستخدم be + V3.",
+        "D": "not لا تكفي وحدها؛ نحتاج are not allowed."
+      }
+    },
+    "AG-C10": {
+      "id": "AG-C10",
+      "text": "Everybody in the classroom _____ to pass the final exam.",
+      "options": {
+        "A": "want",
+        "B": "wants",
+        "C": "wanting",
+        "D": "are wanting"
+      },
+      "correct": "B",
+      "explanation": "Everybody تعتبر مفردًا نحويًا؛ لذلك wants في المضارع البسيط.",
+      "wrongReasons": {
+        "A": "want بلا s لا يناسب Everybody المفرد.",
+        "C": "wanting ليست فعلًا تامًا بدون مساعد.",
+        "D": "are wanting لا توافق Everybody المفرد، وwant غالبًا فعل حالة هنا."
+      }
+    }
+  }
+}
