@@ -14,7 +14,7 @@ article{background:#fff;border:1px solid var(--line);border-radius:13px;padding:
 .options{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0;list-style:none}.options li{border:1px solid var(--line);border-radius:9px;padding:7px 10px}.options .correct{background:#e9f6ef;border-color:#b5dac4}
 small{font-size:12px;color:#65777a}@media(max-width:580px){.options{grid-template-columns:1fr}article{padding:13px}}</style></head><body>
 <header><a href="./"><img src="../step-brand/logo.svg" alt="STEP with Seify"></a><a href="curriculum.html">← المحاور والمؤشرات</a></header>
-<main><h1>تدقيق الدرس الثاني</h1><p>Subject–Verb Agreement · البيانات التالية للأدمن فقط. لا تعرض للطلاب.</p>
+<main><h1>تدقيق الدرس الأول</h1><p>Subject–Verb Agreement · البيانات التالية للأدمن فقط. لا تعرض للطلاب.</p>
 <div id="status" role="status">جاري التحقق من صلاحية الأدمن وتحميل المراجعات…</div><div id="summary" class="summary"></div><section id="list"></section></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
 <script>
@@ -30,7 +30,7 @@ const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
   const r=await fetch(base+"/functions/v1/step-admin/agreement/audit",{headers:{"apikey":key,"Authorization":"Bearer "+session.access_token}});
   const d=await r.json();if(!r.ok)throw Error(d.error||"لا توجد صلاحية للعرض");
   document.getElementById("status").textContent=d.indicator?.status==="published"?
-   "تم نشر الدرس الثاني للطلاب بعد مطابقة أسئلته بالمصادر الأصلية. المرفوض والمكرر والمعلّق مستبعد من التدريب.":
+   "تم نشر الدرس الأول للطلاب بعد مطابقة أسئلته بالمصادر الأصلية. المرفوض والمكرر والمعلّق مستبعد من التدريب.":
    "الدرس مسودة داخلية حتى اعتماد النشر؛ الأسئلة المرفوضة والمكررة غير مستخدمة.";
   document.getElementById("summary").innerHTML=
    "<span>إجمالي السجلات: <b>"+d.summary.total+"</b></span>"+
