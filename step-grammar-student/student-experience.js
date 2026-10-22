@@ -100,7 +100,7 @@ window.StepStudentExperience={
    const details=document.createElement("details");details.className="student-stages-disclosure";
    details.innerHTML='<summary>تفاصيل مراحل المضارع البسيط <span>عرض المراحل</span></summary>';
    stages.parentElement.insertBefore(details,stages);details.appendChild(stages);stagesHead?.remove();
-   details.insertAdjacentElement("beforebegin",home); // place lesson library before the optional stages
+   // Keep the lesson library above both optional detail panels for a clear reading order.
   }
  }
 };
