@@ -12,7 +12,7 @@ const out=path.resolve(process.argv[2]||path.join(root,".step-public-release"));
 if(out===root||out===path.parse(out).root||!path.basename(out).includes("step-public"))throw new Error("Refusing unsafe build destination");
 const files=[".nojekyll","index.html","app.js","data.js","style.css","logo.svg","service-worker.js","manifest.webmanifest"];
 const dirs=["audio","step-brand","step-grammar-account-preview","step-grammar-admin","step-grammar-pilot","step-grammar-student"];
-const forbidden=name=>/^foundation-sentence-elements(?:\.|$)/.test(name);
+const forbidden=name=>/^foundation-sentence-elements(?:[-.]|$)/.test(name);
 await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});
 for(const file of files)await cp(path.join(root,file),path.join(out,file));
 for(const dir of dirs){
@@ -21,6 +21,10 @@ for(const dir of dirs){
  await cp(source,target,{recursive:true,force:true,filter:sourcePath=>
   dir!=="step-grammar-student"||!forbidden(path.basename(sourcePath))});
 }
+const blockedFileList=["foundation-sentence-elements.html","foundation-sentence-elements.js",
+ "foundation-sentence-elements.css","foundation-sentence-elements-data.js",
+ "foundation-sentence-elements-mastery.js"];
+for(const filename of blockedFileList)if(!forbidden(filename))throw new Error("Blocked basename predicate failed: "+filename);
 for(const name of ["html","js","css","data.js","mastery.js"]){
  const file=name==="data.js"?"foundation-sentence-elements-data.js":
   name==="mastery.js"?"foundation-sentence-elements-mastery.js":"foundation-sentence-elements."+name;
