@@ -6,7 +6,8 @@ window.StepAdminHome={
    {n:"01",slug:"subject-verb-agreement",code:"ASGQAGREE",title:"Subject–Verb Agreement",ar:"تطابق الفاعل والفعل"},
    {n:"02",slug:"present-simple",code:"ASGQPRSIM",title:"Present Simple",ar:"المضارع البسيط"},
    {n:"03",slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",ar:"المضارع المستمر"},
-   {n:"04",slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",ar:"الماضي البسيط",status:"draft"}
+   {n:"04",slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",ar:"الماضي البسيط"},
+   {n:"05",slug:"past-continuous",code:"ASGQPACONT",title:"Past Continuous",ar:"الماضي المستمر",status:"draft"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
@@ -17,7 +18,7 @@ window.StepAdminHome={
      title:c.title,ar:c.titleAr,status:c.status
     })));
    }
-  }catch(error){/* Keep the four known course cards if the live catalog is temporarily unavailable. */}
+  }catch(error){/* Keep the known course cards if the live catalog is temporarily unavailable. */}
   const cards=lessons.map(x=>{
    const editor="studio.html?course="+encodeURIComponent(x.code);
    return '<article class="home-card"><div class="count">LESSON '+x.n+'</div>'+
