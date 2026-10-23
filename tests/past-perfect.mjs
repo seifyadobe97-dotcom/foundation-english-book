@@ -61,7 +61,7 @@ try{
   });
   await page.goto(local+"/step-grammar-student/lesson.html?slug=past-perfect",{waitUntil:"domcontentloaded"});
   await page.locator(".lesson-title").waitFor({timeout:12000});
-  assert.equal(await page.locator(".path-button").count(),7,"Seven actual future teaching stages");
+  assert.equal(await page.locator(".path-button").count(),6,"Six actual Past Perfect source-assigned teaching stages");
   assert.equal(await page.locator(".concept-card").count(),3,"Full explanation cards rendered");
   assert.equal(await page.locator(".example").count(),4,"Instructor teaching examples rendered");
   assert.equal(await page.locator(".agreement-table").count(),1);
