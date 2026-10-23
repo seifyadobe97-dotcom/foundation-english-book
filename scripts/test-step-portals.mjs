@@ -129,6 +129,22 @@ assert(lesson35Audit.includes("all 26 printed questions")&&
  lesson35Audit.includes("SCON-018")&&
  lesson35Audit.includes("DRAFT / HOLD"),
  "Lesson35 source review must reconcile 26 originals with 10 approved and three ambiguous holds");
+const lesson38Gate=readFileSync("supabase/migrations/20261023_step_lesson38_reported_speech_source_gate.sql","utf8");
+assert(lesson38Gate.includes("total<12")&&
+ lesson38Gate.includes("full_stages!=4")&&
+ lesson38Gate.includes("step_source_item_reviews")&&
+ lesson38Gate.includes("cross_overlap>0"),
+ "Lesson38 must hold release until 12 independent source-exact Reported Speech items and four scored skills exist");
+assert(studio.includes('value="ASGQREPORTCORE"')&&
+ studio.includes('"ASGQREPORTCORE":"reported-speech"')&&
+ adminHome.includes('code:"ASGQREPORTCORE"'),
+ "Lesson38 source-approved instruction must be editable in Studio");
+const lesson38Audit=readFileSync("curriculum/REPORTED_SPEECH_LESSON38_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson38Audit.includes("all 17 printed original MCQs")&&
+ lesson38Audit.includes("8 independently source-approved originals")&&
+ lesson38Audit.includes("2 meaning/register ambiguity holds")&&
+ lesson38Audit.includes("HOLD — OWNER DRAFT"),
+ "Lesson38 audit must fully reconcile original source count and nonunique backshift keys");
 const lesson37Gate=readFileSync("supabase/migrations/20261023_step_lesson37_wishes_unreal_source_gate.sql","utf8");
 assert(lesson37Gate.includes("total<10")&&
  lesson37Gate.includes("complete_stages!=4")&&
