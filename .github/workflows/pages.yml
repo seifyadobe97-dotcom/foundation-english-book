@@ -119,6 +119,8 @@ jobs:
         run: node tests/second-conditional.mjs
       - name: Test Lesson 36 Third Conditional synthetic teaching on desktop/mobile
         run: node tests/third-conditional.mjs
+      - name: Test Lesson 37 Wishes and Unreal synthetic practice on desktop/mobile
+        run: node tests/wishes-unreal.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
