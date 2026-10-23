@@ -97,6 +97,8 @@ jobs:
         run: node tests/prepositions-time-place.mjs
       - name: Test Lesson 25 Collocations synthetic practice on desktop/mobile
         run: node tests/preposition-collocations.mjs
+      - name: Test Lesson 26 Word Formation synthetic teaching stages on desktop/mobile
+        run: node tests/word-formation.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
