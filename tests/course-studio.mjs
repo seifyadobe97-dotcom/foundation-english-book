@@ -69,7 +69,7 @@ try{
      sections:Array.from({length:stages},(_,i)=>({index:i,titleAr:"المرحلة "+(i+1),
       base:{titleAr:"المرحلة "+(i+1),subtitle:"مثال",short:"مثال",duration:"5 دقائق",description:"شرح بسيط"},
       draft:null,published:null,visual_base:{title:"شرح تجريبي",detail:"شرح تجريبي للقاعدة",tip:"بسيط",cards:[],examples:[],formulas:[],keywords:[]},visual_draft:draft,visual_published:published})),
-     questions:[{id:"TEST-Q01",origin:"source",part_index:0,text:"Synthetic question placeholder",
+     questions:[{id:"TEST-Q01",origin:selected==="ASGQFUTARR"?"simulated":"source",part_index:0,text:"Synthetic question placeholder",
       options:{A:"alpha",B:"bravo",C:"charlie",D:"delta"},correct:"A",
       explanation:"Synthetic grading example",wrongReasons:{B:"Reason B",C:"Reason C",D:"Reason D"},draft:null,published:false}]};
    }else if(endpoint==="/studio/units/save"){draft=JSON.parse(req.postData()).content;data={ok:true,status:"draft"};}
@@ -114,6 +114,11 @@ try{
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===5);
   assert.equal(await page.locator("#course").inputValue(),"ASGQFUTARR");
   assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
+  await page.locator('[data-tab="questions"]').click();
+  await page.getByText("سؤال محاكي · تم إنشاؤه داخليًا",{exact:false}).first().waitFor({timeout:12000});
+  await page.locator('aside button[data-index="1"]').click();
+  await page.getByText("سؤال محاكي معتمد داخليًا",{exact:false}).first().waitFor({timeout:12000});
+  await page.locator('[data-tab="visual"]').click();
   await page.locator("#course").selectOption("ASGQTIMCL");
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===5);
   assert.equal(await page.locator("#course").inputValue(),"ASGQTIMCL");
