@@ -29,9 +29,10 @@ const indicators=[
   {slug:"past-continuous",status:"published"},
  {slug:"will-be-going-to",status:"published"},
  {slug:"future-arrangements",status:"draft"},
- {slug:"time-clauses",status:"published"}
+ {slug:"time-clauses",status:"published"},
+ {slug:"present-perfect",status:"published"}
 ];
-const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous",ASGQWILLGO:"Will / Be Going To",ASGQFUTARR:"Future Arrangements",ASGQTIMCL:"Future Time Clauses"};
+const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous",ASGQWILLGO:"Will / Be Going To",ASGQFUTARR:"Future Arrangements",ASGQTIMCL:"Future Time Clauses",ASGQPRPER:"Present Perfect"};
 try{
  for(const width of [1280,390]){
   const page=await browser.newPage({viewport:{width,height:850}});
@@ -54,11 +55,12 @@ try{
        {slug:"past-continuous",code:"ASGQPACONT",title:"Past Continuous",titleAr:"الماضي المستمر",status:"published",position:105},
        {slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",titleAr:"المستقبل بـ Will و Going To",status:"published",position:106},
        {slug:"future-arrangements",code:"ASGQFUTARR",title:"Future Arrangements",titleAr:"ترتيبات المستقبل والجداول",status:"draft",position:107},
-       {slug:"time-clauses",code:"ASGQTIMCL",title:"Future Time Clauses",titleAr:"الجمل الزمنية الدالة على المستقبل",status:"published",position:108}
+       {slug:"time-clauses",code:"ASGQTIMCL",title:"Future Time Clauses",titleAr:"الجمل الزمنية الدالة على المستقبل",status:"published",position:108},
+       {slug:"present-perfect",code:"ASGQPRPER",title:"Present Perfect",titleAr:"المضارع التام",status:"published",position:109}
      ],can_edit:true};
     }else if(endpoint==="/studio"){
     const code=url.searchParams.get("course")||"ASGQAGREE";
-    const units=code==="ASGQPRSIM"?6:code==="ASGQWILLGO"?7:5;
+    const units=code==="ASGQPRSIM"?6:code==="ASGQWILLGO"||code==="ASGQPRPER"?7:5;
     body={course:{code,title:lessonMeta[code],titleAr:"درس تجريبي",subtitle:"",status:code==="ASGQFUTARR"?"draft":"published"},
      sections:Array.from({length:units},(_,i)=>({index:i,titleAr:"مرحلة "+(i+1),
       base:{titleAr:"مرحلة "+(i+1),subtitle:"",short:"",duration:"7 دقائق",
@@ -70,7 +72,8 @@ try{
   });
   await page.goto(origin+"/step-grammar-admin/",{waitUntil:"domcontentloaded"});
   await page.locator(".home-hero").waitFor({timeout:12000});
-  assert.equal(await page.locator(".home-card").count(),8,"Eight admin lesson cards including Lesson 08");
+  assert.equal(await page.locator(".home-card").count(),9,"Nine admin lesson cards including Lesson 09");
+  assert.match(await page.locator("#home-status-09").innerText(),/منشور للطلاب/);
   assert.match(await page.locator("#home-status-08").innerText(),/منشور للطلاب/);
   assert.match(await page.locator("#home-status-07").innerText(),/مسودة غير منشورة/,"Lesson 07 must not appear as published");
   assert.match(await page.locator("#home-status-06").innerText(),/منشور للطلاب/,"Lesson 06 must be clearly marked as published");
@@ -102,13 +105,18 @@ try{
   await page.goto(origin+"/step-grammar-admin/studio.html?course=ASGQTIMCL&tab=visual",{waitUntil:"domcontentloaded"});
   await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===5);
   assert.equal(await page.locator("#course").inputValue(),"ASGQTIMCL");
+  await page.goto(origin+"/step-grammar-admin/studio.html?course=ASGQPRPER&tab=visual",{waitUntil:"domcontentloaded"});
+  await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===7);
+  assert.equal(await page.locator("#course").inputValue(),"ASGQPRPER");
+  assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
   assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
 
 
   assert.equal(await page.locator(".admin-global-nav a[aria-current='page']").innerText().then(x=>x.includes("تعديل الدروس")),true);
   await page.goto(origin+"/step-grammar-admin/sources.html",{waitUntil:"domcontentloaded"});
   await page.locator("#cards:not([hidden])").waitFor();
-  assert.equal(await page.locator(".card").count(),8,"Eight source-audit cards including Lesson 08");
+  assert.equal(await page.locator(".card").count(),9,"Nine source-audit cards including Lesson 09");
+  assert.equal(await page.locator('a[href="present-perfect-audit.html"]').count(),1);
   assert.equal(await page.locator('a[href="time-clauses-audit.html"]').count(),1);
   assert.equal(await page.locator('a[href="studio.html?course=ASGQFUTARR&tab=visual"]').count(),1,"Lesson 07 has a visual-editor link");
   assert.equal(await page.locator('a[href="studio.html?course=ASGQWILLGO&tab=questions"]').count(),1,"Lesson 06 source intake uses the unified Studio");

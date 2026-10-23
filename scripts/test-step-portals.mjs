@@ -68,6 +68,16 @@ for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"
 const lesson08Gate=readFileSync("supabase/migrations/20261023_step_lesson08_time_clauses_source_release.sql","utf8");
 assert(lesson08Gate.includes("approved<>items")&&lesson08Gate.includes("step_source_item_reviews")&&lesson08Gate.includes("items<5"),
  "Lesson 08 only publishes audited original exam questions");
+const presentPerfectGate=readFileSync("supabase/migrations/20261023_step_lesson09_present_perfect_source_release.sql","utf8");
+assert(presentPerfectGate.includes("total<13")&&presentPerfectGate.includes("step_source_item_reviews")&&
+ presentPerfectGate.includes("approved<>total"),
+ "Lesson 09 release requires thirteen source-matched, independently reviewed questions");
+assert(studio.includes('value="ASGQPRPER"')&&
+ studio.includes('"ASGQPRPER":"present-perfect"')&&
+ adminHome.includes('code:"ASGQPRPER"')&&
+ adminServer.includes('path==="/present-perfect/audit"')&&
+ readFileSync("step-grammar-admin/present-perfect-audit.html","utf8").includes("/step-admin/present-perfect/audit"),
+ "Lesson 09 Studio and owner-only source audit are reachable without public exam keys");
 assert(studio.includes('value="ASGQTIMCL"')&&studio.includes('"ASGQTIMCL":"time-clauses"')&&
  adminHome.includes('code:"ASGQTIMCL"')&&adminServer.includes('path==="/time-clauses/audit"')&&
  readFileSync("step-grammar-admin/time-clauses-audit.html","utf8").includes("/step-admin/time-clauses/audit"),
@@ -220,6 +230,7 @@ assert(logicalSequence.includes("lessons **01–06 are published**")&&
  logicalSequence.includes("`past-continuous` — position `105` — published")&&
  logicalSequence.includes("`will-be-going-to` — position `106` — published")&&
  logicalSequence.includes("`time-clauses` — position `108` — published")&&
+ logicalSequence.includes("`present-perfect` — position `109` — published")&&
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
  "Teaching sequence must keep Foundation deferred, publish lessons 01-06, and stage lesson 07");

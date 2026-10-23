@@ -73,6 +73,8 @@ jobs:
         run: node tests/will-be-going-to.mjs
       - name: Test Lesson 08 Time Clauses on mobile and desktop with synthetic items
         run: node tests/time-clauses.mjs
+      - name: Test Lesson 09 Present Perfect on mobile and desktop using synthetic questions
+        run: node tests/present-perfect.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
