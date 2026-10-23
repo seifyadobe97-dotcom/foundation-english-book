@@ -125,6 +125,8 @@ jobs:
         run: node tests/reported-speech.mjs
       - name: Test Lesson 39 Indirect Questions source-safe synthetic browser lesson
         run: node tests/indirect-questions.mjs
+      - name: Test Lesson 40 Question Tags source-safe responsive practice
+        run: node tests/question-tags.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
