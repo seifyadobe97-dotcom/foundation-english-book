@@ -65,6 +65,13 @@ assert(admin.includes('src="admin-home.js"')&&adminHome.includes('id="nav-lesson
 for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"])
  assert(adminHome.includes(code)&&studio.includes('value="'+code+'"'),
   "Every published lesson must have its own direct editor route: "+code);
+const lesson08Gate=readFileSync("supabase/migrations/20261023_step_lesson08_time_clauses_source_release.sql","utf8");
+assert(lesson08Gate.includes("approved<>items")&&lesson08Gate.includes("step_source_item_reviews")&&lesson08Gate.includes("items<5"),
+ "Lesson 08 only publishes audited original exam questions");
+assert(studio.includes('value="ASGQTIMCL"')&&studio.includes('"ASGQTIMCL":"time-clauses"')&&
+ adminHome.includes('code:"ASGQTIMCL"')&&adminServer.includes('path==="/time-clauses/audit"')&&
+ readFileSync("step-grammar-admin/time-clauses-audit.html","utf8").includes("/step-admin/time-clauses/audit"),
+ "Lesson 08 appears in the existing editor and admin-only audit");
 assert(studio.includes('value="ASGQFUTARR"')&&studio.includes('"ASGQFUTARR":"future-arrangements"')&&
  adminHome.includes('code:"ASGQFUTARR"')&&
  readFileSync("step-grammar-admin/sources.html","utf8").includes("studio.html?course=ASGQFUTARR&tab=visual"),
@@ -212,6 +219,7 @@ const logicalSequence=readFileSync("curriculum/STEP_LOGICAL_GRAMMAR_SEQUENCE_202
 assert(logicalSequence.includes("lessons **01–06 are published**")&&
  logicalSequence.includes("`past-continuous` — position `105` — published")&&
  logicalSequence.includes("`will-be-going-to` — position `106` — published")&&
+ logicalSequence.includes("`time-clauses` — position `108` — published")&&
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
  "Teaching sequence must keep Foundation deferred, publish lessons 01-06, and stage lesson 07");
