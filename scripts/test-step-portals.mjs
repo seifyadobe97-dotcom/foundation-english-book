@@ -129,6 +129,22 @@ assert(lesson35Audit.includes("all 26 printed questions")&&
  lesson35Audit.includes("SCON-018")&&
  lesson35Audit.includes("DRAFT / HOLD"),
  "Lesson35 source review must reconcile 26 originals with 10 approved and three ambiguous holds");
+const lesson37Gate=readFileSync("supabase/migrations/20261023_step_lesson37_wishes_unreal_source_gate.sql","utf8");
+assert(lesson37Gate.includes("total<10")&&
+ lesson37Gate.includes("complete_stages!=4")&&
+ lesson37Gate.includes("step_source_item_reviews")&&
+ lesson37Gate.includes("reused>0"),
+ "Lesson37 must block Wishes and Unreal source shortfall and prevent cross-lesson reuse");
+assert(studio.includes('value="ASGQWISHUNREAL"')&&
+ studio.includes('"ASGQWISHUNREAL":"wishes-and-unreal-structures"')&&
+ adminHome.includes('code:"ASGQWISHUNREAL"'),
+ "Lesson37 must be owner-editable while draft");
+const lesson37Audit=readFileSync("curriculum/WISHES_UNREAL_LESSON37_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson37Audit.includes("12 printed originals")&&
+ lesson37Audit.includes("5 independently source-approved originals")&&
+ lesson37Audit.includes("3 ambiguity holds")&&
+ lesson37Audit.includes("HOLD, not published"),
+ "Lesson37 report must reconcile all twelve originals and never force nonunique as-if/would-rather keys");
 const lesson36Gate=readFileSync("supabase/migrations/20261023_step_lesson36_third_conditional_source_gate.sql","utf8");
 assert(lesson36Gate.includes("total<18")&&
  lesson36Gate.includes("stages!=3")&&
