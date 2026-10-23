@@ -30,8 +30,8 @@ const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
   const r=await fetch(base+"/functions/v1/step-admin/passive-voice/audit",{headers:{"apikey":key,"Authorization":"Bearer "+session.access_token}});
   const d=await r.json();if(!r.ok)throw Error(d.error||"لا توجد صلاحية للعرض");
   document.getElementById("status").textContent=d.indicator?.status==="published"?
-   "الدرس السابع عشر منشور بعد تدقيق 20 سؤالًا أصليًا، والسجل لصاحب الصلاحية فقط.":
-   "الدرس السابع عشر تحت مراجعة النشر: 20 سؤالًا معتمدًا من 31 موضعًا، و9 مراحل تدريس.";
+   "الدرس السابع عشر مسودة محمية إلى حين اعتماد مصدر مستقل ثانٍ على Future Perfect Passive. السجل متاح للأونر فقط.":
+   "الدرس السابع عشر مسودة خاصة: 31 موضعًا مراجَعًا؛ 20 معتمدًا بالمصدر، لكن 19 فقط تخص الأزمنة المستخدمة في التدريب، وسؤال Be Supposed To خارج الاختبار؛ المستقبل التام عليه سؤال واحد.";
   document.getElementById("summary").innerHTML=
    "<span>إجمالي السجلات: <b>"+d.summary.total+"</b></span>"+
    "<span>معتمد ومضمّن في الدرس: <b>"+d.summary.in_course+"</b></span>"+
