@@ -113,6 +113,22 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson29Gate=readFileSync("supabase/migrations/20261023_step_lesson29_bare_infinitives_source_gate.sql","utf8");
+assert(lesson29Gate.includes("total<12")&&
+ lesson29Gate.includes("complete_stages!=4")&&
+ lesson29Gate.includes("step_source_item_reviews")&&
+ lesson29Gate.includes("reused>0"),
+ "Lesson29 must block insufficient bare infinitive source coverage and any source overlap");
+assert(studio.includes('value="ASGQBARECORE"')&&
+ studio.includes('"ASGQBARECORE":"bare-infinitives"')&&
+ adminHome.includes('code:"ASGQBARECORE"'),
+ "Lesson29 must be editable via canonical owner Studio even while held draft");
+const lesson29Audit=readFileSync("curriculum/BARE_INFINITIVES_LESSON29_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson29Audit.includes("14 printed occurrences individually reviewed")&&
+ lesson29Audit.includes("10 approved exact original MCQs")&&
+ lesson29Audit.includes("HOLD")&&
+ lesson29Audit.includes("two or more"),
+ "Lesson29 report must reconcile all 14 originals and its current source shortfall");
 const lesson28Gate=readFileSync("supabase/migrations/20261023_step_lesson28_infinitives_source_gate.sql","utf8");
 assert(lesson28Gate.includes("total<20")&&
  lesson28Gate.includes("full_stages!=4")&&
