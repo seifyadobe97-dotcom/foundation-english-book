@@ -47,7 +47,7 @@ window.StepAdminHome={
    {n:"42",slug:"advanced-conditionals",code:"ASGQADVCOND",title:"Advanced Conditionals",ar:"الشرط المختلط وقلب الشرط",status:"draft"},
    {n:"43",slug:"question-formation",code:"ASGQQFORMCORE",title:"Question Formation",ar:"تكوين الأسئلة",status:"published"},
    {n:"44",slug:"question-words",code:"ASGQQWHCORE",title:"Question Words",ar:"أدوات الاستفهام",status:"published"},
-   {n:"45",slug:"correct-word-order",code:"ASGQWORDORDER",title:"Correct Word Order",ar:"ترتيب الكلمات والجمل",status:"draft"}
+   {n:"45",slug:"correct-word-order",code:"ASGQWORDORDER",title:"Correct Word Order",ar:"ترتيب الكلمات والجمل",status:"published"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
