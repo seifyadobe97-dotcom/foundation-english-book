@@ -129,6 +129,22 @@ assert(lesson35Audit.includes("all 26 printed questions")&&
  lesson35Audit.includes("SCON-018")&&
  lesson35Audit.includes("DRAFT / HOLD"),
  "Lesson35 source review must reconcile 26 originals with 10 approved and three ambiguous holds");
+const lesson43Gate=readFileSync("supabase/migrations/20261024_step_lesson43_question_formation_source_gate.sql","utf8");
+assert(lesson43Gate.includes("total<16")&&
+ lesson43Gate.includes("stages_ok!=4")&&
+ lesson43Gate.includes("step_source_item_reviews")&&
+ lesson43Gate.includes("overlap_count>0"),
+ "Lesson43 source exact question-formation release gate must block unsafe keys/duplicates");
+assert(studio.includes('value="ASGQQFORMCORE"')&&
+ studio.includes('"ASGQQFORMCORE":"question-formation"')&&
+ adminHome.includes('code:"ASGQQFORMCORE"'),
+ "Lesson43 source-audited Question Formation must be editable from owner Studio");
+const lesson43Audit=readFileSync("curriculum/QUESTION_FORMATION_LESSON43_SOURCE_AUDIT_20261024.md","utf8");
+assert(lesson43Audit.includes("32 printed original question occurrences")&&
+ lesson43Audit.includes("16 unique, independently approved source-exact MCQs")&&
+ lesson43Audit.includes("QFORM-015")&&
+ lesson43Audit.includes("Zero cross-course overlap rechecked"),
+ "Lesson43 must document final source count, cross-course double scoring exclusion and verified coverage");
 const lesson42Gate=readFileSync("supabase/migrations/20261024_step_lesson42_advanced_conditionals_source_gate.sql","utf8");
 assert(lesson42Gate.includes("total<9")&&
  lesson42Gate.includes("fully_scored!=3")&&
