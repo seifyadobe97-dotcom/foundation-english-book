@@ -81,6 +81,8 @@ jobs:
         run: node tests/past-perfect.mjs
       - name: Test Lesson 15 Modals Fundamentals teaching and graded feedback on desktop/mobile
         run: node tests/modals-fundamentals.mjs
+      - name: Test Lesson 17 Passive Voice source-audited teaching and practice on desktop/mobile
+        run: node tests/passive-voice-by-tense.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
