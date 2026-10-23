@@ -129,6 +129,22 @@ assert(lesson35Audit.includes("all 26 printed questions")&&
  lesson35Audit.includes("SCON-018")&&
  lesson35Audit.includes("DRAFT / HOLD"),
  "Lesson35 source review must reconcile 26 originals with 10 approved and three ambiguous holds");
+const lesson45Gate=readFileSync("supabase/migrations/20261024_step_lesson45_correct_word_order_source_gate.sql","utf8");
+assert(lesson45Gate.includes("total<12")&&
+ lesson45Gate.includes("full_stages!=4")&&
+ lesson45Gate.includes("step_source_item_reviews")&&
+ lesson45Gate.includes("oq.item->'options'=q.item->'options'"),
+ "Lesson45 must protect exact source questions with full option-set identity rather than repeated generic stems");
+assert(studio.includes('value="ASGQWORDORDER"')&&
+ studio.includes('"ASGQWORDORDER":"correct-word-order"')&&
+ adminHome.includes('code:"ASGQWORDORDER"'),
+ "Word Order Lesson45 must be editable from Studio with canonical admin link");
+const lesson45Audit=readFileSync("curriculum/CORRECT_WORD_ORDER_LESSON45_SOURCE_AUDIT_20261024.md","utf8");
+assert(lesson45Audit.includes("61 printed question occurrences")&&
+ lesson45Audit.includes("12 approved original source-exact graded items")&&
+ lesson45Audit.includes("WORD-044")&&
+ lesson45Audit.includes("12/12 source exact"),
+ "Word Order audit must reconcile limited source selection and avoid scoring duplicate-distractor item");
 const lesson44Gate=readFileSync("supabase/migrations/20261024_step_lesson44_question_words_source_gate.sql","utf8");
 assert(lesson44Gate.includes("total<12")&&
  lesson44Gate.includes("stages_ok!=4")&&
