@@ -95,7 +95,7 @@ try{
   assert.equal(await page.locator("#course").inputValue(),"ASGQWILLGO");
   assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
   await page.locator('[data-tab="questions"]').click();
-  await page.waitForFunction(()=>document.querySelectorAll("aside button").length===1);
+  await page.waitForFunction(()=>document.querySelectorAll("aside button").length===2);
   assert.equal(await page.locator("aside button").count(),2,"Lesson 06 published Studio question editor supports safe synthetic fixture item");
   assert.deepEqual(jsErrors,[],"Admin browser errors "+jsErrors.join("; "));
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);
