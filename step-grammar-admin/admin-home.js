@@ -45,7 +45,8 @@ window.StepAdminHome={
    {n:"40",slug:"question-tags",code:"ASGQQTAGCORE",title:"Question Tags",ar:"الأسئلة الذيلية",status:"draft"},
    {n:"41",slug:"so-neither-agreement",code:"ASGQSONEITHERCORE",title:"So / Neither Agreement",ar:"الاتفاق بالإثبات والنفي",status:"draft"},
    {n:"42",slug:"advanced-conditionals",code:"ASGQADVCOND",title:"Advanced Conditionals",ar:"الشرط المختلط وقلب الشرط",status:"draft"},
-   {n:"43",slug:"question-formation",code:"ASGQQFORMCORE",title:"Question Formation",ar:"تكوين الأسئلة",status:"draft"}
+   {n:"43",slug:"question-formation",code:"ASGQQFORMCORE",title:"Question Formation",ar:"تكوين الأسئلة",status:"draft"},
+   {n:"44",slug:"question-words",code:"ASGQQWHCORE",title:"Question Words",ar:"أدوات الاستفهام",status:"draft"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
