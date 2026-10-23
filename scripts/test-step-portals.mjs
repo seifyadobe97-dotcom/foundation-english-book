@@ -113,6 +113,38 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson35Gate=readFileSync("supabase/migrations/20261023_step_lesson35_second_conditional_source_gate.sql","utf8");
+assert(lesson35Gate.includes("total<12")&&
+ lesson35Gate.includes("complete_stages!=3")&&
+ lesson35Gate.includes("step_source_item_reviews")&&
+ lesson35Gate.includes("overlap_count>0"),
+ "Lesson35 requires independent source-original Second Conditional coverage and no cross-lesson duplicates");
+assert(studio.includes('value="ASGQSECONDCORE"')&&
+ studio.includes('"ASGQSECONDCORE":"second-conditional"')&&
+ adminHome.includes('code:"ASGQSECONDCORE"'),
+ "Lesson35 must be editable in admin Studio while protected as draft");
+const lesson35Audit=readFileSync("curriculum/SECOND_CONDITIONAL_LESSON35_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson35Audit.includes("all 26 printed questions")&&
+ lesson35Audit.includes("Individually approved independent source originals")&&
+ lesson35Audit.includes("SCON-018")&&
+ lesson35Audit.includes("DRAFT / HOLD"),
+ "Lesson35 source review must reconcile 26 originals with 10 approved and three ambiguous holds");
+const lesson36Gate=readFileSync("supabase/migrations/20261023_step_lesson36_third_conditional_source_gate.sql","utf8");
+assert(lesson36Gate.includes("total<18")&&
+ lesson36Gate.includes("stages!=3")&&
+ lesson36Gate.includes("step_source_item_reviews")&&
+ lesson36Gate.includes("reused>0"),
+ "Lesson36 requires 18 exact original Third Conditional MCQs and source-safe section coverage");
+assert(studio.includes('value="ASGQTHIRDCORE"')&&
+ studio.includes('"ASGQTHIRDCORE":"third-conditional"')&&
+ adminHome.includes('code:"ASGQTHIRDCORE"'),
+ "Lesson36 must be editable in owner Studio with administrative navigation");
+const lesson36Audit=readFileSync("curriculum/THIRD_CONDITIONAL_LESSON36_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson36Audit.includes("all 29 printed original question occurrences")&&
+ lesson36Audit.includes("18 exact-source scored originals")&&
+ lesson36Audit.includes("TCON-028")&&
+ lesson36Audit.includes("zero overlap"),
+ "Lesson36 must reconcile all 29 audited original items and 18 independently approved source matches");
 const lesson34Gate=readFileSync("supabase/migrations/20261023_step_lesson34_first_conditional_source_gate.sql","utf8");
 assert(lesson34Gate.includes("total<16")&&
  lesson34Gate.includes("stages!=3")&&
