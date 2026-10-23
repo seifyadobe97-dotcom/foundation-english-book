@@ -113,6 +113,22 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson23Gate=readFileSync("supabase/migrations/20261023_step_lesson23_comparatives_superlatives_source_gate.sql","utf8");
+assert(lesson23Gate.includes("total<18")&&
+ lesson23Gate.includes("comp<12 OR sup<6")&&
+ lesson23Gate.includes("step_source_item_reviews")&&
+ lesson23Gate.includes("full_stages<>5"),
+ "Lesson23 must source-verify 12 comparisons and 6 superlatives in five stages");
+assert(studio.includes('value="ASGQCOMPSUP"')&&
+ studio.includes('"ASGQCOMPSUP":"comparatives-superlatives"')&&
+ adminHome.includes('code:"ASGQCOMPSUP"'),
+ "Lesson23 must be editable and clearly mapped in the owner admin index");
+const lesson23Audit=readFileSync("curriculum/COMPARATIVES_SUPERLATIVES_LESSON23_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson23Audit.includes("19 originals individually reviewed")&&
+ lesson23Audit.includes("18 independently approved")&&
+ lesson23Audit.includes("1 ambiguity hold")&&
+ lesson23Audit.includes("superlative adverbs"),
+ "Lesson23 must reconcile 19 original entries into 18 individually approved and one hold");
 const lesson22Gate=readFileSync("supabase/migrations/20261023_step_lesson22_adjectives_adverbs_source_gate.sql","utf8");
 assert(lesson22Gate.includes("total<22")&&
  lesson22Gate.includes("complete<>6")&&
