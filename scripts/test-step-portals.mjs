@@ -85,6 +85,25 @@ assert(passiveAudit.includes("31 occurrences individually reviewed")&&
  passiveAudit.includes("19 source-approved tense originals")&&
  passiveAudit.includes("current")&&passiveAudit.includes("Future Perfect"),
  "Lesson17 must reconcile approved source occurrences and unpublishable tense practice");
+const lesson18Gate=readFileSync("supabase/migrations/20261023_step_lesson18_modal_passive_source_gate.sql","utf8");
+assert(lesson18Gate.includes("total<12")&&
+ lesson18Gate.includes("perfect<3")&&
+ lesson18Gate.includes("step_source_item_reviews")&&
+ lesson18Gate.includes("source coverage incomplete")&&
+ lesson18Gate.includes("overlaps another lesson bank"),
+ "Lesson18 must retain the strict 12-item source, Modal Perfect, and dedup publication gate");
+assert(studio.includes('value="ASGQMODPASSCORE"')&&
+ studio.includes('"ASGQMODPASSCORE":"modal-passive"')&&
+ adminHome.includes('code:"ASGQMODPASSCORE"')&&
+ adminHome.includes('status:"draft"'),
+ "Lesson18 must remain a clearly marked editable admin Studio draft");
+const lesson18Audit=readFileSync("curriculum/MODAL_PASSIVE_LESSON18_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson18Audit.includes("Total individually reviewed")&&
+ lesson18Audit.includes("**11**")&&
+ lesson18Audit.includes("**6**")&&
+ lesson18Audit.includes("at least 12")&&
+ lesson18Audit.includes("HOLD"),
+ "Lesson18 must document actual six approved originals and deliberate publication hold");
 const lesson16Gate=readFileSync("supabase/migrations/20261023_step_lesson16_modals_deduction_source_gate.sql","utf8");
 assert(lesson16Gate.includes("total<6")&&lesson16Gate.includes("present_n<3")&&
  lesson16Gate.includes("past_n<3")&&lesson16Gate.includes("step_source_item_reviews"),
