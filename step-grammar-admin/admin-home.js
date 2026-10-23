@@ -10,7 +10,8 @@ window.StepAdminHome={
    {n:"05",slug:"past-continuous",code:"ASGQPACONT",title:"Past Continuous",ar:"الماضي المستمر"},
    {n:"06",slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",ar:"المستقبل بـ Will و Going To",status:"published"},
    {n:"07",slug:"future-arrangements",code:"ASGQFUTARR",title:"Future Arrangements",ar:"ترتيبات المستقبل والجداول",status:"draft"},
-   {n:"08",slug:"time-clauses",code:"ASGQTIMCL",title:"Future Time Clauses",ar:"الجمل الزمنية الدالة على المستقبل",status:"published"}
+   {n:"08",slug:"time-clauses",code:"ASGQTIMCL",title:"Future Time Clauses",ar:"الجمل الزمنية الدالة على المستقبل",status:"published"},
+   {n:"09",slug:"present-perfect",code:"ASGQPRPER",title:"Present Perfect",ar:"المضارع التام",status:"published"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{

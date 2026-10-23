@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>تدقيق درس المضارع التام | STEP with Seify</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>:root{--ink:#193343;--green:#26796b;--line:#dfe8e3}*{box-sizing:border-box}body{margin:0;background:#f7f9f7;color:var(--ink);font:14px/1.8 Cairo,Tahoma,sans-serif}
+header{background:white;border-bottom:1px solid var(--line);padding:15px max(18px,calc((100vw - 1060px)/2));display:flex;gap:20px;align-items:center;justify-content:space-between}
+header img{width:175px;height:auto}a{color:var(--green);font-weight:800;text-decoration:none}main{max-width:1100px;padding:30px 17px 80px;margin:auto}
+h1{font-size:clamp(25px,4vw,36px);margin:0 0 4px}p{color:#53686b}#status{border-radius:8px;padding:12px;background:#fff6e8;color:#825d2f}
+.summary{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}.summary span{background:white;border:1px solid var(--line);padding:10px 18px;border-radius:11px}
+article{background:#fff;border:1px solid var(--line);border-radius:13px;padding:20px;margin:14px 0}
+.meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:#5e7378;font-size:12px}
+.tag{padding:3px 11px;border-radius:100px;background:#fcebd7;color:#8c5e28;font-weight:800}.tag.approved{background:#e4f4eb;color:#21704f}
+.english{direction:ltr;text-align:left;unicode-bidi:isolate;font:600 15px/1.7 Arial,sans-serif;overflow-wrap:anywhere}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0;list-style:none}.options li{border:1px solid var(--line);border-radius:9px;padding:7px 10px}.options .correct{background:#e9f6ef;border-color:#b5dac4}
+small{font-size:12px;color:#65777a}@media(max-width:580px){.options{grid-template-columns:1fr}article{padding:13px}}</style><link rel="stylesheet" href="admin-nav.css"></head><body>
+<header><a href="./"><img src="../step-brand/logo.svg" alt="STEP with Seify"></a><a href="sources.html">← كل سجلات المصادر</a></header>
+<main><h1>تدقيق الدرس التاسع</h1><p>Present Perfect · البيانات التالية للأدمن فقط. لا تعرض للطلاب.</p>
+<div id="status" role="status">جاري التحقق من صلاحية الأدمن وتحميل المراجعات…</div><div id="summary" class="summary"></div><section id="list"></section></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+const base="https://funltjxavowlnnfibhpl.supabase.co";
+const key="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const sb=window.supabase.createClient(base,key);
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+(async()=>{
+ try{
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session)throw Error("سجّل دخولك للأدمن أولًا.");
+  const r=await fetch(base+"/functions/v1/step-admin/present-perfect/audit",{headers:{"apikey":key,"Authorization":"Bearer "+session.access_token}});
+  const d=await r.json();if(!r.ok)throw Error(d.error||"لا توجد صلاحية للعرض");
+  document.getElementById("status").textContent=d.indicator?.status==="published"?
+   "الدرس التاسع منشور — راجع سجل المطابقة: الأسئلة الأصلية والاختيارات ومفاتيحها للأدمن فقط.":
+   "الدرس التاسع مسودة خاصة حتى اكتمال اختبارات الجودة واعتماد النشر.";
+  document.getElementById("summary").innerHTML=
+   "<span>إجمالي السجلات: <b>"+d.summary.total+"</b></span>"+
+   "<span>معتمد ومضمّن في الدرس: <b>"+d.summary.in_course+"</b></span>"+
+   "<span>مكرر أو شبه مكرر: <b>"+d.summary.duplicate+"</b></span>"+
+   "<span>معلّق/تحت المراجعة: <b>"+d.summary.held+"</b></span>"+
+   (d.summary.invalid_in_course.length||d.summary.missing_from_ledger.length?
+    "<span>⚠ تعارض يحتاج تدخل: <b>"+esc([...d.summary.invalid_in_course,...d.summary.missing_from_ledger].join(", "))+"</b></span>":"");
+  document.getElementById("list").innerHTML=d.items.map(q=>{
+   const options=q.original_options||{};
+   return '<article><div class="meta"><b>'+esc(q.candidate_id)+'</b><span class="tag '+(q.review_status==="approved"?"approved":"")+'">'+esc(q.review_status)+'</span>'+
+   '<span>'+esc(q.document_key)+' · صفحة '+esc(q.pdf_page)+' · رقم '+esc(q.printed_number)+'</span>'+
+   (q.in_course?'<span class="tag approved">في تدريبات الدرس</span>':'<span class="tag">غير مستخدم</span>')+'</div>'+
+   '<p class="english" lang="en">'+esc(q.original_stem)+'</p>'+
+   '<ul class="options english" lang="en">'+["A","B","C","D"].map(a=>'<li class="'+(a===q.printed_key?"correct":"")+'">'+a+' — '+esc(options[a]??"—")+'</li>').join("")+'</ul>'+
+   '<small>'+esc(q.reviewer_notes||"—")+'</small></article>';
+  }).join("");
+ }catch(e){document.getElementById("status").textContent=e.message;}
+})();
+</script><script src="admin-nav.js" defer></script></body></html>

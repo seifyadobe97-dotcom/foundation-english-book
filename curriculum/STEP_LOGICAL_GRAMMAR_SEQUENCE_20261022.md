@@ -17,7 +17,7 @@ Release-status update verified against production Supabase on **2026-10-23**: le
 6. Will / Be Going To — `will-be-going-to` — position `106` — published
 7. ترتيبات المستقبل — `future-arrangements` — position `107` — draft
 8. الجمل الزمنية — `time-clauses` — position `108` — published
-9. المضارع التام — `present-perfect` — position `109` — draft
+9. المضارع التام — `present-perfect` — position `109` — published
 10. المضارع التام المستمر — `present-perfect-continuous` — position `110` — draft
 11. الماضي التام — `past-perfect` — position `111` — draft
 12. الماضي التام المستمر — `past-perfect-continuous` — position `112` — draft
