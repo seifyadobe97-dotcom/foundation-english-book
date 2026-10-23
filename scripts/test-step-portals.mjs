@@ -978,7 +978,7 @@ assert(blendedMigration.includes("CREATE TABLE IF NOT EXISTS public.step_simulat
 assert(simulationAudit.includes("**191**")&&
  simulationAudit.includes("**143**")&&
  simulationAudit.includes("105 assessed sections")&&
- simulationAudit.includes("two separate private provenance channels"),
+ simulationAudit.includes("Two separate private provenance channels"),
  "All previously draft grammar lessons must have a reconciled synthetic-versus-printed ledger");
 assert(adminServer.includes('original.origin==="simulated"?"simulated":"source"')&&
  studio.includes('q.origin==="simulated"?"سؤال محاكي')&&
