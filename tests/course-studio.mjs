@@ -52,7 +52,8 @@ try{
      {slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",titleAr:"الماضي البسيط",position:104,status:"published"},
      {slug:"past-continuous",code:"ASGQPACONT",title:"Past Continuous",titleAr:"الماضي المستمر",position:105,status:"published"},
      {slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",titleAr:"المستقبل بـ Will و Going To",position:106,status:"published"},
-     {slug:"future-arrangements",code:"ASGQFUTARR",title:"Future Arrangements",titleAr:"ترتيبات المستقبل والجداول",position:107,status:"draft"}
+     {slug:"future-arrangements",code:"ASGQFUTARR",title:"Future Arrangements",titleAr:"ترتيبات المستقبل والجداول",position:107,status:"draft"},
+     {slug:"time-clauses",code:"ASGQTIMCL",title:"Future Time Clauses",titleAr:"الجمل الزمنية الدالة على المستقبل",position:108,status:"published"}
     ],can_edit:true};
    }else if(endpoint==="/studio"){
     data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:selected==="ASGQFUTARR"?"draft":"published"},
@@ -102,6 +103,10 @@ try{
   await page.locator('[data-tab="visual"]').click();
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===5);
   assert.equal(await page.locator("#course").inputValue(),"ASGQFUTARR");
+  await page.locator("#course").selectOption("ASGQTIMCL");
+  await page.waitForFunction(()=>document.querySelectorAll("aside button").length===5);
+  assert.equal(await page.locator("#course").inputValue(),"ASGQTIMCL");
+  assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
   assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
   assert.deepEqual(jsErrors,[],"Admin browser errors "+jsErrors.join("; "));
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);
