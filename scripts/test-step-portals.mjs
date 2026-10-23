@@ -113,6 +113,22 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson25Gate=readFileSync("supabase/migrations/20261023_step_lesson25_collocations_source_gate.sql","utf8");
+assert(lesson25Gate.includes("total<12")&&
+ lesson25Gate.includes("stages!=4")&&
+ lesson25Gate.includes("step_source_item_reviews")&&
+ lesson25Gate.includes("overlaps_count>0"),
+ "Lesson25 must prevent release with fewer than 12 unique reviewed source MCQs and complete stage coverage");
+assert(studio.includes('value="ASGQCOLLOCPREP"')&&
+ studio.includes('"ASGQCOLLOCPREP":"preposition-collocations"')&&
+ adminHome.includes('code:"ASGQCOLLOCPREP"')&&
+ adminHome.includes('code:"ASGQPREPTIME"'),
+ "Lesson25 must be owner-editable and Lesson24 published navigation retained");
+const lesson25Audit=readFileSync("curriculum/PREPOSITION_COLLOCATIONS_LESSON25_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson25Audit.includes("Five source-exact MCQs individually reviewed")&&
+ lesson25Audit.includes("five original source-approved scored questions")&&
+ lesson25Audit.includes("Publication decision: HOLD"),
+ "Lesson25 review must explicitly hold insufficient independently scored collocations");
 const lesson24Gate=readFileSync("supabase/migrations/20261023_step_lesson24_prepositions_time_place_source_gate.sql","utf8");
 assert(lesson24Gate.includes("item_total<22")&&
  lesson24Gate.includes("n_prep<12 OR n_since<10")&&
