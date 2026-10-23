@@ -127,6 +127,8 @@ jobs:
         run: node tests/indirect-questions.mjs
       - name: Test Lesson 40 Question Tags source-safe responsive practice
         run: node tests/question-tags.mjs
+      - name: Test Lesson 41 So and Neither Agreement mobile and desktop practice
+        run: node tests/so-neither-agreement.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
