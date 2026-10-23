@@ -120,14 +120,11 @@ try{
   await page.locator("#course").selectOption("ASGQPAPER");
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===6);
   assert.equal(await page.locator("#course").inputValue(),"ASGQPAPER");
+  assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
   await page.locator("#course").selectOption("ASGQPAPERCONT");
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===5);
   assert.equal(await page.locator("#course").inputValue(),"ASGQPAPERCONT");
   assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
-  assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
-  assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
-  assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
-  assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
 
   assert.deepEqual(jsErrors,[],"Admin browser errors "+jsErrors.join("; "));
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);
