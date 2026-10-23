@@ -34,7 +34,8 @@ window.StepAdminHome={
    {n:"29",slug:"bare-infinitives",code:"ASGQBARECORE",title:"Bare Infinitive & Make / Let",ar:"المصدر المجرد",status:"draft"},
    {n:"30",slug:"causatives",code:"ASGQCAUSCORE",title:"Causatives",ar:"السببية",status:"draft"},
    {n:"31",slug:"conjunctions-and-connectors",code:"ASGQCONNLINK",title:"Conjunctions & Connectors",ar:"الروابط",status:"draft"},
-   {n:"32",slug:"relative-clauses",code:"ASGQRELCORE",title:"Relative Clauses",ar:"جمل الوصل",status:"draft"}
+   {n:"32",slug:"relative-clauses",code:"ASGQRELCORE",title:"Relative Clauses",ar:"جمل الوصل",status:"draft"},
+   {n:"33",slug:"zero-conditional",code:"ASGQZEROCORE",title:"Zero Conditional",ar:"الشرط الصفري",status:"draft"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
