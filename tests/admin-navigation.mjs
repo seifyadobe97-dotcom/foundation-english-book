@@ -89,6 +89,7 @@ try{
   await page.goto(origin+"/step-grammar-admin/",{waitUntil:"domcontentloaded"});
   await page.locator(".home-hero").waitFor({timeout:12000});
   assert.equal(await page.locator(".home-card").count(),17,"Seventeen lessons with Lesson17 safely in draft alongside 07/12/13/14/16");
+  await page.waitForFunction(()=>document.querySelector("#home-status-17")?.textContent?.includes("مسودة غير منشورة"));
   assert.match(await page.locator("#home-status-17").innerText(),/مسودة غير منشورة/);
   assert.match(await page.locator("#home-status-16").innerText(),/مسودة غير منشورة/);
   assert.match(await page.locator("#home-status-15").innerText(),/منشور للطلاب/);
