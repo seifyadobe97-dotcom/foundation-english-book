@@ -22,10 +22,11 @@ window.StepAdminHome={
    {n:"17",slug:"passive-voice-by-tense",code:"ASGQPSVCORE",title:"Passive Voice by Tense",ar:"المبني للمجهول حسب الزمن",status:"draft"},
    {n:"18",slug:"modal-passive",code:"ASGQMODPASSCORE",title:"Modal Passive & Modal Perfect Passive",ar:"المبني للمجهول مع الأفعال الناقصة",status:"draft"},
    {n:"19",slug:"pronouns",code:"ASGQPRONCORE",title:"Pronouns",ar:"الضمائر",status:"published"},
-   {n:"20",slug:"articles-countability",code:"ASGQARTCOUNT",title:"Articles & Countability",ar:"الأدوات والمعدود وغير المعدود",status:"draft"},
+   {n:"20",slug:"articles-countability",code:"ASGQARTCOUNT",title:"Articles & Countability",ar:"الأدوات والمعدود وغير المعدود",status:"published"},
    {n:"21",slug:"quantity-degree",code:"ASGQDEGREE",title:"Too / Enough / So ... That",ar:"تراكيب الدرجة والكفاية",status:"draft"},
    {n:"22",slug:"adjectives-and-adverbs",code:"ASGQADJADVCORE",title:"Adjectives and Adverbs",ar:"الصفات والظروف",status:"draft"},
-   {n:"23",slug:"comparatives-superlatives",code:"ASGQCOMPSUP",title:"Comparatives & Superlatives",ar:"المقارنة والتفضيل",status:"draft"}
+   {n:"23",slug:"comparatives-superlatives",code:"ASGQCOMPSUP",title:"Comparatives & Superlatives",ar:"المقارنة والتفضيل",status:"published"},
+   {n:"24",slug:"prepositions-of-time-and-place",code:"ASGQPREPTIME",title:"Prepositions of Time and Place",ar:"حروف الجر للزمان والمكان",status:"draft"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
