@@ -107,6 +107,8 @@ jobs:
         run: node tests/bare-infinitives.mjs
       - name: Test Lesson 30 Causatives teaching and synthetic practice on desktop/mobile
         run: node tests/causatives.mjs
+      - name: Test Lesson 31 Conjunctions and Connectors synthetic grading on desktop/mobile
+        run: node tests/conjunctions-connectors.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
