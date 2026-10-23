@@ -98,6 +98,23 @@ assert(studio.includes('value="ASGQMODPASSCORE"')&&
  adminHome.includes('status:"draft"'),
  "Lesson18 must remain a clearly marked editable admin Studio draft");
 
+const lesson20Gate=readFileSync("supabase/migrations/20261023_step_lesson20_articles_countability_source_gate.sql","utf8");
+assert(lesson20Gate.includes("total<20")&&
+ lesson20Gate.includes("articles<5 OR quantifiers<15")&&
+ lesson20Gate.includes("step_source_item_reviews")&&
+ lesson20Gate.includes("overlaps original questions"),
+ "Lesson20 must require 20 reviewed original MCQs and at least 5 Article / 15 Countability questions");
+assert(studio.includes('value="ASGQARTCOUNT"')&&
+ studio.includes('"ASGQARTCOUNT":"articles-countability"')&&
+ adminHome.includes('code:"ASGQARTCOUNT"')&&
+ adminHome.includes('code:"ASGQPRONCORE"'),
+ "Lessons19–20 must remain directly editable from Studio and admin navigation");
+const lesson20Audit=readFileSync("curriculum/ARTICLES_COUNTABILITY_LESSON20_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson20Audit.includes("27 individually reviewed bank occurrences")&&
+ lesson20Audit.includes("23 source-approved independent originals")&&
+ lesson20Audit.includes("4 source holds")&&
+ lesson20Audit.includes("Too / Enough"),
+ "Lesson20 audit must retain 23 verified originals and 4 held underconstrained items");
 const lesson19Gate=readFileSync("supabase/migrations/20261023_step_lesson19_pronouns_source_gate.sql","utf8");
 assert(lesson19Gate.includes("total<20")&&
  lesson19Gate.includes("rec_count>0")&&
