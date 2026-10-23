@@ -98,11 +98,12 @@ try{
   await page.goto(origin+"/step-grammar-admin/studio.html?course=ASGQFUTARR&tab=visual",{waitUntil:"domcontentloaded"});
   await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===5);
   assert.equal(await page.locator("#course").inputValue(),"ASGQFUTARR");
+  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
   await page.goto(origin+"/step-grammar-admin/studio.html?course=ASGQTIMCL&tab=visual",{waitUntil:"domcontentloaded"});
   await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===5);
   assert.equal(await page.locator("#course").inputValue(),"ASGQTIMCL");
   assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
-  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
+
 
   assert.equal(await page.locator(".admin-global-nav a[aria-current='page']").innerText().then(x=>x.includes("تعديل الدروس")),true);
   await page.goto(origin+"/step-grammar-admin/sources.html",{waitUntil:"domcontentloaded"});
