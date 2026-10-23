@@ -39,7 +39,7 @@ p{margin:6px 0 14px;color:var(--muted)}.panel{border:1px solid var(--line);borde
 <select class="lesson-select" id="course" aria-label="اختيار الدرس">
 <option value="ASGQAGREE">الدرس 1 — Subject–Verb Agreement</option>
 <option value="ASGQPRSIM">الدرس 2 — Present Simple</option>
-<option value="ASGQPRCONT">الدرس 3 — Present Continuous</option><option value="ASGQPASIM">الدرس 4 — Past Simple</option><option value="ASGQPACONT">الدرس 5 — Past Continuous</option><option value="ASGQWILLGO">الدرس 6 — Will / Be Going To</option><option value="ASGQFUTARR">الدرس 7 — Future Arrangements · مسودة</option><option value="ASGQTIMCL">الدرس 8 — Time Clauses</option><option value="ASGQPRPER">الدرس 9 — Present Perfect</option></select></div>
+<option value="ASGQPRCONT">الدرس 3 — Present Continuous</option><option value="ASGQPASIM">الدرس 4 — Past Simple</option><option value="ASGQPACONT">الدرس 5 — Past Continuous</option><option value="ASGQWILLGO">الدرس 6 — Will / Be Going To</option><option value="ASGQFUTARR">الدرس 7 — Future Arrangements · مسودة</option><option value="ASGQTIMCL">الدرس 8 — Time Clauses</option><option value="ASGQPRPER">الدرس 9 — Present Perfect</option><option value="ASGQPRPERCONT">الدرس 10 — Present Perfect Continuous</option></select></div>
 <div class="tabs" id="tabs">
 <button class="btn active" data-tab="visual">الشرح والأمثلة والجداول</button>
 <button class="btn" data-tab="sections">عناوين ومراحل التدريب</button>
@@ -69,9 +69,9 @@ const sourceUnits=()=>({"ASGQAGREE":window.STEP_SUBJECT_VERB_UNITS,"ASGQPRSIM":w
  "ASGQPRCONT":window.STEP_PRESENT_CONTINUOUS_UNITS,"ASGQPASIM":window.STEP_PAST_SIMPLE_UNITS}[courseSelect.value]||
  state.data?.sections?.map(s=>s.visual_base)||[]);
 const courseSlug=()=>courseCatalog.find(x=>x.code===courseSelect.value)?.slug||
- ({"ASGQAGREE":"subject-verb-agreement","ASGQPRSIM":"present-simple","ASGQPRCONT":"present-continuous","ASGQPASIM":"past-simple","ASGQPACONT":"past-continuous","ASGQWILLGO":"will-be-going-to","ASGQFUTARR":"future-arrangements","ASGQTIMCL":"time-clauses","ASGQPRPER":"present-perfect"}[courseSelect.value]||"");
+ ({"ASGQAGREE":"subject-verb-agreement","ASGQPRSIM":"present-simple","ASGQPRCONT":"present-continuous","ASGQPASIM":"past-simple","ASGQPACONT":"past-continuous","ASGQWILLGO":"will-be-going-to","ASGQFUTARR":"future-arrangements","ASGQTIMCL":"time-clauses","ASGQPRPER":"present-perfect","ASGQPRPERCONT":"present-perfect-continuous"}[courseSelect.value]||"");
 const params=new URLSearchParams(location.search);
-const allowedCourses=["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT","ASGQWILLGO","ASGQFUTARR","ASGQTIMCL","ASGQPRPER"];
+const allowedCourses=["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT","ASGQWILLGO","ASGQFUTARR","ASGQTIMCL","ASGQPRPER","ASGQPRPERCONT"];
 const allowedTabs=["visual","sections","questions","course","history"];
 if(allowedCourses.includes(params.get("course")))courseSelect.value=params.get("course");
 const state={data:null,tab:allowedTabs.includes(params.get("tab"))?params.get("tab"):"visual",index:0,questionId:null,dirty:false};
