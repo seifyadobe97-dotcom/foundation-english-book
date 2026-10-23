@@ -69,6 +69,8 @@ jobs:
         run: node tests/past-simple.mjs
       - name: Test generic Past Continuous lesson and graded feedback on desktop and mobile
         run: node tests/past-continuous.mjs
+      - name: Test Lesson 06 future forms, seven stages and explanation feedback on desktop and mobile
+        run: node tests/will-be-going-to.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
