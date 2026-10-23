@@ -68,6 +68,16 @@ for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"
 const lesson08Gate=readFileSync("supabase/migrations/20261023_step_lesson08_time_clauses_source_release.sql","utf8");
 assert(lesson08Gate.includes("approved<>items")&&lesson08Gate.includes("step_source_item_reviews")&&lesson08Gate.includes("items<5"),
  "Lesson 08 only publishes audited original exam questions");
+const pastPerfectAudit=readFileSync("curriculum/PAST_PERFECT_LESSON11_SOURCE_AUDIT_20261023.md","utf8");
+assert(pastPerfectAudit.includes("19 occurrences")&&
+ pastPerfectAudit.includes("6 approved unique")&&pastPerfectAudit.includes("PAP-T242"),
+ "Past Perfect audit must document six genuine original questions without cloning ambiguous items");
+assert(studio.includes('value="ASGQPAPER"')&&
+ studio.includes('"ASGQPAPER":"past-perfect"')&&
+ adminHome.includes('code:"ASGQPAPER"')&&
+ adminServer.includes('path==="/past-perfect/audit"')&&
+ readFileSync("step-grammar-admin/past-perfect-audit.html","utf8").includes("/step-admin/past-perfect/audit"),
+ "Lesson 11 must have its own owner-editable Studio route and secured audit");
 const presentPerfectContinuousGate=readFileSync("supabase/migrations/20261023_step_lesson10_present_perfect_continuous_source_gate.sql","utf8");
 assert(presentPerfectContinuousGate.includes("total<13")&&
  presentPerfectContinuousGate.includes("exact<>total")&&
@@ -243,6 +253,7 @@ assert(logicalSequence.includes("lessons **01–06 are published**")&&
  logicalSequence.includes("`time-clauses` — position `108` — published")&&
  logicalSequence.includes("`present-perfect` — position `109` — published")&&
  logicalSequence.includes("`present-perfect-continuous` — position `110` — published")&&
+ logicalSequence.includes("`past-perfect` — position `111` — published")&&
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
  "Teaching sequence must keep Foundation deferred, publish lessons 01-06, and stage lesson 07");
