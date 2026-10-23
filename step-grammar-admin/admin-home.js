@@ -42,7 +42,8 @@ window.StepAdminHome={
    {n:"37",slug:"wishes-and-unreal-structures",code:"ASGQWISHUNREAL",title:"Wishes & Unreal Structures",ar:"التمني والافتراض",status:"draft"},
    {n:"38",slug:"reported-speech",code:"ASGQREPORTCORE",title:"Reported Speech",ar:"الكلام المنقول",status:"draft"},
    {n:"39",slug:"indirect-questions",code:"ASGQINDQCORE",title:"Indirect Questions",ar:"الأسئلة غير المباشرة",status:"draft"},
-   {n:"40",slug:"question-tags",code:"ASGQQTAGCORE",title:"Question Tags",ar:"الأسئلة الذيلية",status:"draft"}
+   {n:"40",slug:"question-tags",code:"ASGQQTAGCORE",title:"Question Tags",ar:"الأسئلة الذيلية",status:"draft"},
+   {n:"41",slug:"so-neither-agreement",code:"ASGQSONEITHERCORE",title:"So / Neither Agreement",ar:"الاتفاق بالإثبات والنفي",status:"draft"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
