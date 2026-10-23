@@ -97,6 +97,24 @@ assert(studio.includes('value="ASGQMODPASSCORE"')&&
  adminHome.includes('code:"ASGQMODPASSCORE"')&&
  adminHome.includes('status:"draft"'),
  "Lesson18 must remain a clearly marked editable admin Studio draft");
+
+const lesson19Gate=readFileSync("supabase/migrations/20261023_step_lesson19_pronouns_source_gate.sql","utf8");
+assert(lesson19Gate.includes("total<20")&&
+ lesson19Gate.includes("rec_count>0")&&
+ lesson19Gate.includes("step_source_item_reviews")&&
+ lesson19Gate.includes("overlaps other scored lessons")&&
+ lesson19Gate.includes("count(DISTINCT r.original_category_code)"),
+ "Lesson19 must require 20 source-exact graded originals and prohibit ambiguous reciprocal MCQs");
+assert(studio.includes('value="ASGQPRONCORE"')&&
+ studio.includes('"ASGQPRONCORE":"pronouns"')&&
+ adminHome.includes('code:"ASGQPRONCORE"'),
+ "Lesson19 Pronouns must appear in the owner-editable Studio and fallback admin navigation");
+const lesson19Audit=readFileSync("curriculum/PRONOUNS_LESSON19_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson19Audit.includes("27 individually reviewed source items")&&
+ lesson19Audit.includes("24 independently source-approved originals")&&
+ lesson19Audit.includes("3 ambiguity holds")&&
+ lesson19Audit.includes("unscored"),
+ "Lesson19 review must explain 24 independently graded originals and unscored reciprocal content");
 const lesson18Audit=readFileSync("curriculum/MODAL_PASSIVE_LESSON18_SOURCE_AUDIT_20261023.md","utf8");
 assert(lesson18Audit.includes("Total individually reviewed")&&
  lesson18Audit.includes("**11**")&&
