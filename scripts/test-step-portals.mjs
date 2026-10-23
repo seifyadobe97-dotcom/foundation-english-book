@@ -68,6 +68,20 @@ for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"
 const lesson08Gate=readFileSync("supabase/migrations/20261023_step_lesson08_time_clauses_source_release.sql","utf8");
 assert(lesson08Gate.includes("approved<>items")&&lesson08Gate.includes("step_source_item_reviews")&&lesson08Gate.includes("items<5"),
  "Lesson 08 only publishes audited original exam questions");
+const lesson15Gate=readFileSync("supabase/migrations/20261023_step_lesson15_modals_fundamentals_source_guard.sql","utf8");
+assert(lesson15Gate.includes("total<18")&&lesson15Gate.includes("obligation<8")&&
+ lesson15Gate.includes("requests<3")&&lesson15Gate.includes("advice<5")&&
+ lesson15Gate.includes("step_source_item_reviews"),"Lesson15 must require 18 source-exact items covering all Modal Fundamentals skills");
+assert(studio.includes('value="ASGQMODCORE"')&&
+ studio.includes('"ASGQMODCORE":"modals-fundamentals"')&&
+ adminHome.includes('code:"ASGQMODCORE"')&&
+ adminServer.includes('path==="/modals-fundamentals/audit"')&&adminServer.includes('permission.role!=="owner"')&&
+ readFileSync("step-grammar-admin/modals-fundamentals-audit.html","utf8").includes("/step-admin/modals-fundamentals/audit"),
+ "Lesson15 source evidence must remain owner-only with editable Studio stages");
+const lesson15Audit=readFileSync("curriculum/MODALS_FUNDAMENTALS_LESSON15_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson15Audit.includes("26 source candidate records")&&lesson15Audit.includes("18 approved independent")&&
+ lesson15Audit.includes("53 original printed occurrences"),
+ "Lesson15 must distinguish screened source occurrences from the 18 actually source-approved originals");
 const lesson14Gate=readFileSync("supabase/migrations/20261023_step_lesson14_used_to_source_gate.sql","utf8");
 assert(lesson14Gate.includes("past_n<3")&&lesson14Gate.includes("be_n<3")&&
  lesson14Gate.includes("get_n<3")&&lesson14Gate.includes("step_source_item_reviews"),
@@ -288,6 +302,7 @@ assert(logicalSequence.includes("lessons **01–06 are published**")&&
  logicalSequence.includes("`past-perfect-continuous` — position `112` — draft")&&
  logicalSequence.includes("`future-continuous-future-perfect` — position `113` — draft")&&
  logicalSequence.includes("`used-to-be-used-to-get-used-to` — position `114` — draft")&&
+ logicalSequence.includes("`modals-fundamentals` — position `115` — published")&&
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
  "Teaching sequence must keep Foundation deferred, publish lessons 01-06, and stage lesson 07");

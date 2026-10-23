@@ -42,7 +42,7 @@ try{
   await page.route("https://funltjxavowlnnfibhpl.supabase.co/functions/v1/step-admin/**",async route=>{
    const req=route.request(),u=new URL(req.url()),endpoint=u.pathname.split("/step-admin")[1];
    const selected=u.searchParams.get("course")||"ASGQAGREE";
-   const stages=selected==="ASGQPRSIM"||selected==="ASGQPAPER"||selected==="ASGQFUCOMBO"?6:selected==="ASGQWILLGO"||selected==="ASGQPRPER"||selected==="ASGQPRPERCONT"||selected==="ASGQUSED"?7:5;
+   const stages=selected==="ASGQPRSIM"||selected==="ASGQPAPER"||selected==="ASGQFUCOMBO"?6:selected==="ASGQWILLGO"||selected==="ASGQPRPER"||selected==="ASGQPRPERCONT"||selected==="ASGQUSED"||selected==="ASGQMODCORE"?7:5;
    let data={error:"No mock"},status=200;
    if(endpoint==="/studio/catalog"){
     data={courses:[
@@ -59,7 +59,8 @@ try{
       {slug:"past-perfect",code:"ASGQPAPER",title:"Past Perfect",titleAr:"الماضي التام",position:111,status:"published"},
       {slug:"past-perfect-continuous",code:"ASGQPAPERCONT",title:"Past Perfect Continuous",titleAr:"الماضي التام المستمر",position:112,status:"draft"},
       {slug:"future-continuous-future-perfect",code:"ASGQFUCOMBO",title:"Future Continuous & Future Perfect",titleAr:"المستقبل المستمر والمستقبل التام",position:113,status:"draft"},
-      {slug:"used-to-be-used-to-get-used-to",code:"ASGQUSED",title:"Used To / Be Used To / Get Used To",titleAr:"العادة الماضية والتعود",position:114,status:"draft"}
+      {slug:"used-to-be-used-to-get-used-to",code:"ASGQUSED",title:"Used To / Be Used To / Get Used To",titleAr:"العادة الماضية والتعود",position:114,status:"draft"},
+      {slug:"modals-fundamentals",code:"ASGQMODCORE",title:"Modals Fundamentals",titleAr:"أساسيات الأفعال الناقصة",position:115,status:"published"}
     ],can_edit:true};
    }else if(endpoint==="/studio"){
     data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:selected==="ASGQFUTARR"||selected==="ASGQPAPERCONT"||selected==="ASGQFUCOMBO"||selected==="ASGQUSED"?"draft":"published"},
@@ -135,6 +136,10 @@ try{
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===7);
   assert.equal(await page.locator("#course").inputValue(),"ASGQUSED");
   assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
+  await page.locator("#course").selectOption("ASGQMODCORE");
+  await page.waitForFunction(()=>document.querySelectorAll("aside button").length===7);
+  assert.equal(await page.locator("#course").inputValue(),"ASGQMODCORE");
+  assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
 
   assert.deepEqual(jsErrors,[],"Admin browser errors "+jsErrors.join("; "));
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);
