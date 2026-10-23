@@ -8,7 +8,7 @@ The previous original-source-only release model kept 22 full teaching lessons as
 
 The instructor examples already present in the 22 course teaching stages were used as grammatical pattern inputs; language and selective contexts were rewritten when producing practice stems and alternatives. Simulated choices are shorter/simpler in some cases and must not be represented as officially sourced, guaranteed identical in difficulty, or independently externally validated.
 
-## Private grading inventory (before publication)
+## Private grading inventory (released in production)
 
 | Lesson | Topic | Original source-exact | New instructor-simulated | Scored total | Teaching stages |
 |---:|---|---:|---:|---:|---:|
@@ -61,8 +61,12 @@ A transactionally rolled-back **full 22-draft publication simulation** passed. A
 
 The prior 21 lesson-specific **source-only** triggers are superseded by the stronger, centrally enforced original+simulated provenance trigger. Historical original source audits and prior migration files remain in the repository for traceability.
 
-## Deployment requirement
+## Verified production release
 
-Only transition the 22 draft lessons to `published` after a green GitHub Actions run for this content/code commit, including the STEP browser gate, general release gate and GitHub Pages deployment. Re-query live statuses, verify the owner Studio displays provenance labels, and keep the separate foundation module closed.
+**Publication decision: APPROVED AND RELEASED.** GitHub Actions run [40040223630](https://github.com/seifyadobe97-dotcom/foundation-english-book/actions/runs/40040223630) passed all three jobs (STEP Pilot quality gate, Release quality gate, and Deploy verified static book) on code commit `3cb376d0196c`. After that success, an atomic Supabase update promoted the 22 previously draft Grammar lessons to `published`.
+
+A separate SQL verification read **45 of 45 Grammar lessons published**, **0 Grammar drafts**, and **foundation position 999 still draft/closed**. Protected historical student rows were unchanged (70 part attempts, 10 exam attempts and 259 question answer details). A subsequent GitHub change synchronized the 22 published labels on Studio and the owner dashboard; CI for that UI-only sync must also complete cleanly.
+
+The internal review table remains private with RLS enabled and no anon/authenticated grants. This release does **not** represent the instructor-authored simulated questions as authentic historical STEP questions.
 
 This report contains metadata only, not any proprietary original exam item or student response.
