@@ -135,6 +135,8 @@ jobs:
         run: node tests/question-formation.mjs
       - name: Test Lesson 44 Question Words original-safe browser practice desktop/mobile
         run: node tests/question-words.mjs
+      - name: Test Lesson 45 Correct Word Order synthetic practice desktop/mobile
+        run: node tests/correct-word-order.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
