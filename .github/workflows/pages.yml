@@ -85,6 +85,8 @@ jobs:
         run: node tests/passive-voice-by-tense.mjs
       - name: Test Lesson 19 Pronouns on desktop/mobile with synthetic mock questions only
         run: node tests/pronouns.mjs
+      - name: Test Lesson 20 Articles and Countability on desktop/mobile with synthetic items
+        run: node tests/articles-countability.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
