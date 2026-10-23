@@ -29,8 +29,8 @@ window.StepAdminHome={
    {n:"24",slug:"prepositions-of-time-and-place",code:"ASGQPREPTIME",title:"Prepositions of Time and Place",ar:"حروف الجر للزمان والمكان",status:"published"},
    {n:"25",slug:"preposition-collocations",code:"ASGQCOLLOCPREP",title:"Preposition Collocations",ar:"تلازم الأفعال وحروف الجر",status:"draft"},
    {n:"26",slug:"word-formation",code:"ASGQWORDFORM",title:"Word Formation",ar:"الاشتقاقات وتكوين الكلمة",status:"draft"},
-   {n:"27",slug:"gerunds",code:"ASGQGERUNDCORE",title:"Gerunds (-ing)",ar:"المصدر المنتهي بـ ing",status:"draft"},
-   {n:"28",slug:"infinitives",code:"ASGQINFINCORE",title:"To-Infinitive",ar:"المصدر المسبوق بـ to",status:"draft"},
+   {n:"27",slug:"gerunds",code:"ASGQGERUNDCORE",title:"Gerunds (-ing)",ar:"المصدر المنتهي بـ ing",status:"published"},
+   {n:"28",slug:"infinitives",code:"ASGQINFINCORE",title:"To-Infinitive",ar:"المصدر المسبوق بـ to",status:"published"},
    {n:"29",slug:"bare-infinitives",code:"ASGQBARECORE",title:"Bare Infinitive & Make / Let",ar:"المصدر المجرد",status:"draft"},
    {n:"30",slug:"causatives",code:"ASGQCAUSCORE",title:"Causatives",ar:"السببية",status:"draft"}
   ];
