@@ -68,10 +68,12 @@ for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"
 const lesson08Gate=readFileSync("supabase/migrations/20261023_step_lesson08_time_clauses_source_release.sql","utf8");
 assert(lesson08Gate.includes("approved<>items")&&lesson08Gate.includes("step_source_item_reviews")&&lesson08Gate.includes("items<5"),
  "Lesson 08 only publishes audited original exam questions");
-const lesson17Gate=readFileSync("supabase/migrations/20261023_step_lesson17_passive_voice_source_gate.sql","utf8");
-assert(lesson17Gate.includes("total<20")&&lesson17Gate.includes("future_perf<1")&&
- lesson17Gate.includes("supposed<1")&&lesson17Gate.includes("step_source_item_reviews"),
- "Lesson17 requires at least 20 exact-source originals across all nine Passive Voice teaching stages");
+const lesson17Gate=readFileSync("supabase/migrations/20261023_step_lesson17_passive_tense_only_source_gate.sql","utf8");
+assert(lesson17Gate.includes("total < 20")&&
+ lesson17Gate.includes("future perfect has fewer than two")&&
+ lesson17Gate.includes("step_source_item_reviews")&&
+ lesson17Gate.includes("PSV-SUP01"),
+ "Lesson17 stays draft until 20 independently verified tense originals and two future perfect items exist");
 assert(studio.includes('value="ASGQPSVCORE"')&&
  studio.includes('"ASGQPSVCORE":"passive-voice-by-tense"')&&
  adminHome.includes('code:"ASGQPSVCORE"')&&
@@ -79,8 +81,10 @@ assert(studio.includes('value="ASGQPSVCORE"')&&
  readFileSync("step-grammar-admin/passive-voice-audit.html","utf8").includes("/step-admin/passive-voice/audit"),
  "Lesson17 protected source audit and owner-editable Studio route required");
 const passiveAudit=readFileSync("curriculum/PASSIVE_VOICE_LESSON17_SOURCE_AUDIT_20261023.md","utf8");
-assert(passiveAudit.includes("31 individually reviewed")&&passiveAudit.includes("20 approved")&&
- passiveAudit.includes("Future Perfect"),"Lesson17 conservative source ledger must be documented");
+assert(passiveAudit.includes("31 occurrences individually reviewed")&&
+ passiveAudit.includes("19 source-approved tense originals")&&
+ passiveAudit.includes("current")&&passiveAudit.includes("Future Perfect"),
+ "Lesson17 must reconcile approved source occurrences and unpublishable tense practice");
 const lesson16Gate=readFileSync("supabase/migrations/20261023_step_lesson16_modals_deduction_source_gate.sql","utf8");
 assert(lesson16Gate.includes("total<6")&&lesson16Gate.includes("present_n<3")&&
  lesson16Gate.includes("past_n<3")&&lesson16Gate.includes("step_source_item_reviews"),
@@ -333,7 +337,7 @@ assert(logicalSequence.includes("lessons **01–06 are published**")&&
  logicalSequence.includes("`used-to-be-used-to-get-used-to` — position `114` — draft")&&
  logicalSequence.includes("`modals-fundamentals` — position `115` — published")&&
  logicalSequence.includes("`modals-of-deduction` — position `116` — draft")&&
- logicalSequence.includes("`passive-voice-by-tense` — position `117` — published")&&
+ logicalSequence.includes("`passive-voice-by-tense` — position `117` — draft")&&
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
  "Teaching sequence must keep Foundation deferred, publish lessons 01-06, and stage lesson 07");
