@@ -87,6 +87,10 @@ jobs:
         run: node tests/pronouns.mjs
       - name: Test Lesson 20 Articles and Countability on desktop/mobile with synthetic items
         run: node tests/articles-countability.mjs
+      - name: Test Lesson 21 Too Enough So That synthetic practice on desktop/mobile
+        run: node tests/quantity-degree.mjs
+      - name: Test Lesson 22 Adjectives and Adverbs synthetic practice on desktop/mobile
+        run: node tests/adjectives-adverbs.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
