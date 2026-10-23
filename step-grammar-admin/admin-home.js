@@ -13,7 +13,8 @@ window.StepAdminHome={
    {n:"08",slug:"time-clauses",code:"ASGQTIMCL",title:"Future Time Clauses",ar:"الجمل الزمنية الدالة على المستقبل",status:"published"},
    {n:"09",slug:"present-perfect",code:"ASGQPRPER",title:"Present Perfect",ar:"المضارع التام",status:"published"},
    {n:"10",slug:"present-perfect-continuous",code:"ASGQPRPERCONT",title:"Present Perfect Continuous",ar:"المضارع التام المستمر",status:"published"},
-   {n:"11",slug:"past-perfect",code:"ASGQPAPER",title:"Past Perfect",ar:"الماضي التام",status:"published"}
+   {n:"11",slug:"past-perfect",code:"ASGQPAPER",title:"Past Perfect",ar:"الماضي التام",status:"published"},
+   {n:"12",slug:"past-perfect-continuous",code:"ASGQPAPERCONT",title:"Past Perfect Continuous",ar:"الماضي التام المستمر",status:"draft"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
