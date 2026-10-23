@@ -103,6 +103,8 @@ jobs:
         run: node tests/gerunds.mjs
       - name: Test Lesson 28 To-Infinitive synthetic grading on desktop/mobile
         run: node tests/infinitives.mjs
+      - name: Test Lesson 29 Bare Infinitives synthetic grading on desktop/mobile
+        run: node tests/bare-infinitives.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
