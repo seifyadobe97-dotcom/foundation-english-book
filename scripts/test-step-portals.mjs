@@ -68,6 +68,16 @@ for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"
 const lesson08Gate=readFileSync("supabase/migrations/20261023_step_lesson08_time_clauses_source_release.sql","utf8");
 assert(lesson08Gate.includes("approved<>items")&&lesson08Gate.includes("step_source_item_reviews")&&lesson08Gate.includes("items<5"),
  "Lesson 08 only publishes audited original exam questions");
+const lesson14Gate=readFileSync("supabase/migrations/20261023_step_lesson14_used_to_source_gate.sql","utf8");
+assert(lesson14Gate.includes("past_n<3")&&lesson14Gate.includes("be_n<3")&&
+ lesson14Gate.includes("get_n<3")&&lesson14Gate.includes("step_source_item_reviews"),
+ "Lesson14 requires approved exact-source questions for all three used to constructions");
+assert(studio.includes('value="ASGQUSED"')&&
+ studio.includes('"ASGQUSED":"used-to-be-used-to-get-used-to"')&&
+ adminHome.includes('code:"ASGQUSED"')&&
+ adminServer.includes('path==="/used-to/audit"')&&adminServer.includes('permission.role!=="owner"')&&
+ readFileSync("step-grammar-admin/used-to-audit.html","utf8").includes("/step-admin/used-to/audit"),
+ "Lesson14 must be editable in owner Studio and source evidence must remain private");
 const lesson13Gate=readFileSync("supabase/migrations/20261023_step_lesson13_future_forms_source_gate.sql","utf8");
 assert(lesson13Gate.includes("total<6")&&lesson13Gate.includes("continuous_n<3")&&
  lesson13Gate.includes("perfect_n<3")&&lesson13Gate.includes("step_source_item_reviews"),
@@ -277,6 +287,7 @@ assert(logicalSequence.includes("lessons **01–06 are published**")&&
  logicalSequence.includes("`past-perfect` — position `111` — published")&&
  logicalSequence.includes("`past-perfect-continuous` — position `112` — draft")&&
  logicalSequence.includes("`future-continuous-future-perfect` — position `113` — draft")&&
+ logicalSequence.includes("`used-to-be-used-to-get-used-to` — position `114` — draft")&&
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
  "Teaching sequence must keep Foundation deferred, publish lessons 01-06, and stage lesson 07");

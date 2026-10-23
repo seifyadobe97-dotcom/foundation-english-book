@@ -42,7 +42,7 @@ try{
   await page.route("https://funltjxavowlnnfibhpl.supabase.co/functions/v1/step-admin/**",async route=>{
    const req=route.request(),u=new URL(req.url()),endpoint=u.pathname.split("/step-admin")[1];
    const selected=u.searchParams.get("course")||"ASGQAGREE";
-   const stages=selected==="ASGQPRSIM"||selected==="ASGQPAPER"||selected==="ASGQFUCOMBO"?6:selected==="ASGQWILLGO"||selected==="ASGQPRPER"||selected==="ASGQPRPERCONT"?7:5;
+   const stages=selected==="ASGQPRSIM"||selected==="ASGQPAPER"||selected==="ASGQFUCOMBO"?6:selected==="ASGQWILLGO"||selected==="ASGQPRPER"||selected==="ASGQPRPERCONT"||selected==="ASGQUSED"?7:5;
    let data={error:"No mock"},status=200;
    if(endpoint==="/studio/catalog"){
     data={courses:[
@@ -58,10 +58,11 @@ try{
       {slug:"present-perfect-continuous",code:"ASGQPRPERCONT",title:"Present Perfect Continuous",titleAr:"المضارع التام المستمر",position:110,status:"published"},
       {slug:"past-perfect",code:"ASGQPAPER",title:"Past Perfect",titleAr:"الماضي التام",position:111,status:"published"},
       {slug:"past-perfect-continuous",code:"ASGQPAPERCONT",title:"Past Perfect Continuous",titleAr:"الماضي التام المستمر",position:112,status:"draft"},
-      {slug:"future-continuous-future-perfect",code:"ASGQFUCOMBO",title:"Future Continuous & Future Perfect",titleAr:"المستقبل المستمر والمستقبل التام",position:113,status:"draft"}
+      {slug:"future-continuous-future-perfect",code:"ASGQFUCOMBO",title:"Future Continuous & Future Perfect",titleAr:"المستقبل المستمر والمستقبل التام",position:113,status:"draft"},
+      {slug:"used-to-be-used-to-get-used-to",code:"ASGQUSED",title:"Used To / Be Used To / Get Used To",titleAr:"العادة الماضية والتعود",position:114,status:"draft"}
     ],can_edit:true};
    }else if(endpoint==="/studio"){
-    data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:selected==="ASGQFUTARR"||selected==="ASGQPAPERCONT"||selected==="ASGQFUCOMBO"?"draft":"published"},
+    data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:selected==="ASGQFUTARR"||selected==="ASGQPAPERCONT"||selected==="ASGQFUCOMBO"||selected==="ASGQUSED"?"draft":"published"},
      sections:Array.from({length:stages},(_,i)=>({index:i,titleAr:"المرحلة "+(i+1),
       base:{titleAr:"المرحلة "+(i+1),subtitle:"مثال",short:"مثال",duration:"5 دقائق",description:"شرح بسيط"},
       draft:null,published:null,visual_base:{title:"شرح تجريبي",detail:"شرح تجريبي للقاعدة",tip:"بسيط",cards:[],examples:[],formulas:[],keywords:[]},visual_draft:draft,visual_published:published})),
@@ -129,6 +130,10 @@ try{
   await page.locator("#course").selectOption("ASGQFUCOMBO");
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===6);
   assert.equal(await page.locator("#course").inputValue(),"ASGQFUCOMBO");
+  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
+  await page.locator("#course").selectOption("ASGQUSED");
+  await page.waitForFunction(()=>document.querySelectorAll("aside button").length===7);
+  assert.equal(await page.locator("#course").inputValue(),"ASGQUSED");
   assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
 
   assert.deepEqual(jsErrors,[],"Admin browser errors "+jsErrors.join("; "));
