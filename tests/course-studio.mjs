@@ -42,7 +42,7 @@ try{
   await page.route("https://funltjxavowlnnfibhpl.supabase.co/functions/v1/step-admin/**",async route=>{
    const req=route.request(),u=new URL(req.url()),endpoint=u.pathname.split("/step-admin")[1];
    const selected=u.searchParams.get("course")||"ASGQAGREE";
-   const stages=selected==="ASGQPRSIM"?6:selected==="ASGQWILLGO"||selected==="ASGQPRPER"?7:5;
+   const stages=selected==="ASGQPRSIM"?6:selected==="ASGQWILLGO"||selected==="ASGQPRPER"||selected==="ASGQPRPERCONT"?7:5;
    let data={error:"No mock"},status=200;
    if(endpoint==="/studio/catalog"){
     data={courses:[
@@ -54,7 +54,8 @@ try{
      {slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",titleAr:"المستقبل بـ Will و Going To",position:106,status:"published"},
      {slug:"future-arrangements",code:"ASGQFUTARR",title:"Future Arrangements",titleAr:"ترتيبات المستقبل والجداول",position:107,status:"draft"},
      {slug:"time-clauses",code:"ASGQTIMCL",title:"Future Time Clauses",titleAr:"الجمل الزمنية الدالة على المستقبل",position:108,status:"published"},
-     {slug:"present-perfect",code:"ASGQPRPER",title:"Present Perfect",titleAr:"المضارع التام",position:109,status:"published"}
+     {slug:"present-perfect",code:"ASGQPRPER",title:"Present Perfect",titleAr:"المضارع التام",position:109,status:"published"},
+      {slug:"present-perfect-continuous",code:"ASGQPRPERCONT",title:"Present Perfect Continuous",titleAr:"المضارع التام المستمر",position:110,status:"published"}
     ],can_edit:true};
    }else if(endpoint==="/studio"){
     data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:selected==="ASGQFUTARR"?"draft":"published"},
@@ -111,6 +112,10 @@ try{
   await page.locator("#course").selectOption("ASGQPRPER");
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===7);
   assert.equal(await page.locator("#course").inputValue(),"ASGQPRPER");
+  await page.locator("#course").selectOption("ASGQPRPERCONT");
+  await page.waitForFunction(()=>document.querySelectorAll("aside button").length===7);
+  assert.equal(await page.locator("#course").inputValue(),"ASGQPRPERCONT");
+  assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
   assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
   assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
 
