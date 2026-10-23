@@ -28,9 +28,10 @@ const indicators=[
   {slug:"past-simple",status:"published"},
   {slug:"past-continuous",status:"published"},
  {slug:"will-be-going-to",status:"published"},
- {slug:"future-arrangements",status:"draft"}
+ {slug:"future-arrangements",status:"draft"},
+ {slug:"time-clauses",status:"published"}
 ];
-const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous",ASGQWILLGO:"Will / Be Going To",ASGQFUTARR:"Future Arrangements"};
+const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous",ASGQWILLGO:"Will / Be Going To",ASGQFUTARR:"Future Arrangements",ASGQTIMCL:"Future Time Clauses"};
 try{
  for(const width of [1280,390]){
   const page=await browser.newPage({viewport:{width,height:850}});
@@ -52,7 +53,8 @@ try{
        {slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",titleAr:"الماضي البسيط",status:"published",position:104},
        {slug:"past-continuous",code:"ASGQPACONT",title:"Past Continuous",titleAr:"الماضي المستمر",status:"published",position:105},
        {slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",titleAr:"المستقبل بـ Will و Going To",status:"published",position:106},
-       {slug:"future-arrangements",code:"ASGQFUTARR",title:"Future Arrangements",titleAr:"ترتيبات المستقبل والجداول",status:"draft",position:107}
+       {slug:"future-arrangements",code:"ASGQFUTARR",title:"Future Arrangements",titleAr:"ترتيبات المستقبل والجداول",status:"draft",position:107},
+       {slug:"time-clauses",code:"ASGQTIMCL",title:"Future Time Clauses",titleAr:"الجمل الزمنية الدالة على المستقبل",status:"published",position:108}
      ],can_edit:true};
     }else if(endpoint==="/studio"){
     const code=url.searchParams.get("course")||"ASGQAGREE";
@@ -68,7 +70,8 @@ try{
   });
   await page.goto(origin+"/step-grammar-admin/",{waitUntil:"domcontentloaded"});
   await page.locator(".home-hero").waitFor({timeout:12000});
-  assert.equal(await page.locator(".home-card").count(),7,"Seven admin lesson cards including Lesson 07 draft");
+  assert.equal(await page.locator(".home-card").count(),8,"Eight admin lesson cards including Lesson 08");
+  assert.match(await page.locator("#home-status-08").innerText(),/منشور للطلاب/);
   assert.match(await page.locator("#home-status-07").innerText(),/مسودة غير منشورة/,"Lesson 07 must not appear as published");
   assert.match(await page.locator("#home-status-06").innerText(),/منشور للطلاب/,"Lesson 06 must be clearly marked as published");
   assert.equal(await page.locator(".admin-global-nav a").count(),8,"Admin pages use eight unambiguous destinations");
@@ -95,12 +98,17 @@ try{
   await page.goto(origin+"/step-grammar-admin/studio.html?course=ASGQFUTARR&tab=visual",{waitUntil:"domcontentloaded"});
   await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===5);
   assert.equal(await page.locator("#course").inputValue(),"ASGQFUTARR");
+  await page.goto(origin+"/step-grammar-admin/studio.html?course=ASGQTIMCL&tab=visual",{waitUntil:"domcontentloaded"});
+  await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===5);
+  assert.equal(await page.locator("#course").inputValue(),"ASGQTIMCL");
+  assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
   assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
 
   assert.equal(await page.locator(".admin-global-nav a[aria-current='page']").innerText().then(x=>x.includes("تعديل الدروس")),true);
   await page.goto(origin+"/step-grammar-admin/sources.html",{waitUntil:"domcontentloaded"});
   await page.locator("#cards:not([hidden])").waitFor();
-  assert.equal(await page.locator(".card").count(),7,"Seven source-audit cards including Lesson 07 draft");
+  assert.equal(await page.locator(".card").count(),8,"Eight source-audit cards including Lesson 08");
+  assert.equal(await page.locator('a[href="time-clauses-audit.html"]').count(),1);
   assert.equal(await page.locator('a[href="studio.html?course=ASGQFUTARR&tab=visual"]').count(),1,"Lesson 07 has a visual-editor link");
   assert.equal(await page.locator('a[href="studio.html?course=ASGQWILLGO&tab=questions"]').count(),1,"Lesson 06 source intake uses the unified Studio");
   assert.equal(await page.locator('a[href="past-continuous-audit.html"]').count(),1,"Lesson 5 protected review available");
