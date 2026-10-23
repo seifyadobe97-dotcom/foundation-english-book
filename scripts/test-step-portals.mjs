@@ -113,6 +113,22 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson33Gate=readFileSync("supabase/migrations/20261023_step_lesson33_zero_conditional_source_gate.sql","utf8");
+assert(lesson33Gate.includes("total<10")&&
+ lesson33Gate.includes("complete_stages!=3")&&
+ lesson33Gate.includes("step_source_item_reviews")&&
+ lesson33Gate.includes("reused>0"),
+ "Lesson33 must prevent a Zero Conditional release without 10 independent source originals across all three teaching skills");
+assert(studio.includes('value="ASGQZEROCORE"')&&
+ studio.includes('"ASGQZEROCORE":"zero-conditional"')&&
+ adminHome.includes('code:"ASGQZEROCORE"'),
+ "Lesson33 must remain editable from owner Studio even while protected draft");
+const lesson33Audit=readFileSync("curriculum/ZERO_CONDITIONAL_LESSON33_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson33Audit.includes("all seven")&&
+ lesson33Audit.includes("3 source-approved individually scored originals")&&
+ lesson33Audit.includes("1 wrong-category rejection")&&
+ lesson33Audit.includes("1 unsupported generalization hold"),
+ "Lesson33 must reconcile all seven audited source occurrences without inflating near-clones");
 const lesson32Gate=readFileSync("supabase/migrations/20261023_step_lesson32_relative_clauses_source_gate.sql","utf8");
 assert(lesson32Gate.includes("n_items<18")&&
  lesson32Gate.includes("n_stages!=5")&&
