@@ -80,6 +80,11 @@ for(const pageName of ["index.html","studio.html","curriculum.html","reports.htm
  const adminPath="step-grammar-admin/"+pageName,html=readFileSync(adminPath,"utf8");
  assert(html.includes("admin-nav.js")&&html.includes("admin-nav.css"),adminPath+" must share navigation");
 }
+assert(adminServer.includes('path==="/future/audit"')&&adminServer.includes('WGO-%'),
+ "Lesson 06 original stem/key ledger must only be accessible via the authenticated admin API");
+assert(readFileSync("step-grammar-admin/future-audit.html","utf8").includes("/step-admin/future/audit")&&
+ readFileSync("step-grammar-admin/sources.html","utf8").includes('href="future-audit.html"'),
+ "Lesson 06 source review must have an explicit admin-only page");
 assert(adminServer.includes('path==="/past-continuous/audit"')&&adminServer.includes('original_category_code","ASGQPACONT"'),
  "Original Lesson 5 question register must be admin-only");
 assert(courseServer.includes("dynamicMatch")&&courseServer.includes('data.status!=="published"'),

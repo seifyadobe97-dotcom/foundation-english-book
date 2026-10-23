@@ -190,6 +190,32 @@ Deno.serve(async(req)=>{
     missing_from_ledger:[...ids].filter(id=>!items.some(x=>x.candidate_id===id))},
    items:items.map(x=>({...x,in_course:ids.has(x.candidate_id)}))});
  }
+
+ // Protected Lesson 06 provenance ledger. Never publish PDF stems/keys in GitHub or student APIs.
+ if(req.method==="GET"&&path==="/future/audit"){
+  const privateLesson=allCourseBanks.find(x=>x.code==="ASGQWILLGO");
+  if(!privateLesson)return reply(404,{error:"الدرس السادس غير مُجهّز"});
+  const [indicator,reviewed]=await Promise.all([
+   admin.from("step_curriculum_indicators")
+    .select("slug,title_ar,status,legacy_course_code")
+    .eq("slug","will-be-going-to").maybeSingle(),
+   admin.from("step_source_item_reviews")
+    .select("candidate_id,document_key,pdf_page,printed_number,original_category_code,original_stem,original_options,printed_key,review_status,reviewer_notes")
+    .like("candidate_id","WGO-%").order("candidate_id")
+  ]);
+  if(indicator.error||reviewed.error)return reply(500,{error:"تعذر تحميل تدقيق أسئلة المستقبل"});
+  const items=reviewed.data||[];
+  const ids=new Set(Object.keys(privateLesson.questions));
+  const valid=items.filter(x=>ids.has(x.candidate_id)&&x.review_status==="approved");
+  return reply(200,{indicator:indicator.data,
+   summary:{total:items.length,approved:items.filter(x=>x.review_status==="approved").length,
+    duplicate:items.filter(x=>x.review_status==="duplicate").length,
+    held:items.filter(x=>x.review_status==="ambiguous_hold"||x.review_status==="in_review").length,
+    in_course:valid.length,
+    invalid_in_course:items.filter(x=>ids.has(x.candidate_id)&&x.review_status!=="approved").map(x=>x.candidate_id),
+    missing_from_ledger:[...ids].filter(id=>!items.some(x=>x.candidate_id===id))},
+   items:items.map(x=>({...x,in_course:ids.has(x.candidate_id)}))});
+ }
  let reportLesson=lesson;
  // All indicator reports are resolved by the server, never by client-supplied course codes.
  const indicatorReportRoute=path.match(/^\/indicators\/([a-z][a-z0-9-]{2,39})(?:\/(analytics|students\/([0-9a-f-]{36})\/report))?$/i);

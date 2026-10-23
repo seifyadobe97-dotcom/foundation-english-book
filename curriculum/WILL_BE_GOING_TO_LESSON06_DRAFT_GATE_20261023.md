@@ -5,7 +5,15 @@ Date: 2026-10-23 — Instructor-only source and release checklist
 - Indicator: `will-be-going-to`, axis grammar, position 106, status **draft**.
 - Private editable course bank: `ASGQWILLGO`.
 - Seven Arabic-first interactive teaching sections, 28 **instructor-written** examples and 23 comparison-table rows.
-- Source-graded questions: **zero**. No answers or original stems were created, imported or altered.
+- Source-graded questions: **8 source-exact, approved independent items** across seven teaching stages; each has explanations for the correct and three incorrect options. Stored in service-role-only Supabase, not GitHub.
+- Source-ledger occurrences: **15 = 8 approved + 5 duplicated/near duplicated + 1 ambiguous hold + 1 mapping review**. Includes audited bank PDFs pp.28, 29, 30, 31, 233 and Tajmeaat PDF pp.14 and 113.
+- Source binaries verified against pre-existing Supabase source-document SHA-256 fingerprints (all three identical). The book PDF contains no dedicated Will/Going To lesson; use it only for curricular context, not to invent source-matching questions.
+- Approved private IDs: `WGO-FS02`, `WGO-FS03`, `WGO-FS04`, `WGO-FS06`, `WGO-FS07`, `WGO-GT01`, `WGO-GT03`, `WGO-AB01`.
+- Duplicate/near-duplicate IDs excluded from grading: `WGO-FS05`, `WGO-AB02`, `WGO-AB03`, `WGO-TAJ035`, `WGO-TAJ286`.
+- Withheld: `WGO-FS01` (another grammatical but less pragmatically natural choice), `WGO-GT02` (present-continuous motion, not be-going-to future).
+- Source audit: `step-grammar-admin/future-audit.html` (admin-only authenticated content).
+- A live publication gate still requires at least **10** distinct, fully source-approved questions; lesson remains draft until a sufficiently varied bank is available. No synthetic/duplicated filler questions may be counted.
+
 - Student route `step-grammar-student/lesson.html?slug=will-be-going-to` must remain unavailable to authenticated students before publication.
 - The existing Studio lists this draft; save/publish of *editing overrides* stays distinct from the course's overall draft/published status.
 - Foundation `sentence-elements` remains deferred, draft at 999.
@@ -16,7 +24,7 @@ The existing private classification map links these audited-bank categories to t
 - `ASGQFUGO` — Be Going To — bank PDF page 30.
 - `ASGQFUTABOUT` — Be About To — bank PDF page 233.
 These are *category start-page anchors*, not page-verified question occurrences.
-The previous three named reference PDFs were not available as original page bytes through this session's conversation/Library file search. The private Supabase source document hashes are metadata, not substitutes for their rendered pages. Accordingly, no new source-graded MCQ was admitted. Never invent an original stem or infer a printed key.
+All three original PDFs became available as uploaded files later in this session, their SHA-256 hashes matched the pre-existing private source-document fingerprints, and relevant original pages were read and visually inspected. Never invent an original stem or infer a printed key.
 
 ## Editorial workflow before student publication
 1. Recover the unchanged PDF originals from approved private project files.
