@@ -129,6 +129,22 @@ assert(lesson35Audit.includes("all 26 printed questions")&&
  lesson35Audit.includes("SCON-018")&&
  lesson35Audit.includes("DRAFT / HOLD"),
  "Lesson35 source review must reconcile 26 originals with 10 approved and three ambiguous holds");
+const lesson39Gate=readFileSync("supabase/migrations/20261024_step_lesson39_indirect_questions_source_gate.sql","utf8");
+assert(lesson39Gate.includes("total<12")&&
+ lesson39Gate.includes("full_stages!=5")&&
+ lesson39Gate.includes("step_source_item_reviews")&&
+ lesson39Gate.includes("overlap_count>0"),
+ "Lesson39 must remain private without verified independent coverage of embedded WH, passive and if/whether");
+assert(studio.includes('value="ASGQINDQCORE"')&&
+ studio.includes('"ASGQINDQCORE":"indirect-questions"')&&
+ adminHome.includes('code:"ASGQINDQCORE"'),
+ "Lesson39 must be editable from existing owner Studio");
+const lesson39Audit=readFileSync("curriculum/INDIRECT_QUESTIONS_LESSON39_SOURCE_AUDIT_20261024.md","utf8");
+assert(lesson39Audit.includes("all **21** printed questions examined")&&
+ lesson39Audit.includes("Approved, distinct original MCQs")&&
+ lesson39Audit.includes("INDQ-018")&&
+ lesson39Audit.includes("HOLD — OWNER DRAFT"),
+ "Lesson39 audit must reconcile 21 original indirect questions with source holds and prevent non-skill grading");
 const lesson38Gate=readFileSync("supabase/migrations/20261023_step_lesson38_reported_speech_source_gate.sql","utf8");
 assert(lesson38Gate.includes("total<12")&&
  lesson38Gate.includes("full_stages!=4")&&
