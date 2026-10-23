@@ -23,7 +23,8 @@ window.StepAdminHome={
    {n:"18",slug:"modal-passive",code:"ASGQMODPASSCORE",title:"Modal Passive & Modal Perfect Passive",ar:"المبني للمجهول مع الأفعال الناقصة",status:"draft"},
    {n:"19",slug:"pronouns",code:"ASGQPRONCORE",title:"Pronouns",ar:"الضمائر",status:"published"},
    {n:"20",slug:"articles-countability",code:"ASGQARTCOUNT",title:"Articles & Countability",ar:"الأدوات والمعدود وغير المعدود",status:"draft"},
-   {n:"21",slug:"quantity-degree",code:"ASGQDEGREE",title:"Too / Enough / So ... That",ar:"تراكيب الدرجة والكفاية",status:"draft"}
+   {n:"21",slug:"quantity-degree",code:"ASGQDEGREE",title:"Too / Enough / So ... That",ar:"تراكيب الدرجة والكفاية",status:"draft"},
+   {n:"22",slug:"adjectives-and-adverbs",code:"ASGQADJADVCORE",title:"Adjectives and Adverbs",ar:"الصفات والظروف",status:"draft"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
