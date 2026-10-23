@@ -92,7 +92,8 @@ try{
   assert.equal(await page.locator(".admin-global-nav a[aria-current='page']").innerText().then(x=>x.includes("تعديل الدروس")),true);
   await page.goto(origin+"/step-grammar-admin/sources.html",{waitUntil:"domcontentloaded"});
   await page.locator("#cards:not([hidden])").waitFor();
-  assert.equal(await page.locator(".card").count(),5,"Five admin source-audit cards");
+  assert.equal(await page.locator(".card").count(),6,"Six source-audit cards, with Lesson 06 clearly marked draft");
+  assert.equal(await page.locator('a[href="studio.html?course=ASGQWILLGO&tab=questions"]').count(),1,"Lesson 06 source intake uses the unified Studio");
   assert.equal(await page.locator('a[href="past-continuous-audit.html"]').count(),1,"Lesson 5 protected review available");
   assert.equal(await page.locator('a[href="past-audit.html"]').count(),1,"Lesson 4 private audit route is linked");
   assert.equal(await page.locator(".admin-global-nav a[aria-current='page']").innerText().then(x=>x.includes("تدقيق المصادر")),true);
