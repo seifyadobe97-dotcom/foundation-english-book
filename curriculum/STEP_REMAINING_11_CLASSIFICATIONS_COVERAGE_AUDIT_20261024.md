@@ -30,7 +30,31 @@ This register is derived from the original classification headings and printed q
 4. Separate communicative grammar from discourse/paragraph-coherence and from spelling. Those topics may warrant a distinct Writing/Language skill group when the course roadmap expands, not indiscriminate inclusion in the Grammar sequence.
 5. Preserve the current protected pilot responses, historical attempts and completed lesson publications. The foundation module at position 999 remains closed.
 
-## Next actionable audit sequence
-First complete the **12-item Sentence Insertion** ledger and **6-item Correct Sentence** ledger, assigning safe/duplicate/ambiguous/editorial statuses individually. Next assess the **2 Sentence Combining** and **1 Logical Completion** originals for coherence-skill grouping. Only then decide whether to build an owner-draft Writing/Coherence unit. Separately, treat the one-to-three-item grammar microcategories as non-scored instructional extensions pending more independently reviewed original items.
+## Completed private source-item reconciliation
+
+All **30 distinct printed occurrences across these 11 classifications** have now been reconciled against the original PDF pages and individually recorded in `public.step_source_item_reviews`. The counts below are decisions on printed occurrences, **not** approvals to publish a new graded lesson:
+
+| Source code | Approved individual originals | Near-duplicate holds | Editorial holds | Ambiguity holds | Distinct originals |
+|---|---:|---:|---:|---:|---:|
+| ASGQMODCONT | 0 | 0 | 0 | 1 | 1 |
+| ASGQPARTPER | 1 | 2 | 0 | 0 | 3 |
+| ASGQLIKEAS | 1 | 0 | 0 | 0 | 1 |
+| ASGQCOMBINE | 1 | 1 | 0 | 0 | 2 |
+| ASGQINSERT | 3 | 3 | 4 | 2 | 12 |
+| ASGQLOGCOMP | 0 | 0 | 0 | 1 | 1 |
+| ASGQSENT | 1 | 5 | 0 | 0 | 6 |
+| ASGQSPELL | 1 | 0 | 0 | 0 | 1 |
+| ASGQNOUNCL | 0 | 0 | 1 | 0 | 1 |
+| ASGQSUGG | 0 | 0 | 1 | 0 | 1 |
+| ASGQINV | 1 | 0 | 0 | 0 | 1 |
+| **Total distinct** | **9** | **11** | **6** | **4** | **30** |
+
+One important historical ledger discrepancy was reconciled: the **single Modal Continuous source question** on page 69 had two different private review identifiers (`DED-CONT01` and `MODCT-001`) with contradictory previous decisions. Both are retained for traceability, but the **unique printed source occurrence is counted once, held as ambiguous**, not approved. Thus there are **31 physical review ledger records representing 30 distinct printed source occurrences**, never 31 original questions.
+
+The full private editorial review confirmed several repeated near-clone families in Sentence Insertion (heating water and returning-to-visit stories); incomplete or grammatically defective paragraph contexts were held rather than silently repaired. Correct Sentence has one representative accepted original and five near-clones testing `your` versus `you're` with changed nouns or dates. The one Logical Completion item does not uniquely entail the source-keyed geographical conclusion. There is **no invented scored coverage** in any of these unresolved 11 categories.
+
+## Next implementation decision
+
+Retain all eleven classification mappings as `needs_review` because a completed source audit does **not** establish an owner-editable teaching home or student-ready breadth. For the next course-design pass, group independent writing/discourse skills (Sentence Combining, Sentence Insertion, Logical Completion, Correct Sentence) into a potential **owner-only Writing/Coherence draft** with a separate coverage gate. Keep the 1–3-item grammar microcategories as ungraded instructional extensions pending additional, independently reviewed original items. Do not move them into the live graded course automatically.
 
 This file contains **metadata only**. Original proprietary question stems, alternatives, printed keys and response data must remain in the RLS-protected Supabase banks and not appear in the public GitHub repository.
