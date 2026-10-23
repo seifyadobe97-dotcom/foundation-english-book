@@ -2,7 +2,7 @@
 
 Date: 2026-10-22. This is a pedagogical teaching order, NOT the original course book's chapter order. No exam questions, keys, source classification codes, student attempt records or publishing decisions are changed by changing lesson positions.
 
-Release-status update verified against production Supabase on **2026-10-23**: lessons **01–06 are published**. Lesson **06 — Will / Be Going To** uses eight independently source-verified questions in seven stages. The next lesson to prepare is **07 — Future Arrangements**. The original teaching order remains unchanged.
+Release-status update verified against production Supabase on **2026-10-23**: lessons **01–06 are published**. Lesson **06 — Will / Be Going To** uses eight independently source-verified questions in seven stages. Lesson **07 — Future Arrangements** is now an **admin-only private draft** (five teaching stages, no new source-exclusive MCQs). Bank PDF page 4 classifies the relevant original questions under Present Continuous; two are already scored in published Lesson 03, and another is near-duplicate/underconstrained. The published Lesson 03 arrangement explanation has been extended; no original question IDs or student attempts were moved. The next independent graded release requires additional source-approved, nonduplicated items. The original teaching order remains unchanged.
 
 ## أساس الفعل والأزمنة الأولى
 

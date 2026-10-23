@@ -8,7 +8,8 @@ window.StepAdminHome={
    {n:"03",slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",ar:"المضارع المستمر"},
    {n:"04",slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",ar:"الماضي البسيط"},
    {n:"05",slug:"past-continuous",code:"ASGQPACONT",title:"Past Continuous",ar:"الماضي المستمر"},
-   {n:"06",slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",ar:"المستقبل بـ Will و Going To",status:"published"}
+   {n:"06",slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",ar:"المستقبل بـ Will و Going To",status:"published"},
+   {n:"07",slug:"future-arrangements",code:"ASGQFUTARR",title:"Future Arrangements",ar:"ترتيبات المستقبل والجداول",status:"draft"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
