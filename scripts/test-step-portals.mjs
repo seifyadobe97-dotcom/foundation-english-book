@@ -113,6 +113,22 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson27Gate=readFileSync("supabase/migrations/20261023_step_lesson27_gerunds_source_gate.sql","utf8");
+assert(lesson27Gate.includes("total<20")&&
+ lesson27Gate.includes("stages!=4")&&
+ lesson27Gate.includes("step_source_item_reviews")&&
+ lesson27Gate.includes("overlapping>0"),
+ "Lesson27 must require 20 independent source-exact original MCQs in four taught stages");
+assert(studio.includes('value="ASGQGERUNDCORE"')&&
+ studio.includes('"ASGQGERUNDCORE":"gerunds"')&&
+ adminHome.includes('code:"ASGQGERUNDCORE"'),
+ "Lesson27 Gerunds must be editable in owner Studio with admin navigation");
+const lesson27Audit=readFileSync("curriculum/GERUNDS_LESSON27_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson27Audit.includes("41 printed question occurrences")&&
+ lesson27Audit.includes("20 source-exact scored IDs")&&
+ lesson27Audit.includes("participle/adverbial clause")&&
+ lesson27Audit.includes("10")&&lesson27Audit.includes("5"),
+ "Lesson27 source audit must reconcile 41 originals and distinguish true gerunds from reduced clauses");
 const lesson26Gate=readFileSync("supabase/migrations/20261023_step_lesson26_word_formation_source_gate.sql","utf8");
 assert(lesson26Gate.includes("question_count<12")&&
  lesson26Gate.includes("taxonomy.indicator_slug='word-formation'")&&
