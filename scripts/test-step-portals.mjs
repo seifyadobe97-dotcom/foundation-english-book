@@ -68,6 +68,16 @@ for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"
 const lesson08Gate=readFileSync("supabase/migrations/20261023_step_lesson08_time_clauses_source_release.sql","utf8");
 assert(lesson08Gate.includes("approved<>items")&&lesson08Gate.includes("step_source_item_reviews")&&lesson08Gate.includes("items<5"),
  "Lesson 08 only publishes audited original exam questions");
+const lesson12Gate=readFileSync("supabase/migrations/20261023_step_lesson12_past_perfect_continuous_source_gate.sql","utf8");
+assert(lesson12Gate.includes("total<5")&&lesson12Gate.includes("step_source_item_reviews")
+ &&lesson12Gate.includes("matches<>total"),"Lesson12 must block publication until five independently approved originals");
+assert(studio.includes('value="ASGQPAPERCONT"')&&
+ studio.includes('"ASGQPAPERCONT":"past-perfect-continuous"')&&
+ adminHome.includes('code:"ASGQPAPERCONT"')&&
+ adminServer.includes('path==="/past-perfect-continuous/audit"')&&
+ readFileSync("step-grammar-admin/past-perfect-continuous-audit.html","utf8").includes("/step-admin/past-perfect-continuous/audit"),
+ "Lesson12 draft must have a source-verified owner-only review and visual editor");
+assert(courseServer.includes('data.status!=="published"'),"Unpublished lessons must be blocked by student API");
 const pastPerfectAudit=readFileSync("curriculum/PAST_PERFECT_LESSON11_SOURCE_AUDIT_20261023.md","utf8");
 assert(pastPerfectAudit.includes("19 occurrences")&&
  pastPerfectAudit.includes("6 approved unique")&&pastPerfectAudit.includes("PAP-T242"),
@@ -254,6 +264,7 @@ assert(logicalSequence.includes("lessons **01–06 are published**")&&
  logicalSequence.includes("`present-perfect` — position `109` — published")&&
  logicalSequence.includes("`present-perfect-continuous` — position `110` — published")&&
  logicalSequence.includes("`past-perfect` — position `111` — published")&&
+ logicalSequence.includes("`past-perfect-continuous` — position `112` — draft")&&
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
  "Teaching sequence must keep Foundation deferred, publish lessons 01-06, and stage lesson 07");

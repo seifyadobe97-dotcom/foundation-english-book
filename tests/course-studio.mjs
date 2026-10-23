@@ -56,10 +56,11 @@ try{
      {slug:"time-clauses",code:"ASGQTIMCL",title:"Future Time Clauses",titleAr:"الجمل الزمنية الدالة على المستقبل",position:108,status:"published"},
      {slug:"present-perfect",code:"ASGQPRPER",title:"Present Perfect",titleAr:"المضارع التام",position:109,status:"published"},
       {slug:"present-perfect-continuous",code:"ASGQPRPERCONT",title:"Present Perfect Continuous",titleAr:"المضارع التام المستمر",position:110,status:"published"},
-      {slug:"past-perfect",code:"ASGQPAPER",title:"Past Perfect",titleAr:"الماضي التام",position:111,status:"published"}
+      {slug:"past-perfect",code:"ASGQPAPER",title:"Past Perfect",titleAr:"الماضي التام",position:111,status:"published"},
+      {slug:"past-perfect-continuous",code:"ASGQPAPERCONT",title:"Past Perfect Continuous",titleAr:"الماضي التام المستمر",position:112,status:"draft"}
     ],can_edit:true};
    }else if(endpoint==="/studio"){
-    data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:selected==="ASGQFUTARR"?"draft":"published"},
+    data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:selected==="ASGQFUTARR"||selected==="ASGQPAPERCONT"?"draft":"published"},
      sections:Array.from({length:stages},(_,i)=>({index:i,titleAr:"المرحلة "+(i+1),
       base:{titleAr:"المرحلة "+(i+1),subtitle:"مثال",short:"مثال",duration:"5 دقائق",description:"شرح بسيط"},
       draft:null,published:null,visual_base:{title:"شرح تجريبي",detail:"شرح تجريبي للقاعدة",tip:"بسيط",cards:[],examples:[],formulas:[],keywords:[]},visual_draft:draft,visual_published:published})),
@@ -119,6 +120,10 @@ try{
   await page.locator("#course").selectOption("ASGQPAPER");
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===6);
   assert.equal(await page.locator("#course").inputValue(),"ASGQPAPER");
+  await page.locator("#course").selectOption("ASGQPAPERCONT");
+  await page.waitForFunction(()=>document.querySelectorAll("aside button").length===5);
+  assert.equal(await page.locator("#course").inputValue(),"ASGQPAPERCONT");
+  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
   assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
   assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
   assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);

@@ -307,6 +307,7 @@ Deno.serve(async(req)=>{
 
  // Lesson 12 original source records are owner-only: no public stems or answer keys.
  if(req.method==="GET"&&path==="/past-perfect-continuous/audit"){
+  if(permission.role!=="owner")return reply(403,{error:"مراجعة الأسئلة الأصلية للمدير فقط"});
   const bank=allCourseBanks.find(b=>b.code==="ASGQPAPERCONT");
   if(!bank)return reply(404,{error:"بنك الدرس الثاني عشر غير متاح"});
   const [indicator,reviewed]=await Promise.all([
