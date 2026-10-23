@@ -111,6 +111,8 @@ jobs:
         run: node tests/conjunctions-connectors.mjs
       - name: Test Lesson 32 Relative Clauses synthetic practice on desktop/mobile
         run: node tests/relative-clauses.mjs
+      - name: Test Lesson 33 Zero Conditional synthetic practice on desktop/mobile
+        run: node tests/zero-conditional.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
