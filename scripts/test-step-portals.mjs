@@ -113,6 +113,21 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson30Gate=readFileSync("supabase/migrations/20261023_step_lesson30_causatives_source_gate.sql","utf8");
+assert(lesson30Gate.includes("count_questions<12")&&
+ lesson30Gate.includes("n_complete!=4")&&
+ lesson30Gate.includes("step_source_item_reviews")&&
+ lesson30Gate.includes("n_overlap>0"),
+ "Lesson30 must remain private until four causative skill groups have sufficient approved originals");
+assert(studio.includes('value="ASGQCAUSCORE"')&&
+ studio.includes('"ASGQCAUSCORE":"causatives"')&&
+ adminHome.includes('code:"ASGQCAUSCORE"'),
+ "Lesson30 must be editable via owner Studio and task-first admin navigation");
+const lesson30Audit=readFileSync("curriculum/CAUSATIVES_LESSON30_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson30Audit.includes("exactly **two** distinct printed MCQs")&&
+ lesson30Audit.includes("16 instructor-created examples")&&
+ lesson30Audit.includes("HOLD / OWNER DRAFT"),
+ "Lesson30 source audit must acknowledge precisely two original source questions and no fabricated scored coverage");
 const lesson29Gate=readFileSync("supabase/migrations/20261023_step_lesson29_bare_infinitives_source_gate.sql","utf8");
 assert(lesson29Gate.includes("total<12")&&
  lesson29Gate.includes("complete_stages!=4")&&
