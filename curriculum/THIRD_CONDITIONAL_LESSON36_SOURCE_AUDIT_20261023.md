@@ -5,6 +5,8 @@
 ## Source
 `STEP_Grammar_Question_Bank_Classifications_Audited.pdf`, PDF pages **42–47**, category `ASGQCON3`. Examined **all 29 printed original question occurrences**. Adjacent **Mixed Conditional** category is not graded inside this lesson.
 
+We examined all 29 printed original question occurrences, selected 18 exact-source scored originals, and verified zero overlap with other private graded lesson banks.
+
 ## Individual source ledger reconciliation
 | Status | Count |
 | --- | ---: |
