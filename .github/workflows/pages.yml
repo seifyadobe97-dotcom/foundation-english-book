@@ -71,6 +71,8 @@ jobs:
         run: node tests/past-continuous.mjs
       - name: Test Lesson 06 future forms, seven stages and explanation feedback on desktop and mobile
         run: node tests/will-be-going-to.mjs
+      - name: Test Lesson 08 Time Clauses on mobile and desktop with synthetic items
+        run: node tests/time-clauses.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
