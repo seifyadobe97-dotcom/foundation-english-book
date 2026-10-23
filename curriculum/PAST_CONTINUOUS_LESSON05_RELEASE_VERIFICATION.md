@@ -16,4 +16,9 @@
 - Database indicator and course identity match; original stems/options/keys match all ten approved source ledger entries.
 - Five groups of 2 questions, complete teaching visuals, previous courses and student progress preserved.
 - GitHub STEP quality and general release quality jobs both passed on 2026-10-22.
-- The GitHub Pages deploy job for workflow run 39865460333 failed due to **duplicate `github-pages` artifacts** in the workflow run, not a lesson logic or grading failure; the Pages release must be confirmed separately through a clean successful deploy run.
+- The prior GitHub Pages artifact-collision failure (run 39865460333) was resolved; the subsequent clean workflow run **39866099159** succeeded for release quality, STEP Pilot quality, and GitHub Pages deployment at commit `a428dd3`.
+- On 2026-10-23 the private bank was directly reconciled to the audit ledger in Supabase: **10/10** stems, option objects, and printed keys match approved candidates; every live question has an answer explanation and wrong-choice rationale.
+- The second teaching section was enhanced through separate **draft then published** Supabase overrides to explain `as` and simultaneous past events, with two additional teacher-created teaching examples and table rows. No original question or answer key changed. Four revision-history entries were recorded for the two override records.
+- Supabase migration `step_studio_edit_all_private_courses` replaced outdated two-course Editor constraints with private-course foreign keys in section and question edits (part indices 0–49). The server retains owner-only publishing and the original-question approval checks.
+- **Limit of evidence:** browser tests use synthetic fixtures. A new real-student authenticated grading/persistence test was **not** performed in this maintenance pass; existing attempt records were preserved. Direct anonymous SELECT privileges on private source/key tables remain revoked.
+

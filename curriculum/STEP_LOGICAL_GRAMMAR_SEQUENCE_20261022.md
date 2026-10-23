@@ -2,15 +2,15 @@
 
 Date: 2026-10-22. This is a pedagogical teaching order, NOT the original course book's chapter order. No exam questions, keys, source classification codes, student attempt records or publishing decisions are changed by changing lesson positions.
 
-The first two lessons are **published**, while all subsequent lesson indicators are **draft**. Next planned lesson: **Present Continuous (Lesson 03)**.
+Release-status update verified against production Supabase on **2026-10-23**: lessons **01–05 are published**. The next planned grammar lesson is **06 — Will / Be Going To**. The original teaching order remains unchanged.
 
 ## أساس الفعل والأزمنة الأولى
 
 1. تطابق الفاعل والفعل — `subject-verb-agreement` — position `101` — published
 2. المضارع البسيط — `present-simple` — position `102` — published
-3. المضارع المستمر — `present-continuous` — position `103` — draft
-4. الماضي البسيط — `past-simple` — position `104` — draft
-5. الماضي المستمر — `past-continuous` — position `105` — draft
+3. المضارع المستمر — `present-continuous` — position `103` — published
+4. الماضي البسيط — `past-simple` — position `104` — published
+5. الماضي المستمر — `past-continuous` — position `105` — published
 
 ## المستقبل والأزمنة المتقدمة
 
@@ -73,7 +73,7 @@ The five `writing-analysis` indicators keep their own sequence and statuses. The
 
 ## Implementation invariants
 
-- The catalog returns published indicators sorted by `position` (Lesson 1 = 101, Lesson 2 = 102).
-- All remaining grammar positions run 103 through 141, without duplicated IDs. All later indicators stay draft.
-- Student dashboard shows Agreement first, then Present Simple, with separate course progress and stage history.
-- Original codes `ASGQAGREE` and `ASGQPRSIM` remain unchanged. Never migrate attempts due only to renumbering.
+- The catalog returns the five published grammar indicators sorted by `position` (101–105).
+- The remaining grammar indicators run 106–141, without duplicated IDs; they remain draft until individually reviewed and published.
+- Student dashboard shows Agreement, Present Simple, Present Continuous, Past Simple, then Past Continuous, with separate course progress and stage history.
+- Original codes `ASGQAGREE`, `ASGQPRSIM`, `ASGQPRCONT`, `ASGQPASIM` and `ASGQPACONT` remain unchanged. Never migrate attempts due only to renumbering.
