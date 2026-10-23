@@ -113,6 +113,22 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson31Gate=readFileSync("supabase/migrations/20261023_step_lesson31_conjunctions_connectors_source_gate.sql","utf8");
+assert(lesson31Gate.includes("n_items<20")&&
+ lesson31Gate.includes("n_categories!=5")&&
+ lesson31Gate.includes("step_source_item_reviews")&&
+ lesson31Gate.includes("n_overlap>0"),
+ "Lesson31 must require source-exact 20 original MCQs, 5 link categories and no cross-lesson overlaps");
+assert(studio.includes('value="ASGQCONNLINK"')&&
+ studio.includes('"ASGQCONNLINK":"conjunctions-and-connectors"')&&
+ adminHome.includes('code:"ASGQCONNLINK"'),
+ "Lesson31 must be editable in Studio with canonical owner route");
+const lesson31Audit=readFileSync("curriculum/CONJUNCTIONS_CONNECTORS_LESSON31_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson31Audit.includes("20 individually selected and reviewed original MCQs")&&
+ lesson31Audit.includes("five connector categories")&&
+ lesson31Audit.includes("logical-connectors")&&
+ lesson31Audit.includes("not a complete review"),
+ "Lesson31 audit must bound review scope and prevent source doubling");
 const lesson30Gate=readFileSync("supabase/migrations/20261023_step_lesson30_causatives_source_gate.sql","utf8");
 assert(lesson30Gate.includes("count_questions<12")&&
  lesson30Gate.includes("n_complete!=4")&&
