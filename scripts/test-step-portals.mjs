@@ -113,6 +113,22 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson24Gate=readFileSync("supabase/migrations/20261023_step_lesson24_prepositions_time_place_source_gate.sql","utf8");
+assert(lesson24Gate.includes("item_total<22")&&
+ lesson24Gate.includes("n_prep<12 OR n_since<10")&&
+ lesson24Gate.includes("step_source_item_reviews")&&
+ lesson24Gate.includes("overlap_count>0"),
+ "Lesson24 must require exact 22 original time/place/for-since items and no duplicates");
+assert(studio.includes('value="ASGQPREPTIME"')&&
+ studio.includes('"ASGQPREPTIME":"prepositions-of-time-and-place"')&&
+ adminHome.includes('code:"ASGQPREPTIME"'),
+ "Lesson24 private course must have direct Studio link and admin card");
+const lesson24Audit=readFileSync("curriculum/PREPOSITIONS_TIME_PLACE_LESSON24_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson24Audit.includes("28 individually registered/reviewed source candidates")&&
+ lesson24Audit.includes("22 independent approved originals")&&
+ lesson24Audit.includes("3 duplicate holds")&&
+ lesson24Audit.includes("3 editorial holds"),
+ "Lesson24 source audit must reconcile 22 approved with six held source examples");
 const lesson23Gate=readFileSync("supabase/migrations/20261023_step_lesson23_comparatives_superlatives_source_gate.sql","utf8");
 assert(lesson23Gate.includes("total<18")&&
  lesson23Gate.includes("comp<12 OR sup<6")&&
