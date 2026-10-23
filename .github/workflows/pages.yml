@@ -123,6 +123,8 @@ jobs:
         run: node tests/wishes-unreal.mjs
       - name: Test Lesson 38 Reported Speech synthetic practice on desktop/mobile
         run: node tests/reported-speech.mjs
+      - name: Test Lesson 39 Indirect Questions source-safe synthetic browser lesson
+        run: node tests/indirect-questions.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
