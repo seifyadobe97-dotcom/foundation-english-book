@@ -2,7 +2,7 @@
 
 Date: 2026-10-22. This is a pedagogical teaching order, NOT the original course book's chapter order. No exam questions, keys, source classification codes, student attempt records or publishing decisions are changed by changing lesson positions.
 
-Release-status update verified against production Supabase on **2026-10-23**: lessons **01–06 are published**. Lesson **06 — Will / Be Going To** uses eight independently source-verified questions in seven stages. Lesson **07 — Future Arrangements** is now an **admin-only private draft** (five teaching stages, no new source-exclusive MCQs). Bank PDF page 4 classifies the relevant original questions under Present Continuous; two are already scored in published Lesson 03, and another is near-duplicate/underconstrained. The published Lesson 03 arrangement explanation has been extended; no original question IDs or student attempts were moved. The next independent graded release requires additional source-approved, nonduplicated items. The original teaching order remains unchanged.
+Release-status update verified against production Supabase on **2026-10-23**: lessons **01–06 are published**. Lesson **06 — Will / Be Going To** uses eight independently source-verified questions in seven stages. Lesson **07 — Future Arrangements** is now an **admin-only private draft** (five teaching stages, no new source-exclusive MCQs). Bank PDF page 4 classifies the relevant original questions under Present Continuous; two are already scored in published Lesson 03, and another is near-duplicate/underconstrained. The published Lesson 03 arrangement explanation has been extended; no original question IDs or student attempts were moved. Lesson 08 is released using five source-exact unique Time Clauses originals over five stages, with six duplicate/near-duplicate source occurrences withheld. Lesson 07 remains an admin-only draft; no old student results were moved. The original teaching order remains unchanged.
 
 ## أساس الفعل والأزمنة الأولى
 
@@ -16,7 +16,7 @@ Release-status update verified against production Supabase on **2026-10-23**: le
 
 6. Will / Be Going To — `will-be-going-to` — position `106` — published
 7. ترتيبات المستقبل — `future-arrangements` — position `107` — draft
-8. الجمل الزمنية — `time-clauses` — position `108` — draft
+8. الجمل الزمنية — `time-clauses` — position `108` — published
 9. المضارع التام — `present-perfect` — position `109` — draft
 10. المضارع التام المستمر — `present-perfect-continuous` — position `110` — draft
 11. الماضي التام — `past-perfect` — position `111` — draft
