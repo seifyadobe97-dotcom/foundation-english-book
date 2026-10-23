@@ -77,6 +77,8 @@ jobs:
         run: node tests/present-perfect.mjs
       - name: Test Lesson 10 Present Perfect Continuous on desktop and mobile with synthetic items
         run: node tests/present-perfect-continuous.mjs
+      - name: Test Lesson 11 Past Perfect grading and responsive teaching with synthetic questions
+        run: node tests/past-perfect.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
