@@ -36,9 +36,10 @@ const indicators=[
  {slug:"past-perfect-continuous",status:"draft"},
  {slug:"future-continuous-future-perfect",status:"draft"},
   {slug:"used-to-be-used-to-get-used-to",status:"draft"},
-  {slug:"modals-fundamentals",status:"published"}
+  {slug:"modals-fundamentals",status:"published"},
+  {slug:"modals-of-deduction",status:"draft"}
 ];
-const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous",ASGQWILLGO:"Will / Be Going To",ASGQFUTARR:"Future Arrangements",ASGQTIMCL:"Future Time Clauses",ASGQPRPER:"Present Perfect",ASGQPRPERCONT:"Present Perfect Continuous",ASGQPAPER:"Past Perfect",ASGQPAPERCONT:"Past Perfect Continuous",ASGQFUCOMBO:"Future Continuous & Future Perfect",ASGQUSED:"Used To / Be Used To / Get Used To",ASGQMODCORE:"Modals Fundamentals"};
+const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous",ASGQWILLGO:"Will / Be Going To",ASGQFUTARR:"Future Arrangements",ASGQTIMCL:"Future Time Clauses",ASGQPRPER:"Present Perfect",ASGQPRPERCONT:"Present Perfect Continuous",ASGQPAPER:"Past Perfect",ASGQPAPERCONT:"Past Perfect Continuous",ASGQFUCOMBO:"Future Continuous & Future Perfect",ASGQUSED:"Used To / Be Used To / Get Used To",ASGQMODCORE:"Modals Fundamentals",ASGQMODDEDUCT:"Modals of Deduction & Possibility"};
 try{
  for(const width of [1280,390]){
   const page=await browser.newPage({viewport:{width,height:850}});
@@ -68,12 +69,13 @@ try{
         {slug:"past-perfect-continuous",code:"ASGQPAPERCONT",title:"Past Perfect Continuous",titleAr:"الماضي التام المستمر",status:"draft",position:112},
         {slug:"future-continuous-future-perfect",code:"ASGQFUCOMBO",title:"Future Continuous & Future Perfect",titleAr:"المستقبل المستمر والمستقبل التام",status:"draft",position:113},
         {slug:"used-to-be-used-to-get-used-to",code:"ASGQUSED",title:"Used To / Be Used To / Get Used To",titleAr:"العادة الماضية والتعود",status:"draft",position:114},
-        {slug:"modals-fundamentals",code:"ASGQMODCORE",title:"Modals Fundamentals",titleAr:"أساسيات الأفعال الناقصة",status:"published",position:115}
+        {slug:"modals-fundamentals",code:"ASGQMODCORE",title:"Modals Fundamentals",titleAr:"أساسيات الأفعال الناقصة",status:"published",position:115},
+        {slug:"modals-of-deduction",code:"ASGQMODDEDUCT",title:"Modals of Deduction & Possibility",titleAr:"أفعال الاستنتاج والاحتمال",status:"draft",position:116}
      ],can_edit:true};
     }else if(endpoint==="/studio"){
     const code=url.searchParams.get("course")||"ASGQAGREE";
-    const units=code==="ASGQPRSIM"||code==="ASGQPAPER"||code==="ASGQFUCOMBO"?6:code==="ASGQWILLGO"||code==="ASGQPRPER"||code==="ASGQPRPERCONT"||code==="ASGQUSED"||code==="ASGQMODCORE"?7:5;
-    body={course:{code,title:lessonMeta[code],titleAr:"درس تجريبي",subtitle:"",status:code==="ASGQFUTARR"||code==="ASGQPAPERCONT"||code==="ASGQFUCOMBO"||code==="ASGQUSED"?"draft":"published"},
+    const units=code==="ASGQPRSIM"||code==="ASGQPAPER"||code==="ASGQFUCOMBO"||code==="ASGQMODDEDUCT"?6:code==="ASGQWILLGO"||code==="ASGQPRPER"||code==="ASGQPRPERCONT"||code==="ASGQUSED"||code==="ASGQMODCORE"?7:5;
+    body={course:{code,title:lessonMeta[code],titleAr:"درس تجريبي",subtitle:"",status:code==="ASGQFUTARR"||code==="ASGQPAPERCONT"||code==="ASGQFUCOMBO"||code==="ASGQUSED"||code==="ASGQMODDEDUCT"?"draft":"published"},
      sections:Array.from({length:units},(_,i)=>({index:i,titleAr:"مرحلة "+(i+1),
       base:{titleAr:"مرحلة "+(i+1),subtitle:"",short:"",duration:"7 دقائق",
        description:"تعليم تجريبي",rule:[],alternativeRule:[],gold:{},mistake:{},examples:[],tiles:[]},
@@ -84,7 +86,8 @@ try{
   });
   await page.goto(origin+"/step-grammar-admin/",{waitUntil:"domcontentloaded"});
   await page.locator(".home-hero").waitFor({timeout:12000});
-  assert.equal(await page.locator(".home-card").count(),15,"Fifteen lessons, with 07,12,13,14 private and 15 published");
+  assert.equal(await page.locator(".home-card").count(),16,"Sixteen lessons, with 07,12,13,14,16 private");
+  assert.match(await page.locator("#home-status-16").innerText(),/مسودة غير منشورة/);
   assert.match(await page.locator("#home-status-15").innerText(),/منشور للطلاب/);
   assert.match(await page.locator("#home-status-14").innerText(),/مسودة غير منشورة/);
   assert.match(await page.locator("#home-status-13").innerText(),/مسودة غير منشورة/);
@@ -149,12 +152,17 @@ try{
   await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===7);
   assert.equal(await page.locator("#course").inputValue(),"ASGQMODCORE");
   assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
+  await page.goto(origin+"/step-grammar-admin/studio.html?course=ASGQMODDEDUCT&tab=visual",{waitUntil:"domcontentloaded"});
+  await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===6);
+  assert.equal(await page.locator("#course").inputValue(),"ASGQMODDEDUCT");
+  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
 
 
   assert.equal(await page.locator(".admin-global-nav a[aria-current='page']").innerText().then(x=>x.includes("تعديل الدروس")),true);
   await page.goto(origin+"/step-grammar-admin/sources.html",{waitUntil:"domcontentloaded"});
   await page.locator("#cards:not([hidden])").waitFor();
-  assert.equal(await page.locator(".card").count(),15,"Fifteen source audit cards including Lesson 15");
+  assert.equal(await page.locator(".card").count(),16,"Sixteen source audit cards including private Lesson 16");
+  assert.equal(await page.locator('a[href="modals-deduction-audit.html"]').count(),1);
   assert.equal(await page.locator('a[href="modals-fundamentals-audit.html"]').count(),1);
   assert.equal(await page.locator('a[href="used-to-audit.html"]').count(),1);
   assert.equal(await page.locator('a[href="future-continuous-perfect-audit.html"]').count(),1);

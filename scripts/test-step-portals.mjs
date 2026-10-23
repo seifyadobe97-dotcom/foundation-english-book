@@ -68,6 +68,22 @@ for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"
 const lesson08Gate=readFileSync("supabase/migrations/20261023_step_lesson08_time_clauses_source_release.sql","utf8");
 assert(lesson08Gate.includes("approved<>items")&&lesson08Gate.includes("step_source_item_reviews")&&lesson08Gate.includes("items<5"),
  "Lesson 08 only publishes audited original exam questions");
+const lesson16Gate=readFileSync("supabase/migrations/20261023_step_lesson16_modals_deduction_source_gate.sql","utf8");
+assert(lesson16Gate.includes("total<6")&&lesson16Gate.includes("present_n<3")&&
+ lesson16Gate.includes("past_n<3")&&lesson16Gate.includes("step_source_item_reviews"),
+ "Lesson16 must block source-deficient grading across present and past deductions");
+assert(studio.includes('value="ASGQMODDEDUCT"')&&
+ studio.includes('"ASGQMODDEDUCT":"modals-of-deduction"')&&
+ adminHome.includes('code:"ASGQMODDEDUCT"')&&
+ adminServer.includes('path==="/modals-deduction/audit"')&&
+ readFileSync("step-grammar-admin/modals-deduction-audit.html","utf8").includes("/step-admin/modals-deduction/audit"),
+ "Lesson16 owner-only original-source review and private editor must be connected");
+const lesson16Audit=readFileSync("curriculum/MODALS_DEDUCTION_LESSON16_ADMIN_DRAFT_20261023.md","utf8");
+assert(lesson16Audit.includes("25 individually reviewed")&&
+ lesson16Audit.includes("3 approved original")&&
+ lesson16Audit.includes("deduction")&&
+ lesson16Audit.includes("stays `draft`"),
+ "Lesson16 editorial review and student access restriction must be explicit");
 const lesson15Gate=readFileSync("supabase/migrations/20261023_step_lesson15_modals_fundamentals_source_guard.sql","utf8");
 assert(lesson15Gate.includes("total<18")&&lesson15Gate.includes("obligation<8")&&
  lesson15Gate.includes("requests<3")&&lesson15Gate.includes("advice<5")&&
@@ -303,6 +319,7 @@ assert(logicalSequence.includes("lessons **01–06 are published**")&&
  logicalSequence.includes("`future-continuous-future-perfect` — position `113` — draft")&&
  logicalSequence.includes("`used-to-be-used-to-get-used-to` — position `114` — draft")&&
  logicalSequence.includes("`modals-fundamentals` — position `115` — published")&&
+ logicalSequence.includes("`modals-of-deduction` — position `116` — draft")&&
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
  "Teaching sequence must keep Foundation deferred, publish lessons 01-06, and stage lesson 07");
