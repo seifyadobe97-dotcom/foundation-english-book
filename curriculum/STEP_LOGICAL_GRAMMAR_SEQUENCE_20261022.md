@@ -26,7 +26,7 @@ Release-status update verified against production Supabase on **2026-10-23**: Le
 
 ## الأفعال الناقصة والمبني للمجهول
 
-15. أساسيات الأفعال الناقصة — `modals-fundamentals` — position `115` — draft
+15. أساسيات الأفعال الناقصة — `modals-fundamentals` — position `115` — published
 16. أفعال الاستنتاج والاحتمال — `modals-of-deduction` — position `116` — draft
 17. المبني للمجهول حسب الزمن — `passive-voice-by-tense` — position `117` — draft
 18. المبني للمجهول مع Modals — `modal-passive` — position `118` — draft

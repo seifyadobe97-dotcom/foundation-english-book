@@ -16,7 +16,8 @@ window.StepAdminHome={
    {n:"11",slug:"past-perfect",code:"ASGQPAPER",title:"Past Perfect",ar:"الماضي التام",status:"published"},
    {n:"12",slug:"past-perfect-continuous",code:"ASGQPAPERCONT",title:"Past Perfect Continuous",ar:"الماضي التام المستمر",status:"draft"},
    {n:"13",slug:"future-continuous-future-perfect",code:"ASGQFUCOMBO",title:"Future Continuous & Future Perfect",ar:"المستقبل المستمر والمستقبل التام",status:"draft"},
-   {n:"14",slug:"used-to-be-used-to-get-used-to",code:"ASGQUSED",title:"Used To / Be Used To / Get Used To",ar:"العادة الماضية والتعود",status:"draft"}
+   {n:"14",slug:"used-to-be-used-to-get-used-to",code:"ASGQUSED",title:"Used To / Be Used To / Get Used To",ar:"العادة الماضية والتعود",status:"draft"},
+   {n:"15",slug:"modals-fundamentals",code:"ASGQMODCORE",title:"Modals Fundamentals",ar:"أساسيات الأفعال الناقصة",status:"published"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
