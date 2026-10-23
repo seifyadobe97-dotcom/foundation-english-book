@@ -133,6 +133,8 @@ jobs:
         run: node tests/advanced-conditionals.mjs
       - name: Test Lesson 43 Question Formation synthetic grading on desktop/mobile
         run: node tests/question-formation.mjs
+      - name: Test Lesson 44 Question Words original-safe browser practice desktop/mobile
+        run: node tests/question-words.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
