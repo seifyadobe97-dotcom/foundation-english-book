@@ -200,7 +200,7 @@ assert(curriculum.includes("عاين الدرس الأول التفاعلي")&&
  curriculum.includes("state.indicators=(data.indicators||[]).slice().sort("),
  "Admin must display the revised lesson one preview and sort indicators by position");
 const logicalSequence=readFileSync("curriculum/STEP_LOGICAL_GRAMMAR_SEQUENCE_20261022.md","utf8");
-assert(logicalSequence.includes("next planned grammar lesson is **06 — Will / Be Going To**")&&
+assert(logicalSequence.includes("Lesson **06 — Will / Be Going To** is now an **admin-only private-bank draft**")&&
  logicalSequence.includes("`past-continuous` — position `105` — published")&&
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
