@@ -113,6 +113,22 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson32Gate=readFileSync("supabase/migrations/20261023_step_lesson32_relative_clauses_source_gate.sql","utf8");
+assert(lesson32Gate.includes("n_items<18")&&
+ lesson32Gate.includes("n_stages!=5")&&
+ lesson32Gate.includes("step_source_item_reviews")&&
+ lesson32Gate.includes("n_overlap>0"),
+ "Lesson32 must remain protected until Relative Clauses including where/when have independent scored coverage");
+assert(studio.includes('value="ASGQRELCORE"')&&
+ studio.includes('"ASGQRELCORE":"relative-clauses"')&&
+ adminHome.includes('code:"ASGQRELCORE"'),
+ "Lesson32 must be owner-editable through the existing Studio");
+const lesson32Audit=readFileSync("curriculum/RELATIVE_CLAUSES_LESSON32_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson32Audit.includes("19 individually selected and inspected source items")&&
+ lesson32Audit.includes("16 individually approved originals")&&
+ lesson32Audit.includes("1 wrong-key hold")&&
+ lesson32Audit.includes("Where / When"),
+ "Lesson32 report must acknowledge the held wrong key, missing where/when source coverage and exact review scope");
 const lesson31Gate=readFileSync("supabase/migrations/20261023_step_lesson31_conjunctions_connectors_source_gate.sql","utf8");
 assert(lesson31Gate.includes("n_items<20")&&
  lesson31Gate.includes("n_categories!=5")&&
