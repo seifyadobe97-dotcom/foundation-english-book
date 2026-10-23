@@ -129,6 +129,22 @@ assert(lesson35Audit.includes("all 26 printed questions")&&
  lesson35Audit.includes("SCON-018")&&
  lesson35Audit.includes("DRAFT / HOLD"),
  "Lesson35 source review must reconcile 26 originals with 10 approved and three ambiguous holds");
+const lesson44Gate=readFileSync("supabase/migrations/20261024_step_lesson44_question_words_source_gate.sql","utf8");
+assert(lesson44Gate.includes("total<12")&&
+ lesson44Gate.includes("stages_ok!=4")&&
+ lesson44Gate.includes("step_source_item_reviews")&&
+ lesson44Gate.includes("cross_overlap>0"),
+ "Lesson44 must verify twelve original question-word keys and preserve complete graded skill coverage");
+assert(studio.includes('value="ASGQQWHCORE"')&&
+ studio.includes('"ASGQQWHCORE":"question-words"')&&
+ adminHome.includes('code:"ASGQQWHCORE"'),
+ "Lesson44 source-audited owner Studio route required");
+const lesson44Audit=readFileSync("curriculum/QUESTION_WORDS_LESSON44_SOURCE_AUDIT_20261024.md","utf8");
+assert(lesson44Audit.includes("27 printed original occurrences")&&
+ lesson44Audit.includes("12 original MCQs have been selected and individually verified")&&
+ lesson44Audit.includes("12/12 source-exact originals, zero cross-course reuse")&&
+ lesson44Audit.includes("Informal object"),
+ "Lesson44 provenance report must preserve source scope, register nuance and exact-match safeguards");
 const lesson43Gate=readFileSync("supabase/migrations/20261024_step_lesson43_question_formation_source_gate.sql","utf8");
 assert(lesson43Gate.includes("total<16")&&
  lesson43Gate.includes("stages_ok!=4")&&
