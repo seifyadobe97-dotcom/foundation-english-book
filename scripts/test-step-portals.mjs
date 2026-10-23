@@ -68,6 +68,17 @@ for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"
 const lesson08Gate=readFileSync("supabase/migrations/20261023_step_lesson08_time_clauses_source_release.sql","utf8");
 assert(lesson08Gate.includes("approved<>items")&&lesson08Gate.includes("step_source_item_reviews")&&lesson08Gate.includes("items<5"),
  "Lesson 08 only publishes audited original exam questions");
+const presentPerfectContinuousGate=readFileSync("supabase/migrations/20261023_step_lesson10_present_perfect_continuous_source_gate.sql","utf8");
+assert(presentPerfectContinuousGate.includes("total<13")&&
+ presentPerfectContinuousGate.includes("exact<>total")&&
+ presentPerfectContinuousGate.includes("step_source_item_reviews"),
+ "Lesson 10 publication requires 13 unique, source-exact approved originals across 7 stages");
+assert(studio.includes('value="ASGQPRPERCONT"')&&
+ studio.includes('"ASGQPRPERCONT":"present-perfect-continuous"')&&
+ adminHome.includes('code:"ASGQPRPERCONT"')&&
+ adminServer.includes('path==="/present-perfect-continuous/audit"')&&
+ readFileSync("step-grammar-admin/present-perfect-continuous-audit.html","utf8").includes("/step-admin/present-perfect-continuous/audit"),
+ "Lesson 10 private audit and editable Studio must be wired without exposing original answers");
 const presentPerfectGate=readFileSync("supabase/migrations/20261023_step_lesson09_present_perfect_source_release.sql","utf8");
 assert(presentPerfectGate.includes("total<13")&&presentPerfectGate.includes("step_source_item_reviews")&&
  presentPerfectGate.includes("approved<>total"),
@@ -231,6 +242,7 @@ assert(logicalSequence.includes("lessons **01–06 are published**")&&
  logicalSequence.includes("`will-be-going-to` — position `106` — published")&&
  logicalSequence.includes("`time-clauses` — position `108` — published")&&
  logicalSequence.includes("`present-perfect` — position `109` — published")&&
+ logicalSequence.includes("`present-perfect-continuous` — position `110` — published")&&
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
  "Teaching sequence must keep Foundation deferred, publish lessons 01-06, and stage lesson 07");
