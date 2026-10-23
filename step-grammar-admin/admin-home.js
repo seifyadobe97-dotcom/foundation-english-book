@@ -20,7 +20,8 @@ window.StepAdminHome={
    {n:"15",slug:"modals-fundamentals",code:"ASGQMODCORE",title:"Modals Fundamentals",ar:"أساسيات الأفعال الناقصة",status:"published"},
    {n:"16",slug:"modals-of-deduction",code:"ASGQMODDEDUCT",title:"Modals of Deduction & Possibility",ar:"أفعال الاستنتاج والاحتمال",status:"draft"},
    {n:"17",slug:"passive-voice-by-tense",code:"ASGQPSVCORE",title:"Passive Voice by Tense",ar:"المبني للمجهول حسب الزمن",status:"draft"},
-   {n:"18",slug:"modal-passive",code:"ASGQMODPASSCORE",title:"Modal Passive & Modal Perfect Passive",ar:"المبني للمجهول مع الأفعال الناقصة",status:"draft"}
+   {n:"18",slug:"modal-passive",code:"ASGQMODPASSCORE",title:"Modal Passive & Modal Perfect Passive",ar:"المبني للمجهول مع الأفعال الناقصة",status:"draft"},
+   {n:"19",slug:"pronouns",code:"ASGQPRONCORE",title:"Pronouns",ar:"الضمائر",status:"draft"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
