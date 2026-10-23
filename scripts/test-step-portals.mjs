@@ -95,8 +95,8 @@ assert(lesson18Gate.includes("total<12")&&
 assert(studio.includes('value="ASGQMODPASSCORE"')&&
  studio.includes('"ASGQMODPASSCORE":"modal-passive"')&&
  adminHome.includes('code:"ASGQMODPASSCORE"')&&
- adminHome.includes('status:"draft"'),
- "Lesson18 must remain a clearly marked editable admin Studio draft");
+ adminHome.includes('code:"ASGQMODPASSCORE",title:"Modal Passive & Modal Perfect Passive",ar:"المبني للمجهول مع الأفعال الناقصة",status:"published"'),
+ "Lesson18 must appear as a published, editable course in owner Studio and dashboard");
 
 const lesson21Gate=readFileSync("supabase/migrations/20261023_step_lesson21_degree_source_gate.sql","utf8");
 assert(lesson21Gate.includes("total<12")&&
@@ -425,8 +425,8 @@ assert(lesson26Gate.includes("question_count<12")&&
 assert(studio.includes('value="ASGQWORDFORM"')&&
  studio.includes('"ASGQWORDFORM":"word-formation"')&&
  adminHome.includes('code:"ASGQWORDFORM"')&&
- adminHome.includes('status:"draft"'),
- "Lesson26 must be an editable private draft, never an invented question bank");
+ adminHome.includes('code:"ASGQWORDFORM",title:"Word Formation",ar:"الاشتقاقات وتكوين الكلمة",status:"published"'),
+ "Lesson26 published with private instructor-simulated assessment must retain owner Studio editing");
 const lesson26Audit=readFileSync("curriculum/WORD_FORMATION_LESSON26_SOURCE_AUDIT_20261023.md","utf8");
 assert(lesson26Audit.includes("Five teaching stages with 20 instructor-authored worked examples")&&
  lesson26Audit.includes("0 original questions")&&
