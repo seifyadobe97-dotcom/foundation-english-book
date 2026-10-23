@@ -32,7 +32,8 @@ window.StepAdminHome={
    {n:"27",slug:"gerunds",code:"ASGQGERUNDCORE",title:"Gerunds (-ing)",ar:"المصدر المنتهي بـ ing",status:"published"},
    {n:"28",slug:"infinitives",code:"ASGQINFINCORE",title:"To-Infinitive",ar:"المصدر المسبوق بـ to",status:"published"},
    {n:"29",slug:"bare-infinitives",code:"ASGQBARECORE",title:"Bare Infinitive & Make / Let",ar:"المصدر المجرد",status:"draft"},
-   {n:"30",slug:"causatives",code:"ASGQCAUSCORE",title:"Causatives",ar:"السببية",status:"draft"}
+   {n:"30",slug:"causatives",code:"ASGQCAUSCORE",title:"Causatives",ar:"السببية",status:"draft"},
+   {n:"31",slug:"conjunctions-and-connectors",code:"ASGQCONNLINK",title:"Conjunctions & Connectors",ar:"الروابط",status:"draft"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
