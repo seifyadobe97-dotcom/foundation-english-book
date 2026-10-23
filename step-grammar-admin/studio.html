@@ -189,14 +189,14 @@ function questions(){
  const active=list.find(q=>q.id===state.questionId);
  const items=[{name:"＋ إضافة سؤال جديد",sub:"إضافة مسودة جديدة"},...list.map(q=>({
  name:q.text.length>60?q.text.slice(0,58)+"…":q.text,
- sub:(q.origin==="source"?"سؤال أصلي":"سؤال مضاف")+(q.draft?" · مسودة":q.published?" · تعديل منشور":q.archived?" · مؤرشف":"")}))];
+ sub:(q.origin==="simulated"?"سؤال محاكي · تم إنشاؤه داخليًا":q.origin==="source"?"سؤال أصلي مُراجع":"سؤال مضاف من الأدمن")+(q.draft?" · مسودة":q.published?" · تعديل منشور":q.archived?" · مؤرشف":"")}))];
  const idx=active?list.findIndex(q=>q.id===active.id)+1:0;
  const v=active?.draft||active||{part_index:state.index,text:"",options:{A:"",B:"",C:"",D:""},correct:"A",explanation:"",wrongReasons:{}};
  const options=state.data.sections.map(s=>'<option value="'+s.index+'" '+(Number(v.part_index)===s.index?"selected":"")+'>'+safe("المرحلة "+(s.index+1)+" — "+s.titleAr)+'</option>').join("");
  const wrong=v.wrongReasons||{};
  work.innerHTML=sideButtons(items,idx)+'<div class="panel"><h2>'+(active?"تعديل سؤال":"إضافة سؤال للمراجعة")+'</h2>'+
- (active?'<p>الرقم الداخلي '+safe(active.id)+' · '+(active.origin==="source"?"المصدر الأصلي محفوظ، والتعديل يُسجل كنسخة تحريرية.":"سؤال مضاف من لوحة الإدارة.")+'</p>':"")+
- '<div class="field"><label for="q-part">مرحلة التدريب</label><select id="q-part" '+(active?.origin==="source"?"disabled":"")+'>'+options+'</select></div>'+
+ (active?'<p>الرقم الداخلي '+safe(active.id)+' · '+(active.origin==="simulated"?"<strong>سؤال محاكي معتمد داخليًا</strong> — مش من النص الأصلي للتجميعات. يظهر كتمرين عادي للطالب.":active.origin==="source"?"<strong>سؤال أصلي</strong> — المصدر محفوظ وأي تعديل يُسجل كنسخة تحريرية.":"سؤال مضاف من لوحة الإدارة.")+'</p>':"")+
+ '<div class="field"><label for="q-part">مرحلة التدريب</label><select id="q-part" '+(active?.origin==="source"||active?.origin==="simulated"?"disabled":"")+'>'+options+'</select></div>'+
  field("q-text","نص السؤال",v.text,{multi:true})+
  '<div class="cols">'+["A","B","C","D"].map(k=>field("q-"+k,"الاختيار "+k,(v.options||{})[k]||"",{multi:true})).join("")+'</div>'+
  '<div class="field"><label for="q-correct">الإجابة الصحيحة</label><select id="q-correct">'+["A","B","C","D"].map(k=>'<option '+(v.correct===k?"selected":"")+'>'+k+'</option>').join("")+'</select></div>'+
@@ -204,7 +204,7 @@ function questions(){
  '<h3>ليه كل اختيار تاني غلط؟</h3>'+
  '<div class="cols">'+["A","B","C","D"].map(k=>field("q-w-"+k,"سبب خطأ الاختيار "+k,wrong[k]||"",{multi:true,help:"سيتم استخدام الأسباب الثلاثة باستثناء الاختيار الصحيح"})).join("")+'</div>'+
  actions("questions",!!active?.draft&&active?.origin==="source",!!active?.published,true)+
- '<div class="note">أي تغيير على نص سؤال المصدر أو إجابته يعد «نسخة تحريرية» وليست النص الأصلي؛ المصدر والتقييمات السابقة يفضلوا محفوظين. الأسئلة الجديدة تُحفظ كمسودات ولا تُنشر حتى تدقيق المصدر الأصلي.</div></div>';
+ '<div class="note">تمييز داخلي للأدمن: «سؤال أصلي» مطابق للمصدر المُراجع؛ «سؤال محاكي» من إنشاء المنصة بنفس المهارة والنمط ولكن ليس من التجميعات. الطالب يرى جميعها كتدريب بدون نوع السؤال. نشر التعديلات يخضع للمراجعة، وبيانات المحاولات القديمة محفوظة.</div></div>';
  document.querySelectorAll("[data-index]").forEach(b=>b.onclick=()=>{
  if(!canNavigate())return;setDirty(false);
  state.questionId=Number(b.dataset.index)===0?null:list[Number(b.dataset.index)-1]?.id||null;paint();
