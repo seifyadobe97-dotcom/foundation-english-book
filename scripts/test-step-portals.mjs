@@ -98,6 +98,37 @@ assert(studio.includes('value="ASGQMODPASSCORE"')&&
  adminHome.includes('status:"draft"'),
  "Lesson18 must remain a clearly marked editable admin Studio draft");
 
+const lesson21Gate=readFileSync("supabase/migrations/20261023_step_lesson21_degree_source_gate.sql","utf8");
+assert(lesson21Gate.includes("total<12")&&
+ lesson21Gate.includes("stages<>4")&&
+ lesson21Gate.includes("step_source_item_reviews")&&
+ lesson21Gate.includes("Lesson21 draft only"),
+ "Lesson21 source shortage must keep Too/Enough/So-That a private draft");
+assert(studio.includes('value="ASGQDEGREE"')&&
+ studio.includes('"ASGQDEGREE":"quantity-degree"')&&
+ adminHome.includes('code:"ASGQDEGREE"'),
+ "Lesson21 owner must be able to edit all 4 private stages");
+const lesson21Audit=readFileSync("curriculum/DEGREE_LESSON21_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson21Audit.includes("5 original degree items")&&
+ lesson21Audit.includes("no additional original")&&
+ lesson21Audit.includes("never publish"),
+ "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson22Gate=readFileSync("supabase/migrations/20261023_step_lesson22_adjectives_adverbs_source_gate.sql","utf8");
+assert(lesson22Gate.includes("total<22")&&
+ lesson22Gate.includes("complete<>6")&&
+ lesson22Gate.includes("step_source_item_reviews")&&
+ lesson22Gate.includes("adjective coverage"),
+ "Lesson22 publish gate must block insufficient adjective questions and repeated stems");
+assert(studio.includes('value="ASGQADJADVCORE"')&&
+ studio.includes('"ASGQADJADVCORE":"adjectives-and-adverbs"')&&
+ adminHome.includes('code:"ASGQADJADVCORE"'),
+ "Lesson22 must remain editable from the protected admin course studio");
+const lesson22Audit=readFileSync("curriculum/ADJECTIVES_ADVERBS_LESSON22_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson22Audit.includes("26 individual bank originals")&&
+ lesson22Audit.includes("18 source-approved independent originals")&&
+ lesson22Audit.includes("4 ambiguous holds")&&
+ lesson22Audit.includes("2 editorial holds"),
+ "Lesson22 must reconcile 26 inspected items into 18 approved, eight held records");
 const lesson20Gate=readFileSync("supabase/migrations/20261023_step_lesson20_articles_countability_source_gate.sql","utf8");
 assert(lesson20Gate.includes("total<20")&&
  lesson20Gate.includes("articles<5 OR quantifiers<15")&&
