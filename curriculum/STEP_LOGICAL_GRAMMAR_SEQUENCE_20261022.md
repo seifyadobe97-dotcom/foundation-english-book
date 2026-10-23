@@ -28,7 +28,7 @@ Release-status update verified against production Supabase on **2026-10-23**: Le
 
 15. أساسيات الأفعال الناقصة — `modals-fundamentals` — position `115` — published
 16. أفعال الاستنتاج والاحتمال — `modals-of-deduction` — position `116` — draft (6 teaching stages; 3 original source-approved items across present/past, protected by a minimum six-question gate)
-17. المبني للمجهول حسب الزمن — `passive-voice-by-tense` — position `117` — published
+17. المبني للمجهول حسب الزمن — `passive-voice-by-tense` — position `117` — draft (19 independent tense MCQs across 8 tense stages; Active-vs-Passive ungraded intro; Future Perfect has only one original and needs a second; Be Supposed To reserved)
 18. المبني للمجهول مع Modals — `modal-passive` — position `118` — draft
 
 ## الأسماء والضمائر والصفات والكمية
