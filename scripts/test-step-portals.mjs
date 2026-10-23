@@ -205,17 +205,24 @@ assert(curriculum.includes("عاين الدرس الأول التفاعلي")&&
  curriculum.includes("state.indicators=(data.indicators||[]).slice().sort("),
  "Admin must display the revised lesson one preview and sort indicators by position");
 const logicalSequence=readFileSync("curriculum/STEP_LOGICAL_GRAMMAR_SEQUENCE_20261022.md","utf8");
-assert(logicalSequence.includes("Lesson **06 — Will / Be Going To** is now an **admin-only private-bank draft**")&&
+assert(logicalSequence.includes("lessons **01–06 are published**")&&
  logicalSequence.includes("`past-continuous` — position `105` — published")&&
+ logicalSequence.includes("`will-be-going-to` — position `106` — published")&&
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
- "Teaching sequence must keep Foundation deferred, publish lessons 01-05, and stage lesson 06");
+ "Teaching sequence must keep Foundation deferred, publish lessons 01-06, and stage lesson 07");
 const lesson06Migration=readFileSync("supabase/migrations/20261023_step_lesson06_private_draft_and_publish_gate.sql","utf8");
 assert(lesson06Migration.includes("step_guard_lesson06_publication")&&
  lesson06Migration.includes("step_source_item_reviews")&&
  lesson06Migration.includes("approved_count <> items_count")&&
  lesson06Migration.includes("step_lesson06_publish_gate"),
  "Lesson 06 publication requires private audited source questions, not sample teaching examples");
+const lesson06Release=readFileSync("supabase/migrations/20261023_step_lesson06_verified_eight_item_release.sql","utf8");
+assert(lesson06Release.includes("IF items_count < 8 THEN")&&
+ lesson06Release.includes("approved_count <> items_count")&&
+ lesson06Release.includes("step_source_item_reviews")&&
+ !lesson06Release.includes("IF items_count < 10 THEN"),
+ "Lesson 06 release must preserve source-matched 8-item minimum and unambiguous private bank gate");
 assert(portal.includes("محاور STEP الأربعة"),"Four axes shown on student dashboard");
 assert(curriculum.includes('function bankSections('),"Bank category review visible in admin");
 assert(curriculum.includes('/curriculum/classifications/link'),"Owner can link bank classifications");
