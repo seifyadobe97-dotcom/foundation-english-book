@@ -129,6 +129,22 @@ assert(lesson35Audit.includes("all 26 printed questions")&&
  lesson35Audit.includes("SCON-018")&&
  lesson35Audit.includes("DRAFT / HOLD"),
  "Lesson35 source review must reconcile 26 originals with 10 approved and three ambiguous holds");
+const lesson40Gate=readFileSync("supabase/migrations/20261024_step_lesson40_question_tags_source_gate.sql","utf8");
+assert(lesson40Gate.includes("total<10")&&
+ lesson40Gate.includes("complete_stages!=4")&&
+ lesson40Gate.includes("step_source_item_reviews")&&
+ lesson40Gate.includes("cross_overlap>0"),
+ "Lesson40 release must be blocked until source-exact Question Tags have complete independent coverage");
+assert(studio.includes('value="ASGQQTAGCORE"')&&
+ studio.includes('"ASGQQTAGCORE":"question-tags"')&&
+ adminHome.includes('code:"ASGQQTAGCORE"'),
+ "Lesson40 Question Tags must be owner-editable as a guarded draft");
+const lesson40Audit=readFileSync("curriculum/QUESTION_TAGS_LESSON40_SOURCE_AUDIT_20261024.md","utf8");
+assert(lesson40Audit.includes("All seven original question occurrences individually reviewed")&&
+ lesson40Audit.includes("4 approved original scored questions")&&
+ lesson40Audit.includes("QTAG-001")&&
+ lesson40Audit.includes("DRAFT — HOLD"),
+ "Lesson40 source review must identify all seven originals, held ambiguous imperative and publishing restriction");
 const lesson39Gate=readFileSync("supabase/migrations/20261024_step_lesson39_indirect_questions_source_gate.sql","utf8");
 assert(lesson39Gate.includes("total<12")&&
  lesson39Gate.includes("full_stages!=5")&&
