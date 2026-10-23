@@ -51,10 +51,11 @@ try{
      {slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",titleAr:"المضارع المستمر",position:103,status:"published"},
      {slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",titleAr:"الماضي البسيط",position:104,status:"published"},
      {slug:"past-continuous",code:"ASGQPACONT",title:"Past Continuous",titleAr:"الماضي المستمر",position:105,status:"published"},
-     {slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",titleAr:"المستقبل بـ Will و Going To",position:106,status:"published"}
+     {slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",titleAr:"المستقبل بـ Will و Going To",position:106,status:"published"},
+     {slug:"future-arrangements",code:"ASGQFUTARR",title:"Future Arrangements",titleAr:"ترتيبات المستقبل والجداول",position:107,status:"draft"}
     ],can_edit:true};
    }else if(endpoint==="/studio"){
-    data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:"published"},
+    data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:selected==="ASGQFUTARR"?"draft":"published"},
      sections:Array.from({length:stages},(_,i)=>({index:i,titleAr:"المرحلة "+(i+1),
       base:{titleAr:"المرحلة "+(i+1),subtitle:"مثال",short:"مثال",duration:"5 دقائق",description:"شرح بسيط"},
       draft:null,published:null,visual_base:{title:"شرح تجريبي",detail:"شرح تجريبي للقاعدة",tip:"بسيط",cards:[],examples:[],formulas:[],keywords:[]},visual_draft:draft,visual_published:published})),
@@ -97,6 +98,11 @@ try{
   await page.locator('[data-tab="questions"]').click();
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===2);
   assert.equal(await page.locator("aside button").count(),2,"Lesson 06 published Studio question editor supports safe synthetic fixture item");
+  await page.locator("#course").selectOption("ASGQFUTARR");
+  await page.locator('[data-tab="visual"]').click();
+  await page.waitForFunction(()=>document.querySelectorAll("aside button").length===5);
+  assert.equal(await page.locator("#course").inputValue(),"ASGQFUTARR");
+  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
   assert.deepEqual(jsErrors,[],"Admin browser errors "+jsErrors.join("; "));
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);
   assert(!overflow,"Horizontal overflow at "+width);

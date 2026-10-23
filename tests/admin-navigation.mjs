@@ -27,9 +27,10 @@ const indicators=[
  {slug:"present-continuous",status:"published"},
   {slug:"past-simple",status:"published"},
   {slug:"past-continuous",status:"published"},
- {slug:"will-be-going-to",status:"published"}
+ {slug:"will-be-going-to",status:"published"},
+ {slug:"future-arrangements",status:"draft"}
 ];
-const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous",ASGQWILLGO:"Will / Be Going To"};
+const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous",ASGQWILLGO:"Will / Be Going To",ASGQFUTARR:"Future Arrangements"};
 try{
  for(const width of [1280,390]){
   const page=await browser.newPage({viewport:{width,height:850}});
@@ -50,12 +51,13 @@ try{
       {slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",titleAr:"المضارع المستمر",status:"published",position:103},
        {slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",titleAr:"الماضي البسيط",status:"published",position:104},
        {slug:"past-continuous",code:"ASGQPACONT",title:"Past Continuous",titleAr:"الماضي المستمر",status:"published",position:105},
-       {slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",titleAr:"المستقبل بـ Will و Going To",status:"published",position:106}
+       {slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",titleAr:"المستقبل بـ Will و Going To",status:"published",position:106},
+       {slug:"future-arrangements",code:"ASGQFUTARR",title:"Future Arrangements",titleAr:"ترتيبات المستقبل والجداول",status:"draft",position:107}
      ],can_edit:true};
     }else if(endpoint==="/studio"){
     const code=url.searchParams.get("course")||"ASGQAGREE";
     const units=code==="ASGQPRSIM"?6:code==="ASGQWILLGO"?7:5;
-    body={course:{code,title:lessonMeta[code],titleAr:"درس تجريبي",subtitle:"",status:"published"},
+    body={course:{code,title:lessonMeta[code],titleAr:"درس تجريبي",subtitle:"",status:code==="ASGQFUTARR"?"draft":"published"},
      sections:Array.from({length:units},(_,i)=>({index:i,titleAr:"مرحلة "+(i+1),
       base:{titleAr:"مرحلة "+(i+1),subtitle:"",short:"",duration:"7 دقائق",
        description:"تعليم تجريبي",rule:[],alternativeRule:[],gold:{},mistake:{},examples:[],tiles:[]},
@@ -66,7 +68,8 @@ try{
   });
   await page.goto(origin+"/step-grammar-admin/",{waitUntil:"domcontentloaded"});
   await page.locator(".home-hero").waitFor({timeout:12000});
-  assert.equal(await page.locator(".home-card").count(),6,"Six admin lesson cards, including unpublished Lesson 06");
+  assert.equal(await page.locator(".home-card").count(),7,"Seven admin lesson cards including Lesson 07 draft");
+  assert.match(await page.locator("#home-status-07").innerText(),/مسودة غير منشورة/,"Lesson 07 must not appear as published");
   assert.match(await page.locator("#home-status-06").innerText(),/منشور للطلاب/,"Lesson 06 must be clearly marked as published");
   assert.equal(await page.locator(".admin-global-nav a").count(),8,"Admin pages use eight unambiguous destinations");
   assert.equal(await page.locator('.admin-global-nav a[aria-current="page"]').innerText().then(x=>x.includes("الرئيسية")),true);
@@ -88,11 +91,16 @@ try{
   await page.goto(origin+"/step-grammar-admin/studio.html?course=ASGQWILLGO&tab=visual",{waitUntil:"domcontentloaded"});
   await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===7);
   assert.equal(await page.locator("#course").inputValue(),"ASGQWILLGO");
+  await page.goto(origin+"/step-grammar-admin/studio.html?course=ASGQFUTARR&tab=visual",{waitUntil:"domcontentloaded"});
+  await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===5);
+  assert.equal(await page.locator("#course").inputValue(),"ASGQFUTARR");
+  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
   assert.match(await page.locator("#course-publication-note").innerText(),/مفتاح|المحتوى الأصلي|معرّفات الأسئلة/);
   assert.equal(await page.locator(".admin-global-nav a[aria-current='page']").innerText().then(x=>x.includes("تعديل الدروس")),true);
   await page.goto(origin+"/step-grammar-admin/sources.html",{waitUntil:"domcontentloaded"});
   await page.locator("#cards:not([hidden])").waitFor();
-  assert.equal(await page.locator(".card").count(),6,"Six source-audit cards, with Lesson 06 clearly marked draft");
+  assert.equal(await page.locator(".card").count(),7,"Seven source-audit cards including Lesson 07 draft");
+  assert.equal(await page.locator('a[href="studio.html?course=ASGQFUTARR&tab=visual"]').count(),1,"Lesson 07 has a visual-editor link");
   assert.equal(await page.locator('a[href="studio.html?course=ASGQWILLGO&tab=questions"]').count(),1,"Lesson 06 source intake uses the unified Studio");
   assert.equal(await page.locator('a[href="past-continuous-audit.html"]').count(),1,"Lesson 5 protected review available");
   assert.equal(await page.locator('a[href="past-audit.html"]').count(),1,"Lesson 4 private audit route is linked");

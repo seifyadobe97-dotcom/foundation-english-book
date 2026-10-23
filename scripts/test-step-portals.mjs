@@ -65,6 +65,10 @@ assert(admin.includes('src="admin-home.js"')&&adminHome.includes('id="nav-lesson
 for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"])
  assert(adminHome.includes(code)&&studio.includes('value="'+code+'"'),
   "Every published lesson must have its own direct editor route: "+code);
+assert(studio.includes('value="ASGQFUTARR"')&&studio.includes('"ASGQFUTARR":"future-arrangements"')&&
+ adminHome.includes('code:"ASGQFUTARR"')&&
+ readFileSync("step-grammar-admin/sources.html","utf8").includes("studio.html?course=ASGQFUTARR&tab=visual"),
+ "Lesson 07 draft and source limitations must be accessible in the unified admin interface");
 assert(studio.includes('value="ASGQWILLGO"')&&studio.includes('"ASGQWILLGO":"will-be-going-to"'),
  "Lesson 06 draft must be selectable in the existing Studio without creating a second editor");
 assert(adminHome.includes('code:"ASGQWILLGO"'),
