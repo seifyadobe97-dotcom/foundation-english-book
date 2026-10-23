@@ -115,6 +115,10 @@ jobs:
         run: node tests/zero-conditional.mjs
       - name: Test Lesson 34 First Conditional synthetic practice on desktop/mobile
         run: node tests/first-conditional.mjs
+      - name: Test Lesson 35 Second Conditional synthetic teaching on desktop/mobile
+        run: node tests/second-conditional.mjs
+      - name: Test Lesson 36 Third Conditional synthetic teaching on desktop/mobile
+        run: node tests/third-conditional.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
