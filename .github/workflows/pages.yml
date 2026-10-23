@@ -83,6 +83,8 @@ jobs:
         run: node tests/modals-fundamentals.mjs
       - name: Test Lesson 17 Passive Voice source-audited teaching and practice on desktop/mobile
         run: node tests/passive-voice-by-tense.mjs
+      - name: Test Lesson 19 Pronouns on desktop/mobile with synthetic mock questions only
+        run: node tests/pronouns.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
