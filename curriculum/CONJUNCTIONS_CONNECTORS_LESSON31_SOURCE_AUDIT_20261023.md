@@ -2,6 +2,9 @@
 
 **Audit date:** 2026-10-23. Indicator `conjunctions-and-connectors`, position 131, private course `ASGQCONNLINK`.
 
+## Precise scope of review
+The five connector categories represented here are Reason, Result, Contrast, Time, and Other Linking Words. This is not a complete review of every original source question in those categories; it is a verified 20-item selection.
+
 ## Sources and scope
 Source: `STEP_Grammar_Question_Bank_Classifications_Audited.pdf` pages **214–228**. Five original classifications: `ASGQLINKCAUSE`, `ASGQLINKRES`, `ASGQLINKCONTRAST`, `ASGQLINKTIME`, `ASGQLINK`.
 
