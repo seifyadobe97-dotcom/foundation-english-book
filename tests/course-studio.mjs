@@ -51,14 +51,14 @@ try{
      {slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",titleAr:"المضارع المستمر",position:103,status:"published"},
      {slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",titleAr:"الماضي البسيط",position:104,status:"published"},
      {slug:"past-continuous",code:"ASGQPACONT",title:"Past Continuous",titleAr:"الماضي المستمر",position:105,status:"published"},
-     {slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",titleAr:"المستقبل بـ Will و Going To",position:106,status:"draft"}
+     {slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",titleAr:"المستقبل بـ Will و Going To",position:106,status:"published"}
     ],can_edit:true};
    }else if(endpoint==="/studio"){
-    data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:selected==="ASGQWILLGO"?"draft":"published"},
+    data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:"published"},
      sections:Array.from({length:stages},(_,i)=>({index:i,titleAr:"المرحلة "+(i+1),
       base:{titleAr:"المرحلة "+(i+1),subtitle:"مثال",short:"مثال",duration:"5 دقائق",description:"شرح بسيط"},
       draft:null,published:null,visual_base:{title:"شرح تجريبي",detail:"شرح تجريبي للقاعدة",tip:"بسيط",cards:[],examples:[],formulas:[],keywords:[]},visual_draft:draft,visual_published:published})),
-     questions:selected==="ASGQWILLGO"?[]:[{id:"TEST-Q01",origin:"source",part_index:0,text:"Synthetic question placeholder",
+     questions:[{id:"TEST-Q01",origin:"source",part_index:0,text:"Synthetic question placeholder",
       options:{A:"alpha",B:"bravo",C:"charlie",D:"delta"},correct:"A",
       explanation:"Synthetic grading example",wrongReasons:{B:"Reason B",C:"Reason C",D:"Reason D"},draft:null,published:false}]};
    }else if(endpoint==="/studio/units/save"){draft=JSON.parse(req.postData()).content;data={ok:true,status:"draft"};}
@@ -93,10 +93,10 @@ try{
   await page.locator("#course").selectOption("ASGQWILLGO");
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===7);
   assert.equal(await page.locator("#course").inputValue(),"ASGQWILLGO");
-  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
+  assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
   await page.locator('[data-tab="questions"]').click();
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===1);
-  assert.equal(await page.locator("aside button").count(),1,"Unreviewed Lesson 06 must not show fabricated graded items");
+  assert.equal(await page.locator("aside button").count(),2,"Lesson 06 published Studio question editor supports safe synthetic fixture item");
   assert.deepEqual(jsErrors,[],"Admin browser errors "+jsErrors.join("; "));
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);
   assert(!overflow,"Horizontal overflow at "+width);
