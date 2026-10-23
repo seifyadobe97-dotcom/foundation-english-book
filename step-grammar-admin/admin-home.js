@@ -38,7 +38,7 @@ window.StepAdminHome={
    {n:"33",slug:"zero-conditional",code:"ASGQZEROCORE",title:"Zero Conditional",ar:"الشرط الصفري",status:"draft"},
    {n:"34",slug:"first-conditional",code:"ASGQFIRSTCORE",title:"First Conditional",ar:"الشرط الأول",status:"published"},
    {n:"35",slug:"second-conditional",code:"ASGQSECONDCORE",title:"Second Conditional",ar:"الشرط الثاني",status:"draft"},
-   {n:"36",slug:"third-conditional",code:"ASGQTHIRDCORE",title:"Third Conditional",ar:"الشرط الثالث",status:"draft"},
+   {n:"36",slug:"third-conditional",code:"ASGQTHIRDCORE",title:"Third Conditional",ar:"الشرط الثالث",status:"published"},
    {n:"37",slug:"wishes-and-unreal-structures",code:"ASGQWISHUNREAL",title:"Wishes & Unreal Structures",ar:"التمني والافتراض",status:"draft"},
    {n:"38",slug:"reported-speech",code:"ASGQREPORTCORE",title:"Reported Speech",ar:"الكلام المنقول",status:"draft"},
    {n:"39",slug:"indirect-questions",code:"ASGQINDQCORE",title:"Indirect Questions",ar:"الأسئلة غير المباشرة",status:"draft"},
