@@ -113,6 +113,22 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson28Gate=readFileSync("supabase/migrations/20261023_step_lesson28_infinitives_source_gate.sql","utf8");
+assert(lesson28Gate.includes("total<20")&&
+ lesson28Gate.includes("full_stages!=4")&&
+ lesson28Gate.includes("step_source_item_reviews")&&
+ lesson28Gate.includes("overlap_count>0"),
+ "Lesson28 release gate must source-verify 20 independent originals and four complete skills");
+assert(studio.includes('value="ASGQINFINCORE"')&&
+ studio.includes('"ASGQINFINCORE":"infinitives"')&&
+ adminHome.includes('code:"ASGQINFINCORE"'),
+ "Lesson28 source-audited To-Infinitive course must have owner Studio route");
+const lesson28Audit=readFileSync("curriculum/INFINITIVES_LESSON28_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson28Audit.includes("45 printed original question occurrences")&&
+ lesson28Audit.includes("20 reviewed original scored MCQs")&&
+ lesson28Audit.includes("INF-018")&&
+ lesson28Audit.includes("INF-042"),
+ "Lesson28 must report all 45 originals, two ambiguous key holds, and 20 scored questions");
 const lesson27Gate=readFileSync("supabase/migrations/20261023_step_lesson27_gerunds_source_gate.sql","utf8");
 assert(lesson27Gate.includes("total<20")&&
  lesson27Gate.includes("stages!=4")&&
