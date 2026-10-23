@@ -964,6 +964,29 @@ assert(reports.includes("followupPanel(")&&reports.includes("wireFollowups("),
 assert(portal.includes("followupCards(")&&portal.includes("markFollowupReviewed("),
  "Student dashboard must render and acknowledge assignments");
 
+// Instructor-only provenance: simulated scored items must never masquerade as original printed questions.
+const blendedMigration=readFileSync("supabase/migrations/20261024_step_source_and_simulated_question_release_gate.sql","utf8");
+const simulationAudit=readFileSync("curriculum/SIMULATED_GRAMMAR_22_LESSONS_RELEASE_AUDIT_20261024.md","utf8");
+assert(blendedMigration.includes("CREATE TABLE IF NOT EXISTS public.step_simulated_item_reviews")&&
+ blendedMigration.includes("ENABLE ROW LEVEL SECURITY")&&
+ blendedMigration.includes("REVOKE ALL ON TABLE public.step_simulated_item_reviews")&&
+ blendedMigration.includes("r.approval_status='approved'")&&
+ blendedMigration.includes("r.original_stem=q.item->>'text'")&&
+ blendedMigration.includes("n_sim_verified<>n_sim")&&
+ blendedMigration.includes("n_source_verified<>n_source"),
+ "Source and instructor-simulated originals need independent, private, fail-closed approvals");
+assert(simulationAudit.includes("**191**")&&
+ simulationAudit.includes("**143**")&&
+ simulationAudit.includes("105 assessed sections")&&
+ simulationAudit.includes("two separate private provenance channels"),
+ "All previously draft grammar lessons must have a reconciled synthetic-versus-printed ledger");
+assert(adminServer.includes('original.origin==="simulated"?"simulated":"source"')&&
+ studio.includes('q.origin==="simulated"?"سؤال محاكي')&&
+ studio.includes("سؤال محاكي معتمد داخليًا"),
+ "Owner Studio must clearly flag simulated questions and distinguish original-source identity");
+assert(courseServer.includes('const serializeQ=(id:string,questions:QuestionMap,publicId:string)=>({id:publicId,text:questions[id].text,options:questions[id].options})'),
+ "Student public question serializer must omit simulated/source provenance and private answer key");
+
 const brandedPages=[
  "step-grammar-account-preview/index.html","step-grammar-student/index.html",
  "step-grammar-student/learn.html","step-grammar-student/lesson-v2.html",
