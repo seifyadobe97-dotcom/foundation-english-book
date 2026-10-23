@@ -100,6 +100,7 @@ try{
   await page.locator("#course").selectOption("ASGQPRSIM");
   await page.locator('[data-tab="visual"]').click();
   await page.locator("#v-title").waitFor();
+  await page.waitForFunction(()=>document.querySelectorAll("aside button").length===6);
   assert.equal(await page.locator("aside button").count(),6);
   await page.locator("#course").selectOption("ASGQWILLGO");
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===7);
