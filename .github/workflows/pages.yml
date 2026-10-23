@@ -91,6 +91,8 @@ jobs:
         run: node tests/quantity-degree.mjs
       - name: Test Lesson 22 Adjectives and Adverbs synthetic practice on desktop/mobile
         run: node tests/adjectives-adverbs.mjs
+      - name: Test Lesson 23 Comparatives and Superlatives synthetic practice on desktop/mobile
+        run: node tests/comparatives-superlatives.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
