@@ -196,9 +196,11 @@ assert(curriculum.includes("عاين الدرس الأول التفاعلي")&&
  curriculum.includes("state.indicators=(data.indicators||[]).slice().sort("),
  "Admin must display the revised lesson one preview and sort indicators by position");
 const logicalSequence=readFileSync("curriculum/STEP_LOGICAL_GRAMMAR_SEQUENCE_20261022.md","utf8");
-assert(logicalSequence.includes("Present Continuous (Lesson 03)")&&
- logicalSequence.includes("sentence-elements")&&logicalSequence.includes("position `999`"),
- "Teaching sequence must keep Foundation deferred and specify lesson 3");
+assert(logicalSequence.includes("next planned grammar lesson is **06 — Will / Be Going To**")&&
+ logicalSequence.includes("`past-continuous` — position `105` — published")&&
+ logicalSequence.includes("`sentence-elements` stays **draft**")&&
+ logicalSequence.includes("position `999`"),
+ "Teaching sequence must keep Foundation deferred, publish lessons 01-05, and stage lesson 06");
 assert(portal.includes("محاور STEP الأربعة"),"Four axes shown on student dashboard");
 assert(curriculum.includes('function bankSections('),"Bank category review visible in admin");
 assert(curriculum.includes('/curriculum/classifications/link'),"Owner can link bank classifications");
