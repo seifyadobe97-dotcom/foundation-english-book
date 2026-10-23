@@ -113,6 +113,22 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson26Gate=readFileSync("supabase/migrations/20261023_step_lesson26_word_formation_source_gate.sql","utf8");
+assert(lesson26Gate.includes("question_count<12")&&
+ lesson26Gate.includes("taxonomy.indicator_slug='word-formation'")&&
+ lesson26Gate.includes("step_source_item_reviews")&&
+ lesson26Gate.includes("complete_stages!=5"),
+ "Lesson26 must refuse publication with no mapped source taxonomy and fewer than 12 audited MCQs");
+assert(studio.includes('value="ASGQWORDFORM"')&&
+ studio.includes('"ASGQWORDFORM":"word-formation"')&&
+ adminHome.includes('code:"ASGQWORDFORM"')&&
+ adminHome.includes('status:"draft"'),
+ "Lesson26 must be an editable private draft, never an invented question bank");
+const lesson26Audit=readFileSync("curriculum/WORD_FORMATION_LESSON26_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson26Audit.includes("Five teaching stages with 20 instructor-authored worked examples")&&
+ lesson26Audit.includes("0 original questions")&&
+ lesson26Audit.includes("DRAFT"),
+ "Lesson26 must acknowledge absent source MCQs, while preserving book-grounded teaching");
 const lesson25Gate=readFileSync("supabase/migrations/20261023_step_lesson25_collocations_source_gate.sql","utf8");
 assert(lesson25Gate.includes("total<12")&&
  lesson25Gate.includes("stages!=4")&&
