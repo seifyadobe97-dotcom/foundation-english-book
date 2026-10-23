@@ -129,6 +129,8 @@ jobs:
         run: node tests/question-tags.mjs
       - name: Test Lesson 41 So and Neither Agreement mobile and desktop practice
         run: node tests/so-neither-agreement.mjs
+      - name: Test Lesson 42 Advanced Conditionals synthetic lesson mobile/desktop
+        run: node tests/advanced-conditionals.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
