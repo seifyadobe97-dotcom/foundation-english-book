@@ -113,6 +113,22 @@ assert(lesson21Audit.includes("5 original degree items")&&
  lesson21Audit.includes("no additional original")&&
  lesson21Audit.includes("never publish"),
  "Lesson21 report must explicitly document lack of So ... That scored originals");
+const lesson34Gate=readFileSync("supabase/migrations/20261023_step_lesson34_first_conditional_source_gate.sql","utf8");
+assert(lesson34Gate.includes("total<16")&&
+ lesson34Gate.includes("stages!=3")&&
+ lesson34Gate.includes("step_source_item_reviews")&&
+ lesson34Gate.includes("overlap_count>0"),
+ "Lesson34 only publishes with 16 exact reviewed originals and all three scored conditions");
+assert(studio.includes('value="ASGQFIRSTCORE"')&&
+ studio.includes('"ASGQFIRSTCORE":"first-conditional"')&&
+ adminHome.includes('code:"ASGQFIRSTCORE"'),
+ "Lesson34 owner Studio and admin draft navigation must be wired");
+const lesson34Audit=readFileSync("curriculum/FIRST_CONDITIONAL_LESSON34_SOURCE_AUDIT_20261023.md","utf8");
+assert(lesson34Audit.includes("23 individually selected source candidates")&&
+ lesson34Audit.includes("16 original source-exact approved MCQs")&&
+ lesson34Audit.includes("6 ambiguity holds")&&
+ lesson34Audit.includes("not** a full audit"),
+ "Lesson34 must document limited audit scope, six ambiguous options and 16 approved originals");
 const lesson33Gate=readFileSync("supabase/migrations/20261023_step_lesson33_zero_conditional_source_gate.sql","utf8");
 assert(lesson33Gate.includes("total<10")&&
  lesson33Gate.includes("complete_stages!=3")&&
