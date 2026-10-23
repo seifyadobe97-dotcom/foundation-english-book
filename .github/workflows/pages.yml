@@ -95,6 +95,8 @@ jobs:
         run: node tests/comparatives-superlatives.mjs
       - name: Test Lesson 24 prepositions of time/place synthetic practice on desktop/mobile
         run: node tests/prepositions-time-place.mjs
+      - name: Test Lesson 25 Collocations synthetic practice on desktop/mobile
+        run: node tests/preposition-collocations.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
