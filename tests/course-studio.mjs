@@ -62,10 +62,10 @@ try{
       {slug:"used-to-be-used-to-get-used-to",code:"ASGQUSED",title:"Used To / Be Used To / Get Used To",titleAr:"العادة الماضية والتعود",position:114,status:"draft"},
       {slug:"modals-fundamentals",code:"ASGQMODCORE",title:"Modals Fundamentals",titleAr:"أساسيات الأفعال الناقصة",position:115,status:"published"},
       {slug:"modals-of-deduction",code:"ASGQMODDEDUCT",title:"Modals of Deduction & Possibility",titleAr:"أفعال الاستنتاج والاحتمال",position:116,status:"draft"},
-      {slug:"passive-voice-by-tense",code:"ASGQPSVCORE",title:"Passive Voice by Tense",titleAr:"المبني للمجهول حسب الزمن",position:117,status:"published"}
+      {slug:"passive-voice-by-tense",code:"ASGQPSVCORE",title:"Passive Voice by Tense",titleAr:"المبني للمجهول حسب الزمن",position:117,status:"draft"}
     ],can_edit:true};
    }else if(endpoint==="/studio"){
-    data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:selected==="ASGQFUTARR"||selected==="ASGQPAPERCONT"||selected==="ASGQFUCOMBO"||selected==="ASGQUSED"||selected==="ASGQMODDEDUCT"?"draft":"published"},
+    data={can_edit:true,course:{code:selected,title:"Test Lesson",titleAr:"الدرس التجريبي",subtitle:"Mock",status:selected==="ASGQFUTARR"||selected==="ASGQPAPERCONT"||selected==="ASGQFUCOMBO"||selected==="ASGQUSED"||selected==="ASGQMODDEDUCT"||selected==="ASGQPSVCORE"?"draft":"published"},
      sections:Array.from({length:stages},(_,i)=>({index:i,titleAr:"المرحلة "+(i+1),
       base:{titleAr:"المرحلة "+(i+1),subtitle:"مثال",short:"مثال",duration:"5 دقائق",description:"شرح بسيط"},
       draft:null,published:null,visual_base:{title:"شرح تجريبي",detail:"شرح تجريبي للقاعدة",tip:"بسيط",cards:[],examples:[],formulas:[],keywords:[]},visual_draft:draft,visual_published:published})),
@@ -149,7 +149,7 @@ try{
   await page.locator("#course").selectOption("ASGQPSVCORE");
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===9);
   assert.equal(await page.locator("#course").inputValue(),"ASGQPSVCORE");
-  assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
+  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
 
   assert.deepEqual(jsErrors,[],"Admin browser errors "+jsErrors.join("; "));
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);
