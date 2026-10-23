@@ -129,6 +129,22 @@ assert(lesson35Audit.includes("all 26 printed questions")&&
  lesson35Audit.includes("SCON-018")&&
  lesson35Audit.includes("DRAFT / HOLD"),
  "Lesson35 source review must reconcile 26 originals with 10 approved and three ambiguous holds");
+const lesson41Gate=readFileSync("supabase/migrations/20261024_step_lesson41_so_neither_source_gate.sql","utf8");
+assert(lesson41Gate.includes("total<12")&&
+ lesson41Gate.includes("complete_stages!=5")&&
+ lesson41Gate.includes("step_source_item_reviews")&&
+ lesson41Gate.includes("cross_overlap>0"),
+ "Lesson41 must reject a So-Neither release with incomplete original positive agreement source coverage");
+assert(studio.includes('value="ASGQSONEITHERCORE"')&&
+ studio.includes('"ASGQSONEITHERCORE":"so-neither-agreement"')&&
+ adminHome.includes('code:"ASGQSONEITHERCORE"'),
+ "Lesson41 must remain owner editable while held");
+const lesson41Audit=readFileSync("curriculum/SO_NEITHER_LESSON41_SOURCE_AUDIT_20261024.md","utf8");
+assert(lesson41Audit.includes("All fourteen printed occurrences reviewed")&&
+ lesson41Audit.includes("5 approved, independently graded originals")&&
+ lesson41Audit.includes("SN-005")&&
+ lesson41Audit.includes("DRAFT — HOLD"),
+ "Lesson41 source audit must account for all 14 originals and unsafe double negatives");
 const lesson40Gate=readFileSync("supabase/migrations/20261024_step_lesson40_question_tags_source_gate.sql","utf8");
 assert(lesson40Gate.includes("total<10")&&
  lesson40Gate.includes("complete_stages!=4")&&
