@@ -26,9 +26,10 @@ const indicators=[
  {slug:"present-simple",status:"published"},
  {slug:"present-continuous",status:"published"},
   {slug:"past-simple",status:"published"},
-  {slug:"past-continuous",status:"published"}
+  {slug:"past-continuous",status:"published"},
+ {slug:"will-be-going-to",status:"draft"}
 ];
-const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous"};
+const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous",ASGQWILLGO:"Will / Be Going To"};
 try{
  for(const width of [1280,390]){
   const page=await browser.newPage({viewport:{width,height:850}});
@@ -48,12 +49,13 @@ try{
       {slug:"present-simple",code:"ASGQPRSIM",title:"Present Simple",titleAr:"المضارع البسيط",status:"published",position:102},
       {slug:"present-continuous",code:"ASGQPRCONT",title:"Present Continuous",titleAr:"المضارع المستمر",status:"published",position:103},
        {slug:"past-simple",code:"ASGQPASIM",title:"Past Simple",titleAr:"الماضي البسيط",status:"published",position:104},
-       {slug:"past-continuous",code:"ASGQPACONT",title:"Past Continuous",titleAr:"الماضي المستمر",status:"published",position:105}
+       {slug:"past-continuous",code:"ASGQPACONT",title:"Past Continuous",titleAr:"الماضي المستمر",status:"published",position:105},
+       {slug:"will-be-going-to",code:"ASGQWILLGO",title:"Will / Be Going To",titleAr:"المستقبل بـ Will و Going To",status:"draft",position:106}
      ],can_edit:true};
     }else if(endpoint==="/studio"){
     const code=url.searchParams.get("course")||"ASGQAGREE";
-    const units=code==="ASGQPRSIM"?6:5;
-    body={course:{code,title:lessonMeta[code],titleAr:"درس تجريبي",subtitle:"",status:"published"},
+    const units=code==="ASGQPRSIM"?6:code==="ASGQWILLGO"?7:5;
+    body={course:{code,title:lessonMeta[code],titleAr:"درس تجريبي",subtitle:"",status:code==="ASGQWILLGO"?"draft":"published"},
      sections:Array.from({length:units},(_,i)=>({index:i,titleAr:"مرحلة "+(i+1),
       base:{titleAr:"مرحلة "+(i+1),subtitle:"",short:"",duration:"7 دقائق",
        description:"تعليم تجريبي",rule:[],alternativeRule:[],gold:{},mistake:{},examples:[],tiles:[]},
@@ -64,12 +66,14 @@ try{
   });
   await page.goto(origin+"/step-grammar-admin/",{waitUntil:"domcontentloaded"});
   await page.locator(".home-hero").waitFor({timeout:12000});
-  assert.equal(await page.locator(".home-card").count(),5,"Five admin lesson cards from current catalog");
+  assert.equal(await page.locator(".home-card").count(),6,"Six admin lesson cards, including unpublished Lesson 06");
+  assert.match(await page.locator("#home-status-06").innerText(),/مسودة غير منشورة/,"Lesson 06 must be clearly marked as unpublished");
   assert.equal(await page.locator(".admin-global-nav a").count(),8,"Admin pages use eight unambiguous destinations");
   assert.equal(await page.locator('.admin-global-nav a[aria-current="page"]').innerText().then(x=>x.includes("الرئيسية")),true);
   const lesson3Link=page.locator('a[href="studio.html?course=ASGQPRCONT&tab=questions"]').first();
   assert.equal(await page.locator('a[href="studio.html?course=ASGQPASIM&tab=questions"]').count(),1,"Past Simple has its own Studio editing button");
   assert.equal(await lesson3Link.count(),1,"Lesson 3 answer-edit button deep-links to the correct course");
+  assert.equal(await page.locator('a[href="studio.html?course=ASGQWILLGO&tab=visual"]').count(),1,"Lesson 06 has a direct Studio route");
   const links=await page.locator(".admin-global-nav a").evaluateAll(xs=>xs.map(x=>new URL(x.getAttribute("href"),location.href).pathname));
   assert(links.every(x=>x.includes("step-grammar-admin")),"All admin navigation stays inside admin workspace");
   assert(!(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2)),"Home layout does not overflow "+width+"px");
@@ -81,6 +85,10 @@ try{
     .catch(async error=>{throw Error("Studio route failed; errors="+JSON.stringify(errors)+
       "; body="+(await page.locator("body").innerText()).slice(-500)+"; "+String(error));});
   assert.equal(await page.locator("#course").inputValue(),"ASGQPRCONT");
+  await page.goto(origin+"/step-grammar-admin/studio.html?course=ASGQWILLGO&tab=visual",{waitUntil:"domcontentloaded"});
+  await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===7);
+  assert.equal(await page.locator("#course").inputValue(),"ASGQWILLGO");
+  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
   assert.equal(await page.locator(".admin-global-nav a[aria-current='page']").innerText().then(x=>x.includes("تعديل الدروس")),true);
   await page.goto(origin+"/step-grammar-admin/sources.html",{waitUntil:"domcontentloaded"});
   await page.locator("#cards:not([hidden])").waitFor();
