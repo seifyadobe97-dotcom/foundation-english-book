@@ -852,7 +852,7 @@ Deno.serve(async(req)=>{
    const useEdit=edit?.status==="published";
    const visible=useEdit?{text:edit.question_text,options:edit.options,correct:edit.correct,
     explanation:edit.explanation,wrongReasons:edit.wrong_reasons||original?.wrongReasons||{}}:original;
-   return {id,origin:original?"source":"custom",part_index:original?partIds.get(id):edit?.part_index??draft?.part_index,
+   return {id,origin:original?(original.origin==="simulated"?"simulated":"source"):"custom",part_index:original?partIds.get(id):edit?.part_index??draft?.part_index,
     text:visible?.text||"",options:visible?.options||{},correct:visible?.correct||"A",
     explanation:visible?.explanation||"",wrongReasons:visible?.wrongReasons||{},
     published:!!useEdit,draft,archived:!original&&edit?.status==="archived"};
