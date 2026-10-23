@@ -103,11 +103,12 @@ try{
   await page.locator('[data-tab="visual"]').click();
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===5);
   assert.equal(await page.locator("#course").inputValue(),"ASGQFUTARR");
+  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
   await page.locator("#course").selectOption("ASGQTIMCL");
   await page.waitForFunction(()=>document.querySelectorAll("aside button").length===5);
   assert.equal(await page.locator("#course").inputValue(),"ASGQTIMCL");
   assert.match(await page.locator("#course-publication-note").innerText(),/المحتوى الأصلي|معرّفات الأسئلة/);
-  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
+
   assert.deepEqual(jsErrors,[],"Admin browser errors "+jsErrors.join("; "));
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2);
   assert(!overflow,"Horizontal overflow at "+width);
