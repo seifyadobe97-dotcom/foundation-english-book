@@ -39,7 +39,7 @@ p{margin:6px 0 14px;color:var(--muted)}.panel{border:1px solid var(--line);borde
 <select class="lesson-select" id="course" aria-label="اختيار الدرس">
 <option value="ASGQAGREE">الدرس 1 — Subject–Verb Agreement</option>
 <option value="ASGQPRSIM">الدرس 2 — Present Simple</option>
-<option value="ASGQPRCONT">الدرس 3 — Present Continuous</option><option value="ASGQPASIM">الدرس 4 — Past Simple</option><option value="ASGQPACONT">الدرس 5 — Past Continuous</option></select></div>
+<option value="ASGQPRCONT">الدرس 3 — Present Continuous</option><option value="ASGQPASIM">الدرس 4 — Past Simple</option><option value="ASGQPACONT">الدرس 5 — Past Continuous</option><option value="ASGQWILLGO">الدرس 6 — Will / Be Going To · مسودة</option></select></div>
 <div class="tabs" id="tabs">
 <button class="btn active" data-tab="visual">الشرح والأمثلة والجداول</button>
 <button class="btn" data-tab="sections">عناوين ومراحل التدريب</button>
@@ -48,7 +48,7 @@ p{margin:6px 0 14px;color:var(--muted)}.panel{border:1px solid var(--line);borde
 <button class="btn" data-tab="history">سجل النسخ والرجوع</button></div>
 <div id="dirty-label" class="dirty-label" role="status">في تعديلات لسه ما اتحفظتش</div>
 <div id="msg" role="status" aria-live="polite"></div>
-<div class="note">المحتوى الأصلي وسجل الأسئلة محفوظين. «حفظ مسودة» لا يغيّر نسخة الطالب؛ «نشر التعديل» يفعّله فورًا. معرّفات الأسئلة وعدد المراحل والدرجات القديمة محمية.</div>
+<div class="note" id="course-publication-note">المحتوى الأصلي وسجل الأسئلة محفوظين. «حفظ مسودة» لا يغيّر نسخة الطالب؛ «نشر التعديل» يفعّله فورًا. معرّفات الأسئلة وعدد المراحل والدرجات القديمة محمية.</div>
 <section class="grid" id="work"><div class="panel">جاري التحقق من صلاحيات الإدارة وتحميل الدروس…</div></section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
@@ -69,9 +69,9 @@ const sourceUnits=()=>({"ASGQAGREE":window.STEP_SUBJECT_VERB_UNITS,"ASGQPRSIM":w
  "ASGQPRCONT":window.STEP_PRESENT_CONTINUOUS_UNITS,"ASGQPASIM":window.STEP_PAST_SIMPLE_UNITS}[courseSelect.value]||
  state.data?.sections?.map(s=>s.visual_base)||[]);
 const courseSlug=()=>courseCatalog.find(x=>x.code===courseSelect.value)?.slug||
- ({"ASGQAGREE":"subject-verb-agreement","ASGQPRSIM":"present-simple","ASGQPRCONT":"present-continuous","ASGQPASIM":"past-simple","ASGQPACONT":"past-continuous"}[courseSelect.value]||"");
+ ({"ASGQAGREE":"subject-verb-agreement","ASGQPRSIM":"present-simple","ASGQPRCONT":"present-continuous","ASGQPASIM":"past-simple","ASGQPACONT":"past-continuous","ASGQWILLGO":"will-be-going-to"}[courseSelect.value]||"");
 const params=new URLSearchParams(location.search);
-const allowedCourses=["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"];
+const allowedCourses=["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT","ASGQWILLGO"];
 const allowedTabs=["visual","sections","questions","course","history"];
 if(allowedCourses.includes(params.get("course")))courseSelect.value=params.get("course");
 const state={data:null,tab:allowedTabs.includes(params.get("tab"))?params.get("tab"):"visual",index:0,questionId:null,dirty:false};
@@ -133,6 +133,10 @@ async function load(){
  work.innerHTML='<div class="panel">جاري تحميل محتوى الدرس…</div>';
  try{
   state.data=await api("/studio?course="+encodeURIComponent(courseSelect.value));
+  const publicationNote=document.getElementById("course-publication-note");
+  if(publicationNote)publicationNote.textContent=state.data.course?.status==="draft"?
+   "الدرس مسودة داخلية غير ظاهرة للطلاب. تقدر تعدل الشرح وتحفظه، لكن لن يُفتح مسار الطالب قبل توثيق أسئلة المصدر واعتماد نشر المؤشر.":
+   "المحتوى الأصلي وسجل الأسئلة محفوظين. «حفظ مسودة» لا يغيّر نسخة الطالب؛ «نشر التعديل» يفعّله فورًا. معرّفات الأسئلة وعدد المراحل والدرجات القديمة محمية.";
   state.index=0;state.questionId=null;
   document.getElementById("videos-link").href="videos.html?indicator="+courseSlug();
   paint();

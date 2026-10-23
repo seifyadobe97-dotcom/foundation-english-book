@@ -2,7 +2,7 @@
 
 Date: 2026-10-22. This is a pedagogical teaching order, NOT the original course book's chapter order. No exam questions, keys, source classification codes, student attempt records or publishing decisions are changed by changing lesson positions.
 
-Release-status update verified against production Supabase on **2026-10-23**: lessons **01–05 are published**. The next planned grammar lesson is **06 — Will / Be Going To**. The original teaching order remains unchanged.
+Release-status update verified against production Supabase on **2026-10-23**: lessons **01–05 are published**. Lesson **06 — Will / Be Going To** is now an **admin-only private-bank draft**, still unpublished to students while its original questions are audited. The next lesson to release remains **06**. The original teaching order remains unchanged.
 
 ## أساس الفعل والأزمنة الأولى
 

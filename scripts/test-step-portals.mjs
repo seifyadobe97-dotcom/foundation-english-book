@@ -65,6 +65,10 @@ assert(admin.includes('src="admin-home.js"')&&adminHome.includes('id="nav-lesson
 for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"])
  assert(adminHome.includes(code)&&studio.includes('value="'+code+'"'),
   "Every published lesson must have its own direct editor route: "+code);
+assert(studio.includes('value="ASGQWILLGO"')&&studio.includes('"ASGQWILLGO":"will-be-going-to"'),
+ "Lesson 06 draft must be selectable in the existing Studio without creating a second editor");
+assert(adminHome.includes('code:"ASGQWILLGO"'),
+ "Lesson 06 draft should have a fallback admin dashboard entry");
 for(const tab of ["visual","sections","questions","course"])
  assert(studio.includes('data-tab="'+tab+'"')&&studio.includes('allowedTabs.includes(params.get("tab"))'),
   "Studio must open each editing tab directly");
@@ -201,6 +205,12 @@ assert(logicalSequence.includes("next planned grammar lesson is **06 — Will / 
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
  "Teaching sequence must keep Foundation deferred, publish lessons 01-05, and stage lesson 06");
+const lesson06Migration=readFileSync("supabase/migrations/20261023_step_lesson06_private_draft_and_publish_gate.sql","utf8");
+assert(lesson06Migration.includes("step_guard_lesson06_publication")&&
+ lesson06Migration.includes("step_source_item_reviews")&&
+ lesson06Migration.includes("approved_count <> items_count")&&
+ lesson06Migration.includes("step_lesson06_publish_gate"),
+ "Lesson 06 publication requires private audited source questions, not sample teaching examples");
 assert(portal.includes("محاور STEP الأربعة"),"Four axes shown on student dashboard");
 assert(curriculum.includes('function bankSections('),"Bank category review visible in admin");
 assert(curriculum.includes('/curriculum/classifications/link'),"Owner can link bank classifications");
