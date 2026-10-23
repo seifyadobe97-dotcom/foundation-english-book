@@ -131,6 +131,8 @@ jobs:
         run: node tests/so-neither-agreement.mjs
       - name: Test Lesson 42 Advanced Conditionals synthetic lesson mobile/desktop
         run: node tests/advanced-conditionals.mjs
+      - name: Test Lesson 43 Question Formation synthetic grading on desktop/mobile
+        run: node tests/question-formation.mjs
       - name: Test organized admin dashboard and lesson editor links
         run: node tests/admin-navigation.mjs
       - name: Test unified STEP admin course editor on desktop and mobile
