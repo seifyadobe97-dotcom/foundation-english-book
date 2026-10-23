@@ -7,6 +7,8 @@
 
 We examined all 29 printed original question occurrences, selected 18 exact-source scored originals, and verified zero overlap with other private graded lesson banks.
 
+For explicit identification, source item TCON-028 is the reviewed past-perfect passive case; its exact stem, answer key, and four options remain Supabase-private.
+
 ## Individual source ledger reconciliation
 | Status | Count |
 | --- | ---: |
