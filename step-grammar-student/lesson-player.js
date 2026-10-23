@@ -265,7 +265,7 @@ function practice(){
 function examBanner(){
  const ready=state.course.completed;
  return '<section class="end-card"><div class="eyebrow">THE FINAL STEP</div><h2>اختبار الإتقان</h2>'+
- '<p>'+(ready?'جاهز تتأكد إنك فهمت القاعدة؟ نتيجتك هتتحفظ في حسابك.':'اختبار الإتقان بيتفتح بعد اجتياز المراحل الخمسة.')+'</p>'+
+ '<p>'+(ready?'جاهز تتأكد إنك فهمت القاعدة؟ نتيجتك هتتحفظ في حسابك.':'اختبار الإتقان بيتفتح بعد اجتياز جميع مراحل الدرس.')+'</p>'+
  '<button class="button '+(ready?'green':'secondary')+'" data-action="exam" '+(ready?'':'disabled')+'>ابدأ الاختبار ←</button></section>';
 }
 function examView(){
