@@ -22,7 +22,7 @@ Release-status update verified against production Supabase on **2026-10-23**: Le
 11. الماضي التام — `past-perfect` — position `111` — published
 12. الماضي التام المستمر — `past-perfect-continuous` — position `112` — draft (five-stage private lesson; two approved originals; blocked pending five independent MCQs)
 13. المستقبل المستمر والتام — `future-continuous-future-perfect` — position `113` — draft (six-stage admin-only course; two source-approved Future Perfect items, no uniquely approved Future Continuous items; publication blocked)
-14. Used To / Be Used To / Get Used To — `used-to-be-used-to-get-used-to` — position `114` — draft
+14. Used To / Be Used To / Get Used To — `used-to-be-used-to-get-used-to` — position `114` — draft (7 teaching stages, 28 authored examples, 10 approved past-used-to source originals; awaits >=3 audited be-used-to and >=3 get-used-to questions)
 
 ## الأفعال الناقصة والمبني للمجهول
 
