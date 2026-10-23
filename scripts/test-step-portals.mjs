@@ -129,6 +129,22 @@ assert(lesson35Audit.includes("all 26 printed questions")&&
  lesson35Audit.includes("SCON-018")&&
  lesson35Audit.includes("DRAFT / HOLD"),
  "Lesson35 source review must reconcile 26 originals with 10 approved and three ambiguous holds");
+const lesson42Gate=readFileSync("supabase/migrations/20261024_step_lesson42_advanced_conditionals_source_gate.sql","utf8");
+assert(lesson42Gate.includes("total<9")&&
+ lesson42Gate.includes("fully_scored!=3")&&
+ lesson42Gate.includes("step_source_item_reviews")&&
+ lesson42Gate.includes("cross_overlap>0"),
+ "Lesson42 must hold mixed and inverted conditional grading until nine audited originals cover all skills");
+assert(studio.includes('value="ASGQADVCOND"')&&
+ studio.includes('"ASGQADVCOND":"advanced-conditionals"')&&
+ adminHome.includes('code:"ASGQADVCOND"'),
+ "Lesson42 must be reachable only through editable owner Studio while draft");
+const lesson42Audit=readFileSync("curriculum/ADVANCED_CONDITIONALS_LESSON42_SOURCE_AUDIT_20261024.md","utf8");
+assert(lesson42Audit.includes("five printed occurrences")&&
+ lesson42Audit.includes("2 approved source-exact independent originals")&&
+ lesson42Audit.includes("2 ambiguity holds")&&
+ lesson42Audit.includes("1 wrong-category rejection"),
+ "Lesson42 audit must reconcile exact printed Mixed/Inverse Conditional source groups");
 const lesson41Gate=readFileSync("supabase/migrations/20261024_step_lesson41_so_neither_source_gate.sql","utf8");
 assert(lesson41Gate.includes("total<12")&&
  lesson41Gate.includes("complete_stages!=5")&&
