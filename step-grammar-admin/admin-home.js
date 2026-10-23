@@ -26,7 +26,8 @@ window.StepAdminHome={
    {n:"21",slug:"quantity-degree",code:"ASGQDEGREE",title:"Too / Enough / So ... That",ar:"تراكيب الدرجة والكفاية",status:"draft"},
    {n:"22",slug:"adjectives-and-adverbs",code:"ASGQADJADVCORE",title:"Adjectives and Adverbs",ar:"الصفات والظروف",status:"draft"},
    {n:"23",slug:"comparatives-superlatives",code:"ASGQCOMPSUP",title:"Comparatives & Superlatives",ar:"المقارنة والتفضيل",status:"published"},
-   {n:"24",slug:"prepositions-of-time-and-place",code:"ASGQPREPTIME",title:"Prepositions of Time and Place",ar:"حروف الجر للزمان والمكان",status:"draft"}
+   {n:"24",slug:"prepositions-of-time-and-place",code:"ASGQPREPTIME",title:"Prepositions of Time and Place",ar:"حروف الجر للزمان والمكان",status:"published"},
+   {n:"25",slug:"preposition-collocations",code:"ASGQCOLLOCPREP",title:"Preposition Collocations",ar:"تلازم الأفعال وحروف الجر",status:"draft"}
   ];
   // Dashboard is driven by the same canonical index as Studio; new audited courses appear automatically.
   try{
