@@ -33,9 +33,10 @@ const indicators=[
  {slug:"present-perfect",status:"published"},
  {slug:"present-perfect-continuous",status:"published"},
  {slug:"past-perfect",status:"published"},
- {slug:"past-perfect-continuous",status:"draft"}
+ {slug:"past-perfect-continuous",status:"draft"},
+ {slug:"future-continuous-future-perfect",status:"draft"}
 ];
-const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous",ASGQWILLGO:"Will / Be Going To",ASGQFUTARR:"Future Arrangements",ASGQTIMCL:"Future Time Clauses",ASGQPRPER:"Present Perfect",ASGQPRPERCONT:"Present Perfect Continuous",ASGQPAPER:"Past Perfect",ASGQPAPERCONT:"Past Perfect Continuous"};
+const lessonMeta={ASGQAGREE:"Subject–Verb Agreement",ASGQPRSIM:"Present Simple",ASGQPRCONT:"Present Continuous",ASGQPASIM:"Past Simple",ASGQPACONT:"Past Continuous",ASGQWILLGO:"Will / Be Going To",ASGQFUTARR:"Future Arrangements",ASGQTIMCL:"Future Time Clauses",ASGQPRPER:"Present Perfect",ASGQPRPERCONT:"Present Perfect Continuous",ASGQPAPER:"Past Perfect",ASGQPAPERCONT:"Past Perfect Continuous",ASGQFUCOMBO:"Future Continuous & Future Perfect"};
 try{
  for(const width of [1280,390]){
   const page=await browser.newPage({viewport:{width,height:850}});
@@ -62,12 +63,13 @@ try{
        {slug:"present-perfect",code:"ASGQPRPER",title:"Present Perfect",titleAr:"المضارع التام",status:"published",position:109},
         {slug:"present-perfect-continuous",code:"ASGQPRPERCONT",title:"Present Perfect Continuous",titleAr:"المضارع التام المستمر",status:"published",position:110},
         {slug:"past-perfect",code:"ASGQPAPER",title:"Past Perfect",titleAr:"الماضي التام",status:"published",position:111},
-        {slug:"past-perfect-continuous",code:"ASGQPAPERCONT",title:"Past Perfect Continuous",titleAr:"الماضي التام المستمر",status:"draft",position:112}
+        {slug:"past-perfect-continuous",code:"ASGQPAPERCONT",title:"Past Perfect Continuous",titleAr:"الماضي التام المستمر",status:"draft",position:112},
+        {slug:"future-continuous-future-perfect",code:"ASGQFUCOMBO",title:"Future Continuous & Future Perfect",titleAr:"المستقبل المستمر والمستقبل التام",status:"draft",position:113}
      ],can_edit:true};
     }else if(endpoint==="/studio"){
     const code=url.searchParams.get("course")||"ASGQAGREE";
-    const units=code==="ASGQPRSIM"||code==="ASGQPAPER"?6:code==="ASGQWILLGO"||code==="ASGQPRPER"||code==="ASGQPRPERCONT"?7:5;
-    body={course:{code,title:lessonMeta[code],titleAr:"درس تجريبي",subtitle:"",status:code==="ASGQFUTARR"||code==="ASGQPAPERCONT"?"draft":"published"},
+    const units=code==="ASGQPRSIM"||code==="ASGQPAPER"||code==="ASGQFUCOMBO"?6:code==="ASGQWILLGO"||code==="ASGQPRPER"||code==="ASGQPRPERCONT"?7:5;
+    body={course:{code,title:lessonMeta[code],titleAr:"درس تجريبي",subtitle:"",status:code==="ASGQFUTARR"||code==="ASGQPAPERCONT"||code==="ASGQFUCOMBO"?"draft":"published"},
      sections:Array.from({length:units},(_,i)=>({index:i,titleAr:"مرحلة "+(i+1),
       base:{titleAr:"مرحلة "+(i+1),subtitle:"",short:"",duration:"7 دقائق",
        description:"تعليم تجريبي",rule:[],alternativeRule:[],gold:{},mistake:{},examples:[],tiles:[]},
@@ -78,7 +80,8 @@ try{
   });
   await page.goto(origin+"/step-grammar-admin/",{waitUntil:"domcontentloaded"});
   await page.locator(".home-hero").waitFor({timeout:12000});
-  assert.equal(await page.locator(".home-card").count(),12,"Twelve lesson cards: published Lesson11 and private Lesson12");
+  assert.equal(await page.locator(".home-card").count(),13,"Thirteen lessons with unpublished 07,12,13");
+  assert.match(await page.locator("#home-status-13").innerText(),/مسودة غير منشورة/);
   assert.match(await page.locator("#home-status-12").innerText(),/مسودة غير منشورة/);
   assert.match(await page.locator("#home-status-11").innerText(),/منشور للطلاب/);
   assert.match(await page.locator("#home-status-10").innerText(),/منشور للطلاب/);
@@ -128,12 +131,17 @@ try{
   await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===5);
   assert.equal(await page.locator("#course").inputValue(),"ASGQPAPERCONT");
   assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
+  await page.goto(origin+"/step-grammar-admin/studio.html?course=ASGQFUCOMBO&tab=visual",{waitUntil:"domcontentloaded"});
+  await page.waitForFunction(()=>document.querySelectorAll("#work aside button").length===6);
+  assert.equal(await page.locator("#course").inputValue(),"ASGQFUCOMBO");
+  assert.match(await page.locator("#course-publication-note").innerText(),/مسودة داخلية غير ظاهرة للطلاب/);
 
 
   assert.equal(await page.locator(".admin-global-nav a[aria-current='page']").innerText().then(x=>x.includes("تعديل الدروس")),true);
   await page.goto(origin+"/step-grammar-admin/sources.html",{waitUntil:"domcontentloaded"});
   await page.locator("#cards:not([hidden])").waitFor();
-  assert.equal(await page.locator(".card").count(),12,"Twelve source-audit cards including private Lesson 12");
+  assert.equal(await page.locator(".card").count(),13,"Thirteen protected source-audit cards including Lesson13");
+  assert.equal(await page.locator('a[href="future-continuous-perfect-audit.html"]').count(),1);
   assert.equal(await page.locator('a[href="past-perfect-continuous-audit.html"]').count(),1);
   assert.equal(await page.locator('a[href="past-perfect-audit.html"]').count(),1);
   assert.equal(await page.locator('a[href="present-perfect-continuous-audit.html"]').count(),1);

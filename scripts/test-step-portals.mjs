@@ -68,6 +68,17 @@ for(const code of ["ASGQAGREE","ASGQPRSIM","ASGQPRCONT","ASGQPASIM","ASGQPACONT"
 const lesson08Gate=readFileSync("supabase/migrations/20261023_step_lesson08_time_clauses_source_release.sql","utf8");
 assert(lesson08Gate.includes("approved<>items")&&lesson08Gate.includes("step_source_item_reviews")&&lesson08Gate.includes("items<5"),
  "Lesson 08 only publishes audited original exam questions");
+const lesson13Gate=readFileSync("supabase/migrations/20261023_step_lesson13_future_forms_source_gate.sql","utf8");
+assert(lesson13Gate.includes("total<6")&&lesson13Gate.includes("continuous_n<3")&&
+ lesson13Gate.includes("perfect_n<3")&&lesson13Gate.includes("step_source_item_reviews"),
+ "Lesson13 source-only gate needs six authentic questions, three from each Future tense");
+assert(studio.includes('value="ASGQFUCOMBO"')&&
+ studio.includes('"ASGQFUCOMBO":"future-continuous-future-perfect"')&&
+ adminHome.includes('code:"ASGQFUCOMBO"')&&
+ adminServer.includes('path==="/future-continuous-perfect/audit"')&&
+ adminServer.includes('permission.role!=="owner"')&&
+ readFileSync("step-grammar-admin/future-continuous-perfect-audit.html","utf8").includes("/step-admin/future-continuous-perfect/audit"),
+ "Lesson13 must remain an editable admin-only draft with owner-authenticated source review");
 const lesson12Gate=readFileSync("supabase/migrations/20261023_step_lesson12_past_perfect_continuous_source_gate.sql","utf8");
 assert(lesson12Gate.includes("total<5")&&lesson12Gate.includes("step_source_item_reviews")
  &&lesson12Gate.includes("matches<>total"),"Lesson12 must block publication until five independently approved originals");
@@ -265,6 +276,7 @@ assert(logicalSequence.includes("lessons **01–06 are published**")&&
  logicalSequence.includes("`present-perfect-continuous` — position `110` — published")&&
  logicalSequence.includes("`past-perfect` — position `111` — published")&&
  logicalSequence.includes("`past-perfect-continuous` — position `112` — draft")&&
+ logicalSequence.includes("`future-continuous-future-perfect` — position `113` — draft")&&
  logicalSequence.includes("`sentence-elements` stays **draft**")&&
  logicalSequence.includes("position `999`"),
  "Teaching sequence must keep Foundation deferred, publish lessons 01-06, and stage lesson 07");
