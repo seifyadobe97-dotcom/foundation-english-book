@@ -74,6 +74,7 @@ try{
   assert.equal(await page.locator(".concept-card .concept-heading").first().innerText(),"الشرط\nCondition");
   assert((await page.locator(".agreement-table th").nth(1).textContent()).includes("جملة الشرط"),"Arabic meaning for If clause");
   assert((await page.locator(".agreement-table th").nth(2).textContent()).includes("جملة النتيجة"),"Arabic meaning for Main clause");
+  assert((await page.locator(".agreement-table tbody tr").first().innerText()).includes("التركيب الأساسي"),"Standard table row explained in Arabic");
   assert.equal(await page.locator(".agreement-table").getAttribute("dir"),"ltr");
   assert.equal(await page.locator(".flow-pieces").getAttribute("dir"),"ltr");
   assert.equal(await page.locator(".flow-rule").getAttribute("dir"),"ltr");
