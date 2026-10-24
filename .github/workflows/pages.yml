@@ -195,6 +195,8 @@ jobs:
         run: node tests/listening-source-samples-browser.mjs
       - name: Test authenticated Listening direct-audio and official attempt boundary
         run: node tests/listening-live-contract.mjs
+      - name: Browser-test authenticated Listening audio and saved scores on desktop and mobile
+        run: node tests/listening-live-browser.mjs
 
   deploy:
     name: Deploy verified static book
