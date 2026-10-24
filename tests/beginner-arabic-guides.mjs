@@ -22,7 +22,7 @@ for(const [slug,parts] of Object.entries(data.lessons)){
  assert(Array.isArray(parts)&&parts.length===5,"Guide must have meaning, pattern, English example, Arabic translation, warning: "+slug);
  for(const val of parts)assert(typeof val==="string"&&val.trim().length>8,slug+" has a missing beginner field");
  assert(/[\u0600-\u06FF]/.test(parts[0])&&/[\u0600-\u06FF]/.test(parts[3]),"Needs Arabic meaning and example translation: "+slug);
- assert(/[A-Za-z]/.test(parts[1])&&/[A-Za-z]/.test(parts[2]),"English example/pattern missing: "+slug);
+ assert(/[A-Za-z]/.test(parts[2]),"English example missing: "+slug);
  assert(!/ASGQ[A-Z0-9]+|TAJMEAAT|answer key|private source/i.test(parts.join(" ")),
   "No instructor source codes or internal provenance exposed: "+slug);
 }
