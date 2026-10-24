@@ -53,6 +53,8 @@ jobs:
           node-version: '22'
       - name: Check STEP student, admin and secure question flows
         run: node scripts/test-step-portals.mjs
+      - name: Verify Writing Analysis taxonomy, protected historical progress and safe navigation
+        run: node tests/writing-analysis-taxonomy.mjs
       - name: Fast STEP source and JavaScript checks
         run: node tests/step-v2-source-check.mjs
       - name: Install browser-test dependencies
