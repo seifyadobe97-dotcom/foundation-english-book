@@ -175,6 +175,8 @@ jobs:
         run: node tests/student-experience.mjs
       - name: Test Writing Analysis published-only dashboard on desktop/mobile
         run: node tests/writing-student-browser.mjs
+      - name: Test partial course API failures and safe learner retry on mobile/desktop
+        run: node tests/student-dashboard-resilience.mjs
 
   deploy:
     name: Deploy verified static book
