@@ -185,6 +185,8 @@ jobs:
         run: node tests/ungraded-teaching-stages.mjs
       - name: Check Arabic recovery on course and stage fetch failures on two widths
         run: node tests/lesson-network-recovery.mjs
+      - name: Verify STEP Listening 15 30 45s practice and one-play exam modes on mobile and desktop
+        run: node tests/listening-dual-mode.mjs
 
   deploy:
     name: Deploy verified static book

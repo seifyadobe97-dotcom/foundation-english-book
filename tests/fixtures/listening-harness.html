@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>STEP Listening — Synthetic UI Harness</title>
+<link rel="stylesheet" href="../../step-grammar-student/listening-player.css">
+<style>body{background:#f4f7f5;margin:0;padding:12px;font:15px Cairo,Tahoma,sans-serif}</style>
+</head><body><main id="listening-root"></main>
+<script src="../../step-grammar-student/listening-session.js"></script>
+<script src="../../step-grammar-student/listening-player.js"></script>
+<script>
+window.mockClock={time:0,timers:new Map(),id:0,now(){return this.time},
+ every(fn){const id=++this.id;this.timers.set(id,fn);return id},
+ stop(id){this.timers.delete(id)},
+ advance(ms){this.time+=ms;for(const fn of this.timers.values())fn()}};
+window.attachMock=(mode,count=2,blocked=false)=>{
+ const root=document.getElementById("listening-root");root.replaceChildren();
+ const media=document.createElement("audio");window.media=media;
+ let rejectOnce=blocked;window.plays=0;
+ media.play=async()=>{
+  if(rejectOnce){rejectOnce=false;throw new DOMException("Blocked","NotAllowedError");}
+  window.plays++;return undefined;
+ };
+ media.pause=()=>{};
+ const questions=Array.from({length:count},(_,i)=>({
+  id:"q"+(i+1),text:"What did the speaker say in question "+(i+1)+"?",
+  options:{A:"A library",B:"A shopping mall",C:"A school",D:"An airport"}
+ }));
+ window.session=window.StepListeningUI.mount(root,{
+  mode,media,clock:window.mockClock,questions,secondsPerQuestion:15,
+  grade:async(answers,currentMode)=>currentMode==="practice"?
+   {transcript:"The speaker said: I am going to the library.",
+    results:questions.map(q=>({id:q.id,correct:"A",isCorrect:answers[q.id]==="A",
+     explanation:"The speaker explicitly mentioned the library."}))}:
+   {accepted:true,transcript:"SECRET EXAM TRANSCRIPT NEVER SHOW",results:questions.map(q=>({correct:"A"}))}
+ });
+};
+</script></body></html>
