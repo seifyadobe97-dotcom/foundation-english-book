@@ -85,7 +85,8 @@ window.StepAdminHome={
    '<section class="home-section"><h2>3. المنهج والجودة</h2>'+
    '<p>ترتيب الدروس وتدقيق المصادر وتجهيز الدروس القادمة.</p>'+
    '<div class="home-shortcuts">'+
-   '<a href="curriculum.html"><strong>ترتيب المنهج والمؤشرات ←</strong><small>41 موضوعًا في الجرامر، ترتيب وحالة كل مؤشر وربط المصادر.</small></a>'+
+   '<a href="curriculum.html?axis=grammar"><strong>منهج Grammar ←</strong><small>45 درسًا منشورًا، مع التصنيفات النحوية الأصلية.</small></a>'+
+   '<a href="curriculum.html?axis=writing-analysis"><strong>محور التحليل الكتابي ←</strong><small>علامات الترقيم، الحروف الكبيرة، ترتيب الفقرات، الروابط المنطقية واكتشاف الأخطاء — قيد الإعداد.</small></a>'+
    '<a href="sources.html"><strong>تدقيق بنك الأسئلة ←</strong><small>السجلات الأصلية والأسئلة المعتمدة والمستبعدة.</small></a>'+
    '<a href="courses.html"><strong>إضافة درس جديد كمسودة ←</strong><small>دي لإعداد الدروس القادمة، مش لتعديل الدروس المنشورة.</small></a>'+
    '<a href="../step-grammar-student/" target="_blank" rel="noopener noreferrer"><strong>فتح بوابة الطالب ↗</strong><small>تصفح المسار الظاهر للطلاب بحساب الطالب التجريبي.</small></a>'+
