@@ -23,6 +23,8 @@ assert(api.includes('guideResult.data?.published')&&api.includes('simResult.data
  "Source, simulated and published teaching content must pass release gates");
 assert(api.includes("publishedWritingModules")&&api.includes("guideModules.length!==lesson.sections.length")&&api.includes("fromGuide")&&api.includes("guide.intro_ar"),
  "Published Writing explanations and source-labeled guide examples must reach the student lesson player");
+assert(api.includes("editorialMarker")&&api.includes('["مثال توضيحي",e.en'),
+ "Public Writing teaching must not disclose internal source labels or PDF anchors");
 assert(api.includes('question_text!==q.text')&&api.includes('r.correct!==q.correct'),
  "Simulated review must match canonical stem and key");
 assert(adminApi.includes('.in("axis_code",["grammar","writing-analysis"])')&&
