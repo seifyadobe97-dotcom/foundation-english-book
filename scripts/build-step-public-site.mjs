@@ -4,7 +4,7 @@
  * Teaching foundation stays in GitHub source control, NOT in the published student site.
  * Editorial source banks, migrations, docs and test fixtures are never Pages assets.
  */
-import {cp,mkdir,rm,stat,readdir} from "node:fs/promises";
+import {cp,mkdir,rm,stat,readdir,readFile,writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
