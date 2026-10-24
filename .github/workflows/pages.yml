@@ -181,6 +181,8 @@ jobs:
         run: node tests/student-learning-journey.mjs
       - name: Verify 53-course 263-stage dashboard with progressive loading on mobile and desktop
         run: node tests/student-full-catalog.mjs
+      - name: Verify explanation-only STEP stages are ungraded and can continue
+        run: node tests/ungraded-teaching-stages.mjs
 
   deploy:
     name: Deploy verified static book
