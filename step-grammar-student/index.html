@@ -37,12 +37,14 @@ async function course(){
  const {data:{session}}=await db.auth.getSession();
  if(!session){location.replace(lessonUrl);return;}
  const response=await fetch(config.url+"/functions/v1/step-course/course",{
-  headers:{"Content-Type":"application/json","apikey":config.anonKey,"Authorization":"Bearer "+session.access_token}
+  headers:{"Content-Type":"application/json","apikey":config.anonKey,"Authorization":"Bearer "+session.access_token},
+  signal:AbortSignal.timeout(15000)
  });
  const result=await response.json().catch(()=>({}));
  if(!response.ok)throw Error(result.error||"تعذر جلب بيانات الطالب");
  const catalogResponse=await fetch(config.url+"/functions/v1/step-course/catalog",{
-  headers:{"Content-Type":"application/json","apikey":config.anonKey,"Authorization":"Bearer "+session.access_token}
+  headers:{"Content-Type":"application/json","apikey":config.anonKey,"Authorization":"Bearer "+session.access_token},
+  signal:AbortSignal.timeout(15000)
  });
  const catalog=await catalogResponse.json().catch(()=>({}));
  if(!catalogResponse.ok)throw Error(catalog.error||"تعذر جلب محاور المنهج");
@@ -200,7 +202,14 @@ function paint(x){
 }
 async function init(){
  try{const result=await course();if(result)paint(result);}
- catch(error){app.innerHTML='<div class="notice">'+esc(error.message||"تعذر تحميل بيانات حسابك")+'</div><button id="retry" class="button">إعادة المحاولة</button>';document.getElementById("retry").onclick=init;}
+ catch(error){
+  const networkFailure=["TypeError","AbortError","TimeoutError"].includes(error?.name);
+  const message=networkFailure?"الاتصال اتقطع أو التحميل اتأخر. اتأكد من الإنترنت واضغط إعادة المحاولة.":
+   error.message||"تعذر تحميل بيانات حسابك";
+  app.innerHTML='<div class="notice" role="alert">'+esc(message)+'</div>'+
+   '<button id="retry" class="button" type="button">إعادة المحاولة</button>';
+  document.getElementById("retry").onclick=init;
+ }
 }
 app.addEventListener("click",e=>{
  const button=e.target.closest("[data-followup-review]");

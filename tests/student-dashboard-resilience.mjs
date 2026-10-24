@@ -38,7 +38,7 @@ const catalog={axes:[
 ],indicators};
 try{
  for(const width of [390,1280]){
-  let recovered=false;
+  let recovered=false,coreUnavailable=false;
   const page=await browser.newPage({viewport:{width,height:890}});
   const errors=[];page.on("pageerror",e=>errors.push(String(e)));
   await page.route("https://cdn.jsdelivr.net/npm/@supabase/**",r=>
@@ -48,6 +48,7 @@ try{
   await page.route("https://funltjxavowlnnfibhpl.supabase.co/functions/v1/step-course/**",r=>{
    const endpoint=new URL(r.request().url()).pathname.split("/step-course")[1];
    if(endpoint==="/followups")return r.abort("failed"); // Nonessential service outage
+   if(endpoint==="/course"&&coreUnavailable)return r.abort("failed");
    const data={
     "/course":grammar,"/catalog":catalog,
     "/lesson/past-simple/course":lesson("Past Simple","الماضي البسيط"),
@@ -80,6 +81,18 @@ try{
    "Retry restores Writing only after successful authorized response");
   assert(!(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+3)),
    "Student dashboard responsive at "+width+"px");
+  // A failure of the *essential* course request should be Arabic and recoverable,
+  // not an indefinite spinner or a raw browser 'Failed to fetch' message.
+  coreUnavailable=true;
+  await page.goto(origin+"/step-grammar-student/",{waitUntil:"domcontentloaded"});
+  await page.locator("#retry").waitFor();
+  assert((await page.locator('[role="alert"]').innerText()).includes("الاتصال اتقطع"),
+   "Essential API failure gives an actionable Arabic connection message");
+  coreUnavailable=false;
+  await page.locator("#retry").click();
+  await page.locator("#student-learning-path").waitFor();
+  assert.equal(await page.locator("#student-learning-path .student-course-tile").count(),3,
+   "Retry restores the authenticated dashboard after an essential network outage");
   assert.deepEqual(errors,[],"No JS errors on "+width+"px");
   await page.close();
   console.log("PASS dashboard resilience "+width+"px: partial outage, transparent totals, safe retry");
