@@ -35,7 +35,7 @@ try{
    const items=request.sample==="record-1"?["r1-q1","r1-q2"]:["r2-q1","r2-q2"];
    const keys=request.sample==="record-1"?["D","A"]:["B","A"];
    const results=items.map((id,i)=>({id,correct:keys[i],isCorrect:request.answers[id]===keys[i],explanation:"شرح عربي للاختيار"}));
-   await route.fulfill({status:200,contentType:"application/json",body:JSON.stringify(request.mode==="exam"?{accepted:true}:{results,transcript:"Teacher: Test script."})});
+   await route.fulfill({status:200,contentType:"application/json",headers:{"Access-Control-Allow-Origin":origin,"Access-Control-Allow-Headers":"authorization,apikey,content-type"},body:JSON.stringify(request.mode==="exam"?{accepted:true}:{results,transcript:"Teacher: Test script."})});
   });
   await page.goto(origin+"/step-grammar-student/listening-samples.html",{waitUntil:"domcontentloaded"});
   assert.equal(await page.locator("[data-clip]").count(),2);
