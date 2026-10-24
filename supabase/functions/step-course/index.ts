@@ -101,6 +101,7 @@ Deno.serve(async(request)=>{
   ||typeof lesson.requiredPassRate!=="number")return send(503,{error:"بيانات الدرس تحتاج مراجعة"});
  const total=lesson.sections.length;
  const originalQuestions=lesson.questions as QuestionMap;
+ let publishedWritingModules:any[]=[];
  // Writing Analysis has a second release gate: never expose an unapproved
  // simulated item or an unaudited source item even if someone flips a lesson status.
  if(dynamicIndicator?.axis_code==="writing-analysis"){
@@ -111,6 +112,11 @@ Deno.serve(async(request)=>{
   ]);
   if(guideResult.error||simResult.error||!guideResult.data?.published)
    return send(403,{error:"الدرس تحت المراجعة ولم يعتمد شرحه بعد"});
+  const guideModules=guideResult.data.published.modules;
+  if(!Array.isArray(guideModules)||guideModules.length!==lesson.sections.length||
+   lesson.sections.some((section:any,index:number)=>guideModules[index]?.id!==section.id))
+   return send(403,{error:"شرح المراحل غير مكتمل"});
+  publishedWritingModules=guideModules;
   const simMap=new Map((simResult.data||[]).map(r=>[r.question_id,r]));
   const sims=Object.entries(originalQuestions).filter(([,q]:any)=>q.origin==="simulated");
   if(sims.some(([id,q]:any)=>{
@@ -197,12 +203,22 @@ Deno.serve(async(request)=>{
    const {data:teachingRows,error:teachingError}=await admin.from("step_teaching_unit_edits")
     .select("part_index,published").eq("course_code",courseCode).not("published","is",null);
    if(teachingError)throw teachingError;
-   const visuals=lesson.sections.map((section:any,i:number)=>
-    teachingRows?.find(x=>x.part_index===i)?.published||section.visual||
+   const visuals=lesson.sections.map((section:any,i:number)=>{
+    const guide=publishedWritingModules[i];
+    const fromGuide=guide?{
+     title:guide.title_ar,detail:guide.intro_ar,
+     tip:(guide.rules||[]).map((r:any)=>r.label_ar+" — "+r.formula).join("؛ "),
+     cards:(guide.rules||[]).map((r:any)=>[r.label_ar,r.formula,"من شرح الدرس","✓"]),
+     examples:(guide.examples||[]).map((e:any)=>[e.tag||"مثال توضيحي",e.en,"راجع القاعدة في هذا المثال"]),
+     keywords:(guide.keywords||[]).map((k:any)=>[k.en,k.ar]),
+     formulas:[],warning:null
+    }:null;
+    return teachingRows?.find(x=>x.part_index===i)?.published||fromGuide||section.visual||
     {title:section.titleAr||section.title,detail:section.description||section.short||section.titleAr||"",
      tip:section.short||"",cards:[],examples:[],formulas:[],keywords:[],
      warning:{wrong:"",correct:"",why:""},table:{headers:[],rows:[]},
-     extra:{heading:"",paragraphs:[]}});
+     extra:{heading:"",paragraphs:[]}};
+   });
    return {student:user.user_metadata?.username||"طالب STEP",
     teachingUnits:visuals,
     course:{title:lesson.title,titleAr:lesson.titleAr,subtitle:lesson.subtitle,axis_code:dynamicIndicator?.axis_code||"grammar",totalQuestions:activeQuestionIds.length},
