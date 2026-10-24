@@ -36,6 +36,23 @@ assert(admin.includes("[data-remap-code]")&&admin.includes("mappingReason(")&&ad
  "Admin must offer reasoned reclassification and protect published courses");
 assert(admin.includes("writingReviewCodes=new Set([])"),
  "Grammar sentence-correction review must not be mislabeled as Writing");
+// The owner retained eight skills: exactly five from the book and three from audited bank sources.
+const eightDecision=read("curriculum/WRITING_ANALYSIS_EIGHT_SKILLS_OWNER_DECISION_20261024.md");
+const fiveBook=["punctuation","capitalization","sequencing","logical-connectors","error-recognition"];
+const threeBank=["sentence-combining","logical-sentence-completion","spelling-word-recognition"];
+assert(admin.includes('const writingBookSkills=new Set('+JSON.stringify(fiveBook)+')'),
+ "Admin must retain the source book's five units in their original order");
+assert(admin.includes('const writingBankSkills=new Set('+JSON.stringify(threeBank)+')'),
+ "Admin must label all three additional bank-derived skills");
+assert(admin.includes('id="writing-eight-summary"')&&admin.includes("8 مهارات"),
+ "Admin must display the approved 8=5+3 curriculum decision");
+assert(admin.includes("توسعة بنك الأسئلة")&&admin.includes("من الكتاب"),
+ "Editor must distinguish the original five units from the bank extensions");
+for(const slug of [...fiveBook,...threeBank]){
+ assert(eightDecision.includes('('+String.fromCharCode(96)+slug+String.fromCharCode(96)+')'),
+  "Internal approval record is missing "+slug);
+}
+
 assert(student.includes('data-axis-code=')&&student.includes("axis-feedback")&&student.includes("المحتوى قيد الإعداد"),
  "Student axis selection must describe the actual published readiness");
 for(const path of ["step-grammar-admin/curriculum.html","step-grammar-student/index.html"]){

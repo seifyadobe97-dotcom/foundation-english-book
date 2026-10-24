@@ -47,6 +47,10 @@ const client=window.supabase.createClient(BASE,KEY);
 const root=document.getElementById("content");
 const initialAxis=new URLSearchParams(location.search).get("axis");
 const state={axes:[],indicators:[],bank:[],axis:initialAxis==="writing-analysis"?"writing-analysis":"grammar",item:null,role:null,search:""};
+// Approved by the curriculum owner: 5 source-book chapters + 3 bank-specific additions.
+// Keep slugs and lesson identities stable; classification does not release a student course.
+const writingBookSkills=new Set(["punctuation","capitalization","sequencing","logical-connectors","error-recognition"]);
+const writingBankSkills=new Set(["sentence-combining","logical-sentence-completion","spelling-word-recognition"]);
 const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function mappingReason(action,code){
  const reason=prompt("اكتب السبب التعليمي لـ "+action+" للتصنيف "+code+" وفق مهارة السؤال:");
@@ -80,9 +84,10 @@ function paint(){
  state.axes.map(x=>{const total=state.indicators.filter(i=>i.axis_code===x.code).length;
  return '<button class="axis '+(state.axis===x.code?"active":"")+'" data-axis="'+escapeHtml(x.code)+'"><span>AXIS 0'+x.position+'</span><b>'+escapeHtml(x.title_ar)+'</b><small>'+escapeHtml(x.title_en)+'</small><small>'+(x.content_model==="indicators"?total+' مؤشر':'محور مستقل')+'</small></button>';
  }).join("")+'</div><section class="layout"><div class="panel"><h2>'+escapeHtml(axis?.title_ar||"")+'</h2>'+
- (isIndicatorAxis?'<input id="indicator-search" class="filter" placeholder="بحث عن مؤشر…" value="'+escapeHtml(state.search)+'">'+
+ (isIndicatorAxis?(state.axis==="writing-analysis"?'<div class="note" id="writing-eight-summary">التحليل الكتابي: 8 مهارات معتمدة في هيكل المنهج — 5 وحدات من كتاب STEP بنفس ترتيبها، و3 مهارات إضافية من بنك الأسئلة المدقق. كل المهارات تظهر كمسودات لحد اعتماد شرحها وأسئلتها ونشرها.</div>':'')+
+ '<input id="indicator-search" class="filter" placeholder="بحث عن مؤشر…" value="'+escapeHtml(state.search)+'">'+
  (canEdit?'<button class="btn" id="new-indicator">+ إضافة مؤشر</button>':'')+
- '<div id="indicators-list">'+filtered.map(i=>'<button class="indicator '+(i.id===state.item?"active":"")+'" data-indicator="'+escapeHtml(i.id)+'"><small class="status '+(i.status==="published"?"published":"")+'">'+(i.status==="published"?"منشور":i.status==="archived"?"مؤرشف":"مسودة")+'</small>'+(i.axis_code==="grammar"&&i.slug!=="sentence-elements"&&i.position>=101&&i.position<=141?'<small>الدرس '+(i.position-100)+'</small>':'')+'<strong>'+escapeHtml(i.title_ar)+'</strong><small>'+escapeHtml(i.title_en)+'</small><small>تصنيفات بنك الأسئلة: '+state.bank.filter(b=>b.indicator_slug===i.slug).length+'</small></button>').join("")+'</div>':
+ '<div id="indicators-list">'+filtered.map(i=>'<button class="indicator '+(i.id===state.item?"active":"")+'" data-indicator="'+escapeHtml(i.id)+'"><small class="status '+(i.status==="published"?"published":"")+'">'+(i.status==="published"?"منشور":i.status==="archived"?"مؤرشف":"مسودة")+'</small>'+(i.axis_code==="grammar"&&i.slug!=="sentence-elements"&&i.position>=101&&i.position<=141?'<small>الدرس '+(i.position-100)+'</small>':'')+(i.axis_code==="writing-analysis"?'<small>'+(writingBookSkills.has(i.slug)?'من الكتاب · الوحدة '+(i.position-1000):writingBankSkills.has(i.slug)?'توسعة بنك الأسئلة · مهارة إضافية':'قيد تدقيق المصدر')+'</small>':'')+'<strong>'+escapeHtml(i.title_ar)+'</strong><small>'+escapeHtml(i.title_en)+'</small><small>تصنيفات بنك الأسئلة: '+state.bank.filter(b=>b.indicator_slug===i.slug).length+'</small></button>').join("")+'</div>':
  '<div class="note">المحور مستقل، وهنربط محتواه وتدريباته به مباشرة.</div>')+
  '</div><div class="panel">'+(isIndicatorAxis?form(current,canEdit):
  '<h2>'+escapeHtml(axis?.title_ar||"")+'</h2><p>مكان المحور جاهز. إدخال المحتوى الفعلي هيبدأ بعد اعتماد المواد والأسئلة.</p>')+
@@ -170,7 +175,7 @@ function bankSections(selected,canEdit){
  return '<section class="panel bank-panel"><h2>'+(isWriting?'بنك أسئلة التحليل الكتابي المصنّف':'بنك أسئلة قواعد اللغة المصنّف')+'</h2>'+
  '<div class="bank-stats"><span>'+primary.length+' تصنيفًا أساسيًا بالمحور</span><span>'+supplemental.length+' إحالات إضافية من محور آخر</span><span>'+pending.length+' بانتظار مراجعة التصنيف</span></div>'+
  '<div class="note">'+(isWriting?
- 'التحليل الكتابي محور مستقل: علامات الترقيم، الحروف الكبيرة، ترتيب الفقرات، الروابط المنطقية واكتشاف الأخطاء. الموضوعات ما زالت مسودات حتى اعتماد دروسها؛ نقل التصنيف لا ينشر أسئلة أو يغيّر درجات الطلاب.':
+ 'Writing Analysis منظّم على 8 مهارات: 5 وحدات أساسية من الكتاب + 3 إضافات من بنك الأسئلة (دمج الجمل، الإكمال المنطقي، والتهجئة). Sentence Insertion مرتبط بـ Sequencing وليس وحدة تاسعة. جميع المؤشرات مسودات حتى اعتماد محتواها؛ تغيير التصنيف لا يغيّر درجات الطلاب.':
  'هنا قواعد اللغة فقط؛ تدريبات ترتيب الكلمات داخل الجملة تختلف عن ترتيب جمل الفقرة. الروابط المنطقية مصنّفة أساسيًا في التحليل الكتابي، مع إحالة تعليمية محفوظة هنا.')+
  ' المصدر الداخلي للتصنيفات: STEP_Grammar_Question_Bank_Classifications_Audited.pdf</div>'+
  mineHtml+'<details class="unmapped"><summary>تصنيفات هذا المحور التي تحتاج مراجعة ('+pending.length+')</summary><p>الربط مؤقت حتى مراجعة تصنيف كل سؤال؛ لا يغيّر درجات الطالب أو صلاحيات النشر.</p>'+pendingHtml+'</details></section>';
