@@ -95,15 +95,17 @@ function paint(){
  document.querySelectorAll("[data-unlink-code]").forEach(btn=>btn.onclick=async()=>{
   const code=btn.dataset.unlinkCode;
   if(!confirm("فصل تصنيف "+code+" من المؤشر الحالي وإعادته لقائمة المراجعة؟"))return;
+  const reason=mappingReason("فصل الربط",code);if(!reason)return;
   btn.disabled=true;
-  try{const reason=mappingReason("فصل الربط",code);if(!reason)return;await request("/curriculum/classifications/link",{code,indicator_slug:null,reason});await load();}
+  try{await request("/curriculum/classifications/link",{code,indicator_slug:null,reason});await load();}
   catch(error){alert(error.message);btn.disabled=false;}
  });
  document.querySelectorAll("[data-link-code]").forEach(btn=>btn.onclick=async()=>{
   const code=btn.dataset.linkCode, slug=document.getElementById("link-"+code)?.value||"";
   if(!slug){alert("اختار المؤشر المناسب أولًا");return;}
+  const reason=mappingReason("ربط المهارة",code);if(!reason)return;
   btn.disabled=true;
-  try{const reason=mappingReason("ربط المهارة",code);if(!reason)return;await request("/curriculum/classifications/link",{code,indicator_slug:slug,reason});await load();}
+  try{await request("/curriculum/classifications/link",{code,indicator_slug:slug,reason});await load();}
   catch(error){alert(error.message);btn.disabled=false;}
  });
  document.querySelectorAll("[data-remap-code]").forEach(btn=>btn.onclick=async()=>{
@@ -140,7 +142,7 @@ function paint(){
 }
 function bankSections(selected,canEdit){
  // The audited bank contains BOTH grammar and Writing Analysis. Never count all categories as Grammar.
- const writingReviewCodes=new Set(["ASGQSENT"]);
+ const writingReviewCodes=new Set([]); // ASGQSENT tests grammar forms: leave in Grammar review queue.
  const axisSlugs=new Set(state.indicators.filter(i=>i.axis_code===state.axis).map(i=>i.slug));
  const primary=state.bank.filter(x=>axisSlugs.has(x.indicator_slug));
  const supplemental=state.bank.filter(x=>axisSlugs.has(x.related_indicator_slug)&&!axisSlugs.has(x.indicator_slug));
