@@ -67,6 +67,13 @@ try{
    await page.clock.fastForward(260);
    await page.clock.runFor(10);
    assert.equal(await page.evaluate(()=>window.speechSynthesis.plays),playsBefore+1);
+   // Chromium's synthetic speech-start callback can lag behind a fake-clock
+   // fastForward. Explicitly confirm the first utterance starts before testing
+   // UI transition; media.play() itself remains the sole source of playback.
+   await page.evaluate(()=>window.speechSynthesis.last?.onstart?.());
+   await page.clock.runFor(20);
+   assert.equal(await page.evaluate(()=>window.stepListeningDemoSession.phase),"playing",
+     "Choices unlock only after the mocked voice starts successfully");
    assert.equal(await page.locator(".listening-choice input:not([disabled])").count(),4*n);
    assert.equal(await page.locator('[data-action="play"]').count(),0);
    await page.evaluate(()=>window.speechSynthesis.last.onend?.());
