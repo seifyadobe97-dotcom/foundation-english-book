@@ -151,7 +151,7 @@
       config.scrollIntoView({block:"start",behavior:"smooth"});
     });
     config.hidden=true;root.classList.remove("demo-hidden");
-    root.scrollIntoView({behavior:"start",block:"start"});
+    root.scrollIntoView({behavior:"smooth",block:"start"});
   });
   window.addEventListener("pagehide",()=>{session?.destroy();adapter?.stopVoice?.();});
 })();
