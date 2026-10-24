@@ -1379,27 +1379,27 @@ Deno.serve(async(req)=>{
  }
 
  if(path==="/curriculum/classifications/link"&&req.method==="POST"){
-  if(permission.role!=="owner")return reply(403,{error:"ربط تصنيفات بنك الأسئلة متاح لمدير المنصة فقط"});
+  if(permission.role!=="owner")return reply(403,{error:"إعادة تصنيف بنك الأسئلة متاحة لمدير المنصة فقط"});
   try{
-   const raw=await req.text();if(raw.length>1500)return reply(413,{error:"بيانات كبيرة جدًا"});
+   const raw=await req.text();if(raw.length>2200)return reply(413,{error:"بيانات كبيرة جدًا"});
    const body=JSON.parse(raw),code=String(body?.code||""),slug=body?.indicator_slug;
+   const reason=typeof body?.reason==="string"?body.reason.trim():"";
    if(!/^ASGQ[A-Z0-9]+$/.test(code)||!(slug===null||typeof slug==="string"))
-     return reply(422,{error:"كود التصنيف أو المؤشر غير صحيح"});
+    return reply(422,{error:"كود التصنيف أو المؤشر غير صحيح"});
    if(typeof slug==="string"&&!/^[a-z][a-z0-9-]{2,39}$/.test(slug))
-     return reply(422,{error:"كود المؤشر غير صحيح"});
-   if(slug!==null){
-    const linked=await admin.from("step_curriculum_indicators").select("slug").eq("slug",slug).maybeSingle();
-    if(linked.error)throw linked.error;
-    if(!linked.data)return reply(422,{error:"المؤشر المطلوب غير موجود"});
+    return reply(422,{error:"كود المؤشر غير صحيح"});
+   if(reason.length<12||reason.length>1000)
+    return reply(422,{error:"اكتب سبب النقل التعليمي من المصدر (12 حرفًا على الأقل)"});
+   const {data,error}=await admin.rpc("step_reassign_classification",{
+    p_code:code,p_indicator_slug:slug,p_actor:auth.user.id,p_reason:reason
+   });
+   if(error){
+    if(error.code==="22023")return reply(422,{error:"رفضت قاعدة البيانات النقل: "+error.message});
+    throw error;
    }
-   const result=await admin.from("step_question_bank_classifications")
-    .update({indicator_slug:slug,related_indicator_slug:null,
-      mapping_status:slug?"mapped":"needs_review",updated_at:new Date().toISOString()})
-    .eq("code",code).select("code,indicator_slug,mapping_status").maybeSingle();
-   if(result.error)throw result.error;
-   if(!result.data)return reply(404,{error:"تصنيف بنك الأسئلة غير موجود"});
-   return reply(200,{ok:true,classification:result.data});
-  }catch(error){console.error("Bank classification link",error);return reply(500,{error:"تعذر حفظ ربط التصنيف"});}
+   if(!Array.isArray(data)||!data.length)return reply(404,{error:"تصنيف بنك الأسئلة غير موجود"});
+   return reply(200,{ok:true,classification:data[0]});
+  }catch(error){console.error("Bank classification reassign",error);return reply(500,{error:"تعذر حفظ ربط التصنيف"});}
  }
  if(path==="/curriculum/indicators/save"&&req.method==="POST"){
   if(permission.role!=="owner")return reply(403,{error:"تعديل المؤشرات متاح لمدير المنصة فقط"});
