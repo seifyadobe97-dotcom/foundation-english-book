@@ -128,7 +128,7 @@ function renderLessonHeader(){
  const done=list[i]?.passed,locked=list[i]?.locked,active=state.mode==="lesson"&&i===state.index;
  return '<button type="button" class="path-button '+(active?'active':done?'done':'')+'" data-action="part" data-index="'+i+'" '+
  (locked?'disabled title="اجتز المرحلة السابقة أولًا"':'')+' aria-current="'+(active?'step':'false')+'">'+
- '<span class="path-number">'+(done?'✓':i+1)+'</span><span class="path-label">'+escapeHtml((window.StepStageClarity?.[lessonSlug]?.[i]?.[0]===state.course.sections[i]?.id?window.StepStageClarity[lessonSlug][i][1]:null)||(beginnerData().stages[lessonSlug]||[])[i]?.[0]||state.course.sections[i]?.titleAr||m.title)+'</span></button>';
+ '<span class="path-number">'+(done?'✓':i+1)+'</span><span class="path-label">'+escapeHtml((Array.isArray(window.StepStageClarity?.[lessonSlug]?.[i])&&window.StepStageClarity[lessonSlug][i][0]===state.course.sections[i]?.id?window.StepStageClarity[lessonSlug][i][1]:null)||(beginnerData().stages[lessonSlug]||[])[i]?.[0]||state.course.sections[i]?.titleAr||m.title)+'</span></button>';
  }).join("")+'</nav>';
 }
 // English examples, rules and arrows are always read left to right. Arabic explanations
