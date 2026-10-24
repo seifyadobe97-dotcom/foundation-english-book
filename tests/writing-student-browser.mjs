@@ -65,6 +65,7 @@ try{
     "Never invent an exam start link before a real exam system exists");
    await page.locator('[data-curriculum-target="exams"]').click();
    assert(await page.locator("#student-exams").isVisible(),"Mock exam placeholder must be reachable");
+   assert.equal(new URL(page.url()).hash,"#student-exams","Exam section selection is bookmarkable");
    assert((await page.locator("#student-exams").innerText()).includes("قيد التجهيز"),
     "Reserved exam space must accurately disclose availability");
    assert(!(await page.locator("#student-learning-path").isVisible()),
@@ -73,6 +74,11 @@ try{
     await page.locator('[data-curriculum-target="writing"]').click();
     assert(await page.locator("#writing-analysis-lessons").isVisible(),
      "Writing section must open directly");
+    assert.equal(new URL(page.url()).hash,"#writing-analysis-lessons","Writing section selection persists in URL");
+    await page.goBack();
+    assert(await page.locator("#student-exams").isVisible(),"Browser Back restores exam section");
+    await page.goForward();
+    assert(await page.locator("#writing-analysis-lessons").isVisible(),"Browser Forward restores Writing section");
     const writingSearch=page.locator("#search-writing-lessons");
     await writingSearch.fill("Punctuation");
     assert.equal(await page.locator("#writing-analysis-lessons .student-course-tile:visible").count(),1,
@@ -85,6 +91,10 @@ try{
    await page.locator('[data-curriculum-target="grammar"]').click();
    assert(await page.locator("#student-learning-path").isVisible(),
     "Grammar section must open directly");
+   assert.equal(new URL(page.url()).hash,"#student-learning-path","Grammar selection persists in URL");
+   await page.reload({waitUntil:"domcontentloaded"});
+   await page.locator("#student-learning-path").waitFor({state:"visible"});
+   assert(await page.locator("#student-learning-path").isVisible(),"Reload restores chosen Grammar section");
    assert(await page.locator("#search-grammar-lessons").isVisible(),
     "Grammar lesson search should be accessible");
    assert(!(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+3)),
