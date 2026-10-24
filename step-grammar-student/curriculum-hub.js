@@ -8,7 +8,7 @@ window.StepCurriculumHub={
   const writingPanel=app.querySelector("#writing-analysis-lessons");
   const examPanel=document.createElement("section");
   examPanel.id="student-exams";
-  examPanel.className="student-exams-panel student-learning-path";
+  examPanel.className="student-exams-panel";
   examPanel.setAttribute("aria-labelledby","student-exams-heading");
   examPanel.innerHTML='<div class="student-section-title"><div><span class="section-label">MOCK EXAMS</span>'+
    '<h2 id="student-exams-heading">الاختبارات المحاكية</h2><p>القسم المخصص للاختبارات الشاملة بنظام STEP.</p></div></div>'+
