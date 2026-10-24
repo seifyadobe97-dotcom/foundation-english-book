@@ -117,7 +117,7 @@ Deno.serve(async(request)=>{
    lesson.sections.some((section:any,index:number)=>guideModules[index]?.id!==section.id))
    return send(403,{error:"شرح المراحل غير مكتمل"});
   // Never expose admin provenance, PDF page anchors or bank codes as learner teaching text.
-  const editorialMarker=/ASGQ[A-Z0-9]+|STEP course book|STEP_Grammar_Question_Bank|TAJMEAAT|ص\\s*\\d{2,3}/i;
+  const editorialMarker=/ASGQ[A-Z0-9]+|STEP course book|STEP_Grammar_Question_Bank|TAJMEAAT|ص\s*\d{2,3}/i;
   if(guideModules.some((m:any)=>editorialMarker.test(String(m.intro_ar||""))))
    return send(403,{error:"شرح الدرس يحتاج تنقيح ملاحظات المصدر قبل النشر"});
   publishedWritingModules=guideModules;
