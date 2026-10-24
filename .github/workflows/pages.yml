@@ -147,6 +147,8 @@ jobs:
         run: node tests/course-studio.mjs
       - name: Test dynamic student dashboard on desktop and mobile
         run: node tests/student-experience.mjs
+      - name: Test Writing Analysis published-only dashboard on desktop/mobile
+        run: node tests/writing-student-browser.mjs
 
   deploy:
     name: Deploy verified static book
