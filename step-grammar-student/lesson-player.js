@@ -241,6 +241,14 @@ function diagram(m){
  '<div class="formula-list">'+rows.map(row=>{
   const parts=row.map(plainText);
   const [label,a,b,c]=parts;
+  const plain=beginnerData().formulas[label];
+  if(lessonSlug==="first-conditional"&&Array.isArray(plain)){
+   return '<article class="agreement-flow rule-flow beginner-rule">'+
+    '<div class="flow-label">'+escapeHtml(plain[0])+
+    '<small dir="ltr" lang="en">'+escapeHtml(label)+'</small></div>'+
+    '<div class="beginner-rule-parts">'+plain.slice(1).map(part=>
+     '<div class="beginner-rule-part" dir="auto">'+escapeHtml(part)+'</div>').join("")+'</div></article>';
+  }
   // Most of the bank's formulas are [rule, note]. Treat them as a full rule,
   // never as [label, subject, missing verb, missing complement].
   if(row.length<4||!b||!c){
@@ -251,7 +259,7 @@ function diagram(m){
     '<div class="flow-label">'+escapeHtml(subtitle||"القاعدة والتطبيق")+
     (subtitle?'<small dir="ltr" lang="en">'+escapeHtml(label)+'</small>':"")+'</div>'+
     '<div class="flow-rule" dir="'+(isArabic(pattern)?"rtl":"ltr")+'" lang="'+(isArabic(pattern)?"ar":"en")+'">'+escapeHtml(pattern)+'</div>'+
-    (hint?'<div class="flow-explain" dir="rtl">'+escapeHtml(hint)+'</div>':"")+
+    (hint&&hint!=="طبقها بحسب معنى الجملة"?'<div class="flow-explain" dir="rtl">'+escapeHtml(hint)+'</div>':"")+
     '</article>';
   }
   const explanation=labelArabic(label)|| (isArabic(label)?label:"تركيب الجملة");
@@ -317,10 +325,49 @@ function studentSafeExtra(extra){
  const copy=[extra.heading,...extra.paragraphs].join(" ");
  return !/(?:ASGQ[A-Z0-9]+|البنك الأصلي|سجل المراجعة|مصادر الأسئلة|مصدر الأسئلة|التجميعات|المحاكي|المحاكاة|التدقيق|تدقيق|تصنيف المصدر|قيود المصدر|مصداقية بنك|مراجعة مصدرية|الأسئلة المعتمدة|تقييم المصدر)/i.test(copy);
 }
+
+const beginnerData=()=>window.StepBeginnerTeaching||{lessons:{},stages:{},formulas:{}};
+const beginnerTerms=[
+ [/present\s+simple/i,"present simple","المضارع البسيط: عادة أو حقيقة، والفعل غالبًا مصدر مع I/you/we/they"],
+ [/past\s+simple/i,"past simple","الماضي البسيط: حدث انتهى في الماضي"],
+ [/\bV1\b/i,"V1","المصدر: شكل الفعل الأساسي، زي play أو go"],
+ [/\bV2\b/i,"V2","التصريف الثاني: ماضي الفعل، زي went"],
+ [/\bV3\b/i,"V3","التصريف الثالث: زي gone أو played"],
+ [/\bing\b/i,"-ing","نهاية بنضيفها للفعل في التراكيب المستمرة وبعض التراكيب الأخرى"],
+ [/\bwill\b/i,"will","غالبًا علامة مستقبل، وبعدها الفعل في المصدر"],
+ [/\bif\b/i,"if","أداة الشرط: معناها لو أو إذا"]
+];
+function beginnerTeaching(){
+ const entry=beginnerData().lessons[lessonSlug];if(!Array.isArray(entry)||entry.length!==5)return "";
+ const [meaning,structure,example,translation,tip]=entry;
+ const stage=beginnerData().stages[lessonSlug]?.[state.index];
+ const terms=[structure,stage?.[1]||"",...(state.index===0?[]:[LESSONS[state.index]?.title||""])].join(" ");
+ const activeTerms=beginnerTerms.filter(([match])=>match.test(terms)).slice(0,5);
+ return '<section class="beginner-help" aria-label="شرح مبسط للمبتدئين">'+
+  '<div class="beginner-head"><span class="beginner-icon" aria-hidden="true">★</span><div><h3>افهمها بالعربي الأول</h3>'+
+  '<p>بص على المعنى وشكل الجملة قبل الحفظ.</p></div></div>'+
+  '<div class="beginner-meaning"><strong>بنتعلم إيه وليه؟</strong><p>'+escapeHtml(meaning)+'</p></div>'+
+  (stage?'<div class="beginner-stage"><strong>'+escapeHtml(stage[0])+'</strong>'+
+    '<p>'+escapeHtml(stage[1])+'</p>'+
+    '<div class="beginner-parts" dir="ltr">'+stage.slice(2,5).map((part,i)=>'<span class="beginner-part">'+
+    '<small lang="ar" dir="rtl">'+["الجزء الأول","الجزء الثاني","الجزء الثالث"][i]+'</small>'+
+    '<span dir="auto">'+escapeHtml(part)+'</span></span>').join("")+'</div></div>':"")+
+  '<div class="beginner-structure"><strong>شكل الجملة ببساطة</strong>'+
+  '<div class="beginner-pattern" dir="auto">'+escapeHtml(structure)+'</div></div>'+
+  '<div class="beginner-example"><strong>مثال واضح</strong><p class="beginner-english" dir="ltr" lang="en">'+
+    escapeHtml(stage?.[5]||example)+'</p><p class="beginner-arabic" dir="rtl">'+
+    escapeHtml(stage?.[6]||translation)+'</p></div>'+
+  '<p class="beginner-reminder"><strong>خد بالك:</strong> '+escapeHtml(tip)+'</p>'+
+  (activeTerms.length?'<details class="beginner-glossary"><summary>الرموز الإنجليزية دي معناها إيه؟</summary>'+
+    '<dl>'+activeTerms.map(([,name,description])=>'<div><dt dir="ltr" lang="en">'+escapeHtml(name)+
+    '</dt><dd>'+escapeHtml(description)+'</dd></div>').join("")+'</dl></details>':"")+
+  '</section>';
+}
+
 function chapter(){
  const m=LESSONS[state.index],number=state.index+1;
  return '<div class="lesson-inner"><div class="eyebrow">المرحلة '+number+' من '+LESSONS.length+'</div>'+
- '<h2 class="lesson-title">'+escapeHtml(m.title)+'</h2><p class="explain">'+mark(m.detail)+'</p>'+
+ '<h2 class="lesson-title">'+escapeHtml(m.title)+'</h2>'+beginnerTeaching()+'<p class="explain">'+mark(m.detail)+'</p>'+
  concepts(m)+diagram(m)+explainTable(m)+words(m)+examples(m)+
  lessonVideo(m)+
  '<div class="tip"><strong>خد بالك:</strong> '+mark(m.tip)+warningExamples(m)+'</div>'+
