@@ -182,6 +182,12 @@ Deno.serve(async(request)=>{
    const sameOriginal=canonical&&edit.question_text===originalQuestions[edit.id].text
      &&edit.correct===originalQuestions[edit.id].correct
      &&["A","B","C","D"].every(k=>edit.options?.[k]===originalQuestions[edit.id].options[k]);
+   // A Writing question edit must not bypass the bank's audited publication snapshot.
+   // Owner edits may improve non-answering explanations, but changed stems, keys,
+   // alternatives and newly added questions must go back through item review.
+   if(dynamicIndicator?.axis_code==="writing-analysis"&&edit.status==="published"
+      &&(!canonical||!sameOriginal))
+    return send(403,{error:"تعديل أسئلة التحليل الكتابي يحتاج إعادة تدقيق قبل النشر"});
    const entry={id:edit.id,text:edit.question_text,options:edit.options,correct:edit.correct,
      explanation:edit.explanation,wrongReasons:edit.wrong_reasons||(
       sameOriginal?originalQuestions[edit.id].wrongReasons:undefined)};
