@@ -46,6 +46,7 @@
         esc(q.text)+'</bdi></legend><div class="listening-choices">'+options+'</div>'+
         (result?'<p class="listening-rationale">'+
           (result.isCorrect?'✓ إجابتك صحيحة. ':'✕ الإجابة الصحيحة: '+esc(result.correct)+'. ')+
+          (result.isCorrect?"":esc(result.wrongReason||"الاختيار ده مش مطابق للتسجيل.")+" ")+
           esc(result.explanation||"راجع النص المسجل.")+'</p>':"")+'</fieldset>';
     }
     function render(s){
@@ -72,7 +73,10 @@
         else if(s.phase==="answering")
           phaseMessage='<p class="listening-live">انتهى التسجيل. كمّل الإجابات؛ مفيش إعادة للصوت.</p>';
         else if(s.phase==="finished")
-          phaseMessage='<p class="listening-done" role="status">✓ تم حفظ إجابات المجموعة. التصحيح والسكريبت مش بيظهروا أثناء المحاكاة.</p>'+
+          phaseMessage='<p class="listening-done" role="status">'+
+            (config.demo?'✓ انتهت تجربة المجموعة. إجاباتك مش محفوظة ولا محسوبة؛ ارجع للتدريب لو عايز تشوف السكريبت.':
+              '✓ تم حفظ إجابات المجموعة. التصحيح والسكريبت مش بيظهروا أثناء المحاكاة.')+
+            '</p>'+
             (typeof config.onNext==="function"?
               '<button type="button" class="listening-button" data-action="next">المجموعة التالية ←</button>':"");
       }else{
