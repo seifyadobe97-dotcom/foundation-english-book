@@ -711,7 +711,8 @@ const studentStyle=readFileSync("step-grammar-student/student-experience.css","u
 const studioPage=readFileSync("step-grammar-admin/studio.html","utf8");
 new Script(studentSkin,{filename:"student-experience.js"});
 new Script(dynamicLesson,{filename:"lesson-player.js"});
-assert(portal.includes('src="student-experience.js"')&&portal.includes('extraLessons:extraLessons.filter(Boolean)'),
+assert(portal.includes('src="student-experience.js"')&&portal.includes('extraLessons:extraResults.filter(entry=>entry?.data)')&&
+ portal.includes('unavailableLessons')&&portal.includes('student-lessons-load-warning'),
  "Student dashboard must render any future published grammar lesson automatically");
 assert(studentSkin.includes('student-learning-path')&&studentSkin.includes('student-hero-cta')&&studentStyle.includes('@media(max-width:550px)'),
  "Learners must have a responsive, calm resume-and-progress experience");
