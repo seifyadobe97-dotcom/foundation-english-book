@@ -213,6 +213,17 @@ Deno.serve(async(request)=>{
    const {data:teachingRows,error:teachingError}=await admin.from("step_teaching_unit_edits")
     .select("part_index,published").eq("course_code",courseCode).not("published","is",null);
    if(teachingError)throw teachingError;
+   // Teacher/source audit metadata must not be served through the student API.
+   const studentTeachingCopy=(input:any)=>{
+    if(!input||typeof input!=="object"||Array.isArray(input))return input;
+    const copy={...input},extra=copy.extra;
+    if(extra&&typeof extra==="object"){
+     const text=[extra.heading,...(Array.isArray(extra.paragraphs)?extra.paragraphs:[])].join(" ");
+     if(/ASGQ[A-Z0-9]+|البنك الأصلي|سجل المراجعة|مصادر الأسئلة|مصدر الأسئلة|التجميعات|المحاكي|المحاكاة|التدقيق|تدقيق|تصنيف المصدر|قيود المصدر|مصداقية بنك|مراجعة مصدرية|الأسئلة المعتمدة|تقييم المصدر/i.test(text))
+      delete copy.extra;
+    }
+    return copy;
+   };
    const visuals=lesson.sections.map((section:any,i:number)=>{
     const guide=publishedWritingModules[i];
     const fromGuide=guide?{
@@ -223,11 +234,11 @@ Deno.serve(async(request)=>{
      keywords:(guide.keywords||[]).map((k:any)=>[k.en,k.ar]),
      formulas:[],warning:null
     }:null;
-    return teachingRows?.find(x=>x.part_index===i)?.published||fromGuide||section.visual||
+    return studentTeachingCopy(teachingRows?.find(x=>x.part_index===i)?.published||fromGuide||section.visual||
     {title:section.titleAr||section.title,detail:section.description||section.short||section.titleAr||"",
      tip:section.short||"",cards:[],examples:[],formulas:[],keywords:[],
      warning:{wrong:"",correct:"",why:""},table:{headers:[],rows:[]},
-     extra:{heading:"",paragraphs:[]}};
+     extra:{heading:"",paragraphs:[]}});
    });
    return {student:user.user_metadata?.username||"طالب STEP",
     teachingUnits:visuals,
@@ -244,7 +255,7 @@ Deno.serve(async(request)=>{
    if(teachingError)return send(503,{error:"تعذر تحميل تحديثات الشرح"});
    return send(200,{units:(teachingRows||[]).filter(x=>Number.isInteger(x.part_index)&&
     x.part_index>=0&&x.part_index<effectiveLesson.sections.length)
-    .map(x=>({index:x.part_index,content:x.published}))});
+    .map(x=>({index:x.part_index,content:studentTeachingCopy(x.published)}))});
   }
   if(method==="GET"&&path==="/videos"){
    const {data:rows,error:videoError}=await admin.from("step_indicator_videos")
