@@ -85,7 +85,7 @@ try{
   assert((await page.locator(".agreement-table tbody tr").first().innerText()).includes("التركيب الأساسي"),"Standard table row explained in Arabic");
   assert.equal(await page.locator(".agreement-table").getAttribute("dir"),"ltr");
   assert.equal(await page.locator(".flow-pieces").getAttribute("dir"),"ltr");
-  assert.equal(await page.locator(".flow-rule").getAttribute("dir"),"ltr");
+  assert.equal(await page.locator(".beginner-english").getAttribute("dir"),"ltr");
   assert.equal(await page.locator(".optional").count(),0,"Teacher-only question audits must not be shown");
 
   assert.equal(await page.locator(".question").count(),2,"Only synthetic mock source placeholders graded in CI");
