@@ -223,7 +223,13 @@ function explainTable(m){
  '<table class="agreement-table" dir="ltr"><thead><tr>'+headers.map(h=>
  '<th dir="auto">'+escapeHtml(h==="البناء"&&localized?"نوع البناء":heading(h))+
  (labelArabic(h)?'<small class="table-heading-en" dir="ltr" lang="en">'+escapeHtml(h)+'</small>':"")+'</th>').join("")+'</tr></thead><tbody>'+
- rows.map(row=>'<tr>'+row.map((value,i)=>'<td data-label="'+escapeHtml(heading(headers[i]))+'"><span dir="'+(isArabic(value)?"rtl":"ltr")+'" lang="'+(isArabic(value)?"ar":"en")+'">'+escapeHtml(value)+'</span></td>').join("")+'</tr>').join("")+
+ rows.map(row=>'<tr>'+row.map((value,i)=>{
+  const ar=i===0&&!isArabic(value)?labelArabic(value):"";
+  const shown=ar?'<span dir="rtl" lang="ar">'+escapeHtml(ar)+'</span>'+
+   '<small class="table-value-en" dir="ltr" lang="en">'+escapeHtml(value)+'</small>':
+   '<span dir="'+(isArabic(value)?"rtl":"ltr")+'" lang="'+(isArabic(value)?"ar":"en")+'">'+escapeHtml(value)+'</span>';
+  return '<td data-label="'+escapeHtml(heading(headers[i]))+'">'+shown+'</td>';
+ }).join("")+'</tr>').join("")+
  '</tbody></table></div></section>';
 }
 function diagram(m){
