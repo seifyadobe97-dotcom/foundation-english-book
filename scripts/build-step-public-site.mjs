@@ -21,7 +21,7 @@ for(const dir of dirs){
  await cp(source,target,{recursive:true,force:true,filter:sourcePath=>
   dir!=="step-grammar-student"||!forbidden(path.basename(sourcePath))});
 }
-const stageBundles=["clarity-future-06.js","clarity-arrangements-07.js","clarity-time-08.js","clarity-present-perfect-09.js","clarity-perfect-continuous-10.js","clarity-perfect-continuous-extra.js","clarity-perfect-continuous-finish.js","clarity-past-perfect-11.js","clarity-past-perfect-continuous-12.js","clarity-future-perfect-combo-13.js","clarity-used-to-14.js","clarity-modals-15.js","clarity-deduction-16.js","clarity-passive-17.js","clarity-modal-passive-18.js","clarity-pronouns-19.js","clarity-articles-20.js"];
+const stageBundles=["clarity-future-06.js","clarity-arrangements-07.js","clarity-time-08.js","clarity-present-perfect-09.js","clarity-perfect-continuous-10.js","clarity-perfect-continuous-extra.js","clarity-perfect-continuous-finish.js","clarity-past-perfect-11.js","clarity-past-perfect-continuous-12.js","clarity-future-perfect-combo-13.js","clarity-used-to-14.js","clarity-modals-15.js","clarity-deduction-16.js","clarity-passive-17.js","clarity-modal-passive-18.js","clarity-pronouns-19.js","clarity-articles-20.js","clarity-degree-21.js","clarity-adverbs-22.js","clarity-comparatives-23.js","clarity-prepositions-24.js","clarity-collocations-25.js"];
 const lessonPagePath=path.join(out,"step-grammar-student","lesson.html");
 let lessonPageHtml=await readFile(lessonPagePath,"utf8");
 const stageAnchor=' <script src="lesson-stage-clarity.js"></script>';
