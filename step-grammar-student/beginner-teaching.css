@@ -1,0 +1,31 @@
+/* Beginner teaching: stable teaching order regardless of the underlying course schema. */
+.beginner-help{direction:rtl;margin:18px 0 25px;padding:20px 22px;border:1px solid #cbded3;background:#f6faf7;border-radius:20px;color:#23493f}
+.beginner-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.beginner-head h3{margin:0;font-size:21px;color:#1d5747}
+.beginner-head p{margin:3px 0 0;color:#5c776d;font-size:13px}
+.beginner-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:11px;color:#146449;background:#e1f2e7;font-size:20px;flex:none}
+.beginner-meaning,.beginner-structure,.beginner-example,.beginner-stage{background:#fff;border:1px solid #e0eae3;padding:14px 17px;border-radius:12px;margin:9px 0}
+.beginner-meaning strong,.beginner-structure strong,.beginner-example strong,.beginner-stage>strong{display:block;font-size:14px;color:#1a5a4b;margin-bottom:5px}
+.beginner-meaning p,.beginner-stage>p{margin:0;line-height:1.95;font-size:15px}
+.beginner-pattern{direction:ltr;unicode-bidi:isolate;text-align:left;overflow-wrap:anywhere;padding:10px 12px;border-radius:9px;background:#eaf4ec;color:#224e43;font:700 16px/1.8 "DM Sans",Arial,sans-serif}
+.beginner-english{direction:ltr;unicode-bidi:isolate;text-align:left;margin:8px 0 6px;padding:10px 12px;background:#f0f7fc;border:1px solid #d9e8f4;border-radius:9px;font:700 17px/1.7 "DM Sans",Arial,sans-serif;color:#194e72;overflow-wrap:anywhere}
+.beginner-arabic{margin:5px 0 0;font-size:14px;line-height:1.95;color:#345f53}
+.beginner-reminder{font-size:13px;line-height:1.9;margin:13px 3px 5px;border-right:3px solid #d49d42;padding-right:11px;color:#6f5628}
+.beginner-reminder strong{color:#805718}
+.beginner-parts{display:flex;gap:7px;align-items:stretch;direction:ltr;flex-wrap:wrap;margin-top:12px}
+.beginner-part{display:flex;flex-direction:column;gap:5px;flex:1;min-width:165px;background:#eff4fc;border:1px solid #d3e1f3;padding:10px 12px;border-radius:10px;font:700 14px/1.8 Cairo,Tahoma,Arial,sans-serif;color:#254a70;text-align:center}
+.beginner-part:nth-child(2){background:#edf7ef;border-color:#cde4d2;color:#236147}
+.beginner-part:nth-child(3){background:#fbf4e7;border-color:#ecd9ad;color:#755519}
+.beginner-part small{font-size:11px;color:#637981}
+.beginner-glossary{border-top:1px solid #d9e7dc;margin-top:13px;padding:12px 3px 2px}
+.beginner-glossary summary{font-weight:800;font-size:13px;color:#286457;cursor:pointer}
+.beginner-glossary dl{margin:10px 0 0;display:grid;gap:7px}
+.beginner-glossary dl>div{display:flex;gap:14px;align-items:center;padding:9px;border-radius:9px;background:white}
+.beginner-glossary dt{font:700 13px/1.7 "DM Sans",Arial,sans-serif;min-width:100px;text-align:left;color:#235e6e}
+.beginner-glossary dd{margin:0;font-size:12px;line-height:1.8}
+.beginner-rule .flow-label{font-size:15px}
+.beginner-rule-parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.beginner-rule-part{background:#e9f4ed;border:1px solid #c7dfd0;border-radius:10px;padding:12px 14px;line-height:1.85;font-size:14px;color:#1e574b}
+@media(max-width:620px){.beginner-help{padding:14px 12px;border-radius:15px}.beginner-head h3{font-size:18px}.beginner-parts{flex-direction:column}.beginner-part{min-width:0;flex:auto}.beginner-rule-parts{grid-template-columns:1fr}.beginner-english,.beginner-pattern{font-size:15px}.beginner-glossary dl>div{align-items:flex-start;flex-direction:column;gap:2px}.beginner-meaning p{font-size:14px}}
+
+.beginner-pattern[dir="rtl"]{direction:rtl;text-align:right;font-family:Cairo,Tahoma,Arial,sans-serif}
