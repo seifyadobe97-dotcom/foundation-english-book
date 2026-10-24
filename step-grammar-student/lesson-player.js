@@ -387,7 +387,9 @@ function chapter(){
  '<div class="tip"><strong>خد بالك:</strong> '+mark(m.tip)+warningExamples(m)+'</div>'+
  (studentSafeExtra(m.extra)?'<details class="optional"><summary>'+escapeHtml(m.extra.heading)+'</summary><div class="optional-content">'+m.extra.paragraphs.map(p=>'<p>'+escapeHtml(p)+'</p>').join("")+'</div></details>':'')+
 '<div class="chapter-footer">'+(number>1?'<button class="button secondary" data-action="part" data-index="'+(number-2)+'">المرحلة السابقة</button>':'<span></span>')+
- '<button class="button green" data-action="practice">جاهز؟ حل تدريبات المرحلة ↓</button></div></div>';
+ '<button class="button green" data-action="practice">'+
+ (state.part?.questions?.length?'جاهز؟ حل تدريبات المرحلة ↓':'خلصت شرح المرحلة؟ كمّل ↓')+
+ '</button></div></div>';
 }
 function question(q,i,result){
  const chosen=state.answers[q.id],feedback=result?.results?.find(x=>x.id===q.id);
@@ -417,6 +419,18 @@ function question(q,i,result){
 }
 function practice(){
  const p=state.part,r=state.graded;
+ // A few source-audited teaching-only stages intentionally have no graded items.
+ // Keep them navigable without presenting a fake 0/0 exam or inventing questions.
+ if(!p.questions.length)return '<section id="practice" class="practice">'+
+  '<div class="practice-head"><div><div class="eyebrow">LEARN & CONTINUE</div>'+
+  '<h3 class="practice-title">مرحلة شرح من غير اختبار</h3>'+
+  '<p>المرحلة دي للفهم والمراجعة، ومفيهاش أسئلة تقييمية. ارجع للمثال فوق لو محتاج توضيح أكتر.</p></div></div>'+
+  (r?'<div class="score" role="status"><strong>✓ اتسجّل إنك راجعت الشرح.</strong>'+
+   '<p>مش هتتحسب لك درجة على المرحلة دي.</p></div>'+
+   '<div class="practice-actions"><button class="button green" data-action="continue">'+
+   (state.index===LESSONS.length-1?'اختبار الإتقان':'المرحلة التالية')+' ←</button></div>':
+   '<div class="practice-actions"><button class="button" id="submit-practice" data-action="submit">'+
+   'خلصت قراءة الشرح — كمّل ←</button></div>')+'</section>';
  return '<section id="practice" class="practice"><div class="practice-head"><div><div class="eyebrow">PRACTICE</div>'+
  '<h3 class="practice-title">دلوقتي دورك</h3><p>حل الأسئلة، واعرف سبب كل إجابة بعد التصحيح.</p></div><span class="practice-count">'+p.questions.length+' أسئلة</span></div>'+
  (r?'<div class="score '+(r.passed?'':'needs-work')+'" role="status"><strong>'+
@@ -462,7 +476,7 @@ async function submit(isExam){
  if(questions.some(q=>!state.answers[q.id]))return;
  state.busy=true;
  const button=document.getElementById("submit-practice");
- if(button){button.disabled=true;button.textContent="بنصحّح إجاباتك…";}
+ if(button){button.disabled=true;button.textContent=!isExam&&!questions.length?"بنسجّل مراجعة الشرح…":"بنصحّح إجاباتك…";}
  try{
   const timings=Object.fromEntries(questions.map(q=>[q.id,{
    ms:Math.min(3600000,Math.max(0,state.timing?.perQuestion[q.id]||0)),
@@ -472,7 +486,7 @@ async function submit(isExam){
   if(isExam)d.elapsedMs=elapsedBeforeSubmit;
   if(isExam){state.examResult=d;state.course=d.progress;}else{state.graded=d;state.course=d.progress;}
   draw();document.getElementById(isExam?"lesson-root":"practice")?.scrollIntoView({behavior:"smooth",block:"start"});
- }catch(e){alert(e.message);if(button){button.disabled=false;button.textContent="صحّح إجاباتي ←";}}
+ }catch(e){alert(e.message);if(button){button.disabled=false;button.textContent=!isExam&&!questions.length?"خلصت قراءة الشرح — كمّل ←":"صحّح إجاباتي ←";}}
  finally{state.busy=false;}
 }
 async function openExam(){
