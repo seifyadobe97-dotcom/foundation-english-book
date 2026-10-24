@@ -57,10 +57,14 @@ try{
    assert.equal(await page.locator("audio[controls]").count(),0,
      "Voice simulation cannot show native replay controls");
    const playsBefore=await page.evaluate(()=>window.speechSynthesis.plays);
-   await page.clock.fastForward(n*15000-1);
+   // Browser assertions take measurable time after Start. Measure against the
+   // actual monotonic session deadline, not N*15s since the assertion began.
+   const remaining=await page.evaluate(()=>window.stepListeningDemoSession.readingEndsAt-Date.now());
+   assert(remaining>500,"The reading window must still be active before fast forward");
+   await page.clock.fastForward(remaining-250);
    assert.equal(await page.evaluate(()=>window.speechSynthesis.plays),playsBefore,
-     "Synthetic voice must not start before reading deadline");
-   await page.clock.fastForward(1);
+     "Synthetic voice must not start before the session's actual reading deadline");
+   await page.clock.fastForward(260);
    await page.clock.runFor(10);
    assert.equal(await page.evaluate(()=>window.speechSynthesis.plays),playsBefore+1);
    assert.equal(await page.locator(".listening-choice input:not([disabled])").count(),4*n);
