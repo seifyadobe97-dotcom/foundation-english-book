@@ -26,6 +26,8 @@ for(const [slug,ids] of Object.entries(expected)){
  });
 }
 assert.equal(count,21);
+assert.equal(Object.keys(c.window.StepStageClarity).length,10,"Five historical baseline lessons plus the new batch loaded");
+assert.equal(Object.values(c.window.StepStageClarity).reduce((n,rows)=>n+rows.length,0),47,"Original five stages plus 21 new stages");
 const build=readFileSync("scripts/build-step-public-site.mjs","utf8");
 for(const filename of files)assert(build.includes('"'+filename+'"'),"Public bundle allowlist "+filename);
 console.log("PASS: all 21 distinct Arabic beginner teaching stages for Grammar lessons 26–30");
