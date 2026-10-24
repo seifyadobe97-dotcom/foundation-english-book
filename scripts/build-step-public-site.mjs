@@ -26,6 +26,9 @@ const lessonPagePath=path.join(out,"step-grammar-student","lesson.html");
 let lessonPageHtml=await readFile(lessonPagePath,"utf8");
 const stageAnchor=' <script src="lesson-stage-clarity.js"></script>';
 if(!lessonPageHtml.includes(stageAnchor))throw new Error("Missing original stage explanation script");
+const stageTags=stageBundles.map(name=>' <script src="'+name+'"></script>').join("\n");
+lessonPageHtml=lessonPageHtml.replace(stageAnchor,stageAnchor+"\n"+stageTags);
+await writeFile(lessonPagePath,lessonPageHtml,"utf8");
 const blockedFileList=["foundation-sentence-elements.html","foundation-sentence-elements.js",
  "foundation-sentence-elements.css","foundation-sentence-elements-data.js",
  "foundation-sentence-elements-mastery.js"];
