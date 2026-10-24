@@ -800,13 +800,13 @@ Deno.serve(async(req)=>{
  // Unified visual studio: the original source banks remain immutable and owner edits are versioned.
  if(path==="/studio/catalog"&&req.method==="GET"){
   const {data:indicators,error}=await admin.from("step_curriculum_indicators")
-   .select("slug,title_ar,title_en,position,status,legacy_course_code").eq("axis_code","grammar")
+   .select("slug,title_ar,title_en,position,status,legacy_course_code,axis_code").in("axis_code",["grammar","writing-analysis"])
    .order("position");
   if(error)return reply(500,{error:"تعذر تحميل فهرس الدروس"});
   return reply(200,{courses:(indicators||[]).filter(i=>i.legacy_course_code&&
    allCourseBanks.some(b=>b.code===i.legacy_course_code)).map(i=>({
     slug:i.slug,code:i.legacy_course_code,titleAr:i.title_ar,title:i.title_en,
-    position:i.position,status:i.status
+    position:i.position,status:i.status,axis_code:i.axis_code
    })),can_edit:permission.role==="owner"});
  }
  if(path==="/studio/history"&&req.method==="GET"){
