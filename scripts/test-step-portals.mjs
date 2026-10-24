@@ -761,7 +761,9 @@ assert(adminServer.includes('permission.role!=="owner"')&&adminServer.includes('
  "Publishing videos requires server-side owner authorization");
 assert(courseServer.includes('path==="/videos"')&&courseServer.includes('.eq("published",true)'),
  "Only approved video links may be shown to students");
-assert(adminHome.includes('href="curriculum.html"'),"Admin home links curriculum ordering");
+assert(adminHome.includes('href="curriculum.html?axis=grammar"')&&
+ adminHome.includes('href="curriculum.html?axis=writing-analysis"'),
+ "Admin home links both separately classified curriculum axes");
 assert(adminServer.includes('path==="/curriculum"'),"Admin server includes authorized curriculum API");
 assert(courseServer.includes('path==="/catalog"'),"Student service provides published curriculum catalog");
 assert(portal.includes('step-course/catalog'),"Student portal loads backend catalog");
