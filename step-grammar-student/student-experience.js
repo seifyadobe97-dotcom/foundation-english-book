@@ -92,10 +92,13 @@ window.StepStudentExperience={
    home.insertAdjacentElement("afterend",writingPanel);
   }
 
+  const writingCompleted=writing.reduce((sum,item)=>sum+(item.data.sections||[]).filter(stage=>stage.passed).length,0);
+  const writingTotal=writing.reduce((sum,item)=>sum+(item.data.sections||[]).length,0);
+  const overallDone=done+writingCompleted,overallTotal=total+writingTotal;
   const metrics=app.querySelectorAll(".metric");
   if(metrics.length>=2){
-   metrics[0].querySelector("strong").textContent=done+"/"+total;
-   metrics[1].querySelector("strong").textContent=percent+"%";
+   metrics[0].querySelector("strong").textContent=overallDone+"/"+overallTotal;
+   metrics[1].querySelector("strong").textContent=overallTotal?Math.round(overallDone*100/overallTotal)+"%":"0%";
   }
   const hero=app.querySelector(".hero");
   if(hero&&target){
