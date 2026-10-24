@@ -116,6 +116,10 @@ Deno.serve(async(request)=>{
   if(!Array.isArray(guideModules)||guideModules.length!==lesson.sections.length||
    lesson.sections.some((section:any,index:number)=>guideModules[index]?.id!==section.id))
    return send(403,{error:"شرح المراحل غير مكتمل"});
+  // Never expose admin provenance, PDF page anchors or bank codes as learner teaching text.
+  const editorialMarker=/ASGQ[A-Z0-9]+|STEP course book|STEP_Grammar_Question_Bank|TAJMEAAT|ص\\s*\\d{2,3}/i;
+  if(guideModules.some((m:any)=>editorialMarker.test(String(m.intro_ar||""))))
+   return send(403,{error:"شرح الدرس يحتاج تنقيح ملاحظات المصدر قبل النشر"});
   publishedWritingModules=guideModules;
   const simMap=new Map((simResult.data||[]).map(r=>[r.question_id,r]));
   const sims=Object.entries(originalQuestions).filter(([,q]:any)=>q.origin==="simulated");
@@ -209,7 +213,7 @@ Deno.serve(async(request)=>{
      title:guide.title_ar,detail:guide.intro_ar,
      tip:(guide.rules||[]).map((r:any)=>r.label_ar+" — "+r.formula).join("؛ "),
      cards:(guide.rules||[]).map((r:any)=>[r.label_ar,r.formula,"من شرح الدرس","✓"]),
-     examples:(guide.examples||[]).map((e:any)=>[e.tag||"مثال توضيحي",e.en,"راجع القاعدة في هذا المثال"]),
+     examples:(guide.examples||[]).map((e:any)=>["مثال توضيحي",e.en,"راجع القاعدة في هذا المثال"]),
      keywords:(guide.keywords||[]).map((k:any)=>[k.en,k.ar]),
      formulas:[],warning:null
     }:null;
