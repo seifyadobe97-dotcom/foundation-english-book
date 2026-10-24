@@ -71,7 +71,7 @@ try{
   assert.equal(await page.locator(".beginner-help").count(),1,"Beginner explanation must appear in every lesson");
   assert((await page.locator(".beginner-meaning").innerText()).includes("الشرط الأول"));
   assert((await page.locator(".beginner-structure").innerText()).includes("مضارع بسيط"));
-  assert((await page.locator(".beginner-glossary").innerText()).includes("المضارع البسيط"));
+  assert((await page.locator(".beginner-glossary").textContent()).includes("المضارع البسيط"));
   assert((await page.locator(".beginner-english").innerText()).includes("If you study"));
   assert((await page.locator(".beginner-arabic").innerText()).includes("لو ذاكرت"));
   assert.equal(await page.locator(".flow-rule").count(),0,"Use meaningful explanatory parts, not a bare unexplained rule");
