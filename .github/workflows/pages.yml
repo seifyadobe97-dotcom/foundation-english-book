@@ -121,7 +121,9 @@ jobs:
         run: node tests/lesson-stage-clarity.mjs
       - name: Validate 31 new Arabic stage reviews for Grammar 06 through 10
         run: node tests/lesson-stage-clarity-batch2.mjs
-      - name: Verify 57 beginner stages in real Pages artifact (desktop/mobile)
+      - name: Validate 31 new Grammar 11–15 beginner stage guides
+        run: node tests/lesson-stage-clarity-batch3.mjs
+      - name: Verify 88 beginner stages in real Pages artifact (desktop/mobile)
         run: node tests/lesson-stage-clarity-browser.mjs
       - name: Verify all 53 beginner-friendly Arabic teaching guides
         run: node tests/beginner-arabic-guides.mjs
