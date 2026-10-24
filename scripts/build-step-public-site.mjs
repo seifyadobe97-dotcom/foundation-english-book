@@ -22,6 +22,8 @@ for(const dir of dirs){
   dir!=="step-grammar-student"||!forbidden(path.basename(sourcePath))});
 }
 const stageBundles=["clarity-future-06.js","clarity-arrangements-07.js","clarity-time-08.js","clarity-present-perfect-09.js","clarity-perfect-continuous-10.js","clarity-perfect-continuous-extra.js","clarity-perfect-continuous-finish.js"];
+const lessonPagePath=path.join(out,"step-grammar-student","lesson.html");
+let lessonPageHtml=await readFile(lessonPagePath,"utf8");
 const blockedFileList=["foundation-sentence-elements.html","foundation-sentence-elements.js",
  "foundation-sentence-elements.css","foundation-sentence-elements-data.js",
  "foundation-sentence-elements-mastery.js"];
