@@ -151,6 +151,30 @@ const arabicVisualLabel={
  "will + V1":"المستقبل مع will","If + present":"جملة الشرط في المضارع",
  "Main Clause":"جملة النتيجة","If Clause":"جملة الشرط"
 };
+// Additional terminology used throughout the 45 Grammar skills.
+Object.assign(arabicVisualLabel,{
+ "Adverb / Verb":"الظرف أو الفعل","Human":"إنسان","Equality":"التساوي",
+ "Ownership":"الملكية","Superlative":"التفضيل الأعلى","Comparative":"المقارنة",
+ "Person":"الشخص","Thing":"الشيء","Past invert":"قلب الشرط في الماضي",
+ "Future invert":"قلب الشرط للمستقبل","First":"الأول","Zero":"الشرط الصفري",
+ "Variant":"صيغة بديلة","Mixed":"شرط مختلط","Adapting":"التعود التدريجي",
+ "Familiar":"المعتاد","Regret":"الندم","Unreal":"افتراض غير واقعي",
+ "State":"الحالة","Habit past":"عادة قديمة","Future Perfect":"المستقبل التام",
+ "Present Wish":"تمنّي في الحاضر","Present Continuous":"المضارع المستمر",
+ "Past Continuous":"الماضي المستمر","Duration":"المدة الزمنية",
+ "Adverb / Verb":"الظرف أو الفعل","FOR":"استخدام for","TO":"استخدام to",
+ "ON":"استخدام on","WH":"أدوات الاستفهام","Yes/No":"أسئلة نعم أو لا",
+ "Embedded":"سؤال داخل جملة","Suggestion":"اقتراح","Purpose":"الغرض",
+ "Deadline":"وقت نهائي","Enough":"الكفاية","Too":"زيادة عن الحد",
+ "So...that":"النتيجة باستخدام so ... that","Prep + ing":"حرف جر + ing",
+ "Verb + ing":"الفعل مع ing","Other -ing":"استخدامات أخرى لـ ing",
+ "To Infinitive":"المصدر مع to","Get/Help":"أفعال المساعدة get / help",
+ "Causative":"السببية","Pair":"عنصران متلازمان","Special cases":"حالات خاصة",
+ "Conjunction":"أداة ربط","Sentence":"الجملة","Subject":"الفاعل",
+ "Object":"المفعول به","Complement":"تكملة المعنى","Auxiliary":"الفعل المساعد",
+ "Main verb":"الفعل الأساسي","Countable":"معدود","Uncountable":"غير معدود",
+ "Rule":"القاعدة","Question word":"أداة الاستفهام","Time marker":"دلالة زمنية"
+});
 const labelArabic=(value)=>arabicVisualLabel[String(value||"").trim()]||"";
 const plainText=(value)=>String(value??"").replace(/\[\[|\]\]/g,"").trim();
 const isArabic=value=>/[\u0600-\u06FF]/.test(String(value||""));
