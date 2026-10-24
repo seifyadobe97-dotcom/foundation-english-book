@@ -179,6 +179,8 @@ jobs:
         run: node tests/student-dashboard-resilience.mjs
       - name: Test learner path from dashboard through real practice grading and Writing
         run: node tests/student-learning-journey.mjs
+      - name: Verify 53-course 263-stage dashboard with progressive loading on mobile and desktop
+        run: node tests/student-full-catalog.mjs
 
   deploy:
     name: Deploy verified static book
