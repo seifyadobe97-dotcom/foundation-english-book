@@ -1,13 +1,20 @@
 import assert from "node:assert/strict";
-import {readFile,stat} from "node:fs/promises";
+import {readFile,stat,rm} from "node:fs/promises";
+import {execFileSync} from "node:child_process";
 import {readFileSync} from "node:fs";
 import {runInNewContext} from "node:vm";
 import {createServer} from "node:http";
 import {fileURLToPath} from "node:url";
 import path from "node:path";
 import {chromium} from "playwright";
-const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
-const vm={window:{}};runInNewContext(readFileSync(path.join(root,"step-grammar-student/lesson-stage-clarity.js"),"utf8"),vm);
+const repoRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
+const root=path.join(repoRoot,".step-public-stage-check");
+execFileSync(process.execPath,[path.join(repoRoot,"scripts/build-step-public-site.mjs"),root],{stdio:"pipe"});
+const bundles=["lesson-stage-clarity.js","clarity-future-06.js","clarity-arrangements-07.js","clarity-time-08.js","clarity-present-perfect-09.js","clarity-perfect-continuous-10.js","clarity-perfect-continuous-extra.js","clarity-perfect-continuous-finish.js"];
+const lessonHtml=readFileSync(path.join(root,"step-grammar-student/lesson.html"),"utf8");
+for(const filename of bundles)assert(lessonHtml.includes('src="'+filename+'"'),"Missing published script: "+filename);
+const vm={window:{}};
+for(const filename of bundles)runInNewContext(readFileSync(path.join(root,"step-grammar-student",filename),"utf8"),vm,{filename});
 const sources=vm.window.StepStageClarity;
 const server=createServer(async(req,res)=>{
  const url=new URL(req.url,"http://localhost"),raw=decodeURIComponent(url.pathname),file=path.resolve(root,"."+raw);
@@ -75,6 +82,6 @@ try{
   assert.deepEqual(errors,[],"Browser errors "+width+": "+errors.join(" / "));
   await page.close();
  }
-}finally{await browser.close();await new Promise(resolve=>server.close(resolve))}
-assert.equal(checked,52);
-console.log("PASS: "+checked+" real-browser stage renders (26 stages x mobile/desktop), Arabic/LTR, answer reveal and preserved question area");
+}finally{await browser.close();await new Promise(resolve=>server.close(resolve));await rm(root,{recursive:true,force:true})}
+assert.equal(checked,114);
+console.log("PASS: "+checked+" real-browser stage renders (57 reviewed stages x mobile/desktop), Arabic/LTR, answer reveal and preserved question area");
