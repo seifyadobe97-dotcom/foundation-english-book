@@ -341,7 +341,7 @@ function beginnerTeaching(){
  const entry=beginnerData().lessons[lessonSlug];if(!Array.isArray(entry)||entry.length!==5)return "";
  const [meaning,structure,example,translation,tip]=entry;
  const stage=beginnerData().stages[lessonSlug]?.[state.index];
- const terms=[structure,stage?.[1]||"",...(state.index===0?[]:[LESSONS[state.index]?.title||""])].join(" ");
+ const terms=[structure,stage?.[1]||"",LESSONS[state.index]?.title||"",LESSONS[state.index]?.detail||"",...(LESSONS[state.index]?.formulas||[]).map(row=>row[0]||"")].join(" ");
  const activeTerms=beginnerTerms.filter(([match])=>match.test(terms)).slice(0,5);
  return '<section class="beginner-help" aria-label="شرح مبسط للمبتدئين">'+
   '<div class="beginner-head"><span class="beginner-icon" aria-hidden="true">★</span><div><h3>افهمها بالعربي الأول</h3>'+
