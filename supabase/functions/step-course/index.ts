@@ -204,6 +204,17 @@ Deno.serve(async(request)=>{
    .select("part_index,correct_count,passed").eq("user_id",user.id).eq("course_code",courseCode);
   if(attemptError)throw attemptError;
   const status=sectionStatus(partRows??[],effectiveLesson);
+  // Teacher/source audit metadata must not be served through the student API.
+  const studentTeachingCopy=(input:any)=>{
+   if(!input||typeof input!=="object"||Array.isArray(input))return input;
+   const copy={...input},extra=copy.extra;
+   if(extra&&typeof extra==="object"){
+    const text=[extra.heading,...(Array.isArray(extra.paragraphs)?extra.paragraphs:[])].join(" ");
+    if(/ASGQ[A-Z0-9]+|البنك الأصلي|سجل المراجعة|مصادر الأسئلة|مصدر الأسئلة|التجميعات|المحاكي|المحاكاة|التدقيق|تدقيق|تصنيف المصدر|قيود المصدر|مصداقية بنك|مراجعة مصدرية|الأسئلة المعتمدة|تقييم المصدر/i.test(text))
+     delete copy.extra;
+   }
+   return copy;
+  };
   const getCourse=async()=>{
    const {data:exams,error}=await admin.from("step_exam_attempts")
      .select("correct_count,total_questions,attempted_at")
@@ -223,11 +234,14 @@ Deno.serve(async(request)=>{
      keywords:(guide.keywords||[]).map((k:any)=>[k.en,k.ar]),
      formulas:[],warning:null
     }:null;
-    return teachingRows?.find(x=>x.part_index===i)?.published||fromGuide||section.visual||
-    {title:section.titleAr||section.title,detail:section.description||section.short||section.titleAr||"",
-     tip:section.short||"",cards:[],examples:[],formulas:[],keywords:[],
-     warning:{wrong:"",correct:"",why:""},table:{headers:[],rows:[]},
-     extra:{heading:"",paragraphs:[]}};
+    const base=fromGuide||section.visual||
+     {title:section.titleAr||section.title,detail:section.description||section.short||section.titleAr||"",
+      tip:section.short||"",cards:[],examples:[],formulas:[],keywords:[],
+      warning:{wrong:"",correct:"",why:""},table:{headers:[],rows:[]},
+      extra:{heading:"",paragraphs:[]}};
+    const revision=teachingRows?.find(x=>x.part_index===i)?.published;
+    // A partial approved edit must not remove untouched source teaching components.
+    return studentTeachingCopy(revision&&typeof revision==="object"&&!Array.isArray(revision)?{...base,...revision}:base);
    });
    return {student:user.user_metadata?.username||"طالب STEP",
     teachingUnits:visuals,
@@ -244,7 +258,7 @@ Deno.serve(async(request)=>{
    if(teachingError)return send(503,{error:"تعذر تحميل تحديثات الشرح"});
    return send(200,{units:(teachingRows||[]).filter(x=>Number.isInteger(x.part_index)&&
     x.part_index>=0&&x.part_index<effectiveLesson.sections.length)
-    .map(x=>({index:x.part_index,content:x.published}))});
+    .map(x=>({index:x.part_index,content:studentTeachingCopy(x.published)}))});
   }
   if(method==="GET"&&path==="/videos"){
    const {data:rows,error:videoError}=await admin.from("step_indicator_videos")

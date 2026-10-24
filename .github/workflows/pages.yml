@@ -117,6 +117,8 @@ jobs:
         run: node tests/relative-clauses.mjs
       - name: Test Lesson 33 Zero Conditional synthetic practice on desktop/mobile
         run: node tests/zero-conditional.mjs
+      - name: Verify shared teaching visual layouts Arabic/LTR on desktop and mobile
+        run: node tests/teaching-visual-ltr-regression.mjs
       - name: Test Lesson 34 First Conditional synthetic practice on desktop/mobile
         run: node tests/first-conditional.mjs
       - name: Test Lesson 35 Second Conditional synthetic teaching on desktop/mobile

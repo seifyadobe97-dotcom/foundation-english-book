@@ -107,3 +107,32 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
 .feedback-distractors li{display:flex;flex-wrap:wrap;gap:9px;align-items:start;background:#f7faf8;border:1px solid #e0eae4;border-radius:9px;padding:9px 11px}
 .feedback-distractors li bdi{font-weight:800;min-width:85px;max-width:100%;overflow-wrap:anywhere}
 .feedback-distractors li span{flex:1;min-width:180px}
+
+
+/* Teaching-visual accessibility fixes shared by all dynamic Grammar/Writing lessons */
+.concept-heading{display:flex;flex-direction:column;gap:2px;min-width:0}
+.concept-heading-en{font:700 11px/1.5 "DM Sans",Arial,sans-serif;color:#628078;text-align:start}
+.concept-formula{direction:ltr;text-align:left;unicode-bidi:isolate;overflow-wrap:anywhere;font-family:"DM Sans",Arial,sans-serif}
+.agreement-table{direction:ltr}
+.agreement-table th{text-align:left;direction:auto}
+.table-heading-en{display:block;font:700 10px/1.6 "DM Sans",Arial,sans-serif;color:#638379;margin-top:3px}
+.agreement-table td{text-align:left}
+.agreement-table td span[dir="rtl"]{display:block;text-align:right;unicode-bidi:isolate}
+.agreement-table td span[dir="ltr"]{display:block;text-align:left;unicode-bidi:isolate}
+.agreement-table td::before{direction:auto;text-align:start}
+.flow-label small{display:block;margin-top:3px;font:700 11px/1.5 "DM Sans",Arial,sans-serif;color:#5e8078}
+.flow-rule{display:block;width:100%;min-width:0;padding:13px 16px;border-radius:11px;background:#eef6f1;border:1px solid #cce2d6;color:#1b5948;font:800 17px/1.8 "DM Sans",Cairo,Arial,sans-serif;text-align:left;overflow-wrap:anywhere;unicode-bidi:isolate;white-space:normal}
+.flow-explain{margin-top:10px;color:#4b6965;font-size:13px;line-height:1.9;text-align:right}
+.rule-flow .flow-label{font-size:14px}
+.flow-pieces .flow-piece-caption{display:block;margin-bottom:3px;font:700 11px/1.5 Cairo,Tahoma,sans-serif;color:#52736d;direction:rtl;text-align:center}
+.flow-pieces>span:not(.flow-arrow){white-space:normal;overflow-wrap:anywhere;unicode-bidi:isolate;min-width:0}
+.flow-pieces{overflow-x:auto;direction:ltr}
+@media(max-width:550px){
+ .flow-pieces{gap:5px}
+ .flow-pieces>span:not(.flow-arrow){min-width:110px;flex:none}
+ .agreement-table td{text-align:start}
+ .flow-rule{font-size:15px;padding:12px}
+ .concept-heading-en{font-size:10px}
+}
+
+.table-value-en{display:block;font:700 11px/1.6 "DM Sans",Arial,sans-serif;color:#678178;text-align:left;margin-top:3px}
