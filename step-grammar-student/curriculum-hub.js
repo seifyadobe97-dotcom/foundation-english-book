@@ -93,6 +93,6 @@ window.StepCurriculumHub={
   // Restore bookmarked sections on reload and when navigating browser history.
   window.addEventListener("popstate",()=>show(fromHash(),false));
   window.addEventListener("hashchange",()=>show(fromHash(),false));
-  show(fromHash,false);
+  show(fromHash(),false);
  }
 };
