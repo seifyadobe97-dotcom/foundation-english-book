@@ -204,6 +204,17 @@ Deno.serve(async(request)=>{
    .select("part_index,correct_count,passed").eq("user_id",user.id).eq("course_code",courseCode);
   if(attemptError)throw attemptError;
   const status=sectionStatus(partRows??[],effectiveLesson);
+  // Teacher/source audit metadata must not be served through the student API.
+  const studentTeachingCopy=(input:any)=>{
+   if(!input||typeof input!=="object"||Array.isArray(input))return input;
+   const copy={...input},extra=copy.extra;
+   if(extra&&typeof extra==="object"){
+    const text=[extra.heading,...(Array.isArray(extra.paragraphs)?extra.paragraphs:[])].join(" ");
+    if(/ASGQ[A-Z0-9]+|البنك الأصلي|سجل المراجعة|مصادر الأسئلة|مصدر الأسئلة|التجميعات|المحاكي|المحاكاة|التدقيق|تدقيق|تصنيف المصدر|قيود المصدر|مصداقية بنك|مراجعة مصدرية|الأسئلة المعتمدة|تقييم المصدر/i.test(text))
+     delete copy.extra;
+   }
+   return copy;
+  };
   const getCourse=async()=>{
    const {data:exams,error}=await admin.from("step_exam_attempts")
      .select("correct_count,total_questions,attempted_at")
@@ -213,17 +224,6 @@ Deno.serve(async(request)=>{
    const {data:teachingRows,error:teachingError}=await admin.from("step_teaching_unit_edits")
     .select("part_index,published").eq("course_code",courseCode).not("published","is",null);
    if(teachingError)throw teachingError;
-   // Teacher/source audit metadata must not be served through the student API.
-   const studentTeachingCopy=(input:any)=>{
-    if(!input||typeof input!=="object"||Array.isArray(input))return input;
-    const copy={...input},extra=copy.extra;
-    if(extra&&typeof extra==="object"){
-     const text=[extra.heading,...(Array.isArray(extra.paragraphs)?extra.paragraphs:[])].join(" ");
-     if(/ASGQ[A-Z0-9]+|البنك الأصلي|سجل المراجعة|مصادر الأسئلة|مصدر الأسئلة|التجميعات|المحاكي|المحاكاة|التدقيق|تدقيق|تصنيف المصدر|قيود المصدر|مصداقية بنك|مراجعة مصدرية|الأسئلة المعتمدة|تقييم المصدر/i.test(text))
-      delete copy.extra;
-    }
-    return copy;
-   };
    const visuals=lesson.sections.map((section:any,i:number)=>{
     const guide=publishedWritingModules[i];
     const fromGuide=guide?{
