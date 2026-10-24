@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تجربة تسجيلات الاستماع | STEP WITH SEIFY</title>
+<meta name="theme-color" content="#173d41">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="listening-player.css">
+<style>
+:root{--ink:#193a41;--green:#24705b;--muted:#5f7774;--line:#d8e5df;background:#f5f8f6;font-family:Cairo,Tahoma,sans-serif;color:var(--ink)}
+*{box-sizing:border-box}body{margin:0;line-height:1.85}a{color:var(--green)}
+header{background:#fff;border-bottom:1px solid var(--line);padding:12px max(18px,calc((100vw - 1080px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font:bold 16px Arial,sans-serif;letter-spacing:.07em;color:#24544b}
+.wrap{max-width:1050px;margin:25px auto 44px;padding:0 15px}
+h1{font-size:clamp(24px,3vw,34px);margin:4px 0}p{margin:7px 0}small,.small{color:var(--muted);font-size:12px}
+.kicker{color:#287263;font:bold 12px Arial,sans-serif;letter-spacing:.12em}
+.notice{background:#fff8e8;border:1px solid #ead6a7;padding:12px 15px;border-radius:12px;font-size:13px;margin:17px 0}
+.panel{border:1px solid var(--line);border-radius:17px;background:#fff;padding:19px;margin:17px 0;box-shadow:0 9px 22px #31594b09}
+.panel[hidden]{display:none}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.clip{border:1px solid #cbded4;background:#fbfdfb;border-radius:14px;text-align:right;padding:16px;font:inherit;cursor:pointer;min-height:128px;color:var(--ink)}
+.clip b{display:block;margin:5px 0}.clip small{display:block}.clip[aria-pressed=true]{background:#ecf7ef;border:2px solid #23806e;padding:15px}
+.pill{font:bold 11px Arial,sans-serif;background:#e2eee9;color:#1b584a;border-radius:7px;padding:3px 7px}
+.modes{display:flex;gap:10px;flex-wrap:wrap}
+.mode{border:1px solid #b9d0c6;background:#fff;border-radius:10px;padding:9px 15px;font:700 13px Cairo,Tahoma;cursor:pointer;color:var(--ink)}
+.mode[aria-pressed=true]{background:#e9f6ef;border-color:var(--green)}
+label[for=audio-source]{font-weight:800;font-size:14px;display:block;margin:10px 0 5px}
+input[type=file]{width:100%;border:1px dashed #b8cdc5;border-radius:12px;padding:13px;font:13px Cairo,Tahoma}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:15px}
+.primary{background:#205c51;color:white;border:0;border-radius:10px;padding:11px 19px;font:800 14px Cairo,Tahoma;cursor:pointer}
+.primary:disabled{opacity:.45;cursor:not-allowed}
+.feedback{font-size:13px;color:#386d60;min-height:24px}
+.footer{font-size:12px;color:var(--muted);text-align:center;margin-top:18px}
+.hidden{display:none}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #bb9860;outline-offset:3px}
+@media(max-width:650px){.wrap{margin:15px auto}.grid{grid-template-columns:1fr}.panel{padding:14px}.actions .primary{width:100%}}
+</style>
+</head>
+<body>
+<header><span class="brand" dir="ltr">STEP WITH SEIFY · LISTENING</span><a href="./">← العودة لحساب الطالب</a></header>
+<main class="wrap">
+<span class="kicker">LISTENING / SOURCE-SAMPLE LAB</span>
+<h1>جرّب مجموعتين من تسجيلات الاستماع</h1>
+<p>التجربة دي عشان تشوف شكل سؤال الاستماع على حساب الطالب: تدريب حر أو محاكاة بوقت قراءة <strong>30 ثانية</strong> للمجموعة المكوّنة من سؤالين.</p>
+<div class="notice"><strong>معاينة غير محسوبة:</strong> التسجيلين من الملفات المرفوعة للتجربة، مش اختبار STEP رسمي. التصحيح من السيرفر في التدريب فقط، بدون تسجيل درجات أو تغيير تقدمك. التسجيل الثالث في المستند لم يُفعّل لأن مفيش ملف صوت مرفوع ليه.</div>
+<section class="panel" id="setup">
+<h2>1. اختار التسجيل</h2>
+<div class="grid">
+<button class="clip" type="button" data-clip="record-1" aria-pressed="true"><span class="pill">RECORD 01 · 27s</span><b>موعد الامتحان والوحدات</b><small>حوار بين مدرسة وطالبين · سؤالان</small></button>
+<button class="clip" type="button" data-clip="record-2" aria-pressed="false"><span class="pill">RECORD 02 · 31s</span><b>تغيّر العادات الغذائية</b><small>محاضرة قصيرة عن الطعام · سؤالان</small></button>
+</div>
+<h2>2. اختار الطريقة</h2>
+<div class="modes"><button class="mode" type="button" data-mode="practice" aria-pressed="true">🎧 تدريب حر — إعادة بلا حدود</button><button class="mode" type="button" data-mode="exam" aria-pressed="false">⏱ محاكاة اختبار — 30 ثانية ثم تشغيل واحد</button></div>
+<label for="audio-source">3. اختار التسجيل الصوتي الأصلي من جهازك (MP3)</label>
+<input type="file" id="audio-source" accept="audio/mpeg,audio/mp3,audio/mp4,audio/wav,audio/ogg,audio/webm,audio/*">
+<p class="small">لأمان ملفات المصدر، الاختيار محلي على جهازك ومش بيرفع أي صوت إلى حساب الطالب. اختار الملف المطابق للتسجيل المحدد. نسخة المعاينة المحلية المرفقة في ZIP بتجهّز التسجيلين تلقائيًا.</p>
+<div class="actions"><button id="launch" class="primary" type="button" disabled>ابدأ تجربة التسجيل ←</button><span class="feedback" id="feedback" role="status" aria-live="polite">اختار MP3 الأول.</span></div>
+</section>
+<section class="panel hidden" id="active">
+<p id="active-label" class="small"></p>
+<button id="reset" class="mode" type="button">← غيّر التسجيل أو الوضع</button>
+<div id="listening-root"></div>
+</section>
+<p class="footer">مفاتيح الإجابات والنصوص التفسيرية مش موجودة داخل ملفات الصفحة العامة، ولا بتظهر في وضع المحاكاة. محرك الاختبار الرسمي ما زال قيد الإعداد.</p>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script src="listening-session.js"></script>
+<script src="listening-player.js"></script>
+<script>
+"use strict";
+(()=> {
+const config={url:"https://funltjxavowlnnfibhpl.supabase.co",key:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg"};
+const db=window.supabase?.createClient(config.url,config.key);
+const samples={
+"record-1":{label:"Record 1 — Final exam",questions:[
+{id:"r1-q1",text:"Which exact date does Mrs. Smith mention for the final exam?",options:{A:"Wednesday",B:"Next Monday (no exact date)",C:"Next week (no exact date)",D:"Monday 26th December"}},
+{id:"r1-q2",text:"How many units must the students study for the test?",options:{A:"2",B:"5",C:"6",D:"26"}}]},
+"record-2":{label:"Record 2 — Eating habits",questions:[
+{id:"r2-q1",text:"What is the main idea in the lecture?",options:{A:"Health in America",B:"Changes in eating habits",C:"The American beef industry",D:"Traditional foods"}},
+{id:"r2-q2",text:"What does the lecturer recommend about eating beef?",options:{A:"Stop eating huge amounts of beef",B:"Increase the amount of beef",C:"Eat only a small amount of vegetables",D:"Become vegetarians"}}]}
+};
+let selected="record-1",mode="practice",picked=null,session=null,media=null,blob=null;
+const setup=document.querySelector("#setup"),active=document.querySelector("#active"),root=document.querySelector("#listening-root");
+const input=document.querySelector("#audio-source"),launch=document.querySelector("#launch"),feedback=document.querySelector("#feedback");
+const buttons=[...document.querySelectorAll("[data-clip]")],modes=[...document.querySelectorAll("[data-mode]")];
+function setMessage(t){feedback.textContent=t;}
+function clearMedia(){session?.destroy();session=null;if(media){media.pause();media.removeAttribute("src");media.load();media=null;}if(blob){URL.revokeObjectURL(blob);blob=null;}}
+function setSelection(id){if(session)return;selected=id;picked=null;input.value="";buttons.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.clip===id)));refreshAvailability();}
+function refreshAvailability(){
+ const local=window.StepPreviewLocalAssets?.[selected];
+ launch.disabled=!picked&&!local;
+ setMessage(picked?"تم اختيار "+picked.name+". جاهز للتجربة.":local?"التسجيل الأصلي متاح داخل حزمة التجربة.":"اختار ملف MP3 الخاص بالتسجيل ده.");
+}
+buttons.forEach(b=>b.addEventListener("click",()=>setSelection(b.dataset.clip)));
+modes.forEach(b=>b.addEventListener("click",()=>{if(session)return;mode=b.dataset.mode;modes.forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.mode===mode)));}));
+input.addEventListener("change",()=>{picked=input.files?.[0]||null;if(picked&&!picked.type.startsWith("audio/")&&!/\.(mp3|ogg|wav|m4a)$/i.test(picked.name)){picked=null;input.value="";setMessage("اختار ملف صوت حقيقي.");}refreshAvailability();});
+async function grade(answers,runMode){
+ if(window.StepPreviewOfflineGrade)return window.StepPreviewOfflineGrade(selected,answers,runMode);
+ if(!db)throw Error("تعذر تحميل تسجيل الدخول");
+ const {data:{session:auth}}=await db.auth.getSession();
+ if(!auth)throw Error("لازم تسجّل دخول الأول من بوابة الطالب.");
+ const response=await fetch(config.url+"/functions/v1/step-listening-samples",{
+ method:"POST",
+ headers:{"apikey":config.key,"authorization":"Bearer "+auth.access_token,"content-type":"application/json"},
+ body:JSON.stringify({sample:selected,mode:runMode,answers}),signal:AbortSignal.timeout(15000)});
+ const result=await response.json().catch(()=>({}));
+ if(!response.ok)throw Error(result.error||"التصحيح مش متاح");
+ return result;
+}
+launch.addEventListener("click",()=>{
+ if(launch.disabled)return;
+ clearMedia();root.replaceChildren();
+ media=document.createElement("audio");
+ media.preload="auto";
+ if(picked){blob=URL.createObjectURL(picked);media.src=blob;}
+ else media.src=window.StepPreviewLocalAssets?.[selected]||"";
+ if(!media.src){setMessage("اختار ملف الصوت الأول.");return;}
+ const current=selected;
+ const valid=samples[current];
+ session=window.StepListeningUI.mount(root,{
+ mode,questions:valid.questions,media,nativeControls:mode==="practice",
+ demo:true,grade,
+ ensureAudioReady:()=>new Promise((resolve,reject)=>{
+  if(media.readyState>=2){resolve();return;}
+  const timer=setTimeout(()=>{cleanup();reject(Error("media timeout"));},12000);
+  const yes=()=>{cleanup();resolve();},no=()=>{cleanup();reject(Error("media error"));};
+  function cleanup(){clearTimeout(timer);media.removeEventListener("canplay",yes);media.removeEventListener("error",no);}
+  media.addEventListener("canplay",yes,{once:true});media.addEventListener("error",no,{once:true});
+  media.load();
+ }),
+ unlockAudio:()=>Promise.resolve()
+ });
+ setup.hidden=true;active.classList.remove("hidden");
+ document.querySelector("#active-label").textContent=valid.label+" · "+(mode==="exam"?"محاكاة غير محسوبة":"تدريب غير محسوب")+" · التسجيل الصوتي المختار";
+ active.scrollIntoView({block:"start",behavior:"smooth"});
+});
+document.querySelector("#reset").addEventListener("click",()=>{
+ clearMedia();active.classList.add("hidden");setup.hidden=false;root.replaceChildren();refreshAvailability();setup.scrollIntoView({block:"start",behavior:"smooth"});
+});
+window.addEventListener("pagehide",clearMedia);
+refreshAvailability();
+})();
+</script>
+</body></html>
