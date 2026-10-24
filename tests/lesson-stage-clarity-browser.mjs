@@ -10,12 +10,13 @@ import {chromium} from "playwright";
 const repoRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const root=path.join(repoRoot,".step-public-stage-check");
 execFileSync(process.execPath,[path.join(repoRoot,"scripts/build-step-public-site.mjs"),root],{stdio:"pipe"});
-const bundles=["lesson-stage-clarity.js","clarity-future-06.js","clarity-arrangements-07.js","clarity-time-08.js","clarity-present-perfect-09.js","clarity-perfect-continuous-10.js","clarity-perfect-continuous-extra.js","clarity-perfect-continuous-finish.js","clarity-past-perfect-11.js","clarity-past-perfect-continuous-12.js","clarity-future-perfect-combo-13.js","clarity-used-to-14.js","clarity-modals-15.js","clarity-deduction-16.js","clarity-passive-17.js","clarity-modal-passive-18.js","clarity-pronouns-19.js","clarity-articles-20.js","clarity-degree-21.js","clarity-adverbs-22.js","clarity-comparatives-23.js","clarity-prepositions-24.js","clarity-collocations-25.js","clarity-word-formation-26.js","clarity-gerunds-27.js","clarity-infinitives-28.js","clarity-bare-29.js","clarity-causatives-30.js","clarity-connectors-31.js","clarity-relative-32.js","clarity-zero-33.js","clarity-first-34.js","clarity-second-35.js","clarity-third-36.js","clarity-wishes-37.js","clarity-reported-38.js","clarity-indirect-39.js","clarity-tags-40.js","clarity-so-neither-41.js","clarity-advanced-42.js","clarity-questions-43.js","clarity-wh-44.js","clarity-order-45.js"];
+const bundles=["lesson-stage-clarity.js","clarity-future-06.js","clarity-arrangements-07.js","clarity-time-08.js","clarity-present-perfect-09.js","clarity-perfect-continuous-10.js","clarity-perfect-continuous-extra.js","clarity-perfect-continuous-finish.js","clarity-past-perfect-11.js","clarity-past-perfect-continuous-12.js","clarity-future-perfect-combo-13.js","clarity-used-to-14.js","clarity-modals-15.js","clarity-deduction-16.js","clarity-passive-17.js","clarity-modal-passive-18.js","clarity-pronouns-19.js","clarity-articles-20.js","clarity-degree-21.js","clarity-adverbs-22.js","clarity-comparatives-23.js","clarity-prepositions-24.js","clarity-collocations-25.js","clarity-word-formation-26.js","clarity-gerunds-27.js","clarity-infinitives-28.js","clarity-bare-29.js","clarity-causatives-30.js","clarity-connectors-31.js","clarity-relative-32.js","clarity-zero-33.js","clarity-first-34.js","clarity-second-35.js","clarity-third-36.js","clarity-wishes-37.js","clarity-reported-38.js","clarity-indirect-39.js","clarity-tags-40.js","clarity-so-neither-41.js","clarity-advanced-42.js","clarity-questions-43.js","clarity-wh-44.js","clarity-order-45.js","clarity-writing-punctuation-01.js","clarity-writing-capitalization-02.js","clarity-writing-sequencing-03.js","clarity-writing-logical-04.js","clarity-writing-errors-05.js","clarity-writing-combining-06.js","clarity-writing-completion-07.js","clarity-writing-spelling-08.js"];
 const lessonHtml=readFileSync(path.join(root,"step-grammar-student/lesson.html"),"utf8");
 for(const filename of bundles)assert(lessonHtml.includes('src="'+filename+'"'),"Missing published script: "+filename);
 const vm={window:{}};
 for(const filename of bundles)runInNewContext(readFileSync(path.join(root,"step-grammar-student",filename),"utf8"),vm,{filename});
 const sources=vm.window.StepStageClarity;
+const writingSlugs=new Set(["punctuation","capitalization","sequencing","logical-connectors","error-recognition","sentence-combining","logical-sentence-completion","spelling-word-recognition"]);
 const server=createServer(async(req,res)=>{
  const url=new URL(req.url,"http://localhost"),raw=decodeURIComponent(url.pathname),file=path.resolve(root,"."+raw);
  if(!file.startsWith(root+path.sep)){res.writeHead(403);res.end();return}
@@ -42,7 +43,7 @@ try{
    const teaching=rows.map(r=>({title:r[1],detail:"افهم المرحلة وبعدين جرب سؤال التحقق.",
     tip:"حدد الفاعل أو الزمن قبل الإجابة.",cards:[],examples:[],formulas:[],keywords:[],
     warning:{wrong:"",correct:"",why:""},extra:{heading:"",paragraphs:[]}}));
-   const course=()=>({student:"synthetic",course:{title:slug,titleAr:slug,subtitle:"reviewed lesson",axis_code:"grammar"},
+   const course=()=>({student:"synthetic",course:{title:slug,titleAr:slug,subtitle:"reviewed lesson",axis_code:writingSlugs.has(slug)?"writing-analysis":"grammar"},
     teachingUnits:teaching,sections:rows.map((r,i)=>({id:r[0],index:i,title:r[1],titleAr:r[1],
      passed:false,locked:false,short:"reviewed",questionCount:1})),
     nextIndex:0,completed:false,exam:{unlocked:false,best:0,attempts:0}});
@@ -83,5 +84,5 @@ try{
   await page.close();
  }
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));await rm(root,{recursive:true,force:true})}
-assert.equal(checked,456);
-console.log("PASS: "+checked+" real-browser stage renders (228 reviewed stages x mobile/desktop), Arabic/LTR, answer reveal and preserved question area");
+assert.equal(checked,526);
+console.log("PASS: "+checked+" real-browser stage renders (263 reviewed stages x mobile/desktop), Arabic/LTR, answer reveal and preserved question area");
