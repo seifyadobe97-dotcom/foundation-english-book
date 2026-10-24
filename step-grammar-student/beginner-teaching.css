@@ -29,3 +29,15 @@
 @media(max-width:620px){.beginner-help{padding:14px 12px;border-radius:15px}.beginner-head h3{font-size:18px}.beginner-parts{flex-direction:column}.beginner-part{min-width:0;flex:auto}.beginner-rule-parts{grid-template-columns:1fr}.beginner-english,.beginner-pattern{font-size:15px}.beginner-glossary dl>div{align-items:flex-start;flex-direction:column;gap:2px}.beginner-meaning p{font-size:14px}}
 
 .beginner-pattern[dir="rtl"]{direction:rtl;text-align:right;font-family:Cairo,Tahoma,Arial,sans-serif}
+
+/* Fully reviewed individual stages: English examples retain LTR order, Arabic functions RTL. */
+.beginner-help .beginner-parts .beginner-part[dir="ltr"]{text-align:center}
+.beginner-check{border:1px solid #e4d3a3;background:#fffaf0;border-radius:12px;padding:15px 18px;margin-top:16px}
+.beginner-check>strong{font-weight:800;color:#735319;font-size:15px}
+.beginner-check>p{font-size:14px;line-height:1.9;margin:8px 0 12px}
+.beginner-check details{border-top:1px solid #eadbb9;padding-top:10px}
+.beginner-check summary{cursor:pointer;width:fit-content;background:#f5e8ca;border-radius:10px;color:#73521c;padding:8px 12px;font-size:13px;font-weight:800;list-style-position:inside}
+.beginner-check-answer{font-weight:800;color:#236047;margin:10px 0 3px;line-height:1.8}
+.beginner-check-why{font-size:13px;color:#536c65;line-height:1.8;margin:4px 0}
+.beginner-check details:not([open]) .beginner-check-answer,.beginner-check details:not([open]) .beginner-check-why{display:none}
+@media(max-width:620px){.beginner-check{padding:12px}.beginner-check summary{max-width:100%}}

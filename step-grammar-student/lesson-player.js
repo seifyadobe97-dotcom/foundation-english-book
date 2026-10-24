@@ -128,7 +128,7 @@ function renderLessonHeader(){
  const done=list[i]?.passed,locked=list[i]?.locked,active=state.mode==="lesson"&&i===state.index;
  return '<button type="button" class="path-button '+(active?'active':done?'done':'')+'" data-action="part" data-index="'+i+'" '+
  (locked?'disabled title="اجتز المرحلة السابقة أولًا"':'')+' aria-current="'+(active?'step':'false')+'">'+
- '<span class="path-number">'+(done?'✓':i+1)+'</span><span class="path-label">'+escapeHtml((beginnerData().stages[lessonSlug]||[])[i]?.[0]||state.course.sections[i]?.titleAr||m.title)+'</span></button>';
+ '<span class="path-number">'+(done?'✓':i+1)+'</span><span class="path-label">'+escapeHtml((Array.isArray(window.StepStageClarity?.[lessonSlug]?.[i])&&window.StepStageClarity[lessonSlug][i][0]===state.course.sections[i]?.id?window.StepStageClarity[lessonSlug][i][1]:null)||(beginnerData().stages[lessonSlug]||[])[i]?.[0]||state.course.sections[i]?.titleAr||m.title)+'</span></button>';
  }).join("")+'</nav>';
 }
 // English examples, rules and arrows are always read left to right. Arabic explanations
@@ -274,7 +274,7 @@ function diagram(m){
  }).join("")+'</div></section>';
 }
 function warningExamples(m){
- if(!m.warning)return "";
+ if(!m.warning||!plainText(m.warning.wrong)||!plainText(m.warning.correct))return "";
  return '<div class="tip-examples"><div class="tip-case is-wrong"><span class="tip-case-label">✕ غلط</span>'+
  '<bdi dir="ltr" lang="en">'+escapeHtml(m.warning.wrong)+'</bdi></div>'+
  '<div class="tip-case is-correct"><span class="tip-case-label">✓ صح</span>'+
@@ -327,6 +327,13 @@ function studentSafeExtra(extra){
 }
 
 const beginnerData=()=>window.StepBeginnerTeaching||{lessons:{},stages:{},formulas:{}};
+const reviewedStage=()=>{
+ const row=window.StepStageClarity?.[lessonSlug]?.[state.index];
+ // Do not mislabel content if the published curriculum is ever reordered.
+ if(!Array.isArray(row)||row.length!==7||row[0]!==state.course?.sections?.[state.index]?.id||
+    !Array.isArray(row[3])||row[3].length!==3||!Array.isArray(row[6]))return null;
+ return row;
+};
 const beginnerTerms=[
  [/present\s+simple/i,"present simple","المضارع البسيط: عادة أو حقيقة، والفعل غالبًا مصدر مع I/you/we/they"],
  [/past\s+simple/i,"past simple","الماضي البسيط: حدث انتهى في الماضي"],
@@ -340,7 +347,8 @@ const beginnerTerms=[
 function beginnerTeaching(){
  const entry=beginnerData().lessons[lessonSlug];if(!Array.isArray(entry)||entry.length!==5)return "";
  const [meaning,structure,example,translation,tip]=entry;
- const stage=beginnerData().stages[lessonSlug]?.[state.index];
+ const review=reviewedStage();
+ const stage=review?[review[1],review[2],...review[3].map(([en,ar])=>en+" = "+ar),review[4],review[5]]:beginnerData().stages[lessonSlug]?.[state.index];
  const terms=[structure,stage?.[1]||"",LESSONS[state.index]?.title||"",LESSONS[state.index]?.detail||"",...(LESSONS[state.index]?.formulas||[]).map(row=>row[0]||"")].join(" ");
  const activeTerms=beginnerTerms.filter(([match])=>match.test(terms)).slice(0,5);
  return '<section class="beginner-help" aria-label="شرح مبسط للمبتدئين">'+
@@ -350,14 +358,20 @@ function beginnerTeaching(){
   (stage?'<div class="beginner-stage"><strong>'+escapeHtml(stage[0])+'</strong>'+
     '<p>'+escapeHtml(stage[1])+'</p>'+
     '<div class="beginner-parts" dir="ltr">'+stage.slice(2,5).map((part,i)=>'<span class="beginner-part">'+
-    '<small lang="ar" dir="rtl">'+["الجزء الأول","الجزء الثاني","الجزء الثالث"][i]+'</small>'+
-    '<span dir="auto">'+escapeHtml(part)+'</span></span>').join("")+'</div></div>':"")+
+    '<small lang="ar" dir="rtl">'+(review?escapeHtml(review[3][i][1]):["الجزء الأول","الجزء الثاني","الجزء الثالث"][i])+'</small>'+
+    (review?'<span dir="ltr" lang="en">'+escapeHtml(review[3][i][0])+'</span>':
+      '<span dir="auto">'+escapeHtml(part)+'</span>')+'</span>').join("")+'</div></div>':"")+
   '<div class="beginner-structure"><strong>شكل الجملة ببساطة</strong>'+
-  '<div class="beginner-pattern" dir="'+(/^[^A-Za-z]*[\u0600-\u06FF]/.test(structure)?"rtl":"ltr")+'">'+escapeHtml(structure)+'</div></div>'+
+  '<div class="beginner-pattern" dir="'+(review?"ltr":/^[^A-Za-z]*[\u0600-\u06FF]/.test(structure)?"rtl":"ltr")+'">'+escapeHtml(review?review[3].map(p=>p[0]).join("  →  "):structure)+'</div></div>'+
   '<div class="beginner-example"><strong>مثال واضح</strong><p class="beginner-english" dir="ltr" lang="en">'+
     escapeHtml(stage?.[5]||example)+'</p><p class="beginner-arabic" dir="rtl">'+
     escapeHtml(stage?.[6]||translation)+'</p></div>'+
   '<p class="beginner-reminder"><strong>خد بالك:</strong> '+escapeHtml(tip)+'</p>'+
+  (review?'<div class="beginner-check" aria-label="تدريب فهم سريع">'+
+     '<strong>فكّر قبل ما تحل أسئلة المرحلة</strong><p>'+escapeHtml(review[6][0])+'</p>'+
+     '<details><summary>اكشف الإجابة واشرح السبب</summary>'+
+     '<p class="beginner-check-answer" dir="auto"><strong>الإجابة: </strong>'+escapeHtml(review[6][1])+'</p>'+
+     '<p class="beginner-check-why">'+escapeHtml(review[6][2])+'</p></details></div>':"")+
   (activeTerms.length?'<details class="beginner-glossary"><summary>الرموز الإنجليزية دي معناها إيه؟</summary>'+
     '<dl>'+activeTerms.map(([,name,description])=>'<div><dt dir="ltr" lang="en">'+escapeHtml(name)+
     '</dt><dd>'+escapeHtml(description)+'</dd></div>').join("")+'</dl></details>':"")+
