@@ -95,7 +95,7 @@
         '<span class="listening-group-count">'+count(s)+' '+(count(s)===1?"سؤال":"أسئلة")+
         ' على نفس المقطع'+(s.mode==="exam"?' · '+s.readingSeconds+' ثانية للقراءة':"")+'</span></div>'+
         '<div class="listening-phase">'+phaseMessage+'</div>'+
-        '<div class="listening-questions">'+s.questions.map((q,i)=>card(q,i,s)).join("")+'</div>'+
+        '<div class="listening-questions">'+(s.mode==="exam"&&s.phase==="ready"?"":s.questions.map((q,i)=>card(q,i,s)).join(""))+'</div>'+
         (maySubmit?'<button type="button" class="listening-button submit" data-action="submit"'+
           (s.busy?' disabled':'')+'>'+(s.busy?"بنسجّل الإجابات…":"سلّم إجابات المجموعة ←")+'</button>':"")+
         status+review;
