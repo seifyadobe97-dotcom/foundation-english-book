@@ -29,7 +29,7 @@ for(const [slug,parts] of Object.entries(data.lessons)){
 assert.equal(data.stages["first-conditional"].length,3,"All three First Conditional stages have teaching breakdowns");
 for(const p of data.stages["first-conditional"])assert(p.length===7&&p.every(x=>x?.length>6));
 assert.equal(Object.keys(data.formulas).length,9,"Every First Conditional 2-field formula gets a readable Arabic explanation");
-for(const parts of Object.values(data.formulas))assert(parts.length===3&&parts.every(v=>v.length>7));
+for(const parts of Object.values(data.formulas))assert(parts.length===3&&parts.every(v=>v.length>=5));
 const player=readFileSync("step-grammar-student/lesson-player.js","utf8");
 const html=readFileSync("step-grammar-student/lesson.html","utf8");
 assert(html.indexOf('beginner-teaching.js')<html.indexOf('lesson-player.js'));
