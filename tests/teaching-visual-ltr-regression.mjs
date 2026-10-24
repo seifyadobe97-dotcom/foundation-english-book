@@ -66,7 +66,15 @@ try{
   assert.equal(await page.locator(".concept-card").count(),3,"Full explanation cards rendered");
   assert.equal(await page.locator(".example").count(),4,"Instructor teaching examples rendered");
   assert.equal(await page.locator(".agreement-table").count(),1);
-  assert.equal(await page.locator(".flow-rule").count(),1,"Two-field rules render as ONE complete visible strip");
+  assert.equal(await page.locator(".beginner-rule").count(),1,"First Conditional rule displayed with a meaningful Arabic explanation");
+  assert.equal(await page.locator(".beginner-rule-parts .beginner-rule-part").count(),2);
+  assert.equal(await page.locator(".beginner-help").count(),1,"Beginner explanation must appear in every lesson");
+  assert((await page.locator(".beginner-meaning").innerText()).includes("الشرط الأول"));
+  assert((await page.locator(".beginner-structure").innerText()).includes("مضارع بسيط"));
+  assert((await page.locator(".beginner-glossary").innerText()).includes("المضارع البسيط"));
+  assert((await page.locator(".beginner-english").innerText()).includes("If you study"));
+  assert((await page.locator(".beginner-arabic").innerText()).includes("لو ذاكرت"));
+  assert.equal(await page.locator(".flow-rule").count(),0,"Use meaningful explanatory parts, not a bare unexplained rule");
   assert.equal(await page.locator(".flow-pieces").count(),1,"Four-field pattern renders as a three-part flow");
   assert.equal(await page.locator(".flow-pieces .flow-arrow").count(),2);
   assert.equal(await page.locator(".flow-pieces>span:empty").count(),0,"Never create empty formula boxes");
