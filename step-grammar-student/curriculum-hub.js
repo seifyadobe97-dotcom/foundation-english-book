@@ -70,24 +70,29 @@ window.StepCurriculumHub={
   const axes=app.querySelector(".student-axes-disclosure");
   if(axes)axes.hidden=true; // Replaced by the five prominent cards, not deleted.
   const panels={grammar:home,writing:writingPanel,exams:examPanel};
-  const show=(target,scroll=true)=>{
+  const hashes={grammar:"#student-learning-path",writing:"#writing-analysis-lessons",exams:"#student-exams"};
+  const fromHash=()=>location.hash===hashes.exams?"exams":
+   location.hash===hashes.writing?"writing":"grammar";
+  const show=(target,scroll=true,updateAddress=false)=>{
    if(!panels[target])target="grammar";
    for(const [name,panel] of Object.entries(panels))if(panel)panel.hidden=name!==target;
    if(stages)stages.hidden=target!=="grammar";
    hub.querySelectorAll("[data-curriculum-target]").forEach(button=>
     button.setAttribute("aria-pressed",String(button.dataset.curriculumTarget===target)));
+   // Shareable section URLs and Back/Forward must match the currently visible section.
+   if(updateAddress&&location.hash!==hashes[target])history.pushState(null,"",hashes[target]);
    if(scroll)hub.scrollIntoView({behavior:"smooth",block:"start"});
   };
   hub.addEventListener("click",event=>{
    const button=event.target.closest("[data-curriculum-target]");
-   if(button&&hub.contains(button))show(button.dataset.curriculumTarget);
+   if(button&&hub.contains(button))show(button.dataset.curriculumTarget,true,true);
   });
   shortcut?.querySelector('[data-curriculum-shortcut="exams"]')?.addEventListener("click",event=>{
-   event.preventDefault();show("exams");history.replaceState(null,"","#student-exams");
+   event.preventDefault();show("exams",true,true);
   });
-  // The user can open a bookmarked curriculum section after reloading.
-  const fromHash=location.hash==="#student-exams"?"exams":
-   location.hash==="#writing-analysis-lessons"?"writing":"grammar";
+  // Restore bookmarked sections on reload and when navigating browser history.
+  window.addEventListener("popstate",()=>show(fromHash(),false));
+  window.addEventListener("hashchange",()=>show(fromHash(),false));
   show(fromHash,false);
  }
 };
