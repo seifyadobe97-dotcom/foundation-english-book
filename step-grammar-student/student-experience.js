@@ -63,6 +63,35 @@ window.StepStudentExperience={
    }).join("")+'</div>';
   heading.replaceWith(home);
   for(const old of Array.from(app.querySelectorAll(".course-card")))old.remove();
+
+  // Only indicators returned as published by the server and with a successful
+  // protected course response get a Writing tile. No draft or review metadata reaches students.
+  const writing=(data.catalog?.indicators||[]).filter(i=>i.axis_code==="writing-analysis")
+   .slice().sort((a,b)=>Number(a.position)-Number(b.position))
+   .map(item=>({...item,data:additional[item.slug]}))
+   .filter(item=>item.data&&Array.isArray(item.data.sections));
+  if(writing.length){
+   const writingPanel=document.createElement("section");
+   writingPanel.id="writing-analysis-lessons";writingPanel.className="student-learning-path";
+   writingPanel.innerHTML='<div class="student-section-title"><div><span class="section-label">WRITING ANALYSIS</span>'+
+    '<h2>دروسي في التحليل الكتابي</h2><p>المهارات المتاحة بعد اعتماد الشرح والأسئلة.</p></div>'+
+    '<span class="student-count">'+writing.length+' دروس متاحة</span></div>'+
+    '<div class="student-course-list">'+writing.map((item,i)=>{
+     const stages=item.data.sections||[],passed=stages.filter(s=>s.passed).length;
+     const next=stages.findIndex(s=>!s.passed&&!s.locked);
+     const step=next>=0?next:Math.min(Math.max(Number(item.data.nextIndex)||0,0),Math.max(0,stages.length-1));
+     const pct=stages.length?Math.round(passed/stages.length*100):0;
+     const url="lesson.html?slug="+encodeURIComponent(item.slug)+"&step="+step;
+     return '<article class="student-course-tile"><div class="student-course-number">WRITING '+String(i+1).padStart(2,"0")+'</div>'+
+      '<div class="student-course-info"><h3>'+esc(item.title_en)+'</h3><p class="student-course-ar">'+esc(item.title_ar)+'</p>'+
+      '<div class="student-stage-meta">'+passed+' من '+stages.length+' مراحل مكتملة</div>'+
+      '<div class="student-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct+'"><span style="width:'+pct+'%"></span></div></div>'+
+      '<div class="student-course-go"><strong>'+pct+'%</strong><a href="'+url+'">'+
+      (passed===stages.length?'راجع الدرس':'ابدأ أو كمّل')+' ←</a></div></article>';
+    }).join("")+'</div>';
+   home.insertAdjacentElement("afterend",writingPanel);
+  }
+
   const metrics=app.querySelectorAll(".metric");
   if(metrics.length>=2){
    metrics[0].querySelector("strong").textContent=done+"/"+total;
