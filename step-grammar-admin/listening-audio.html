@@ -1,0 +1,59 @@
+<!doctype html><html lang="ar" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>رفع صوتيات Listening | إدارة STEP WITH SEIFY</title>
+<style>
+:root{font-family:Cairo,Tahoma,Arial,sans-serif;color:#183d41;background:#f4f7f5}*{box-sizing:border-box}body{margin:0;line-height:1.8}
+header{background:white;border-bottom:1px solid #dae6e0;padding:15px max(15px,calc((100vw - 990px)/2));display:flex;gap:13px;justify-content:space-between}
+a{color:#1d715e}main{max-width:990px;margin:22px auto;padding:0 15px}
+.panel{background:white;border:1px solid #d4e4dd;border-radius:15px;padding:22px;margin:15px 0}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+label{display:block;font-weight:800;margin-bottom:9px}
+input{display:block;border:1px solid #d6e3df;border-radius:9px;padding:12px;width:100%;max-width:100%;font:inherit}
+button{background:#1e6453;color:#fff;border:0;padding:12px 20px;border-radius:10px;font:700 15px Cairo,Tahoma;cursor:pointer}
+button:disabled{opacity:.5;cursor:wait}.msg{font-size:14px;color:#245d50}
+.notice{padding:12px;border:1px solid #f0d4a7;background:#fff9eb;border-radius:10px;font-size:13px}
+@media(max-width:630px){.row{grid-template-columns:1fr}}
+</style></head><body><header><strong>STEP WITH SEIFY · LISTENING ADMIN</strong><a href="./">← لوحة الإدارة</a></header>
+<main><h1>رفع التسجيلات الأصلية وتفعيلها للطلاب</h1>
+<p>الخطوة دي بتحصل مرة واحدة من حساب صاحب المنصة. بعدها الطالب يدخل على Listening ويبدأ السؤال بالصوت مباشرة، من غير ما يختار ملفات أو يرفعها.</p>
+<p class="notice">ارفع التسجيلين الأصليين فقط. ممنوع رفع ملفات مش مصرّح باستخدامها. عند اعتماد الرفع هتظهر المجموعة للطلاب تلقائيًا، ومحاولاتهم هتتحفظ في Listening بشكل مستقل.</p>
+<div class="panel row">
+<div><label for="one">Record 1 — Final Exam</label><input id="one" type="file" accept=".mp3,audio/mpeg"></div>
+<div><label for="two">Record 2 — Eating Habits</label><input id="two" type="file" accept=".mp3,audio/mpeg"></div>
+</div>
+<div class="panel">
+<label><input id="rights" type="checkbox" style="display:inline;width:auto" /> أؤكد أن لدي حق استخدام التسجيلين داخل منصة الطلاب وأوافق على نشرهما لهم.</label>
+<button type="button" id="publish">ارفع التسجيلين واعتمدهم للطلاب</button>
+<p class="msg" id="status" role="status" aria-live="polite">قبل الرفع تأكد إنك داخل بحساب صاحب المنصة.</p>
+</div>
+<a href="../step-grammar-student/listening-live.html" target="_blank" rel="noopener">افتح تجربة الطالب بعد الاعتماد</a>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+(()=>{
+const URLBASE="https://funltjxavowlnnfibhpl.supabase.co",ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const db=window.supabase.createClient(URLBASE,ANON),status=document.querySelector("#status"),btn=document.querySelector("#publish");
+btn.addEventListener("click",async()=>{
+ const first=document.querySelector("#one").files?.[0],second=document.querySelector("#two").files?.[0];
+ if(!first||!second){status.textContent="اختار الملفين MP3 الأول.";return}
+ if(!document.querySelector("#rights").checked){status.textContent="لازم تأكيد حقوق استخدام التسجيلين قبل النشر.";return}
+ const list=[["record-1",first],["record-2",second]];
+ if(list.some(([,file])=>!file.name.toLowerCase().endsWith(".mp3")||file.size>10000000)){status.textContent="اختار ملفات MP3 أصغر من 10 ميجابايت.";return}
+ btn.disabled=true;
+ try{
+  const {data:{session}}=await db.auth.getSession();if(!session)throw Error("سجّل دخولك بحساب صاحب المنصة من لوحة الإدارة الأول.");
+  for(const [sample,file] of list){
+    status.textContent="جاري رفع "+file.name+"…";
+    const r=await fetch(URLBASE+"/functions/v1/step-listening-live/upload?sample="+sample,{
+      method:"POST",headers:{"apikey":ANON,"authorization":"Bearer "+session.access_token,"content-type":"audio/mpeg"},
+      body:file,signal:AbortSignal.timeout(60000)});
+    const x=await r.json().catch(()=>({}));if(!r.ok)throw Error(x.error||"تعذر رفع "+file.name);
+    status.textContent="تم رفع واعتماد "+file.name;
+  }
+  status.textContent="تم اعتماد التسجيلين للطلاب. افتح رابط الطالب وجرب الأسئلة.";
+ }catch(e){status.textContent="تعذر إكمال النشر: "+(e.message||"خطأ")+" — التسجيل الذي تم اعتماده يظل موجودًا؛ لا ترفعه مرتين."}
+ finally{btn.disabled=false}
+});
+})();
+</script></body></html>
