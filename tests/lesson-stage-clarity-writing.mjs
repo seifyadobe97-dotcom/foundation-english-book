@@ -34,4 +34,7 @@ assert.equal(Object.keys(c.window.StepStageClarity).length,13,"Original five sta
 assert.equal(Object.values(c.window.StepStageClarity).reduce((a,rows)=>a+rows.length,0),61,"Original 26 Grammar stages + 35 new Writing stages");
 const build=readFileSync("scripts/build-step-public-site.mjs","utf8");
 for(const filename of files)assert(build.includes('"'+filename+'"'),"Writing bundle not on explicit public allowlist "+filename);
+const browser=readFileSync("tests/lesson-stage-clarity-browser.mjs","utf8");
+assert(browser.includes("writingSlugs")&&browser.includes('axis_code:writingSlugs.has(slug)?"writing-analysis":"grammar"'),"Actual browser mocks must preserve Writing Analysis axis");
+assert(browser.includes("assert.equal(checked,526)"),"All 263 stages must be rendered at desktop and mobile widths");
 console.log("PASS: 35 Writing Analysis beginner stage guides across 8 lessons, distinct axis, Arabic/LTR, self-check and bank privacy");
