@@ -143,7 +143,7 @@
       if(this.mode!=="practice"||!["answering","review"].includes(this.phase))return false;
       // Replay, seeking and pausing are intentionally permitted in training.
       try{
-        if("currentTime" in this.media)this.media.currentTime=0;
+        if("currentTime" in this.media){try{this.media.currentTime=0;}catch{ /* Voice-only preview has no media timeline. */ }}
         await this.media.play();
         this.playCount++;
         this.log("practice_audio_played");

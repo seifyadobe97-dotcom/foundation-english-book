@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#193a41">
+<meta name="description" content="تجربة مجانية غير محسوبة لاختبار واجهة تدريب ومحاكاة الاستماع STEP">
+<title>تجربة الاستماع | STEP with Seify</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=DM+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="listening-player.css">
+<style>
+:root{font-family:Cairo,Tahoma,sans-serif;color:#193a41;background:#f4f7f5}
+*{box-sizing:border-box}
+body{margin:0}
+.demo-top{background:white;border-bottom:1px solid #d8e6df;padding:13px max(15px,calc((100vw - 1100px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.demo-brand{font:800 17px "DM Sans",Arial,sans-serif;color:#1d5750;letter-spacing:.03em}
+.demo-back{color:#245f55;text-decoration:none;font:700 13px Cairo,Tahoma,sans-serif}
+.demo-back:focus-visible{outline:3px solid #b6a06a}
+.demo-setup{max-width:1000px;margin:25px auto 0;padding:0 14px}
+.demo-kicker{font:800 12px Arial,sans-serif;letter-spacing:.12em;color:#207466}
+.demo-heading{font-size:clamp(23px,3.2vw,34px);line-height:1.45;margin:6px 0 4px}
+.demo-subtitle{font-size:14px;line-height:1.95;color:#536c6a;max-width:830px;margin:0 0 14px}
+.demo-flag{border:1px solid #e5d4ac;background:#fff8ea;padding:11px 14px;border-radius:12px;font-size:13px;line-height:1.85;color:#69552d;margin:13px 0}
+.demo-config{background:white;border:1px solid #d7e5df;border-radius:18px;padding:19px;display:grid;gap:16px}
+.demo-config[hidden]{display:none!important}
+.demo-config h2{font-size:17px;margin:0}
+.demo-modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.demo-mode{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:right;background:#f8fbf9;border:1px solid #d2e4d9;border-radius:13px;padding:14px 16px;cursor:pointer;font:inherit}
+.demo-mode strong{font-size:15px}.demo-mode small{font-size:12px;color:#526f6a;line-height:1.7}
+.demo-mode[aria-pressed=true]{border:2px solid #24816b;padding:13px 15px;background:#e9f7ee}
+.demo-count{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.demo-count label{font-size:14px;font-weight:800}
+.demo-count select{border:1px solid #becfc8;border-radius:10px;padding:11px 14px;background:white;color:#1d4e45;font:700 14px Cairo,Tahoma,sans-serif;min-width:168px}
+.demo-actions{display:flex;gap:9px;flex-wrap:wrap}
+.demo-button{background:#245f54;color:white;border:0;border-radius:11px;padding:11px 19px;cursor:pointer;font:800 13px Cairo,Tahoma,sans-serif}
+.demo-button.secondary{background:white;color:#245f54;border:1px solid #bcd3c8}
+.demo-button:focus-visible,.demo-mode:focus-visible,.demo-count select:focus-visible{outline:3px solid #c4a267;outline-offset:2px}
+.demo-help{font-size:12px;color:#61756d;margin:0}
+.demo-feedback{font-size:13px;color:#236658;min-height:22px;line-height:1.7}
+#demo-status{scroll-margin-top:20px}
+.demo-hidden{display:none}
+.demo-footer{max-width:1000px;margin:10px auto 40px;padding:0 14px;font-size:12px;color:#667974;line-height:1.85}
+@media(max-width:620px){
+.demo-top{padding:12px 15px}
+.demo-setup{margin-top:16px}
+.demo-config{padding:14px}
+.demo-modes{grid-template-columns:1fr}
+.demo-count select{width:100%}
+.demo-button{width:100%}
+}
+</style>
+</head>
+<body>
+<header class="demo-top">
+<span class="demo-brand" dir="ltr" lang="en">STEP WITH SEIFY</span>
+<a class="demo-back" href="./">← رجوع لبوابة الطالب</a>
+</header>
+<section class="demo-setup" aria-labelledby="demo-title">
+<span class="demo-kicker">LISTENING LAB · تجربة تفاعلية</span>
+<h1 id="demo-title" class="demo-heading">جرّب الاستماع بطريقتين</h1>
+<p class="demo-subtitle">تدريب تسمع فيه براحتك وتشوف التصحيح والسكريبت، أو محاكاة بتقرأ فيها كل سؤال لمدة 15 ثانية قبل ما الصوت يشتغل تلقائيًا مرة واحدة.</p>
+<div class="demo-flag" role="note"><b>نسخة تجريبية غير محسوبة:</b> الأسئلة والتسجيل نصوص من تأليفنا للتجربة، مش من اختبار STEP الفعلي. الصوت بيتولد من خدمة النطق الموجودة في جهازك، وجودته بتختلف حسب المتصفح. لا بنحفظ إجابات ولا بنحسب درجات في حسابك.</div>
+<section class="demo-config" id="demo-config" aria-label="إعداد التجربة">
+<h2>اختار وضع التجربة</h2>
+<div class="demo-modes">
+<button type="button" id="choose-practice" class="demo-mode" aria-pressed="true" data-mode="practice">
+<strong>🎧 التدريب الحر</strong>
+<small>اقرأ من غير عداد، واسمع مرة واتنين وتلاتة. الإجابات والسكريبت يظهروا بعد الحل.</small>
+</button>
+<button type="button" id="choose-exam" class="demo-mode" aria-pressed="false" data-mode="exam">
+<strong>⏱ محاكاة الاختبار</strong>
+<small>15 / 30 / 45 ثانية لقراءة الأسئلة، وتشغيل تلقائي مرة واحدة من غير إعادة.</small>
+</button>
+</div>
+<div class="demo-count">
+<label for="question-count">كام سؤال يظهر على التسجيل؟</label>
+<select id="question-count">
+<option value="1">سؤال واحد — 15 ثانية</option>
+<option value="2" selected>سؤالان — 30 ثانية</option>
+<option value="3">3 أسئلة — 45 ثانية</option>
+</select>
+</div>
+<div class="demo-actions">
+<button type="button" class="demo-button secondary" id="test-speakers">اختبر السماعات 🔊</button>
+<button type="button" class="demo-button" id="open-demo">افتح تجربة التدريب ←</button>
+</div>
+<div class="demo-feedback" id="speaker-status" role="status" aria-live="polite"></div>
+<p class="demo-help">عشان محاكاة الاختبار تكون عادلة: جرّب السماعات الأول، وما تبدأش العداد إلا لما تكون جاهز تسمع.</p>
+</section>
+<div id="demo-status"></div>
+</section>
+<main id="listening-root" class="demo-hidden" aria-label="أسئلة تجربة الاستماع"></main>
+<footer class="demo-footer">النسخة دي للتعرف على طريقة العرض فقط. في الاختبار الحقيقي تسجيل الصوت والمفاتيح والتوقيت لازم يكونوا محميين على السيرفر، ومش ممكن ضمان منع تسجيل الصوت خارج المتصفح.</footer>
+<script src="listening-session.js"></script>
+<script src="listening-player.js"></script>
+<script src="listening-demo.js"></script>
+</body></html>

@@ -59,9 +59,13 @@ try{
    }
    const cards=page.locator("#student-curriculum-hub .student-curriculum-card");
    assert.equal(await cards.count(),5,"Show four STEP axes plus a distinct mock exam section");
-   assert.equal(await page.locator('#student-curriculum-hub [aria-disabled="true"]').count(),available?2:3,
+   assert.equal(await page.locator('#student-curriculum-hub [aria-disabled="true"]').count(),available?1:2,
     "Unavailable axes and Writing must not have dead active buttons");
-   assert.equal(await page.locator("#student-exams a").count(),0,
+   const listeningTrial=page.locator('#student-curriculum-hub a[href="listening-demo.html"]');
+    assert.equal(await listeningTrial.count(),1,"Listening demo is visible independently of live lesson releases");
+    assert((await listeningTrial.innerText()).includes("غير محسوبة"),
+     "Demo Listening card must communicate it is ungraded");
+    assert.equal(await page.locator("#student-exams a").count(),0,
     "Never invent an exam start link before a real exam system exists");
    await page.locator('[data-curriculum-target="exams"]').click();
    assert(await page.locator("#student-exams").isVisible(),"Mock exam placeholder must be reachable");

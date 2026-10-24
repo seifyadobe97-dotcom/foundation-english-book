@@ -5,6 +5,10 @@
 button.student-curriculum-card{cursor:pointer}
 button.student-curriculum-card:hover{transform:translateY(-2px);border-color:#7bb5a0}
 button.student-curriculum-card[aria-pressed="true"]{background:#eaf6f0;border:2px solid #2b806c;padding:18px 15px;box-shadow:0 9px 22px #285e4e1a}
+.student-curriculum-card.is-demo{background:#eff8f4;border:2px solid #7eaf99;cursor:pointer;text-decoration:none;box-shadow:0 8px 24px #1c554613}
+.student-curriculum-card.is-demo .student-curriculum-footer{color:#1b6b57;font-weight:800}
+.student-curriculum-card.is-demo:hover{transform:translateY(-2px);border-color:#287969;background:#e3f4ea}
+.student-curriculum-card.is-demo:focus-visible{outline:3px solid #bea06b;outline-offset:3px}
 .student-curriculum-card.is-upcoming{background:#f8faf8;border-style:dashed;color:#738581}
 .student-curriculum-icon{display:grid;place-items:center;border-radius:11px;width:42px;height:42px;background:#edf6f0;font:800 20px "DM Sans",sans-serif;color:#207662;direction:ltr}
 .student-curriculum-index{font:800 10px "DM Sans",sans-serif;letter-spacing:.08em;color:#688b83;direction:ltr;text-align:left}
