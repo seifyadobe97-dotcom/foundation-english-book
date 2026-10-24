@@ -183,6 +183,8 @@ jobs:
         run: node tests/student-full-catalog.mjs
       - name: Verify explanation-only STEP stages are ungraded and can continue
         run: node tests/ungraded-teaching-stages.mjs
+      - name: Check Arabic recovery on course and stage fetch failures on two widths
+        run: node tests/lesson-network-recovery.mjs
 
   deploy:
     name: Deploy verified static book
