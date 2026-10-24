@@ -353,7 +353,7 @@ function beginnerTeaching(){
     '<small lang="ar" dir="rtl">'+["الجزء الأول","الجزء الثاني","الجزء الثالث"][i]+'</small>'+
     '<span dir="auto">'+escapeHtml(part)+'</span></span>').join("")+'</div></div>':"")+
   '<div class="beginner-structure"><strong>شكل الجملة ببساطة</strong>'+
-  '<div class="beginner-pattern" dir="auto">'+escapeHtml(structure)+'</div></div>'+
+  '<div class="beginner-pattern" dir="'+(/^[^A-Za-z]*[\u0600-\u06FF]/.test(structure)?"rtl":"ltr")+'">'+escapeHtml(structure)+'</div></div>'+
   '<div class="beginner-example"><strong>مثال واضح</strong><p class="beginner-english" dir="ltr" lang="en">'+
     escapeHtml(stage?.[5]||example)+'</p><p class="beginner-arabic" dir="rtl">'+
     escapeHtml(stage?.[6]||translation)+'</p></div>'+
