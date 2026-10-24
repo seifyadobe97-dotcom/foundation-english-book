@@ -71,11 +71,21 @@ const client=window.supabase.createClient(projectUrl,anonKey);
 async function api(path,body){
  const {data:{session}}=await client.auth.getSession();
  if(!session){location.assign("../step-grammar-account-preview/");throw Error("سجّل دخولك علشان تكمل الدرس.");}
- const r=await fetch(projectUrl+"/functions/v1/step-course"+API_PREFIX+path,{
-  method:body?"POST":"GET",
-  headers:{"apikey":anonKey,"Authorization":"Bearer "+session.access_token,"Content-Type":"application/json"},
-  body:body?JSON.stringify(body):undefined
- });
+ // Failed/slow GETs must not leave a learner on a spinner. POST submissions
+ // may have already been saved, so warn rather than retrying grading automatically.
+ let r;
+ try{
+  r=await fetch(projectUrl+"/functions/v1/step-course"+API_PREFIX+path,{
+   method:body?"POST":"GET",
+   headers:{"apikey":anonKey,"Authorization":"Bearer "+session.access_token,"Content-Type":"application/json"},
+   body:body?JSON.stringify(body):undefined,
+   signal:AbortSignal.timeout(body?30000:15000)
+  });
+ }catch(error){
+  if(!["TypeError","AbortError","TimeoutError"].includes(error?.name))throw error;
+  throw Error(body?"الاتصال اتقطع أثناء إرسال الإجابات. ممكن تكون النتيجة اتحفظت بالفعل؛ ارجع لدروسك واتأكد من تقدمك قبل إعادة التصحيح.":
+   "الاتصال اتقطع أو تحميل الدرس اتأخر. اتأكد من الإنترنت واضغط إعادة المحاولة.");
+ }
  const d=await r.json().catch(()=>({}));
  if(!r.ok)throw Error(d.error||"تعذر تحميل الدرس");
  return d;
