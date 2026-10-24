@@ -189,6 +189,8 @@ jobs:
         run: node tests/listening-dual-mode.mjs
       - name: Verify public synthetic Listening lab, safe demo link and spoken trial on mobile and desktop
         run: node tests/listening-public-demo.mjs
+      - name: Verify two-source Listening student preview and private marking boundary
+        run: node tests/listening-source-samples.mjs
 
   deploy:
     name: Deploy verified static book
