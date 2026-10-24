@@ -61,7 +61,7 @@ async function course(){
   if(r?.ok)continuousData=await r.json().catch(()=>null);
  }
  const coreSlugs=new Set(["subject-verb-agreement","present-simple","present-continuous"]);
- const additional=(catalog.indicators||[]).filter(i=>i.axis_code==="grammar"&&!coreSlugs.has(i.slug));
+ const additional=(catalog.indicators||[]).filter(i=>["grammar","writing-analysis"].includes(i.axis_code)&&!coreSlugs.has(i.slug));
  const extraLessons=await Promise.all(additional.map(async indicator=>{
   if(!/^[a-z][a-z0-9-]{2,39}$/.test(indicator.slug))return null;
   const response=await fetch(config.url+"/functions/v1/step-course/lesson/"+indicator.slug+"/course",{
@@ -163,6 +163,8 @@ function paint(x){
   const axis=button.dataset.axisCode,feedback=app.querySelector("#axis-feedback");
   if(axis==="grammar"){
    feedback.hidden=true;app.querySelector("#grammar-lessons")?.scrollIntoView({behavior:"smooth",block:"start"});
+  }else if(axis==="writing-analysis"&&app.querySelector("#writing-analysis-lessons")){
+   feedback.hidden=true;app.querySelector("#writing-analysis-lessons").scrollIntoView({behavior:"smooth",block:"start"});
   }else{
    const name=axes.find(a=>a.code===axis)?.title_ar||"المحور";
    feedback.textContent="محور "+name+" قيد تجهيز المحتوى واعتماده؛ مش هنظهر تدريبات غير منشورة.";

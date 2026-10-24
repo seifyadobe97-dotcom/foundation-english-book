@@ -82,10 +82,10 @@ Deno.serve(async(request)=>{
  if(isAgreement)path=path.slice("/agreement".length)||"/course";
  if(isContinuous)path=path.slice("/continuous".length)||"/course";
  if(dynamicMatch)path=dynamicMatch[2]||"/course";
- let dynamicIndicator:null|{status:string;legacy_course_code:string|null;slug:string}=null;
+ let dynamicIndicator:null|{status:string;legacy_course_code:string|null;slug:string;axis_code:string}=null;
  if(dynamicMatch){
   const {data,error}=await admin.from("step_curriculum_indicators")
-   .select("slug,status,legacy_course_code").eq("slug",dynamicMatch[1]).eq("axis_code","grammar").maybeSingle();
+   .select("slug,status,legacy_course_code,axis_code").eq("slug",dynamicMatch[1]).in("axis_code",["grammar","writing-analysis"]).maybeSingle();
   if(error)return send(503,{error:"تعذر تحديد الدرس"});
   if(!data||data.status!=="published"||!data.legacy_course_code)
    return send(403,{error:"الدرس ده مش منشور للطلاب"});
@@ -101,6 +101,47 @@ Deno.serve(async(request)=>{
   ||typeof lesson.requiredPassRate!=="number")return send(503,{error:"بيانات الدرس تحتاج مراجعة"});
  const total=lesson.sections.length;
  const originalQuestions=lesson.questions as QuestionMap;
+ let publishedWritingModules:any[]=[];
+ // Writing Analysis has a second release gate: never expose an unapproved
+ // simulated item or an unaudited source item even if someone flips a lesson status.
+ if(dynamicIndicator?.axis_code==="writing-analysis"){
+  const [guideResult,simResult]=await Promise.all([
+   admin.from("step_indicator_guides").select("published").eq("indicator_slug",dynamicIndicator.slug).maybeSingle(),
+   admin.from("step_simulated_item_reviews").select("question_id,question_text,options,correct,approval_status")
+    .eq("course_code",requestedCourseCode)
+  ]);
+  if(guideResult.error||simResult.error||!guideResult.data?.published)
+   return send(403,{error:"الدرس تحت المراجعة ولم يعتمد شرحه بعد"});
+  const guideModules=guideResult.data.published.modules;
+  if(!Array.isArray(guideModules)||guideModules.length!==lesson.sections.length||
+   lesson.sections.some((section:any,index:number)=>guideModules[index]?.id!==section.id))
+   return send(403,{error:"شرح المراحل غير مكتمل"});
+  // Never expose admin provenance, PDF page anchors or bank codes as learner teaching text.
+  const editorialMarker=/ASGQ[A-Z0-9]+|STEP course book|STEP_Grammar_Question_Bank|TAJMEAAT|ص\s*\d{2,3}/i;
+  if(guideModules.some((m:any)=>editorialMarker.test(String(m.intro_ar||""))))
+   return send(403,{error:"شرح الدرس يحتاج تنقيح ملاحظات المصدر قبل النشر"});
+  publishedWritingModules=guideModules;
+  const simMap=new Map((simResult.data||[]).map(r=>[r.question_id,r]));
+  const sims=Object.entries(originalQuestions).filter(([,q]:any)=>q.origin==="simulated");
+  if(sims.some(([id,q]:any)=>{
+   const r=simMap.get(id);
+   return !r||r.approval_status!=="approved"||r.question_text!==q.text||r.correct!==q.correct||
+    ["A","B","C","D"].some(k=>r.options?.[k]!==q.options?.[k]);
+  }))return send(403,{error:"أسئلة الدرس ما زالت تحت مراجعة الجودة"});
+  const sourceItems=Object.entries(originalQuestions).filter(([,q]:any)=>q.origin!=="simulated");
+  if(sourceItems.length){
+   const {data:audits,error:auditsError}=await admin.from("step_source_item_reviews")
+    .select("candidate_id,review_status,original_stem,original_options,printed_key")
+    .in("candidate_id",sourceItems.map(([id])=>id));
+   if(auditsError)return send(503,{error:"تعذر التحقق من الأسئلة الأصلية"});
+   const sourceMap=new Map((audits||[]).map(r=>[r.candidate_id,r]));
+   if(sourceItems.some(([id,q]:any)=>{
+    const r=sourceMap.get(id);
+    return !r||r.review_status!=="approved"||r.original_stem!==q.text||
+     r.printed_key!==q.correct||["A","B","C","D"].some(k=>r.original_options?.[k]!==q.options?.[k]);
+   }))return send(403,{error:"الأسئلة الأصلية تحتاج اعتمادًا قبل عرضها"});
+  }
+ }
  const method=request.method;
  const courseCode=lesson.code;
  try{
@@ -166,15 +207,25 @@ Deno.serve(async(request)=>{
    const {data:teachingRows,error:teachingError}=await admin.from("step_teaching_unit_edits")
     .select("part_index,published").eq("course_code",courseCode).not("published","is",null);
    if(teachingError)throw teachingError;
-   const visuals=lesson.sections.map((section:any,i:number)=>
-    teachingRows?.find(x=>x.part_index===i)?.published||section.visual||
+   const visuals=lesson.sections.map((section:any,i:number)=>{
+    const guide=publishedWritingModules[i];
+    const fromGuide=guide?{
+     title:guide.title_ar,detail:guide.intro_ar,
+     tip:(guide.rules||[]).map((r:any)=>r.label_ar+" — "+r.formula).join("؛ "),
+     cards:(guide.rules||[]).map((r:any)=>[r.label_ar,r.formula,"من شرح الدرس","✓"]),
+     examples:(guide.examples||[]).map((e:any)=>["مثال توضيحي",e.en,"راجع القاعدة في هذا المثال"]),
+     keywords:(guide.keywords||[]).map((k:any)=>[k.en,k.ar]),
+     formulas:[],warning:null
+    }:null;
+    return teachingRows?.find(x=>x.part_index===i)?.published||fromGuide||section.visual||
     {title:section.titleAr||section.title,detail:section.description||section.short||section.titleAr||"",
      tip:section.short||"",cards:[],examples:[],formulas:[],keywords:[],
      warning:{wrong:"",correct:"",why:""},table:{headers:[],rows:[]},
-     extra:{heading:"",paragraphs:[]}});
+     extra:{heading:"",paragraphs:[]}};
+   });
    return {student:user.user_metadata?.username||"طالب STEP",
     teachingUnits:visuals,
-    course:{title:lesson.title,titleAr:lesson.titleAr,subtitle:lesson.subtitle,totalQuestions:activeQuestionIds.length},
+    course:{title:lesson.title,titleAr:lesson.titleAr,subtitle:lesson.subtitle,axis_code:dynamicIndicator?.axis_code||"grammar",totalQuestions:activeQuestionIds.length},
     sections:status.sections,nextIndex:Math.min(status.next,total-1),completed:status.completed,
     exam:{unlocked:status.completed,attempts:attempts.length,best:Math.max(0,...attempts.map(x=>x.percentage)),last:attempts.at(-1)||null}};
   };
