@@ -987,6 +987,28 @@ assert(adminServer.includes('original.origin==="simulated"?"simulated":"source"'
 assert(courseServer.includes('const serializeQ=(id:string,questions:QuestionMap,publicId:string)=>({id:publicId,text:questions[id].text,options:questions[id].options})'),
  "Student public question serializer must omit simulated/source provenance and private answer key");
 
+// Writing Analysis and Grammar are separate curriculum axes, never one shared Grammar catalog.
+const curriculumAdmin=readFileSync("step-grammar-admin/curriculum.html","utf8");
+const adminDashboard=readFileSync("step-grammar-admin/admin-home.js","utf8");
+const writingMigration=readFileSync("supabase/migrations/20261024_step_writing_analysis_taxonomy_separation.sql","utf8");
+assert(curriculumAdmin.includes('axis:initialAxis==="writing-analysis"?"writing-analysis":"grammar"')&&
+ curriculumAdmin.includes('بنك أسئلة التحليل الكتابي المصنّف')&&
+ curriculumAdmin.includes('بنك أسئلة قواعد اللغة المصنّف')&&
+ curriculumAdmin.includes('axisSlugs.has(x.indicator_slug)')&&
+ curriculumAdmin.includes('writingReviewCodes.has(x.code)')&&
+ curriculumAdmin.includes('إحالة إضافية (التصنيف الأساسي يتبع محورًا آخر)'),
+ "Admin must scope Writing Analysis bank independently, preserving secondary grammar links");
+assert(adminDashboard.includes('curriculum.html?axis=writing-analysis')&&
+ adminDashboard.includes('curriculum.html?axis=grammar'),
+ "Owner needs direct, separate access to each axis");
+assert(writingMigration.includes("indicator_slug='logical-connectors'")&&
+ writingMigration.includes("related_indicator_slug='conjunctions-and-connectors'")&&
+ writingMigration.includes('ASGQPARORDER')&&
+ writingMigration.includes('ASGQWOR')&&
+ !writingMigration.includes('DELETE FROM')&&
+ !writingMigration.includes('step_part_attempts SET'),
+ "Only category metadata may change: sentence Word Order != paragraph Sequencing");
+
 const brandedPages=[
  "step-grammar-account-preview/index.html","step-grammar-student/index.html",
  "step-grammar-student/learn.html","step-grammar-student/lesson-v2.html",
