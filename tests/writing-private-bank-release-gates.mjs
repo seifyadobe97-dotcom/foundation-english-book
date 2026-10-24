@@ -25,6 +25,8 @@ assert(api.includes("publishedWritingModules")&&api.includes("guideModules.lengt
  "Published Writing explanations and source-labeled guide examples must reach the student lesson player");
 assert(api.includes("editorialMarker")&&api.includes('["مثال توضيحي",e.en'),
  "Public Writing teaching must not disclose internal source labels or PDF anchors");
+assert(api.includes('edit.status==="published"')&&api.includes("!canonical||!sameOriginal")&&api.includes("dynamicIndicator?.axis_code"),
+ "A Studio override or additional Writing question must not bypass per-item review");
 assert(api.includes('question_text!==q.text')&&api.includes('r.correct!==q.correct'),
  "Simulated review must match canonical stem and key");
 assert(adminApi.includes('.in("axis_code",["grammar","writing-analysis"])')&&
