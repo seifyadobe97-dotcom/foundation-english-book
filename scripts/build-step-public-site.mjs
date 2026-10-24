@@ -29,6 +29,7 @@ if(!lessonPageHtml.includes(stageAnchor))throw new Error("Missing original stage
 const stageTags=stageBundles.map(name=>' <script src="'+name+'"></script>').join("\n");
 lessonPageHtml=lessonPageHtml.replace(stageAnchor,stageAnchor+"\n"+stageTags);
 await writeFile(lessonPagePath,lessonPageHtml,"utf8");
+for(const filename of stageBundles)await stat(path.join(out,"step-grammar-student",filename));
 const blockedFileList=["foundation-sentence-elements.html","foundation-sentence-elements.js",
  "foundation-sentence-elements.css","foundation-sentence-elements-data.js",
  "foundation-sentence-elements-mastery.js"];
