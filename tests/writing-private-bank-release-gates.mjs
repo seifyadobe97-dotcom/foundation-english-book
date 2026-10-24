@@ -21,6 +21,8 @@ assert(api.includes('guideResult.data?.published')&&api.includes('simResult.data
  api.includes('r.approval_status!=="approved"')&&api.includes('sourceItems')&&
  api.includes('r.review_status!=="approved"'),
  "Source, simulated and published teaching content must pass release gates");
+assert(api.includes("publishedWritingModules")&&api.includes("guideModules.length!==lesson.sections.length")&&api.includes("fromGuide")&&api.includes("guide.intro_ar"),
+ "Published Writing explanations and source-labeled guide examples must reach the student lesson player");
 assert(api.includes('question_text!==q.text')&&api.includes('r.correct!==q.correct'),
  "Simulated review must match canonical stem and key");
 assert(adminApi.includes('.in("axis_code",["grammar","writing-analysis"])')&&
