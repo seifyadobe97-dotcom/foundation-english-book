@@ -30,8 +30,8 @@ for(const [slug,expected] of Object.entries(ids)){
  });
 }
 assert.equal(count,35);
-assert.equal(Object.keys(c.window.StepStageClarity).length,9,"Only original starter plus eight writing bundles");
-assert.equal(Object.values(c.window.StepStageClarity).reduce((a,rows)=>a+rows.length,0),40,"Original first Grammar course + 35 new writing stages");
+assert.equal(Object.keys(c.window.StepStageClarity).length,13,"Original five starter Grammar bundles plus eight Writing bundles");
+assert.equal(Object.values(c.window.StepStageClarity).reduce((a,rows)=>a+rows.length,0),61,"Original 26 Grammar stages + 35 new Writing stages");
 const build=readFileSync("scripts/build-step-public-site.mjs","utf8");
 for(const filename of files)assert(build.includes('"'+filename+'"'),"Writing bundle not on explicit public allowlist "+filename);
 console.log("PASS: 35 Writing Analysis beginner stage guides across 8 lessons, distinct axis, Arabic/LTR, self-check and bank privacy");
