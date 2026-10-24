@@ -45,7 +45,8 @@ h1{font-size:clamp(27px,4vw,37px);margin:6px 0}h2{margin:0 0 10px;font-size:21px
 const BASE="https://funltjxavowlnnfibhpl.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
 const client=window.supabase.createClient(BASE,KEY);
 const root=document.getElementById("content");
-const state={axes:[],indicators:[],bank:[],axis:"grammar",item:null,role:null,search:""};
+const initialAxis=new URLSearchParams(location.search).get("axis");
+const state={axes:[],indicators:[],bank:[],axis:initialAxis==="writing-analysis"?"writing-analysis":"grammar",item:null,role:null,search:""};
 const escapeHtml=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 async function request(path,body){
  const {data:{session}}=await client.auth.getSession();
@@ -123,19 +124,32 @@ function paint(){
  };
 }
 function bankSections(selected,canEdit){
+ // The audited bank contains BOTH grammar and Writing Analysis. Never count all categories as Grammar.
+ const writingReviewCodes=new Set(["ASGQCOMBINE","ASGQINSERT","ASGQLOGCOMP","ASGQSENT","ASGQSPELL"]);
+ const axisSlugs=new Set(state.indicators.filter(i=>i.axis_code===state.axis).map(i=>i.slug));
+ const primary=state.bank.filter(x=>axisSlugs.has(x.indicator_slug));
+ const supplemental=state.bank.filter(x=>axisSlugs.has(x.related_indicator_slug)&&!axisSlugs.has(x.indicator_slug));
+ const pending=state.bank.filter(x=>x.mapping_status==="needs_review"&&
+  (state.axis==="writing-analysis"?writingReviewCodes.has(x.code):!writingReviewCodes.has(x.code)));
  const mine=selected?state.bank.filter(x=>x.indicator_slug===selected.slug||x.related_indicator_slug===selected.slug):[];
- const pending=state.bank.filter(x=>x.mapping_status==="needs_review");
- const total=state.bank.length, matched=total-pending.length;
- const options=state.indicators.map(x=>'<option value="'+escapeHtml(x.slug)+'">'+escapeHtml((x.axis_code==="grammar"?"جرامر":"تحليل كتابي")+" · "+x.title_ar)+'</option>').join("");
+ const options=state.indicators.filter(x=>x.axis_code===state.axis)
+  .map(x=>'<option value="'+escapeHtml(x.slug)+'">'+escapeHtml(x.title_ar)+'</option>').join("");
+ const isWriting=state.axis==="writing-analysis";
  const mineHtml=selected?'<h2>تصنيفات الأسئلة المرتبطة بمؤشر '+escapeHtml(selected.title_ar)+'</h2>'+
- (mine.length?'<div class="bank-grid">'+mine.map(x=>'<div class="bank-tag"><span class="ltr">'+escapeHtml(x.code)+'</span><strong>'+escapeHtml(x.title_en)+'</strong><small>بنك الأسئلة · صفحة '+x.first_page+(x.related_indicator_slug===selected.slug?' · رابط إضافي':'')+'</small>'+(canEdit&&x.indicator_slug===selected.slug?'<button type="button" class="btn alt bank-unlink" data-unlink-code="'+escapeHtml(x.code)+'">فصل الربط</button>':'')+'</div>').join("")+'</div>':
- '<p>لا يوجد تصنيف أسئلة مرتبط بهذا المؤشر حتى الآن.</p>'):'<p>اختار مؤشر من القائمة علشان تشوف تصنيفات بنك الأسئلة المرتبطة به.</p>';
+ (mine.length?'<div class="bank-grid">'+mine.map(x=>'<div class="bank-tag"><span class="ltr">'+escapeHtml(x.code)+'</span><strong>'+escapeHtml(x.title_en)+'</strong><small>بنك المصدر · صفحة '+x.first_page+
+ (x.related_indicator_slug===selected.slug?' · إحالة إضافية (التصنيف الأساسي يتبع محورًا آخر)':' · التصنيف الأساسي للمحور')+'</small>'+
+ (canEdit&&x.indicator_slug===selected.slug?'<button type="button" class="btn alt bank-unlink" data-unlink-code="'+escapeHtml(x.code)+'">فصل الربط</button>':'')+'</div>').join("")+'</div>':
+ '<p>لا يوجد تصنيف أسئلة مرتبط بهذا المؤشر حتى الآن.</p>'):
+ '<p>اختار مؤشر من القائمة علشان تشوف تصنيفات بنك الأسئلة المرتبطة به.</p>';
  const pendingHtml=pending.map(x=>'<div class="bank-pending"><div><b>'+escapeHtml(x.title_en)+'</b><small class="ltr">'+escapeHtml(x.code)+'</small><small>صفحة '+x.first_page+'</small></div>'+
  (canEdit?'<div class="link-controls"><select aria-label="مؤشر التصنيف '+escapeHtml(x.code)+'" id="link-'+escapeHtml(x.code)+'"><option value="">اختار المؤشر…</option>'+options+'</select><button class="btn alt" data-link-code="'+escapeHtml(x.code)+'" type="button">ربط</button></div>':'')+'</div>').join("");
- return '<section class="panel bank-panel"><h2>فهرس بنك أسئلة الجرامر المصنّف</h2>'+
- '<div class="bank-stats"><span>'+total+' تصنيفًا بالمصدر</span><span>'+matched+' مرتبطين مبدئيًا</span><span>'+pending.length+' محتاجين قرار تصنيفي</span></div>'+
- '<div class="note">ربط التصنيفات تنظيم للمحتوى وليس اعتمادًا لصحة الإجابات أو نشرًا للأسئلة. المصدر: STEP_Grammar_Question_Bank_Classifications_Audited.pdf</div>'+
- mineHtml+'<details class="unmapped"><summary>التصنيفات التي تحتاج مراجعة ('+pending.length+')</summary><p>دي تصنيفات محتاجة تحديد هل تتبع مؤشر موجود أو تستلزم مؤشر جديد.</p>'+pendingHtml+'</details></section>';
+ return '<section class="panel bank-panel"><h2>'+(isWriting?'بنك أسئلة التحليل الكتابي المصنّف':'بنك أسئلة قواعد اللغة المصنّف')+'</h2>'+
+ '<div class="bank-stats"><span>'+primary.length+' تصنيفًا أساسيًا بالمحور</span><span>'+supplemental.length+' إحالات إضافية من محور آخر</span><span>'+pending.length+' بانتظار مراجعة التصنيف</span></div>'+
+ '<div class="note">'+(isWriting?
+ 'التحليل الكتابي محور مستقل: علامات الترقيم، الحروف الكبيرة، ترتيب الفقرات، الروابط المنطقية واكتشاف الأخطاء. الموضوعات ما زالت مسودات حتى اعتماد دروسها؛ نقل التصنيف لا ينشر أسئلة أو يغيّر درجات الطلاب.':
+ 'هنا قواعد اللغة فقط؛ تدريبات ترتيب الكلمات داخل الجملة تختلف عن ترتيب جمل الفقرة. الروابط المنطقية مصنّفة أساسيًا في التحليل الكتابي، مع إحالة تعليمية محفوظة هنا.')+
+ ' المصدر الداخلي للتصنيفات: STEP_Grammar_Question_Bank_Classifications_Audited.pdf</div>'+
+ mineHtml+'<details class="unmapped"><summary>تصنيفات هذا المحور التي تحتاج مراجعة ('+pending.length+')</summary><p>الربط مؤقت حتى مراجعة تصنيف كل سؤال؛ لا يغيّر درجات الطالب أو صلاحيات النشر.</p>'+pendingHtml+'</details></section>';
 }
 
 function form(item,canEdit){
