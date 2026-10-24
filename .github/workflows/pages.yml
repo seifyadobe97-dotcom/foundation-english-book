@@ -35,7 +35,7 @@ jobs:
       - name: Install pinned browser-test dependency
         run: npm install --ignore-scripts --no-package-lock --no-audit --no-fund
       - name: Install Chromium for actual-browser tests
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
       - name: Test Foundation English book on desktop and mobile
         run: node tests/browser-smoke.mjs
 
@@ -123,7 +123,9 @@ jobs:
         run: node tests/lesson-stage-clarity-batch2.mjs
       - name: Validate 31 new Grammar 11–15 beginner stage guides
         run: node tests/lesson-stage-clarity-batch3.mjs
-      - name: Verify 88 beginner stages in real Pages artifact (desktop/mobile)
+      - name: Validate 35 new Grammar 16–20 beginner stage guides
+        run: node tests/lesson-stage-clarity-batch4.mjs
+      - name: Verify 123 beginner stages in real Pages artifact (desktop/mobile)
         run: node tests/lesson-stage-clarity-browser.mjs
       - name: Verify all 53 beginner-friendly Arabic teaching guides
         run: node tests/beginner-arabic-guides.mjs
