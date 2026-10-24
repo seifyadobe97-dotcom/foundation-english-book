@@ -134,3 +134,5 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offse
  .flow-rule{font-size:15px;padding:12px}
  .concept-heading-en{font-size:10px}
 }
+
+.table-value-en{display:block;font:700 11px/1.6 "DM Sans",Arial,sans-serif;color:#678178;text-align:left;margin-top:3px}
