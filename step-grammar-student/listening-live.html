@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>أسئلة الاستماع | STEP WITH SEIFY</title>
+<link rel="stylesheet" href="listening-player.css">
+<style>
+:root{font-family:Cairo,Tahoma,Arial,sans-serif;color:#193d40;background:#f4f8f5}
+*{box-sizing:border-box}body{margin:0;line-height:1.8}header{background:white;border-bottom:1px solid #d6e4dd;padding:16px max(16px,calc((100vw - 1050px)/2));display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+a{color:#246c5c}main{max-width:1050px;padding:24px 15px;margin:0 auto}
+.card{background:white;border:1px solid #d6e5dc;border-radius:16px;padding:22px;margin:16px 0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.choice{background:#f8fbf9;border:1px solid #c7dad0;border-radius:12px;padding:15px;text-align:right;font:inherit;cursor:pointer;color:#163d3d}
+.choice[aria-pressed=true]{border:2px solid #1e8767;background:#eaf7ef;padding:14px}
+.choice strong,.choice small{display:block}.choice small{font-size:12px}
+.action{padding:11px 19px;border:0;border-radius:10px;background:#205c50;color:white;font:700 14px Cairo,Tahoma;cursor:pointer}
+.action.secondary{background:white;color:#245f56;border:1px solid #a9c4b8}.action:disabled{opacity:.55}
+.mode{margin:7px 5px;padding:11px;border:1px solid #c7dad0;background:white;border-radius:9px;font:inherit;cursor:pointer}
+.mode[aria-pressed=true]{background:#dff2e8;border-color:#157a59}
+.notice{padding:13px;background:#f4f9f7;border:1px solid #d9e7e0;border-radius:10px}
+small{color:#58716b}#active[hidden],#setup[hidden]{display:none}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.card{padding:13px}}
+</style></head><body><header><strong dir="ltr">STEP WITH SEIFY · LISTENING</strong><a href="./">← حساب الطالب</a></header>
+<main><p style="font-weight:700;color:#27715d">LISTENING · INTERACTIVE QUESTIONS</p>
+<h1>أسئلة الاستماع</h1><p>اختار المجموعة وابدأ الحل. التسجيل يشتغل مباشرة من المنصة، ومش مطلوب منك أي رفع ملفات.</p>
+<p id="status" class="notice" role="status">بنحمّل التسجيلات المعتمدة…</p>
+<section class="card" id="setup" hidden><h2>اختار التسجيل</h2><div class="grid" id="clips"></div>
+<h2>اختار وضع الحل</h2>
+<button class="mode" data-mode="practice" aria-pressed="true">🎧 تدريب — تسمع براحتك وتشوف التصحيح</button>
+<button class="mode" data-mode="exam" aria-pressed="false">⏱ محاكاة — 30 ثانية للقراءة وتشغيل واحد</button>
+<p><small>في وضع التدريب بيظهر السكريبت والتفسير بعد الحل. المحاولات بتتحفظ منفصلة عن درجات الجرامر والتحليل الكتابي.</small></p>
+<button id="launch" class="action">افتح الأسئلة</button><p id="error" role="alert"></p>
+</section>
+<section class="card" id="active" hidden><button id="back" class="action secondary">← رجوع للمجموعات</button>
+<p id="label"></p><p id="score" role="status"></p><div id="listening-root"></div></section>
+<p><small>المحاكاة تعليمية، وليست اختبارًا مراقبًا؛ لا يمكن منع نسخ الصوت خارج المتصفح بصورة مطلقة.</small></p>
+</main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script src="listening-session.js"></script><script src="listening-player.js"></script>
+<script>
+"use strict";
+(async()=>{
+const API="https://funltjxavowlnnfibhpl.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const client=window.supabase.createClient(API,KEY);
+const status=document.getElementById("status"),setup=document.getElementById("setup"),active=document.getElementById("active"),
+clips=document.getElementById("clips"),root=document.getElementById("listening-root"),launch=document.getElementById("launch"),
+error=document.getElementById("error"),score=document.getElementById("score");
+let groups=[],selected=null,mode="practice",player=null,media=null,attemptId="",audioMarked=Promise.resolve();
+async function api(path,body){
+ const {data:{session}}=await client.auth.getSession();if(!session)throw Error("سجّل دخولك الأول من بوابة الطالب.");
+ const r=await fetch(API+"/functions/v1/step-listening-live"+path,{
+ method:body===undefined?"GET":"POST",headers:{"apikey":KEY,"authorization":"Bearer "+session.access_token,...(body===undefined?{}:{"content-type":"application/json"})},
+ ...(body===undefined?{}:{body:JSON.stringify(body)}),signal:AbortSignal.timeout(20000)});
+ const x=await r.json().catch(()=>({}));if(!r.ok)throw Error(x.error||"تعذر تحميل البيانات");return x;
+}
+function choose(id){selected=id;clips.querySelectorAll("[data-id]").forEach(n=>n.setAttribute("aria-pressed",String(n.dataset.id===id)));}
+try{
+ const result=await api("/catalog");groups=result.groups||[];
+ if(!groups.length){status.textContent="لسه مفيش تسجيلات صوتية معتمدة للطلاب. الإدارة بتجهّز التسجيلات؛ مش مطلوب منك ترفع أي ملفات.";return;}
+ for(const g of groups){
+   const b=document.createElement("button");b.type="button";b.className="choice";b.dataset.id=g.sample;b.setAttribute("aria-pressed","false");
+   const title=document.createElement("strong");title.textContent=g.title_ar;
+   const detail=document.createElement("small");detail.textContent=g.title_en+" · سؤالان على نفس التسجيل";
+   b.append(title,detail);b.addEventListener("click",()=>choose(g.sample));clips.append(b);
+ }
+ choose(groups[0].sample);status.hidden=true;setup.hidden=false;
+}catch(e){status.textContent=e.message||"تعذر فتح حساب الطالب."}
+document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{
+ mode=b.dataset.mode;document.querySelectorAll("[data-mode]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.mode===mode)));
+}));
+async function preload(){
+ if(media.readyState<2)await new Promise((resolve,reject)=>{
+ const timer=setTimeout(()=>done(()=>reject(Error("التسجيل اتأخر في التحميل"))),15000);
+ const yes=()=>done(resolve),no=()=>done(()=>reject(Error("تعذر تشغيل التسجيل")));
+ function done(fn){clearTimeout(timer);media.removeEventListener("canplay",yes);media.removeEventListener("error",no);fn()}
+ media.addEventListener("canplay",yes);media.addEventListener("error",no);media.load();
+ });
+ await api("/prepare",{attemptId});
+}
+launch.addEventListener("click",async()=>{
+ launch.disabled=true;error.textContent="";
+ try{
+ const result=await api("/begin",{sample:selected,mode});attemptId=result.attemptId;
+ media=document.createElement("audio");media.src=result.audioUrl;media.preload="auto";score.textContent="";
+ player=window.StepListeningUI.mount(root,{
+ mode,questions:result.questions,media,secondsPerQuestion:result.secondsPerQuestion,
+ nativeControls:mode==="practice",ensureAudioReady:preload,
+ onEvent:name=>{if(name==="exam_audio_started"||name==="practice_audio_played")
+   audioMarked=api("/play",{attemptId}).catch(()=>({}));},
+ grade:async answers=>{
+   await audioMarked;
+   const marked=await api("/submit",{attemptId,answers});
+   score.textContent="درجتك: "+marked.correct+" من "+marked.total+" — المحاولة محفوظة.";
+   return marked;
+ }
+ });
+ setup.hidden=true;active.hidden=false;
+ document.getElementById("label").textContent=(groups.find(g=>g.sample===selected)?.title_ar||"Listening")+" · "+(mode==="exam"?"محاكاة":"تدريب");
+ active.scrollIntoView({behavior:"smooth"});
+ }catch(e){error.textContent=e.message||"تعذر فتح الأسئلة";}finally{launch.disabled=false;}
+});
+document.getElementById("back").addEventListener("click",()=>{
+ player?.destroy();player=null;media?.pause();media=null;root.replaceChildren();
+ attemptId="";audioMarked=Promise.resolve();active.hidden=true;setup.hidden=false;
+});
+window.addEventListener("pagehide",()=>{player?.destroy();media?.pause()});
+})();
+</script></body></html>

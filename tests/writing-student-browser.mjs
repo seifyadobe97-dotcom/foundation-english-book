@@ -61,9 +61,9 @@ try{
    assert.equal(await cards.count(),5,"Show four STEP axes plus a distinct mock exam section");
    assert.equal(await page.locator('#student-curriculum-hub [aria-disabled="true"]').count(),available?1:2,
     "Unavailable axes and Writing must not have dead active buttons");
-   const listeningTrial=page.locator('#student-curriculum-hub a[href="listening-samples.html"]');
+   const listeningTrial=page.locator('#student-curriculum-hub a[href="listening-live.html"]');
     assert.equal(await listeningTrial.count(),1,"Listening demo is visible independently of live lesson releases");
-    assert((await listeningTrial.innerText()).includes("غير محسوبة"),
+    assert((await listeningTrial.innerText()).includes("استماع"),
      "Demo Listening card must communicate it is ungraded");
     assert.equal(await page.locator("#student-exams a").count(),0,
     "Never invent an exam start link before a real exam system exists");
