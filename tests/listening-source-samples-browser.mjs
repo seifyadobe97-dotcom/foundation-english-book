@@ -31,6 +31,7 @@ try{
   const errors=[];page.on("pageerror",e=>errors.push(String(e)));
   await page.route("https://cdn.jsdelivr.net/**",route=>route.fulfill({status:200,contentType:"text/javascript",body:'window.supabase={createClient:()=>({auth:{getSession:async()=>({data:{session:{access_token:"FAKE"}}})}})};'}));
   await page.route("https://funltjxavowlnnfibhpl.supabase.co/functions/v1/step-listening-samples",async route=>{
+   if(route.request().method()==="OPTIONS"){await route.fulfill({status:200,headers:{"Access-Control-Allow-Origin":origin,"Access-Control-Allow-Headers":"authorization,apikey,content-type","Access-Control-Allow-Methods":"POST,OPTIONS"},body:""});return;}
    const request=route.request().postDataJSON();
    const items=request.sample==="record-1"?["r1-q1","r1-q2"]:["r2-q1","r2-q2"];
    const keys=request.sample==="record-1"?["D","A"]:["B","A"];
