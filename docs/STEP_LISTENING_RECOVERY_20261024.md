@@ -1,0 +1,12 @@
+# STEP Listening — Recovery and Phase 2 boundary (2026-10-24)
+- PR #41 introduced a prototype group-level player; PR #43 merged the public, ungraded browser-TTS lab to main.
+- Last known main: a93b4f1beffa71e2f89b480875c1fc9e13f54334; GitHub Pages workflow 40125349429 passed.
+- The public demo speaks original synthetic Greenfield Library text; it is **not licensed test-bank audio** and never saves grades.
+- Existing Supabase project had 0 Listening indicators, 0 Listening bank rows, 0 Storage buckets, and no Listening-specific tables before this migration.
+- This migration creates **private, initially empty** content/attempt staging tables and one **private, initially empty** Storage bucket.
+- Both `anon` and `authenticated` have all table privileges revoked and RLS enabled; `service_role` is the only intended DB accessor.
+- No student-facing route or admin upload endpoint has been deployed; these new entities do not make real Listening lessons available.
+- **Do not mark content published** until: licensed audio uploaded; matching clip/question IDs; four choices and correct key audited; Arabic rationale reviewed; authenticated Edge Function authorizes attempts and signs private media; server-side 15 sec/question and no replay enforced; mobile/desktop integration checks pass.
+- Never store production keys or transcripts in GitHub Pages assets. Keep Foundation, Grammar, Writing and previous attempts untouched.
+- Incident evidence: Action run 40124820579 failed `tests/listening-public-demo.mjs:70` with `0 !== 12`; commit 0e044e7 synchronized mock speech start and subsequent main action succeeded. This is not proof of the earlier chat UI failure cause.
+- Open server-integration tracker: https://github.com/seifyadobe97-dotcom/foundation-english-book/issues/42
