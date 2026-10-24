@@ -25,7 +25,7 @@ for(const [slug,ids] of Object.entries(expected)){
    assert(/[a-z]/i.test(pair[0])&&/[\u0600-\u06FF]/.test(pair[1]),"Each English part needs Arabic function");
   }
   assert(/[a-z]/i.test(r[4])&&/[\u0600-\u06FF]/.test(r[5]),"Bilingual example");
-  assert(Array.isArray(r[6])&&r[6].length===3&&r[6].every(x=>x.length>3),"Reveal check");
+  assert(Array.isArray(r[6])&&r[6].length===3&&r[6][0].length>12&&r[6][1].length>=2&&r[6][2].length>12),"Reveal check");
   assert(!/ASGQ[A-Z0-9]+|TAJMEAAT|مصدر الأسئلة|original question bank/i.test(r.join(" ")));
   total++;
  });
