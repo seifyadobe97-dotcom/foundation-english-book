@@ -57,6 +57,36 @@ try{
     assert((await page.locator("#writing-analysis-lessons a").first().getAttribute("href"))
       .includes("lesson.html?slug=punctuation&step=0"));
    }
+   const cards=page.locator("#student-curriculum-hub .student-curriculum-card");
+   assert.equal(await cards.count(),5,"Show four STEP axes plus a distinct mock exam section");
+   assert.equal(await page.locator('#student-curriculum-hub [aria-disabled="true"]').count(),available?2:3,
+    "Unavailable axes and Writing must not have dead active buttons");
+   assert.equal(await page.locator("#student-exams a").count(),0,
+    "Never invent an exam start link before a real exam system exists");
+   await page.locator('[data-curriculum-target="exams"]').click();
+   assert(await page.locator("#student-exams").isVisible(),"Mock exam placeholder must be reachable");
+   assert((await page.locator("#student-exams").innerText()).includes("قيد التجهيز"),
+    "Reserved exam space must accurately disclose availability");
+   assert(!(await page.locator("#student-learning-path").isVisible()),
+    "Selecting exams must collapse the long Grammar lesson list");
+   if(available){
+    await page.locator('[data-curriculum-target="writing"]').click();
+    assert(await page.locator("#writing-analysis-lessons").isVisible(),
+     "Writing section must open directly");
+    const writingSearch=page.locator("#search-writing-lessons");
+    await writingSearch.fill("Punctuation");
+    assert.equal(await page.locator("#writing-analysis-lessons .student-course-tile:visible").count(),1,
+     "Published Writing lessons can be found by name");
+    await writingSearch.fill("not-a-step-lesson");
+    assert.equal(await page.locator("#writing-analysis-lessons .student-course-tile:visible").count(),0,
+     "Search must filter without disclosing draft content");
+    await writingSearch.fill("");
+   }
+   await page.locator('[data-curriculum-target="grammar"]').click();
+   assert(await page.locator("#student-learning-path").isVisible(),
+    "Grammar section must open directly");
+   assert(await page.locator("#search-grammar-lessons").isVisible(),
+    "Grammar lesson search should be accessible");
    assert(!(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+3)),
     "Writing dashboard must fit "+width+"px");
    assert.deepEqual(errors,[],"No browser JS errors at "+width);

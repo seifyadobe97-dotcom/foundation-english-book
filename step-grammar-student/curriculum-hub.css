@@ -1,0 +1,29 @@
+/* Student curriculum: clearly separated source-backed learning and future mock exams. */
+.student-curriculum-hub{margin:0 0 23px;scroll-margin-top:20px}
+.student-curriculum-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px}
+.student-curriculum-card{font:inherit;color:inherit;text-align:right;display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;min-height:209px;padding:19px 16px;border-radius:18px;background:#fff;border:1px solid #d7e7df;box-shadow:0 8px 25px #1b474308;transition:transform .14s ease,border-color .14s ease,background .14s ease}
+button.student-curriculum-card{cursor:pointer}
+button.student-curriculum-card:hover{transform:translateY(-2px);border-color:#7bb5a0}
+button.student-curriculum-card[aria-pressed="true"]{background:#eaf6f0;border:2px solid #2b806c;padding:18px 15px;box-shadow:0 9px 22px #285e4e1a}
+.student-curriculum-card.is-upcoming{background:#f8faf8;border-style:dashed;color:#738581}
+.student-curriculum-icon{display:grid;place-items:center;border-radius:11px;width:42px;height:42px;background:#edf6f0;font:800 20px "DM Sans",sans-serif;color:#207662;direction:ltr}
+.student-curriculum-index{font:800 10px "DM Sans",sans-serif;letter-spacing:.08em;color:#688b83;direction:ltr;text-align:left}
+.student-curriculum-card strong{font-size:16px;line-height:1.55;color:#1a3d43}
+.student-curriculum-desc{font-size:11px;color:#67827d;line-height:1.65}
+.student-curriculum-footer{margin-top:auto;font-size:11px;font-weight:800;color:#216c57}
+.student-curriculum-card.is-upcoming .student-curriculum-footer{color:#83938e}
+.student-exams-empty{display:flex;align-items:center;gap:17px;padding:24px;background:white;border:1px solid #dbe9e2;border-radius:17px}
+.student-exams-empty h3{margin:0 0 5px;color:#1e4750;font-size:18px}
+.student-exams-empty p{margin:0;color:#66817d;font-size:13px}
+.student-exam-symbol{display:grid;place-items:center;flex:none;width:62px;height:62px;background:#edf5f0;border-radius:16px;color:#297967;font:800 32px "DM Sans",sans-serif}
+.student-exam-status{margin-inline-start:auto;white-space:nowrap;font-size:12px;font-weight:800;color:#657d73;background:#eff4f1;border-radius:999px;padding:6px 14px}
+.student-lesson-filter{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:-4px 0 17px;background:#fff;border:1px solid #dbe9e1;border-radius:13px;padding:12px 16px}
+.student-lesson-filter label{font-size:12px;font-weight:800;color:#245c51;white-space:nowrap}
+.student-lesson-filter input{min-width:0;flex:1;border:1px solid #c7ddd1;background:#f9fcfa;border-radius:9px;min-height:45px;padding:9px 13px;font:inherit;color:#21443b;outline-offset:3px}
+.student-lesson-filter input:focus-visible{outline:3px solid #caa579}
+.student-search-results{width:100%;font-size:12px;color:#55766d;margin:0}
+.student-search-results:empty{display:none}
+.student-learning-path[hidden],.student-exams-panel[hidden],.student-course-tile[hidden]{display:none!important}
+@media(max-width:1000px){.student-curriculum-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.student-curriculum-card{min-height:185px}}
+@media(max-width:630px){.student-curriculum-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.student-curriculum-card{min-height:182px;padding:14px 12px;border-radius:15px}.student-curriculum-card[aria-pressed="true"]{padding:13px 11px}.student-curriculum-card strong{font-size:14px}.student-curriculum-index{font-size:9px}.student-curriculum-hub .student-section-title h2{font-size:22px}.student-exams-empty{padding:17px;align-items:flex-start;gap:12px;flex-wrap:wrap}.student-exam-symbol{height:48px;width:48px;font-size:25px}.student-exam-status{margin:0}.student-lesson-filter label{width:100%}.student-lesson-filter input{width:100%;flex:auto}}
+@media(prefers-reduced-motion:reduce){.student-curriculum-card{transition:none}}

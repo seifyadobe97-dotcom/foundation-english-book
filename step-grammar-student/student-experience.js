@@ -92,10 +92,13 @@ window.StepStudentExperience={
    home.insertAdjacentElement("afterend",writingPanel);
   }
 
+  const writingCompleted=writing.reduce((sum,item)=>sum+(item.data.sections||[]).filter(stage=>stage.passed).length,0);
+  const writingTotal=writing.reduce((sum,item)=>sum+(item.data.sections||[]).length,0);
+  const overallDone=done+writingCompleted,overallTotal=total+writingTotal;
   const metrics=app.querySelectorAll(".metric");
   if(metrics.length>=2){
-   metrics[0].querySelector("strong").textContent=done+"/"+total;
-   metrics[1].querySelector("strong").textContent=percent+"%";
+   metrics[0].querySelector("strong").textContent=overallDone+"/"+overallTotal;
+   metrics[1].querySelector("strong").textContent=overallTotal?Math.round(overallDone*100/overallTotal)+"%":"0%";
   }
   const hero=app.querySelector(".hero");
   if(hero&&target){
@@ -109,8 +112,9 @@ window.StepStudentExperience={
   }
   const shortcut=document.createElement("nav");shortcut.className="student-quicknav";
   shortcut.setAttribute("aria-label","تنقل بين أقسام رحلتك");
-  shortcut.innerHTML='<a href="#student-learning-path" aria-label="انتقل لقائمة دروسي">دروسي</a>'+
-   '<a href="#student-followups">خطة متابعتي</a><a href="#student-axes">محاور STEP</a>';
+  shortcut.innerHTML='<a href="#student-curriculum-hub">أقسام المنهج</a>'+
+   '<a href="#student-followups">خطة متابعتي</a>'+
+   '<a href="#student-exams" data-curriculum-shortcut="exams">الاختبارات المحاكية</a>';
   hero?.insertAdjacentElement("beforebegin",shortcut);
   const tasks=app.querySelector(".student-followups");
   if(tasks){
@@ -136,5 +140,6 @@ window.StepStudentExperience={
    stages.parentElement.insertBefore(details,stages);details.appendChild(stages);stagesHead?.remove();
    // Keep the lesson library above both optional detail panels for a clear reading order.
   }
+  window.StepCurriculumHub?.mount(app,data,{progress,writing,home,hero,shortcut},esc);
  }
 };
