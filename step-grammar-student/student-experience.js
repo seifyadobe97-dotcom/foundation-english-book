@@ -109,8 +109,9 @@ window.StepStudentExperience={
   }
   const shortcut=document.createElement("nav");shortcut.className="student-quicknav";
   shortcut.setAttribute("aria-label","تنقل بين أقسام رحلتك");
-  shortcut.innerHTML='<a href="#student-learning-path" aria-label="انتقل لقائمة دروسي">دروسي</a>'+
-   '<a href="#student-followups">خطة متابعتي</a><a href="#student-axes">محاور STEP</a>';
+  shortcut.innerHTML='<a href="#student-curriculum-hub">أقسام المنهج</a>'+
+   '<a href="#student-followups">خطة متابعتي</a>'+
+   '<a href="#student-exams" data-curriculum-shortcut="exams">الاختبارات المحاكية</a>';
   hero?.insertAdjacentElement("beforebegin",shortcut);
   const tasks=app.querySelector(".student-followups");
   if(tasks){
@@ -136,5 +137,6 @@ window.StepStudentExperience={
    stages.parentElement.insertBefore(details,stages);details.appendChild(stages);stagesHead?.remove();
    // Keep the lesson library above both optional detail panels for a clear reading order.
   }
+  window.StepCurriculumHub?.mount(app,data,{progress,writing,home,hero,shortcut},esc);
  }
 };
