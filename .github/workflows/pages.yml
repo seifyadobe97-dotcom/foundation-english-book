@@ -187,6 +187,8 @@ jobs:
         run: node tests/lesson-network-recovery.mjs
       - name: Verify STEP Listening 15 30 45s practice and one-play exam modes on mobile and desktop
         run: node tests/listening-dual-mode.mjs
+      - name: Verify public synthetic Listening lab, safe demo link and spoken trial on mobile and desktop
+        run: node tests/listening-public-demo.mjs
 
   deploy:
     name: Deploy verified static book
