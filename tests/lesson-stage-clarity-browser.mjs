@@ -10,7 +10,7 @@ import {chromium} from "playwright";
 const repoRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const root=path.join(repoRoot,".step-public-stage-check");
 execFileSync(process.execPath,[path.join(repoRoot,"scripts/build-step-public-site.mjs"),root],{stdio:"pipe"});
-const bundles=["lesson-stage-clarity.js","clarity-future-06.js","clarity-arrangements-07.js","clarity-time-08.js","clarity-present-perfect-09.js","clarity-perfect-continuous-10.js","clarity-perfect-continuous-extra.js","clarity-perfect-continuous-finish.js","clarity-past-perfect-11.js","clarity-past-perfect-continuous-12.js","clarity-future-perfect-combo-13.js","clarity-used-to-14.js","clarity-modals-15.js","clarity-deduction-16.js","clarity-passive-17.js","clarity-modal-passive-18.js","clarity-pronouns-19.js","clarity-articles-20.js"];
+const bundles=["lesson-stage-clarity.js","clarity-future-06.js","clarity-arrangements-07.js","clarity-time-08.js","clarity-present-perfect-09.js","clarity-perfect-continuous-10.js","clarity-perfect-continuous-extra.js","clarity-perfect-continuous-finish.js","clarity-past-perfect-11.js","clarity-past-perfect-continuous-12.js","clarity-future-perfect-combo-13.js","clarity-used-to-14.js","clarity-modals-15.js","clarity-deduction-16.js","clarity-passive-17.js","clarity-modal-passive-18.js","clarity-pronouns-19.js","clarity-articles-20.js","clarity-degree-21.js","clarity-adverbs-22.js","clarity-comparatives-23.js","clarity-prepositions-24.js","clarity-collocations-25.js"];
 const lessonHtml=readFileSync(path.join(root,"step-grammar-student/lesson.html"),"utf8");
 for(const filename of bundles)assert(lessonHtml.includes('src="'+filename+'"'),"Missing published script: "+filename);
 const vm={window:{}};
@@ -83,5 +83,5 @@ try{
   await page.close();
  }
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));await rm(root,{recursive:true,force:true})}
-assert.equal(checked,246);
-console.log("PASS: "+checked+" real-browser stage renders (123 reviewed stages x mobile/desktop), Arabic/LTR, answer reveal and preserved question area");
+assert.equal(checked,296);
+console.log("PASS: "+checked+" real-browser stage renders (148 reviewed stages x mobile/desktop), Arabic/LTR, answer reveal and preserved question area");
