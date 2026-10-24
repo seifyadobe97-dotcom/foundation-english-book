@@ -16,7 +16,7 @@ assert(!html.includes('correct:"A"')&&!html.includes('correct:"D"'),
  "Neither answer keys nor sample transcripts may be embedded in public HTML");
 assert(!html.includes("Teacher: That's all for today"));
 assert(!html.includes("Lecturer: Good morning all of you."));
-assert(hub.includes('href="listening-samples.html"'),
+assert(hub.includes('href="listening-live.html"'),
  "Authenticated hub must expose the two-source preview");
 assert(!hub.includes('ready:true,demo:true'),"Do not mark real Listening courses as published");
 assert(base.includes("listening-demo.js"),"Preserve the prior standalone synthetic demo");
