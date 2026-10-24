@@ -18,7 +18,7 @@
     const media=config.media||document.createElement("audio");
     media.preload="auto";
     if(config.audioUrl)media.src=config.audioUrl;
-    media.controls=mode==="practice";
+    media.controls=mode==="practice"&&config.nativeControls!==false;
     media.classList.add("listening-audio");
     media.setAttribute("aria-label","مقطع الاستماع");
     root.appendChild(view);
