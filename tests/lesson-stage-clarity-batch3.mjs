@@ -32,7 +32,7 @@ for(const [slug,ids] of Object.entries(expected)){
  }
 }
 assert.equal(audited,31);
-assert.equal(Object.keys(data).length,15,"All first 15 lessons must remain reviewed");
+assert.equal(Object.keys(data).length,15,"Exactly the first 15 lessons loaded in this historical regression");
 assert.equal(Object.values(data).reduce((n,v)=>n+v.length,0),88);
 const builder=readFileSync("scripts/build-step-public-site.mjs","utf8");
 for(const bundle of names.slice(8))assert(builder.includes('"'+bundle+'"'),"Builder omits "+bundle);
