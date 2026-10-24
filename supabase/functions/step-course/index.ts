@@ -234,11 +234,14 @@ Deno.serve(async(request)=>{
      keywords:(guide.keywords||[]).map((k:any)=>[k.en,k.ar]),
      formulas:[],warning:null
     }:null;
-    return studentTeachingCopy(teachingRows?.find(x=>x.part_index===i)?.published||fromGuide||section.visual||
-    {title:section.titleAr||section.title,detail:section.description||section.short||section.titleAr||"",
-     tip:section.short||"",cards:[],examples:[],formulas:[],keywords:[],
-     warning:{wrong:"",correct:"",why:""},table:{headers:[],rows:[]},
-     extra:{heading:"",paragraphs:[]}});
+    const base=fromGuide||section.visual||
+     {title:section.titleAr||section.title,detail:section.description||section.short||section.titleAr||"",
+      tip:section.short||"",cards:[],examples:[],formulas:[],keywords:[],
+      warning:{wrong:"",correct:"",why:""},table:{headers:[],rows:[]},
+      extra:{heading:"",paragraphs:[]}};
+    const revision=teachingRows?.find(x=>x.part_index===i)?.published;
+    // A partial approved edit must not remove untouched source teaching components.
+    return studentTeachingCopy(revision&&typeof revision==="object"&&!Array.isArray(revision)?{...base,...revision}:base);
    });
    return {student:user.user_metadata?.username||"طالب STEP",
     teachingUnits:visuals,
