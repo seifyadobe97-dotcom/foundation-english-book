@@ -71,9 +71,9 @@ try{
   assert.equal(await page.locator(".flow-pieces .flow-arrow").count(),2);
   assert.equal(await page.locator(".flow-pieces>span:empty").count(),0,"Never create empty formula boxes");
   assert.equal(await page.locator(".flow-subject .flow-piece-caption").innerText(),"الجزء الأول");
-  assert.equal(await page.locator(".concept-card .concept-heading").first().innerText(),"الشرط\\nCondition");
-  assert.equal(await page.locator(".agreement-table th").nth(1).innerText(),"جملة الشرط\\nIf clause");
-  assert.equal(await page.locator(".agreement-table th").nth(2).innerText(),"جملة النتيجة\\nMain clause");
+  assert.equal(await page.locator(".concept-card .concept-heading").first().innerText(),"الشرط\nCondition");
+  assert.equal(await page.locator(".agreement-table th").nth(1).innerText(),"جملة الشرط\nIf clause");
+  assert.equal(await page.locator(".agreement-table th").nth(2).innerText(),"جملة النتيجة\nMain clause");
   assert.equal(await page.locator(".agreement-table").getAttribute("dir"),"ltr");
   assert.equal(await page.locator(".flow-pieces").getAttribute("dir"),"ltr");
   assert.equal(await page.locator(".flow-rule").getAttribute("dir"),"ltr");
