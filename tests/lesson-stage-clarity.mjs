@@ -30,7 +30,7 @@ for(const [slug,ids] of Object.entries(expected)){
   total++;
  });
 }
-assert.equal(total,26);
+assert.equal(total,26); // Previous approved stage set
 const p=readFileSync("step-grammar-student/lesson-player.js","utf8");
 const html=readFileSync("step-grammar-student/lesson.html","utf8");
 assert(p.includes("reviewedStage()")&&p.includes("row[0]!==state.course?.sections?.[state.index]?.id"),"Mismatch must safely fall back");
