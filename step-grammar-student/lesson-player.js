@@ -131,39 +131,109 @@ function renderLessonHeader(){
  '<span class="path-number">'+(done?'✓':i+1)+'</span><span class="path-label">'+escapeHtml(m.title)+'</span></button>';
  }).join("")+'</nav>';
 }
+// English examples, rules and arrows are always read left to right. Arabic explanations
+// remain right to left. A two-field rule is NOT a three-field sentence diagram.
+const arabicVisualLabel={
+ "Condition":"الشرط","Result":"النتيجة","Other":"استخدامات أخرى","Negative":"النفي","Positive":"الإثبات",
+ "Passive":"المبني للمجهول","Active":"المبني للمعلوم","Modal":"الفعل الناقص",
+ "Verb":"الفعل","Noun":"الاسم","Adjective":"الصفة","Adverb":"الظرف","Tense":"الزمن",
+ "Pattern":"التركيب","Check":"تأكد","Time":"الوقت","Past":"الماضي","Present":"المضارع",
+ "Future":"المستقبل","Contrast":"التضاد","Duration":"المدة","Suggestion":"الاقتراح",
+ "If":"الشرط","Sequence":"التسلسل","Meaning":"المعنى","Question":"السؤال",
+ "Main clause":"جملة النتيجة","If clause":"جملة الشرط","Standard":"التركيب الأساسي",
+ "Request":"طلب أو إذن","Provided":"بشرط أن","Comparison":"المقارنة",
+ "Tense":"الزمن","First":"الأول","Second":"الثاني","Third":"الثالث",
+ "Type":"النوع","Form":"الصيغة","Usage":"الاستخدام","Example":"المثال",
+ "Answer":"الإجابة","Look":"لاحظ","Match":"التطابق","Place":"المكان",
+ "Person":"الشخص","Direct":"مباشر","Indirect":"غير مباشر","Habit":"عادة",
+ "Special":"حالة خاصة","Choice":"الاختيار","Why":"السبب","Core":"الأساس",
+ "Rule":"القاعدة","Function":"الوظيفة","Past Simple":"الماضي البسيط",
+ "will + V1":"المستقبل مع will","If + present":"جملة الشرط في المضارع",
+ "Main Clause":"جملة النتيجة","If Clause":"جملة الشرط"
+};
+const labelArabic=(value)=>arabicVisualLabel[String(value||"").trim()]||"";
+const plainText=(value)=>String(value??"").replace(/\[\[|\]\]/g,"").trim();
+const isArabic=value=>/[\u0600-\u06FF]/.test(String(value||""));
 function concepts(m){
- if(!m.cards?.length)return "";
- return '<h3 class="section-label">القاعدة ببساطة</h3><div class="simple-grid '+(m.cards.length===3?'three':'')+'">'+
- m.cards.map(([name,who,how,icon])=>'<div class="concept-card"><div class="concept-top"><span class="concept-icon" aria-hidden="true">'+escapeHtml(icon)+'</span>'+
- '<span class="concept-heading">'+escapeHtml(name)+'</span></div><div class="concept-formula">'+mark(who)+'</div><p>'+mark(how)+'</p></div>').join("")+'</div>';
+ if(!Array.isArray(m.cards)||!m.cards.length)return "";
+ const cards=m.cards.filter(row=>Array.isArray(row)&&row.some(x=>plainText(x)));
+ if(!cards.length)return "";
+ return '<h3 class="section-label">القاعدة ببساطة</h3><div class="simple-grid '+(cards.length===3?'three':'')+'">'+
+ cards.map(([name,who,how,icon])=>{
+  const arabic=labelArabic(name)|| (isArabic(name)?String(name):"الفكرة الأساسية");
+  const english=!isArabic(name)?String(name||""):"";
+  const detail=plainText(how);
+  return '<div class="concept-card"><div class="concept-top">'+
+   (plainText(icon)?'<span class="concept-icon" aria-hidden="true">'+escapeHtml(icon)+'</span>':"")+
+   '<span class="concept-heading">'+escapeHtml(arabic)+
+   (english?'<small class="concept-heading-en" dir="ltr" lang="en">'+escapeHtml(english)+'</small>':"")+
+   '</span></div>'+
+   (plainText(who)?'<div class="concept-formula" dir="ltr" lang="en">'+mark(who)+'</div>':"")+
+   (detail?'<p dir="auto">'+mark(how)+'</p>':"")+
+   '</div>';
+ }).join("")+'</div>';
 }
 function examples(m){
- return '<h3 class="section-label">شوفها في أمثلة</h3><div class="examples">'+m.examples.map(([category,text,desc])=>
- '<div class="example"><div class="example-label"><span class="pin"></span>'+escapeHtml(category)+'</div>'+
- '<div class="example-sentence" lang="en">'+mark(text)+'</div><div class="example-explain">'+escapeHtml(desc)+'</div></div>').join("")+'</div>';
+ const list=Array.isArray(m.examples)?m.examples.filter(a=>Array.isArray(a)&&plainText(a[1])):[];
+ if(!list.length)return "";
+ return '<h3 class="section-label">شوفها في أمثلة</h3><div class="examples">'+list.map(([category,text,desc])=>
+ '<div class="example"><div class="example-label"><span class="pin"></span>'+escapeHtml(category||"مثال")+'</div>'+
+ '<div class="example-sentence" dir="ltr" lang="en">'+mark(text)+'</div>'+
+ (plainText(desc)?'<div class="example-explain" dir="auto">'+escapeHtml(desc)+'</div>':"")+'</div>').join("")+'</div>';
 }
 function words(m){
- return m.keywords?'<h3 class="section-label">الكلمات الدالة</h3><div class="keywords">'+m.keywords.map(([en,ar])=>
- '<span class="keyword"><b class="en" lang="en">'+escapeHtml(en)+'</b><span>'+escapeHtml(ar)+'</span></span>').join("")+'</div>':'';
+ const keywords=Array.isArray(m.keywords)?m.keywords.filter(a=>Array.isArray(a)&&plainText(a[0])):[];
+ return keywords.length?'<h3 class="section-label">الكلمات الدالة</h3><div class="keywords">'+keywords.map(([en,ar])=>
+ '<span class="keyword"><b class="en" lang="en" dir="ltr">'+escapeHtml(en)+'</b><span dir="auto">'+escapeHtml(ar)+'</span></span>').join("")+'</div>':"";
 }
 function explainTable(m){
- if(!m.table)return "";
  const t=m.table;
+ if(!t||!Array.isArray(t.headers)||!t.headers.length||!Array.isArray(t.rows)||!t.rows.length)return "";
+ const headers=t.headers.map(h=>plainText(h));
+ const rows=t.rows.filter(row=>Array.isArray(row)&&row.length===headers.length);
+ if(!rows.length)return "";
+ const heading=h=>labelArabic(h)||h;
+ const localized=["If clause","Main clause"].every(h=>headers.includes(h));
  return '<section class="agreement-table-box" aria-label="جدول قواعد الدرس">'+
  '<h3 class="section-label">جدول للمقارنة والحفظ</h3><div class="agreement-table-scroll">'+
- '<table class="agreement-table"><thead><tr>'+t.headers.map(h=>'<th dir="rtl">'+escapeHtml(h)+'</th>').join("")+'</tr></thead><tbody>'+
- t.rows.map(row=>'<tr>'+row.map((value,i)=>'<td data-label="'+escapeHtml(t.headers[i])+'"><span dir="auto">'+escapeHtml(value)+'</span></td>').join("")+'</tr>').join("")+
+ '<table class="agreement-table" dir="ltr"><thead><tr>'+headers.map(h=>
+ '<th dir="auto">'+escapeHtml(h==="البناء"&&localized?"نوع البناء":heading(h))+
+ (labelArabic(h)?'<small class="table-heading-en" dir="ltr" lang="en">'+escapeHtml(h)+'</small>':"")+'</th>').join("")+'</tr></thead><tbody>'+
+ rows.map(row=>'<tr>'+row.map((value,i)=>'<td data-label="'+escapeHtml(heading(headers[i]))+'"><span dir="'+(isArabic(value)?"rtl":"ltr")+'" lang="'+(isArabic(value)?"ar":"en")+'">'+escapeHtml(value)+'</span></td>').join("")+'</tr>').join("")+
  '</tbody></table></div></section>';
 }
 function diagram(m){
- if(!m.formulas?.length)return "";
- return '<section class="grammar-formulas" aria-label="ترتيب الجملة من اليسار لليمين">'+
- '<h3 class="section-label">خريطة تكوين الجملة</h3><p class="formula-help">اقرأ ترتيب الكلمات الإنجليزية من الشمال لليمين، والشرح العربي تحت المثال.</p>'+
- '<div class="formula-list">'+m.formulas.map(([label,a,b,c])=>
- '<article class="agreement-flow"><div class="flow-label">'+escapeHtml(label)+'</div>'+
- '<div class="flow-pieces" dir="ltr" lang="en"><span class="flow-subject">'+escapeHtml(a)+'</span>'+
- '<span class="flow-arrow" aria-hidden="true">→</span><span class="flow-verb">'+escapeHtml(b)+'</span>'+
- '<span class="flow-arrow" aria-hidden="true">→</span><span class="flow-complement">'+escapeHtml(c)+'</span></div></article>').join("")+'</div></section>';
+ const rows=Array.isArray(m.formulas)?m.formulas.filter(row=>Array.isArray(row)&&row.some(x=>plainText(x))):[];
+ if(!rows.length)return "";
+ return '<section class="grammar-formulas" aria-label="قواعد وترتيب الجملة">'+
+ '<h3 class="section-label">خريطة تكوين الجملة</h3>'+
+ '<p class="formula-help">اقرأ التركيبات الإنجليزية من الشمال لليمين. شرح كل قاعدة مكتوب بالعربي تحتها.</p>'+
+ '<div class="formula-list">'+rows.map(row=>{
+  const parts=row.map(plainText);
+  const [label,a,b,c]=parts;
+  // Most of the bank's formulas are [rule, note]. Treat them as a full rule,
+  // never as [label, subject, missing verb, missing complement].
+  if(row.length<4||!b||!c){
+   const hint=isArabic(a)?a:"";
+   const pattern=hint?label:parts.filter(Boolean).join("  ·  ");
+   const subtitle=labelArabic(label);
+   return '<article class="agreement-flow rule-flow">'+
+    '<div class="flow-label">'+escapeHtml(subtitle||"القاعدة والتطبيق")+
+    (subtitle?'<small dir="ltr" lang="en">'+escapeHtml(label)+'</small>':"")+'</div>'+
+    '<div class="flow-rule" dir="'+(isArabic(pattern)?"rtl":"ltr")+'" lang="'+(isArabic(pattern)?"ar":"en")+'">'+escapeHtml(pattern)+'</div>'+
+    (hint?'<div class="flow-explain" dir="rtl">'+escapeHtml(hint)+'</div>':"")+
+    '</article>';
+  }
+  const explanation=labelArabic(label)|| (isArabic(label)?label:"تركيب الجملة");
+  const names=["الجزء الأول","الجزء الثاني","الجزء الثالث"];
+  return '<article class="agreement-flow"><div class="flow-label">'+escapeHtml(explanation)+
+    (!isArabic(label)?'<small lang="en" dir="ltr">'+escapeHtml(label)+'</small>':"")+'</div>'+
+   '<div class="flow-pieces" dir="ltr" lang="en">'+[a,b,c].map((part,i)=>
+    (i?'<span class="flow-arrow" aria-hidden="true">→</span>':"")+
+    '<span class="'+["flow-subject","flow-verb","flow-complement"][i]+'">'+
+    '<small class="flow-piece-caption" lang="ar" dir="rtl">'+names[i]+'</small>'+
+    escapeHtml(part)+'</span>').join("")+'</div></article>';
+ }).join("")+'</div></section>';
 }
 function warningExamples(m){
  if(!m.warning)return "";
