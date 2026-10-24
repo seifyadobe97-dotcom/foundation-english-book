@@ -35,7 +35,7 @@ jobs:
       - name: Install pinned browser-test dependency
         run: npm install --ignore-scripts --no-package-lock --no-audit --no-fund
       - name: Install Chromium for actual-browser tests
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
       - name: Test Foundation English book on desktop and mobile
         run: node tests/browser-smoke.mjs
 
