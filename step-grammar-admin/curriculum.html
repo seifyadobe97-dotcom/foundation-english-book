@@ -190,6 +190,7 @@ function form(item,canEdit){
  return '<h2>'+(item?'بيانات المؤشر':'إضافة مؤشر جديد')+'</h2>'+(item?
  '<div class="actions"><a class="btn" href="reports.html?indicator='+encodeURIComponent(item.slug)+'">تقرير المؤشر ←</a>'+
  '<a class="btn alt" href="videos.html?indicator='+encodeURIComponent(item.slug)+'">▶ إدارة فيديوهات الدرس</a>'+
+ (item.axis_code==="writing-analysis"&&item.legacy_course_code?'<a class="btn alt" href="studio.html?course='+encodeURIComponent(item.legacy_course_code)+'&tab=questions">✎ محرر بنك الأسئلة (مسودة) ←</a>':'')+
  (item.slug==='present-simple'?'<a class="btn alt" href="../step-grammar-student/learn.html">عاين درس المضارع البسيط الجديد ←</a>':
  item.slug==='subject-verb-agreement'?'<a class="btn alt" href="../step-grammar-student/subject-verb-agreement.html">عاين الدرس الأول التفاعلي ←</a>':
  item.slug==='present-continuous'?'<a class="btn alt" href="continuous-preview.html">معاينة شرح الدرس 3</a> <a class="btn alt" href="continuous-audit.html">تدقيق 24 موضع سؤال</a>':
