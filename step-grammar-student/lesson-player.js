@@ -281,6 +281,12 @@ function lessonVideo(m){
  (open?'<div class="video-frame"><iframe loading="lazy" title="'+escapeHtml(video.title||"فيديو الشرح")+'" src="'+escapeHtml(source.embed)+'" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>':"")+
  '</section>';
 }
+// Instructor source audits remain available in the protected admin, never in student copy.
+function studentSafeExtra(extra){
+ if(!extra||typeof extra!=="object"||!Array.isArray(extra.paragraphs)||!extra.paragraphs.length||!plainText(extra.heading))return false;
+ const copy=[extra.heading,...extra.paragraphs].join(" ");
+ return !/(?:ASGQ[A-Z0-9]+|البنك الأصلي|سجل المراجعة|مصادر الأسئلة|مصدر الأسئلة|التجميعات|المحاكي|المحاكاة|التدقيق|تدقيق|تصنيف المصدر|قيود المصدر|مصداقية بنك|مراجعة مصدرية|الأسئلة المعتمدة|تقييم المصدر)/i.test(copy);
+}
 function chapter(){
  const m=LESSONS[state.index],number=state.index+1;
  return '<div class="lesson-inner"><div class="eyebrow">المرحلة '+number+' من '+LESSONS.length+'</div>'+
@@ -288,7 +294,7 @@ function chapter(){
  concepts(m)+diagram(m)+explainTable(m)+words(m)+examples(m)+
  lessonVideo(m)+
  '<div class="tip"><strong>خد بالك:</strong> '+mark(m.tip)+warningExamples(m)+'</div>'+
- (m.extra?'<details class="optional"><summary>'+escapeHtml(m.extra.heading)+'</summary><div class="optional-content">'+m.extra.paragraphs.map(p=>'<p>'+escapeHtml(p)+'</p>').join("")+'</div></details>':'')+
+ (studentSafeExtra(m.extra)?'<details class="optional"><summary>'+escapeHtml(m.extra.heading)+'</summary><div class="optional-content">'+m.extra.paragraphs.map(p=>'<p>'+escapeHtml(p)+'</p>').join("")+'</div></details>':'')+
 '<div class="chapter-footer">'+(number>1?'<button class="button secondary" data-action="part" data-index="'+(number-2)+'">المرحلة السابقة</button>':'<span></span>')+
  '<button class="button green" data-action="practice">جاهز؟ حل تدريبات المرحلة ↓</button></div></div>';
 }
