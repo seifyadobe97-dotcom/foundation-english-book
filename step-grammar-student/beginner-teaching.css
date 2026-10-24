@@ -27,3 +27,5 @@
 .beginner-rule-parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .beginner-rule-part{background:#e9f4ed;border:1px solid #c7dfd0;border-radius:10px;padding:12px 14px;line-height:1.85;font-size:14px;color:#1e574b}
 @media(max-width:620px){.beginner-help{padding:14px 12px;border-radius:15px}.beginner-head h3{font-size:18px}.beginner-parts{flex-direction:column}.beginner-part{min-width:0;flex:auto}.beginner-rule-parts{grid-template-columns:1fr}.beginner-english,.beginner-pattern{font-size:15px}.beginner-glossary dl>div{align-items:flex-start;flex-direction:column;gap:2px}.beginner-meaning p{font-size:14px}}
+
+.beginner-pattern[dir="rtl"]{direction:rtl;text-align:right;font-family:Cairo,Tahoma,Arial,sans-serif}
