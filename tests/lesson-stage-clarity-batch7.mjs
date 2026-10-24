@@ -25,6 +25,8 @@ for(const [slug,expected] of Object.entries(ids)){
  });
 }
 assert.equal(n,19);
+assert.equal(Object.keys(context.window.StepStageClarity).length,10,"Historical five plus new five lesson bundles");
+assert.equal(Object.values(context.window.StepStageClarity).reduce((total,parts)=>total+parts.length,0),45,"26 historic + 19 new instructor stages");
 const builder=readFileSync("scripts/build-step-public-site.mjs","utf8");
 for(const f of bundles)assert(builder.includes('"'+f+'"'),"Missing learner-safe script: "+f);
 console.log("PASS: 19 beginner Arabic stages in Grammar 31–35 with stable source IDs, LTR/RTL, self-checks and private-bank safety");
