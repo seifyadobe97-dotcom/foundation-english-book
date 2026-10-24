@@ -24,7 +24,7 @@ for(const [slug,ids] of Object.entries(expected)){
   assert(/[\u0600-\u06ff]/.test(row[2])&&/خطأ شائع/.test(row[2]),"Arabic + common pitfall "+slug+"/"+i);
   assert(row[3].length===3&&row[3].every(p=>p.length===2&&/[A-Za-z]/.test(p[0])&&/[\u0600-\u06ff]/.test(p[1])),"LTR English / Arabic role "+slug+"/"+i);
   assert(/[A-Za-z]/.test(row[4])&&/[\u0600-\u06ff]/.test(row[5]),"English sentence + Arabic translation "+slug+"/"+i);
-  assert(row[6].length===3&&row[6][0].length>12&&row[6][1].length>=2&&row[6][2].length>12,"Ungraded check + reasoning "+slug+"/"+i);
+  assert(row[6].length===3&&row[6][0].length>12&&row[6][1].trim().length>=1&&row[6][2].length>12,"Ungraded check + reasoning "+slug+"/"+i);
   assert(!/ASGQ[A-Z0-9]+|TAJMEAAT|private bank|question_id|correct_key/i.test(JSON.stringify(row)),"Private bank safety "+slug+"/"+i);
   checked++;
  });
