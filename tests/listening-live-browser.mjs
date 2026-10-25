@@ -59,7 +59,7 @@ try{
   assert.equal(await page.locator(".listening-question").count(),2);
   await page.locator('input[data-question="q1"][value="A"]').check();
   await page.locator('input[data-question="q2"][value="A"]').check();
-  await page.getByRole("button",{name:"سلّم إجابات المجموعة"}).click();
+  await page.getByRole("button",{name:"سلّم إجابات سؤال الاستماع"}).click();
   await page.locator(".listening-script").waitFor();
   assert((await page.locator("#score").innerText()).includes("2 من 2"));
   assert(calls.some(v=>v.name==="submit"));
