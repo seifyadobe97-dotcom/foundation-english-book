@@ -28,8 +28,8 @@ assert(!player.includes("المجموعة"),"Player must not use group terminolo
 assert(!student.includes('type="file"'),"Never request audio upload from student");
 assert(!student.includes("correct_choice")&&!student.includes("SUPABASE_SERVICE_ROLE_KEY"));
 for(const html of [admin,student,main]){
- for(const code of html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)){
-   new Script(code[1]);
+ for(const part of html.split("<script>").slice(1)){
+   new Script(part.split("</script>")[0]);
  }
 }
 console.log("PASS Word SAD draft, 3 graded MCQs, private owner upload, student Listening grade history");
