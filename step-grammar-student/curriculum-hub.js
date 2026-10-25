@@ -43,6 +43,17 @@ window.StepCurriculumHub={
      '<div class="student-curriculum-card is-upcoming" aria-disabled="true">'+text+'</div>';
    }).join("")+'</div>';
   hero.insertAdjacentElement("afterend",hub);
+  // Listening scores are a distinct STEP skill, and are shown in the same student account.
+  const listeningFooter=hub.querySelector('a[href="listening-live.html"] .student-curriculum-footer');
+  const loadListening=window.StepListeningProgressLoader;
+  if(listeningFooter&&typeof loadListening==="function"){
+    loadListening().then(summary=>{
+      listeningFooter.textContent=summary.completed
+       ? "درجاتك في الاستماع: "+summary.correct+" / "+summary.total+" · "+summary.completed+" محاولة"
+       : "ابدأ سؤال استماع · الدرجات هتظهر هنا";
+    }).catch(()=>{listeningFooter.textContent="افتح أسئلة الاستماع ودرجاتك";});
+  }
+
 
   // Filter existing authenticated cards locally; no course progress or API data changes.
   const search=(panel,id,example)=>{
