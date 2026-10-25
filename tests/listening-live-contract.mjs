@@ -16,13 +16,16 @@ assert(!student.includes('type="file"'),"Student never supplies audio");
 assert(!student.includes("correct_choice"));
 assert(!student.includes("SUPABASE_SERVICE_ROLE_KEY"));
 assert(!student.includes("transcript:"));
-assert(admin.includes('type="file"'));
-assert(admin.includes('id="rights"'),"Owner must attest to clip rights");
+assert(admin.includes('input.type="file"'),"Owner can upload a separate MP3 per Listening question");
+assert(admin.includes('rights.type="checkbox"')&&admin.includes('تصريح استخدام'),"Owner must attest to source audio rights");
 assert(api.includes('step_listening_attempts')&&api.includes('step_listening_responses'),"Tracked grading is required");
 assert(api.includes('createSignedUrl')&&api.includes('owner'),"Private signed audio and owner upload required");
 assert(api.includes('state:"submitted"'),"Submission must close attempts");
 assert(sql.includes("'draft'")&&sql.includes("'record-1'")&&sql.includes("'record-2'"));
-assert(old.includes('id="audio-source"'),"Keep previous opt-in local audio trial untouched as archive");
+assert(old.includes('id="audio-source"'),"Keep prior audio preview untouched as archive");
+assert(api.includes('"record-3"')&&api.includes('"/admin/catalog"'),"New source-based question is staged and manageable");
+assert(api.includes('"/admin/grades"')&&api.includes('"/progress"'),"Listening scored attempts are accessible to students and owner");
+assert(student.includes('refreshProgress()'),"Student score history must be visible");
 for(const page of [student,admin]){
  for(const script of page.matchAll(/<script>([\s\S]*?)<\/script>/g))new Script(script[1]);
 }

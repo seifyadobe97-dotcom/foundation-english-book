@@ -48,7 +48,7 @@ try{
   assert.equal(await page.locator(".listening-question").count(),2);
   await page.locator('input[data-question="r1-q1"][value="D"]').check();
   await page.locator('input[data-question="r1-q2"][value="A"]').check();
-  await page.getByRole("button",{name:"سلّم إجابات المجموعة"}).click();
+  await page.getByRole("button",{name:"سلّم إجابات سؤال الاستماع"}).click();
   await page.locator(".listening-script").waitFor();
   assert((await page.locator(".listening-script").innerText()).includes("Test script"));
   await page.locator("#reset").click();

@@ -20,17 +20,20 @@ small{color:#58716b}#active[hidden],#setup[hidden]{display:none}
 @media(max-width:600px){.grid{grid-template-columns:1fr}.card{padding:13px}}
 </style></head><body><header><strong dir="ltr">STEP WITH SEIFY · LISTENING</strong><a href="./">← حساب الطالب</a></header>
 <main><p style="font-weight:700;color:#27715d">LISTENING · INTERACTIVE QUESTIONS</p>
-<h1>أسئلة الاستماع</h1><p>اختار المجموعة وابدأ الحل. التسجيل يشتغل مباشرة من المنصة، ومش مطلوب منك أي رفع ملفات.</p>
+<h1>أسئلة الاستماع</h1><p>اختار سؤال استماع وابدأ الحل. التسجيل يشتغل مباشرة من المنصة، ومش مطلوب منك أي رفع ملفات.</p>
 <p id="status" class="notice" role="status">بنحمّل التسجيلات المعتمدة…</p>
-<section class="card" id="setup" hidden><h2>اختار التسجيل</h2><div class="grid" id="clips"></div>
+<section class="card" id="setup" hidden><h2>اختار سؤال استماع</h2><div class="grid" id="clips"></div>
 <h2>اختار وضع الحل</h2>
 <button class="mode" data-mode="practice" aria-pressed="true">🎧 تدريب — تسمع براحتك وتشوف التصحيح</button>
 <button class="mode" data-mode="exam" aria-pressed="false">⏱ محاكاة — 30 ثانية للقراءة وتشغيل واحد</button>
-<p><small>في وضع التدريب بيظهر السكريبت والتفسير بعد الحل. المحاولات بتتحفظ منفصلة عن درجات الجرامر والتحليل الكتابي.</small></p>
+<p><small>في وضع التدريب بيظهر السكريبت والتفسير بعد الحل. درجات الاستماع بتتحفظ في سجل الطالب وتظهر في النتائج، من غير ما تختلط بدرجات الجرامر والتحليل الكتابي.</small></p>
 <button id="launch" class="action">افتح الأسئلة</button><p id="error" role="alert"></p>
 </section>
-<section class="card" id="active" hidden><button id="back" class="action secondary">← رجوع للمجموعات</button>
+<section class="card" id="active" hidden><button id="back" class="action secondary">← رجوع لأسئلة الاستماع</button>
 <p id="label"></p><p id="score" role="status"></p><div id="listening-root"></div></section>
+<section class="card" id="grade-history"><h2>درجاتك في الاستماع</h2>
+<p id="progress-message" class="muted" role="status">بنحمّل نتائجك…</p>
+<div class="grid" id="score-summary"></div><ul id="past-listening"></ul></section>
 <p><small>المحاكاة تعليمية، وليست اختبارًا مراقبًا؛ لا يمكن منع نسخ الصوت خارج المتصفح بصورة مطلقة.</small></p>
 </main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
 <script src="listening-session.js"></script><script src="listening-player.js"></script>
@@ -41,7 +44,9 @@ const API="https://funltjxavowlnnfibhpl.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsIn
 const client=window.supabase.createClient(API,KEY);
 const status=document.getElementById("status"),setup=document.getElementById("setup"),active=document.getElementById("active"),
 clips=document.getElementById("clips"),root=document.getElementById("listening-root"),launch=document.getElementById("launch"),
-error=document.getElementById("error"),score=document.getElementById("score");
+error=document.getElementById("error"),score=document.getElementById("score"),
+progressMessage=document.getElementById("progress-message"),scoreSummary=document.getElementById("score-summary"),
+pastListening=document.getElementById("past-listening");
 let groups=[],selected=null,mode="practice",player=null,media=null,attemptId="",audioMarked=Promise.resolve();
 async function api(path,body){
  const {data:{session}}=await client.auth.getSession();if(!session)throw Error("سجّل دخولك الأول من بوابة الطالب.");
@@ -50,17 +55,37 @@ async function api(path,body){
  ...(body===undefined?{}:{body:JSON.stringify(body)}),signal:AbortSignal.timeout(20000)});
  const x=await r.json().catch(()=>({}));if(!r.ok)throw Error(x.error||"تعذر تحميل البيانات");return x;
 }
+async function refreshProgress(){
+ try{
+  const r=await api("/progress");
+  scoreSummary.replaceChildren();pastListening.replaceChildren();
+  for(const [title,data] of [["التدريب",r.byMode?.practice],["المحاكاة",r.byMode?.exam]]){
+    const cell=document.createElement("div");cell.className="choice";
+    const strong=document.createElement("strong");strong.textContent=title;
+    const mark=document.createElement("span");mark.textContent=(data?.correct||0)+" / "+(data?.total||0)+" إجابة صحيحة · "+(data?.attempts||0)+" محاولة";
+    cell.append(strong,mark);scoreSummary.append(cell);
+  }
+  progressMessage.textContent="مجموع درجات الاستماع: "+r.correct+" من "+r.total+
+    " · "+r.completed+" محاولة مكتملة"+(r.percentage===null?"":" · "+r.percentage+"%");
+  for(const a of r.history||[]){
+    const li=document.createElement("li");
+    const day=a.submittedAt?new Date(a.submittedAt).toLocaleDateString("ar-SA"):"";
+    li.textContent=a.question+" · "+(a.mode==="exam"?"محاكاة":"تدريب")+" · "+a.correct+"/"+a.total+" · "+day;
+    pastListening.append(li);
+  }
+ }catch(e){progressMessage.textContent="تعذر تحميل سجل درجات الاستماع: "+(e.message||"");}
+}
 function choose(id){selected=id;clips.querySelectorAll("[data-id]").forEach(n=>n.setAttribute("aria-pressed",String(n.dataset.id===id)));}
 try{
  const result=await api("/catalog");groups=result.groups||[];
- if(!groups.length){status.textContent="لسه مفيش تسجيلات صوتية معتمدة للطلاب. الإدارة بتجهّز التسجيلات؛ مش مطلوب منك ترفع أي ملفات.";return;}
+ if(!groups.length){status.textContent="لسه مفيش أسئلة استماع منشورة للطلاب. الإدارة بتجهّز التسجيلات؛ مش مطلوب منك ترفع أي ملفات.";return;}
  for(const g of groups){
    const b=document.createElement("button");b.type="button";b.className="choice";b.dataset.id=g.sample;b.setAttribute("aria-pressed","false");
    const title=document.createElement("strong");title.textContent=g.title_ar;
-   const detail=document.createElement("small");detail.textContent=g.title_en+" · سؤالان على نفس التسجيل";
+   const detail=document.createElement("small");detail.textContent=g.title_en+" · "+g.questionCount+" سؤال اختيار من متعدد";
    b.append(title,detail);b.addEventListener("click",()=>choose(g.sample));clips.append(b);
  }
- choose(groups[0].sample);status.hidden=true;setup.hidden=false;
+ choose(groups[0].sample);status.hidden=true;setup.hidden=false;refreshProgress();
 }catch(e){status.textContent=e.message||"تعذر فتح حساب الطالب."}
 document.querySelectorAll("[data-mode]").forEach(b=>b.addEventListener("click",()=>{
  mode=b.dataset.mode;document.querySelectorAll("[data-mode]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.mode===mode)));
@@ -87,7 +112,8 @@ launch.addEventListener("click",async()=>{
  grade:async answers=>{
    await audioMarked;
    const marked=await api("/submit",{attemptId,answers});
-   score.textContent="درجتك: "+marked.correct+" من "+marked.total+" — المحاولة محفوظة.";
+   score.textContent="درجتك: "+marked.correct+" من "+marked.total+" — اتسجلت ضمن درجات الاستماع في حسابك.";
+   refreshProgress();
    return marked;
  }
  });

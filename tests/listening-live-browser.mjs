@@ -37,6 +37,7 @@ try{
    calls.push({name,body});
    let result;
    if(name==="catalog")result={groups:[{sample:"record-1",title_ar:"موعد الاختبار",title_en:"Final Exam",questionCount:2},{sample:"record-2",title_ar:"العادات الغذائية",title_en:"Eating Habits",questionCount:2}]};
+   else if(name==="progress")result={completed:1,correct:1,total:2,percentage:50,byMode:{practice:{attempts:0,correct:0,total:0},exam:{attempts:1,correct:1,total:2}},history:[]};
    else if(name==="begin")result={attemptId:"test-"+body.mode,audioUrl:address+"/step-grammar-student/listening-demo.html",secondsPerQuestion:15,questions:[
     {id:"q1",text:"What did the speaker say?",options:{A:"1",B:"2",C:"3",D:"4"}},
     {id:"q2",text:"How many units?",options:{A:"2",B:"5",C:"6",D:"26"}}
@@ -53,16 +54,18 @@ try{
   await page.goto(address+"/step-grammar-student/listening-live.html",{waitUntil:"domcontentloaded"});
   await page.locator("#setup:not([hidden])").waitFor();
   assert.equal(await page.locator("#clips button").count(),2);
+  await page.waitForFunction(()=>document.querySelector("#progress-message")?.textContent?.includes("مجموع درجات الاستماع"));
   assert.equal(await page.locator('input[type="file"]').count(),0);
   await page.locator("#launch").click();
   await page.getByRole("button",{name:"ابدأ التدريب"}).click();
   assert.equal(await page.locator(".listening-question").count(),2);
   await page.locator('input[data-question="q1"][value="A"]').check();
   await page.locator('input[data-question="q2"][value="A"]').check();
-  await page.getByRole("button",{name:"سلّم إجابات المجموعة"}).click();
+  await page.getByRole("button",{name:"سلّم إجابات سؤال الاستماع"}).click();
   await page.locator(".listening-script").waitFor();
   assert((await page.locator("#score").innerText()).includes("2 من 2"));
   assert(calls.some(v=>v.name==="submit"));
+  assert(calls.some(v=>v.name==="progress"),"Scored Listening attempts must load in student account");
   await page.locator("#back").click();
   await page.locator('[data-mode="exam"]').click();
   await page.locator("#launch").click();

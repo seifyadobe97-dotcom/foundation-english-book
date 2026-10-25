@@ -2,7 +2,7 @@ import {createClient} from "npm:@supabase/supabase-js@2.57.0";
 const url=Deno.env.get("SUPABASE_URL")||"",serviceKey=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"";
 const allowedOrigins=new Set(["https://seifyadobe97-dotcom.github.io","http://localhost:3000","http://127.0.0.1:3000"]);
 const bucket="step-listening-private";
-const allowedSamples=new Set(["record-1","record-2"]);
+const allowedSamples=new Set(["record-1","record-2","record-3"]);
 type Dict=Record<string,string>;
 function response(origin:string,status:number,body:unknown){
  return new Response(JSON.stringify(body),{status,headers:{"Content-Type":"application/json; charset=utf-8",
@@ -30,6 +30,51 @@ Deno.serve(async request=>{
  if(auth.error||!user)return send(401,{error:"جلسة حسابك منتهية"});
  const path=new URL(request.url).pathname.replace(/^\/(?:functions\/v1\/)?step-listening-live/,"")||"/";
  try{
+
+  if(request.method==="GET"&&(path==="/admin/catalog"||path==="/admin/grades")){
+    const role=await admin.from("step_admin_accounts").select("role").eq("user_id",user.id).maybeSingle();
+    if(role.error||role.data?.role!=="owner")return send(403,{error:"لوحة الاستماع لصاحب المنصة فقط"});
+    if(path==="/admin/catalog"){
+      const groups=await admin.from("step_listening_groups").select("id,sample_code,title_ar,title_en,review_state,clip_id,seconds_per_question").order("sample_code");
+      if(groups.error)return send(503,{error:"تعذر تحميل أسئلة الاستماع"});
+      const questions=[];
+      for(const group of groups.data||[]){
+        const c=await admin.from("step_listening_clips").select("title,storage_path,review_state,duration_seconds").eq("id",group.clip_id).single();
+        const i=await admin.from("step_listening_items").select("position,question_text,options,correct_choice,review_state")
+          .eq("group_id",group.id).order("position");
+        questions.push({sample:group.sample_code,title_ar:group.title_ar,title_en:group.title_en,
+          status:group.review_state,hasAudio:!!c.data?.storage_path&&c.data.review_state==="approved",
+          durationSeconds:c.data?.duration_seconds||null,questionCount:i.data?.length||0,
+          items:(i.data||[]).map(q=>({position:q.position,text:q.question_text,options:q.options,
+            correct:q.correct_choice,status:q.review_state}))});
+      }
+      return send(200,{questions});
+    }
+    const attempts=await admin.from("step_listening_attempts").select("id,user_id,group_id,mode,submitted_at")
+      .not("submitted_at","is",null).order("submitted_at",{ascending:false}).limit(2000);
+    if(attempts.error)return send(503,{error:"تعذر تحميل درجات الطلاب"});
+    const list=attempts.data||[];
+    const answers=list.length?await admin.from("step_listening_responses").select("attempt_id,is_correct")
+      .in("attempt_id",list.map(a=>a.id)).limit(10000):{data:[],error:null};
+    if(answers.error)return send(503,{error:"تعذر احتساب النتائج"});
+    const profiles=await admin.from("step_student_profiles").select("user_id,username");
+    const names=new Map((profiles.data||[]).map(x=>[x.user_id,x.username]));
+    const results=new Map();
+    for(const a of list){
+      const key=a.user_id,previous=results.get(key)||{userId:key,username:names.get(key)||"طالب",
+        attempts:0,correct:0,total:0,practice:0,exam:0};
+      previous.attempts++;previous[a.mode]++;
+      results.set(key,previous);
+    }
+    for(const response of answers.data||[]){
+      const attempt=list.find(x=>x.id===response.attempt_id);
+      const student=attempt&&results.get(attempt.user_id);
+      if(student){student.total++;if(response.is_correct)student.correct++;}
+    }
+    return send(200,{students:[...results.values()].map(x=>({...x,
+      percent:x.total?Math.round(100*x.correct/x.total):null})).sort((a,b)=>b.attempts-a.attempts),
+      submittedAttempts:list.length});
+  }
   if(request.method==="POST"&&path==="/upload"){
    const role=await admin.from("step_admin_accounts").select("role").eq("user_id",user.id).maybeSingle();
    if(role.error||role.data?.role!=="owner")return send(403,{error:"رفع الصوتيات متاح لصاحب المنصة فقط"});
@@ -45,6 +90,9 @@ Deno.serve(async request=>{
    if(!mp3)return send(415,{error:"صيغة MP3 غير صحيحة"});
    const check=Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",bytes)),x=>x.toString(16).padStart(2,"0")).join("");
    const existing=await admin.from("step_listening_clips").select("id,storage_path,review_state,duration_seconds").eq("sample_code",sample).single();
+   const durationFromOwner=Number(new URL(request.url).searchParams.get("duration"));
+   if(!existing.data?.duration_seconds&&(!Number.isFinite(durationFromOwner)||durationFromOwner<1||durationFromOwner>7200))
+     return send(400,{error:"تعذر تحديد مدة التسجيل. لازم ملف صوت صالح."});
    if(existing.error||!existing.data)return send(404,{error:"بيانات المقطع غير موجودة"});
    if(existing.data.review_state==="approved"||existing.data.storage_path)return send(409,{error:"التسجيل معتمد بالفعل؛ التغيير يحتاج إصدارًا جديدًا"});
    const objectPath="approved-samples/"+sample+"-"+check.slice(0,12)+".mp3";
@@ -52,6 +100,7 @@ Deno.serve(async request=>{
    if(upload.error)return send(503,{error:"تعذر رفع الصوت إلى مساحة التخزين الخاصة"});
    const clip=await admin.from("step_listening_clips").update({
       storage_path:objectPath,sha256:check,review_state:"approved",
+      duration_seconds:existing.data.duration_seconds||durationFromOwner,
       reviewer_id:user.id,reviewed_at:new Date().toISOString(),
       rights_notes:"Owner authorized student use via authenticated audio upload, 2026-10-24"
     }).eq("id",existing.data.id).eq("review_state","draft").select("id").single();
@@ -68,25 +117,48 @@ Deno.serve(async request=>{
   if(profile.error||!profile.data||profile.data.is_active===false)return send(403,{error:"حساب الطالب غير نشط"});
   if(request.method==="GET"&&path==="/catalog"){
     const groups=await admin.from("step_listening_groups").select("id,sample_code,title_ar,title_en,seconds_per_question,clip_id")
-      .eq("review_state","approved").in("sample_code",["record-1","record-2"]).order("sample_code");
-    if(groups.error)return send(503,{error:"تعذر تحميل التسجيلات"});
+      .eq("review_state","approved").in("sample_code",[...allowedSamples]).order("sample_code");
+    if(groups.error)return send(503,{error:"تعذر تحميل أسئلة الاستماع"});
     const listed=[];
     for(const g of groups.data||[]){
       const clip=await admin.from("step_listening_clips").select("storage_path,review_state").eq("id",g.clip_id).single();
       const items=await admin.from("step_listening_items").select("id").eq("group_id",g.id).eq("review_state","approved");
-      if(clip.data?.review_state==="approved"&&clip.data?.storage_path&&items.data?.length===2)
-        listed.push({sample:g.sample_code,title_ar:g.title_ar,title_en:g.title_en,questionCount:2});
+      if(clip.data?.review_state==="approved"&&clip.data?.storage_path&&items.data?.length>=1)
+        listed.push({sample:g.sample_code,title_ar:g.title_ar,title_en:g.title_en,questionCount:items.data.length});
     }
     return send(200,{groups:listed});
   }
   if(request.method==="GET"&&path==="/progress"){
     const attempts=await admin.from("step_listening_attempts").select("id,mode,submitted_at,group_id")
-     .eq("user_id",user.id).not("submitted_at","is",null);
-    return send(200,{completed:attempts.data?.length||0});
+      .eq("user_id",user.id).not("submitted_at","is",null).order("submitted_at",{ascending:false}).limit(2000);
+    if(attempts.error)return send(503,{error:"تعذر تحميل درجات الاستماع"});
+    const list=attempts.data||[];
+    const answers=list.length?await admin.from("step_listening_responses")
+      .select("attempt_id,is_correct").in("attempt_id",list.map(a=>a.id)).limit(10000):{data:[],error:null};
+    if(answers.error)return send(503,{error:"تعذر تحميل نتائج الاستماع"});
+    const allGroups=await admin.from("step_listening_groups").select("id,title_ar,sample_code");
+    const labels=new Map((allGroups.data||[]).map(g=>[g.id,g.title_ar]));
+    const scored=new Map<string,{total:number,correct:number}>();
+    for(const a of answers.data||[]){
+      const cur=scored.get(a.attempt_id)||{total:0,correct:0};
+      cur.total++;if(a.is_correct)cur.correct++;scored.set(a.attempt_id,cur);
+    }
+    const byMode={practice:{attempts:0,correct:0,total:0},exam:{attempts:0,correct:0,total:0}};
+    const history=list.map(a=>{
+      const score=scored.get(a.id)||{total:0,correct:0};
+      const sum=byMode[a.mode as "practice"|"exam"];
+      sum.attempts++;sum.correct+=score.correct;sum.total+=score.total;
+      return {id:a.id,mode:a.mode,question:labels.get(a.group_id)||"سؤال استماع",
+         submittedAt:a.submitted_at,correct:score.correct,total:score.total};
+    });
+    const correct=byMode.practice.correct+byMode.exam.correct;
+    const total=byMode.practice.total+byMode.exam.total;
+    return send(200,{completed:list.length,correct,total,percentage:total?Math.round(correct*100/total):null,
+      byMode,history:history.slice(0,20),section:"listening"});
   }
   if(request.method==="POST"&&path==="/begin"){
    const b=await readBody(request),sample=String(b.sample||""),mode=b.mode;
-   if(!allowedSamples.has(sample)||!["practice","exam"].includes(mode))return send(400,{error:"مجموعة غير متاحة"});
+   if(!allowedSamples.has(sample)||!["practice","exam"].includes(mode))return send(400,{error:"سؤال استماع غير متاح"});
    const group=await admin.from("step_listening_groups").select("id,clip_id,seconds_per_question,review_state")
       .eq("sample_code",sample).maybeSingle();
    if(!group.data||group.data.review_state!=="approved")return send(403,{error:"التسجيل لم يُنشر بعد"});
@@ -94,7 +166,7 @@ Deno.serve(async request=>{
    if(!clip.data?.storage_path||clip.data.review_state!=="approved")return send(403,{error:"التسجيل الصوتي غير جاهز"});
    const items=await admin.from("step_listening_items").select("id,position,question_text,options,review_state")
      .eq("group_id",group.data.id).eq("review_state","approved").order("position");
-   if(items.error||items.data?.length!==2)return send(503,{error:"أسئلة المجموعة تحتاج مراجعة"});
+   if(items.error||!items.data?.length||items.data.length>10)return send(503,{error:"أسئلة سؤال الاستماع تحتاج مراجعة"});
    const signed=await admin.storage.from(bucket).createSignedUrl(clip.data.storage_path,300);
    if(signed.error||!signed.data?.signedUrl)return send(503,{error:"تعذر تجهيز الملف الصوتي"});
    const attempt=await admin.from("step_listening_attempts")
