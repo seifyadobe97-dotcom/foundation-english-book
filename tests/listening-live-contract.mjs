@@ -17,7 +17,7 @@ assert(!student.includes("correct_choice"));
 assert(!student.includes("SUPABASE_SERVICE_ROLE_KEY"));
 assert(!student.includes("transcript:"));
 assert(admin.includes('input.type="file"'),"Owner can upload a separate MP3 per Listening question");
-assert(admin.includes('rights.type="checkbox"')&&admin.includes('حقوق'),"Owner must attest to source audio rights");
+assert(admin.includes('rights.type="checkbox"')&&admin.includes('تصريح استخدام'),"Owner must attest to source audio rights");
 assert(api.includes('step_listening_attempts')&&api.includes('step_listening_responses'),"Tracked grading is required");
 assert(api.includes('createSignedUrl')&&api.includes('owner'),"Private signed audio and owner upload required");
 assert(api.includes('state:"submitted"'),"Submission must close attempts");
