@@ -197,6 +197,8 @@ jobs:
         run: node tests/listening-live-contract.mjs
       - name: Browser-test authenticated Listening audio and saved scores on desktop and mobile
         run: node tests/listening-live-browser.mjs
+      - name: Audit Word Listening question staging and scored progress
+        run: node tests/listening-word-question-grades.mjs
 
   deploy:
     name: Deploy verified static book
