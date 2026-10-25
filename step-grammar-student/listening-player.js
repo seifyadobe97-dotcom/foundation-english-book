@@ -74,11 +74,11 @@
           phaseMessage='<p class="listening-live">انتهى التسجيل. كمّل الإجابات؛ مفيش إعادة للصوت.</p>';
         else if(s.phase==="finished")
           phaseMessage='<p class="listening-done" role="status">'+
-            (config.demo?'✓ انتهت تجربة المجموعة. إجاباتك مش محفوظة ولا محسوبة؛ ارجع للتدريب لو عايز تشوف السكريبت.':
-              '✓ تم حفظ إجابات المجموعة. التصحيح والسكريبت مش بيظهروا أثناء المحاكاة.')+
+            (config.demo?'✓ انتهت تجربة سؤال الاستماع. إجاباتك مش محفوظة ولا محسوبة؛ ارجع للتدريب لو عايز تشوف السكريبت.':
+              '✓ تم حفظ إجابات سؤال الاستماع. التصحيح والسكريبت مش بيظهروا أثناء المحاكاة.')+
             '</p>'+
             (typeof config.onNext==="function"?
-              '<button type="button" class="listening-button" data-action="next">المجموعة التالية ←</button>':"");
+              '<button type="button" class="listening-button" data-action="next">سؤال الاستماع التالي ←</button>':"");
       }else{
         phaseMessage=s.phase==="ready"?
           '<button type="button" class="listening-button" data-action="begin">ابدأ التدريب</button>':
@@ -101,7 +101,7 @@
         '<div class="listening-phase">'+phaseMessage+'</div>'+
         '<div class="listening-questions">'+(s.mode==="exam"&&s.phase==="ready"?"":s.questions.map((q,i)=>card(q,i,s)).join(""))+'</div>'+
         (maySubmit?'<button type="button" class="listening-button submit" data-action="submit"'+
-          (s.busy?' disabled':'')+'>'+(s.busy?"بنسجّل الإجابات…":"سلّم إجابات المجموعة ←")+'</button>':"")+
+          (s.busy?' disabled':'')+'>'+(s.busy?"بنسجّل الإجابات…":"سلّم إجابات سؤال الاستماع ←")+'</button>':"")+
         status+review;
     }
     const session=new global.StepListeningSession({
