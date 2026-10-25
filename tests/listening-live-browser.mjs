@@ -54,7 +54,7 @@ try{
   await page.goto(address+"/step-grammar-student/listening-live.html",{waitUntil:"domcontentloaded"});
   await page.locator("#setup:not([hidden])").waitFor();
   assert.equal(await page.locator("#clips button").count(),2);
-  await page.locator("#progress-message").getByText("مجموع درجات الاستماع", {exact:false}).waitFor();
+  await page.waitForFunction(()=>document.querySelector("#progress-message")?.textContent?.includes("مجموع درجات الاستماع"));
   assert.equal(await page.locator('input[type="file"]').count(),0);
   await page.locator("#launch").click();
   await page.getByRole("button",{name:"ابدأ التدريب"}).click();
