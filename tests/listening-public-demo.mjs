@@ -80,7 +80,7 @@ try{
    for(let i=0;i<n;i++){
     await page.locator('.listening-question').nth(i).locator('input[value="A"]').check();
    }
-   await page.getByRole("button",{name:"سلّم إجابات المجموعة"}).click();
+   await page.getByRole("button",{name:"سلّم إجابات سؤال الاستماع"}).click();
    assert((await page.locator(".listening-done").innerText()).includes("مش محفوظة"),
      "Demo must never claim persistence or real scoring");
    assert.equal(await page.locator(".listening-script").count(),0);
@@ -102,7 +102,7 @@ try{
    "Training demo should count repeated listens");
   const answers=["B","B","C"];
   for(let i=0;i<3;i++)await page.locator(".listening-question").nth(i).locator('input[value="'+answers[i]+'"]').check();
-  await page.getByRole("button",{name:"سلّم إجابات المجموعة"}).click();
+  await page.getByRole("button",{name:"سلّم إجابات سؤال الاستماع"}).click();
   const script=page.locator(".listening-script p");
   await script.waitFor();
   assert((await script.innerText()).includes("Greenfield Library"));
