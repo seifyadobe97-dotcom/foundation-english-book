@@ -1,59 +1,128 @@
-<!doctype html><html lang="ar" dir="rtl"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
-<title>رفع صوتيات Listening | إدارة STEP WITH SEIFY</title>
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>إدارة أسئلة الاستماع | STEP WITH SEIFY</title>
 <style>
-:root{font-family:Cairo,Tahoma,Arial,sans-serif;color:#183d41;background:#f4f7f5}*{box-sizing:border-box}body{margin:0;line-height:1.8}
-header{background:white;border-bottom:1px solid #dae6e0;padding:15px max(15px,calc((100vw - 990px)/2));display:flex;gap:13px;justify-content:space-between}
-a{color:#1d715e}main{max-width:990px;margin:22px auto;padding:0 15px}
-.panel{background:white;border:1px solid #d4e4dd;border-radius:15px;padding:22px;margin:15px 0}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-label{display:block;font-weight:800;margin-bottom:9px}
-input{display:block;border:1px solid #d6e3df;border-radius:9px;padding:12px;width:100%;max-width:100%;font:inherit}
-button{background:#1e6453;color:#fff;border:0;padding:12px 20px;border-radius:10px;font:700 15px Cairo,Tahoma;cursor:pointer}
-button:disabled{opacity:.5;cursor:wait}.msg{font-size:14px;color:#245d50}
-.notice{padding:12px;border:1px solid #f0d4a7;background:#fff9eb;border-radius:10px;font-size:13px}
-@media(max-width:630px){.row{grid-template-columns:1fr}}
-</style></head><body><header><strong>STEP WITH SEIFY · LISTENING ADMIN</strong><a href="./">← لوحة الإدارة</a></header>
-<main><h1>رفع التسجيلات الأصلية وتفعيلها للطلاب</h1>
-<p>الخطوة دي بتحصل مرة واحدة من حساب صاحب المنصة. بعدها الطالب يدخل على Listening ويبدأ السؤال بالصوت مباشرة، من غير ما يختار ملفات أو يرفعها.</p>
-<p class="notice">ارفع التسجيلين الأصليين فقط. ممنوع رفع ملفات مش مصرّح باستخدامها. عند اعتماد الرفع هتظهر المجموعة للطلاب تلقائيًا، ومحاولاتهم هتتحفظ في Listening بشكل مستقل.</p>
-<div class="panel row">
-<div><label for="one">Record 1 — Final Exam</label><input id="one" type="file" accept=".mp3,audio/mpeg"></div>
-<div><label for="two">Record 2 — Eating Habits</label><input id="two" type="file" accept=".mp3,audio/mpeg"></div>
-</div>
-<div class="panel">
-<label><input id="rights" type="checkbox" style="display:inline;width:auto" /> أؤكد أن لدي حق استخدام التسجيلين داخل منصة الطلاب وأوافق على نشرهما لهم.</label>
-<button type="button" id="publish">ارفع التسجيلين واعتمدهم للطلاب</button>
-<p class="msg" id="status" role="status" aria-live="polite">قبل الرفع تأكد إنك داخل بحساب صاحب المنصة.</p>
-</div>
-<a href="../step-grammar-student/listening-live.html" target="_blank" rel="noopener">افتح تجربة الطالب بعد الاعتماد</a>
+:root{font-family:Cairo,Tahoma,Arial,sans-serif;color:#173f43;background:#f5f8f6}
+*{box-sizing:border-box}body{margin:0;line-height:1.9}
+header{background:#fff;border-bottom:1px solid #dce7e1;padding:13px max(15px,calc((100vw - 1020px)/2));display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+a{color:#176c5d}main{max-width:1020px;padding:22px 16px 60px;margin:auto}
+.panel{background:#fff;border:1px solid #d4e4dc;border-radius:15px;padding:21px;margin:16px 0}
+.question{background:#fafcfa;border:1px solid #dce6e0;border-radius:12px;padding:16px;margin:13px 0}
+.question b,.question small{display:block}.question p{margin:7px 0}
+.question-title{font-size:19px;margin:0}.badge{display:inline-block;color:#22604e;background:#e7f4ed;border-radius:22px;padding:3px 10px;font-size:12px}
+.badge.pending{background:#fff0da;color:#926021}
+input[type=file]{padding:9px;border:1px solid #cfdfd6;border-radius:9px;width:100%;max-width:460px}
+label{display:block;margin:8px 0}input[type=checkbox]{width:auto}
+button{padding:10px 16px;border:0;border-radius:10px;background:#245f52;color:white;font:700 14px Cairo,Tahoma;cursor:pointer}
+button:disabled{opacity:.45;cursor:wait}.muted{font-size:13px;color:#687b76}.notice{background:#fff8e9;border:1px solid #ecd6b0;border-radius:10px;padding:12px;font-size:13px}
+.options{padding-right:25px;direction:ltr;text-align:left;font-size:13px;color:#344f4b}
+.options li{margin:2px 0}.correct{font-weight:800;color:#187253}
+table{width:100%;border-collapse:collapse;min-width:640px}td,th{border-bottom:1px solid #dde6e0;text-align:right;padding:10px}
+.scroll{overflow:auto}#catalog-status,#grades-status{font-size:13px;color:#486d63}
+@media(max-width:620px){.panel{padding:13px}}
+</style></head><body>
+<header><strong>STEP WITH SEIFY · LISTENING</strong><div><a href="./">لوحة الإدارة</a> · <a href="reports.html">التقارير</a></div></header>
+<main><p class="muted">LISTENING QUESTION BANK · OWNER ONLY</p><h1>إدارة أسئلة الاستماع</h1>
+<p>كل تسجيل هو <strong>سؤال استماع</strong> تحته سؤال أو أكتر اختيار من متعدد. جهزنا الأسئلة من ملف Word؛ أي سؤال من غير صوت يفضل مخفي عن الطلاب لحد ما ترفع التسجيل وتعتمده.</p>
+<p class="notice">الأسئلة والسكريبت والإجابات موجودة على السيرفر فقط. رفع التسجيل مرة واحدة من حساب صاحب المنصة بيشغّل السؤال للطلاب، ودرجاتهم بتتحفظ تلقائيًا. ما تعيدش رفع التسجيلات المعتمدة.</p>
+<h2>بنك أسئلة الاستماع</h2><p id="catalog-status" role="status">بنحمّل الأسئلة…</p><div id="question-catalog"></div>
+<section class="panel"><h2>درجات الطلاب — الاستماع</h2>
+<p class="muted">التدريب والمحاكاة محسوبين في سجل الطالب، مع فصل درجات الاستماع عن الجرامر والتحليل الكتابي.</p>
+<p id="grades-status" role="status">جارٍ تحميل النتائج…</p>
+<div class="scroll"><table><thead><tr><th>الطالب</th><th>المحاولات</th><th>التدريب</th><th>المحاكاة</th><th>الإجابات الصحيحة</th><th>النسبة</th></tr></thead>
+<tbody id="grade-rows"></tbody></table></div></section>
+<p><a href="../step-grammar-student/listening-live.html">فتح صفحة الطالب لحل أسئلة الاستماع</a></p>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
 <script>
 "use strict";
-(()=>{
-const URLBASE="https://funltjxavowlnnfibhpl.supabase.co",ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
-const db=window.supabase.createClient(URLBASE,ANON),status=document.querySelector("#status"),btn=document.querySelector("#publish");
-btn.addEventListener("click",async()=>{
- const first=document.querySelector("#one").files?.[0],second=document.querySelector("#two").files?.[0];
- if(!first||!second){status.textContent="اختار الملفين MP3 الأول.";return}
- if(!document.querySelector("#rights").checked){status.textContent="لازم تأكيد حقوق استخدام التسجيلين قبل النشر.";return}
- const list=[["record-1",first],["record-2",second]];
- if(list.some(([,file])=>!file.name.toLowerCase().endsWith(".mp3")||file.size>10000000)){status.textContent="اختار ملفات MP3 أصغر من 10 ميجابايت.";return}
- btn.disabled=true;
+(async()=>{
+const BASE="https://funltjxavowlnnfibhpl.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const db=window.supabase.createClient(BASE,KEY),catalog=document.querySelector("#question-catalog"),
+status=document.querySelector("#catalog-status"),grades=document.querySelector("#grades-status"),
+rows=document.querySelector("#grade-rows");
+async function token(){const {data:{session}}=await db.auth.getSession();if(!session)throw Error("ادخل الأول بحساب صاحب المنصة من لوحة الأدمن.");return session.access_token;}
+async function api(url,method="GET",body){
+ const jwt=await token();
+ const result=await fetch(BASE+"/functions/v1/step-listening-live"+url,{
+  method,headers:{"authorization":"Bearer "+jwt,"apikey":KEY,...(body?{"content-type":"audio/mpeg"}:{})},
+  ...(body?{body}:{}),signal:AbortSignal.timeout(60000)
+ });
+ const json=await result.json().catch(()=>({}));if(!result.ok)throw Error(json.error||"تعذر إتمام العملية");return json;
+}
+function element(tag,text,cls){const n=document.createElement(tag);if(text!=null)n.textContent=text;if(cls)n.className=cls;return n;}
+async function duration(file){
+ const audio=document.createElement("audio"),objectURL=URL.createObjectURL(file);audio.preload="metadata";
  try{
-  const {data:{session}}=await db.auth.getSession();if(!session)throw Error("سجّل دخولك بحساب صاحب المنصة من لوحة الإدارة الأول.");
-  for(const [sample,file] of list){
-    status.textContent="جاري رفع "+file.name+"…";
-    const r=await fetch(URLBASE+"/functions/v1/step-listening-live/upload?sample="+sample,{
-      method:"POST",headers:{"apikey":ANON,"authorization":"Bearer "+session.access_token,"content-type":"audio/mpeg"},
-      body:file,signal:AbortSignal.timeout(60000)});
-    const x=await r.json().catch(()=>({}));if(!r.ok)throw Error(x.error||"تعذر رفع "+file.name);
-    status.textContent="تم رفع واعتماد "+file.name;
+  const value=await new Promise((resolve,reject)=>{
+    const timeout=setTimeout(()=>{cleanup();reject(Error("تعذر قراءة مدة MP3"))},15000);
+    function cleanup(){clearTimeout(timeout);audio.removeEventListener("loadedmetadata",loaded);audio.removeEventListener("error",failed);}
+    const loaded=()=>{cleanup();resolve(audio.duration)},failed=()=>{cleanup();reject(Error("ملف MP3 غير قابل للتشغيل"))};
+    audio.addEventListener("loadedmetadata",loaded);audio.addEventListener("error",failed);audio.src=objectURL;audio.load();
+  });
+  if(!Number.isFinite(value)||value<1||value>7200)throw Error("مدة MP3 غير صحيحة");
+  return value;
+ }finally{audio.pause();audio.removeAttribute("src");audio.load();URL.revokeObjectURL(objectURL);}
+}
+function displayQuestion(q){
+ const panel=element("section",null,"panel"),header=element("div");
+ header.append(element("h3",q.title_ar,"question-title"),element("p",q.title_en,"muted"));
+ const ready=q.status==="approved"&&q.hasAudio;
+ header.append(element("span",ready?"منشور للطلاب":"جاهز للأسئلة — بانتظار رفع التسجيل",ready?"badge":"badge pending"));
+ panel.append(header,element("p","عدد الأسئلة الفرعية: "+q.questionCount+" · زمن قراءة الأسئلة: "+q.questionCount*15+" ثانية","muted"));
+ for(const item of q.items||[]){
+   const sec=element("div",null,"question");
+   sec.append(element("b","Q"+item.position+" · "+item.text));
+   const options=element("ol",null,"options");options.type="A";
+   for(const letter of ["A","B","C","D"]){
+      const choice=element("li",item.options[letter]);if(letter===item.correct)choice.className="correct";options.append(choice);
+   }
+   sec.append(options,element("small","الإجابة الصحيحة: "+item.correct,"correct"));panel.append(sec);
+ }
+ if(!ready){
+  const input=element("input");input.type="file";input.accept=".mp3,audio/mpeg";input.setAttribute("aria-label","اختر MP3 لسؤال "+q.title_ar);
+  const rights=element("input");rights.type="checkbox";
+  const rightsLabel=element("label");rightsLabel.append(rights,document.createTextNode(" عندي تصريح استخدام هذا التسجيل داخل منصة الطلاب وأوافق على نشره."));
+  const submit=element("button","رفع التسجيل واعتماد سؤال الاستماع");
+  const info=element("p","","muted");
+  submit.addEventListener("click",async()=>{
+   const file=input.files?.[0];
+   if(!file||!file.name.toLowerCase().endsWith(".mp3")){info.textContent="اختار ملف MP3 الأصلي الأول.";return;}
+   if(file.size<2048||file.size>10000000){info.textContent="حجم الملف لازم يكون أقل من 10 ميجابايت.";return;}
+   if(!rights.checked){info.textContent="أكد حق استخدام التسجيل قبل النشر.";return;}
+   submit.disabled=true;
+   try{
+      info.textContent="بنفحص مدة التسجيل…";
+      const seconds=await duration(file);
+      info.textContent="جارٍ رفع تسجيل "+q.title_ar+"…";
+      await api("/upload?sample="+encodeURIComponent(q.sample)+"&duration="+encodeURIComponent(seconds),"POST",file);
+      info.textContent="تم الرفع والاعتماد — السؤال ظاهر للطلاب.";
+      await reload();
+   }catch(e){info.textContent=e.message||"تعذر الرفع";submit.disabled=false;}
+  });
+  panel.append(input,rightsLabel,submit,info);
+ }
+ return panel;
+}
+async function reload(){
+ try{const result=await api("/admin/catalog");catalog.replaceChildren();
+   for(const q of result.questions||[])catalog.append(displayQuestion(q));
+   status.textContent=(result.questions||[]).length+" أسئلة استماع مجهزة في بنك الأسئلة.";
+ }catch(e){status.textContent=e.message}
+}
+async function loadGrades(){
+ try{
+  const result=await api("/admin/grades");rows.replaceChildren();
+  for(const student of result.students||[]){
+    const tr=document.createElement("tr");
+    for(const content of [student.username,student.attempts,student.practice,student.exam,
+      student.correct+" / "+student.total,student.percent===null?"—":student.percent+"%"])
+      tr.append(element("td",content));
+    rows.append(tr);
   }
-  status.textContent="تم اعتماد التسجيلين للطلاب. افتح رابط الطالب وجرب الأسئلة.";
- }catch(e){status.textContent="تعذر إكمال النشر: "+(e.message||"خطأ")+" — التسجيل الذي تم اعتماده يظل موجودًا؛ لا ترفعه مرتين."}
- finally{btn.disabled=false}
-});
+  grades.textContent=result.submittedAttempts?"محاولات محفوظة: "+result.submittedAttempts:"لسه مفيش محاولات مكتملة.";
+ }catch(e){grades.textContent=e.message}
+}
+await Promise.all([reload(),loadGrades()]);
 })();
 </script></body></html>
