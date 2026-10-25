@@ -118,7 +118,7 @@ Deno.serve(async request=>{
   if(request.method==="GET"&&path==="/catalog"){
     const groups=await admin.from("step_listening_groups").select("id,sample_code,title_ar,title_en,seconds_per_question,clip_id")
       .eq("review_state","approved").in("sample_code",[...allowedSamples]).order("sample_code");
-    if(groups.error)return send(503,{error:"تعذر تحميل التسجيلات"});
+    if(groups.error)return send(503,{error:"تعذر تحميل أسئلة الاستماع"});
     const listed=[];
     for(const g of groups.data||[]){
       const clip=await admin.from("step_listening_clips").select("storage_path,review_state").eq("id",g.clip_id).single();
@@ -158,7 +158,7 @@ Deno.serve(async request=>{
   }
   if(request.method==="POST"&&path==="/begin"){
    const b=await readBody(request),sample=String(b.sample||""),mode=b.mode;
-   if(!allowedSamples.has(sample)||!["practice","exam"].includes(mode))return send(400,{error:"مجموعة غير متاحة"});
+   if(!allowedSamples.has(sample)||!["practice","exam"].includes(mode))return send(400,{error:"سؤال استماع غير متاح"});
    const group=await admin.from("step_listening_groups").select("id,clip_id,seconds_per_question,review_state")
       .eq("sample_code",sample).maybeSingle();
    if(!group.data||group.data.review_state!=="approved")return send(403,{error:"التسجيل لم يُنشر بعد"});
