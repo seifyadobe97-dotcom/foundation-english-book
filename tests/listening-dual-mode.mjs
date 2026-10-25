@@ -145,7 +145,7 @@ try{
         "Never show pause/seek/replay media controls in exam");
       assert.equal(await page.locator('[data-action="play"]').count(),0);
       for(let i=1;i<=n;i++)await page.locator('input[data-question="q'+i+'"][value="A"]').check();
-      await page.getByRole("button",{name:"سلّم إجابات المجموعة"}).click();
+      await page.getByRole("button",{name:"سلّم إجابات سؤال الاستماع"}).click();
       await page.locator(".listening-done").waitFor();
       assert.equal(await page.locator(".listening-script").count(),0);
       assert(!(await page.locator("body").innerText()).includes("SECRET EXAM TRANSCRIPT"));
@@ -160,7 +160,7 @@ try{
     assert.equal(await page.locator(".listening-script").count(),0,"No script before grading");
     await page.locator('input[data-question="q1"][value="A"]').check();
     await page.locator('input[data-question="q2"][value="B"]').check();
-    await page.getByRole("button",{name:"سلّم إجابات المجموعة"}).click();
+    await page.getByRole("button",{name:"سلّم إجابات سؤال الاستماع"}).click();
     await page.locator(".listening-script").waitFor();
     assert((await page.locator(".listening-script").innerText()).includes("The speaker said"));
     assert.equal(await page.locator(".listening-script p").getAttribute("dir"),"ltr");
