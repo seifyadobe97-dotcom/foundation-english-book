@@ -17,8 +17,8 @@ assert(!html.includes('correct:"A"')&&!html.includes('correct:"D"'),
 assert(!html.includes("Teacher: That's all for today"));
 assert(!html.includes("Lecturer: Good morning all of you."));
 assert(hub.includes('href="listening-live.html"'),
- "Authenticated hub must expose the two-source preview");
-assert(!hub.includes('ready:true,demo:true'),"Do not mark real Listening courses as published");
+ "Authenticated hub must link to the scored Listening student page");
+assert(hub.includes('ready:true,demo:true'),"The two approved audio questions must now be available from the student hub");
 assert(base.includes("listening-demo.js"),"Preserve the prior standalone synthetic demo");
 for(const block of html.matchAll(/<script>([\s\S]*?)<\/script>/g))new Script(block[1]);
-console.log("PASS source Listening preview: two audio groups, local real-file adapter, 30s simulator, private server grading and student entry");
+console.log("PASS source Listening archive: 2 audio questions, local preview archived, new graded student portal published");
