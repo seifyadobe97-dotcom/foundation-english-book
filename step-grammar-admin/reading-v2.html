@@ -1,0 +1,130 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>إدارة Reading | STEP WITH SEIFY</title><meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="../step-brand/mark.svg" type="image/svg+xml">
+<style>
+:root{font-family:Tahoma,Arial,sans-serif;color:#203941;background:#f3f7f5;line-height:1.8}*{box-sizing:border-box}
+body{margin:0}header{background:#fff;padding:15px max(17px,calc((100vw - 1150px)/2));border-bottom:1px solid #dbe6de;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+a{color:#176c53}main{max-width:1150px;margin:0 auto;padding:26px 15px 75px}
+h1{font-size:clamp(25px,3vw,37px);margin:6px 0}h2{font-size:23px;margin:0 0 12px}h3{font-size:17px}
+.card{background:#fff;border:1px solid #d8e4db;border-radius:15px;padding:22px;margin:16px 0;box-shadow:0 6px 20px #10432a06}
+.note{background:#fff5df;border:1px solid #e5c990;border-radius:9px;padding:13px}
+.good{background:#edf9f1;border:1px solid #bdddca;border-radius:9px;padding:10px}
+.error{color:#9e4339;background:#fff2ee;border:1px solid #e6c8bf;border-radius:8px;padding:10px}
+.muted{color:#617973}.small{font-size:13px}
+button{background:#1b7056;color:white;border:0;border-radius:9px;cursor:pointer;padding:12px 17px;font:bold 14px Tahoma,Arial}
+button.secondary{background:#fff;color:#146f52;border:1px solid #bdd8c8}
+button:disabled{opacity:.5}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #dca544;outline-offset:3px}
+fieldset{border:1px solid #dbe5dd;border-radius:11px;margin:15px 0;padding:15px;min-width:0}
+legend{font-weight:bold;padding:0 6px}.ltr{direction:ltr;text-align:left;unicode-bidi:isolate}
+.source p{font:16px/1.8 Georgia,serif;text-align:left;direction:ltr;border-bottom:1px solid #edf2ee;padding:12px 0;margin:0}
+label{display:block;margin:12px 0;font-weight:bold}input,textarea,select{display:block;width:100%;padding:11px;border:1px solid #cadfd3;border-radius:8px;font:inherit;background:#fff}
+textarea{min-height:70px;resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:580px}th,td{text-align:right;padding:10px;border-bottom:1px solid #e2eae4}
+[hidden]{display:none!important}@media(max-width:720px){.card{padding:14px}.two{grid-template-columns:1fr}}
+</style></head><body>
+<header><strong dir="ltr">STEP WITH SEIFY · READING ADMIN</strong><a href="./">← لوحة الإدارة</a></header>
+<main><p class="small muted">READING COMPREHENSION · CONTENT & GRADES</p>
+<h1>إدارة أسئلة استيعاب المقروء</h1>
+<p>قطعة القراءة وأسئلتها وإجاباتها محفوظة داخل بنك الأسئلة. المعتمد فقط هو اللي يظهر للطلاب ويدخل في درجاتهم.</p>
+<div class="note">السؤال الثاني من <b>Old Birds</b> تحت المراجعة: صياغة الاختيار D في ملف الوورد بتوحي بمعرفة شكل الطائر كاملًا، لكن الدليل الموجود يسمح باستنتاجات محدودة. عدّل الاختيار والتفسير قبل الاعتماد.</div>
+<section class="card"><h2>بنك أسئلة القراءة</h2>
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+<button id="reload" type="button" class="secondary">إعادة تحميل الأسئلة والدرجات</button><span id="status" class="muted" role="status">بنحمّل القطع…</span>
+</div><div id="bank"></div></section>
+<section class="card"><h2>نتائج الطلاب في Reading</h2><p class="muted small">درجات قسم القراءة مستقلة عن الاستماع والجرامر والتحليل الكتابي.</p>
+<p id="grade-status" role="status">بنحمّل النتائج…</p><div class="scroll">
+<table><thead><tr><th>الطالب</th><th>المحاولات</th><th>التدريب</th><th>المحاكاة</th><th>الإجابات الصحيحة</th><th>النسبة</th></tr></thead>
+<tbody id="grades"></tbody></table></div></section>
+<p><a href="../step-grammar-student/reading-v2.html">فتح تجربة الطالب</a></p>
+</main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+(async()=>{
+const db=window.supabase.createClient("https://funltjxavowlnnfibhpl.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg"),e=id=>document.getElementById(id);
+const make=(tag,text,cls)=>{const v=document.createElement(tag);if(text!==undefined)v.textContent=String(text);if(cls)v.className=cls;return v;};
+async function call(action,payload={}){
+ const {data:{session},error:sessErr}=await db.auth.getSession();
+ if(sessErr||!session)throw Error("سجّل دخولك لحساب صاحب المنصة من لوحة الأدمن أولاً.");
+ const {data,error}=await db.rpc("step_reading_request",{p_action:action,p_payload:payload});
+ if(error)throw Error(error.message||"تعذر الاتصال بقاعدة البيانات");
+ return data;
+}
+function field(name,value,type="textarea"){
+ const row=make("label",name),element=make(type);element.value=value;row.append(element);
+ return {row,element};
+}
+function showQuestion(q){
+ const fieldset=make("fieldset"),legend=make("legend","Q"+q.position+" · "+q.question_text);
+ fieldset.append(legend);
+ fieldset.append(make("p",q.review_state==="approved"?"✓ سؤال معتمد ومتاح للطالب":"بانتظار مراجعة السؤال قبل اعتماده",
+  q.review_state==="approved"?"good":"note"));
+ fieldset.append(make("p","مفتاح الإجابة: "+q.correct_choice+" · الفقرة "+q.paragraph_number,"muted small"));
+ if(q.review_state==="approved"){
+   const options=make("ol");options.type="A";options.dir="ltr";
+   for(const key of ["A","B","C","D"])options.append(make("li",q.options[key]));
+   fieldset.append(options,make("p",q.explanation_ar,"muted"));return fieldset;
+ }
+ const title=field("السؤال بالإنجليزي",q.question_text);title.row.className="ltr";
+ title.element.dir="ltr";fieldset.append(title.row);
+ const opts={};const grid=make("div",undefined,"two");
+ for(const k of ["A","B","C","D"]){
+   const f=field("الاختيار "+k,q.options[k]);f.row.className="ltr";f.element.dir="ltr";
+   opts[k]=f.element;grid.append(f.row);
+ }fieldset.append(grid);
+ const explain=field("تفسير الإجابة للطالب بالعربي",q.explanation_ar);fieldset.append(explain.row);
+ const correct=field("مفتاح الإجابة",q.correct_choice,"input");correct.element.dir="ltr";fieldset.append(correct.row);
+ const paragraph=field("رقم الفقرة الداعمة",String(q.paragraph_number),"input");
+ paragraph.element.type="number";paragraph.element.min="1";paragraph.element.max="100";fieldset.append(paragraph.row);
+ const note=field("ملاحظات الإدارة (مش بتظهر للطالب)",q.editorial_notes||"");fieldset.append(note.row);
+ const buttons=make("div"),save=make("button","حفظ المسودة","secondary"),
+       approve=make("button","اعتماد السؤال ونشره"),status=make("p",undefined,"muted");
+ approve.style.marginRight="10px";
+ async function submit(asApproved){
+   save.disabled=true;approve.disabled=true;status.textContent="جارٍ حفظ السؤال…";
+   try{
+     const r=await call("admin_review",{id:q.id,question_text:title.element.value,
+       options:Object.fromEntries(["A","B","C","D"].map(k=>[k,opts[k].value])),
+       correct_choice:correct.element.value.trim().toUpperCase(),
+       explanation_ar:explain.element.value,paragraph_number:Number(paragraph.element.value),
+       editorial_notes:note.element.value,approve:asApproved});
+     status.textContent="تم الحفظ: "+r.status;if(asApproved)await refresh();
+   }catch(err){status.textContent=err.message||"تعذر حفظ السؤال";}
+   finally{save.disabled=false;approve.disabled=false;}
+ }
+ save.addEventListener("click",()=>submit(false));approve.addEventListener("click",()=>submit(true));
+ buttons.append(save,approve);fieldset.append(buttons,status);
+ return fieldset;
+}
+async function bank(){
+ try{
+   const r=await call("admin_catalog");e("bank").replaceChildren();
+   for(const p of r.passages||[]){
+     const area=make("section",undefined,"card");
+     area.append(make("h3",p.title_en+" — "+p.title_ar),make("p",
+       "القطعة: "+p.status+" · "+p.paragraphs.length+" فقرات · "+p.items.length+" أسئلة","muted small"));
+     const details=make("details",undefined,"source");details.append(make("summary","عرض نص القطعة الأصلي"));
+     for(const txt of p.paragraphs)details.append(make("p",txt));area.append(details);
+     for(const q of p.items)area.append(showQuestion(q));
+     e("bank").append(area);
+   }
+   e("status").textContent="تم تحميل "+(r.passages||[]).length+" قطعة بنجاح.";
+ }catch(err){e("status").textContent=err.message||"تعذر تحميل بنك القراءة";}
+}
+async function grades(){
+ try{
+   const result=await call("admin_grades");e("grades").replaceChildren();
+   for(const g of result.students||[]){
+     const row=make("tr");
+     for(const value of [g.username,g.attempts,g.practice,g.exam,g.correct+" / "+g.total,g.percent+"%"])
+       row.append(make("td",value));
+     e("grades").append(row);
+   }
+   e("grade-status").textContent=result.completed?
+     "المحاولات المكتملة: "+result.completed:"مافيش محاولات قراءة مكتملة لسه.";
+ }catch(err){e("grade-status").textContent=err.message||"تعذر تحميل النتائج";}
+}
+async function refresh(){await Promise.all([bank(),grades()]);}
+e("reload").addEventListener("click",refresh);
+await refresh();
+})();
+</script></body></html>

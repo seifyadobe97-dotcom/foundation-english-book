@@ -61,7 +61,7 @@ try{
    assert.equal(await cards.count(),5,"Show four STEP axes plus a distinct mock exam section");
    assert.equal(await page.locator('#student-curriculum-hub [aria-disabled="true"]').count(),available?0:1,
     "Only genuinely unavailable sections should be disabled; Reading is now live");
-   const readingLink=page.locator('#student-curriculum-hub a[href="reading-live.html"]');
+   const readingLink=page.locator('#student-curriculum-hub a[href="reading-v2.html"]');
     assert.equal(await readingLink.count(),1,"Published Reading now links to its graded student exercise");
     const listeningTrial=page.locator('#student-curriculum-hub a[href="listening-live.html"]');
     assert.equal(await listeningTrial.count(),1,"Listening demo is visible independently of live lesson releases");

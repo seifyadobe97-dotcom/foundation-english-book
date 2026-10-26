@@ -5,7 +5,7 @@ verify_jwt = false
 [functions.step-course]
 verify_jwt = true
 
-# Browser-safe preflight/401: the Reading function validates every Bearer JWT
-# via Supabase Auth getUser() and enforces owner/student DB roles itself.
+# Reading V2 uses authenticated PostgREST RPC.
+# The legacy Reading Edge Function is no longer used by student/admin pages.
 [functions.step-reading-live]
 verify_jwt = false
