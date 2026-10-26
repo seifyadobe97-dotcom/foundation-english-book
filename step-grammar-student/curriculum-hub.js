@@ -37,14 +37,14 @@ window.StepCurriculumHub={
      '<strong>'+item.title+'</strong><span class="student-curriculum-desc">'+item.description+'</span>'+
      '<span class="student-curriculum-footer">'+(item.upcoming?'قريبًا · استكشف القسم':
       item.reading?"قطعة Old Birds · ابدأ القراءة":item.demo?"أسئلة استماع صوتية · افتح القسم":item.ready?item.count+' درس متاح · افتح القسم':'قريبًا')+'</span>';
-    return item.reading?'<a class="student-curriculum-card" href="reading-live.html" aria-label="افتح قطع استيعاب المقروء ودرجاتك">'+text+'</a>':
+    return item.reading?'<a class="student-curriculum-card" href="reading-v2.html" aria-label="افتح قطع استيعاب المقروء ودرجاتك">'+text+'</a>':
     item.demo?'<a class="student-curriculum-card is-demo" href="listening-live.html" aria-label="افتح أسئلة الاستماع ودرجاتك">'+text+'</a>':
      item.ready?'<button type="button" class="student-curriculum-card" data-curriculum-target="'+item.id+
      '" aria-pressed="false" aria-controls="'+(item.id==="grammar"?"student-learning-path":item.id==="writing"?"writing-analysis-lessons":"student-exams")+'">'+text+'</button>':
      '<div class="student-curriculum-card is-upcoming" aria-disabled="true">'+text+'</div>';
    }).join("")+'</div>';
   hero.insertAdjacentElement("afterend",hub);
-  const readingFooter=hub.querySelector('a[href="reading-live.html"] .student-curriculum-footer');
+  const readingFooter=hub.querySelector('a[href="reading-v2.html"] .student-curriculum-footer');
   if(readingFooter&&typeof window.StepReadingProgressLoader==="function"){
     window.StepReadingProgressLoader().then(r=>{
       readingFooter.textContent=r.completed?
