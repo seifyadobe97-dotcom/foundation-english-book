@@ -1,0 +1,33 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {Script} from "node:vm";
+const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
+const sql=read("supabase/migrations/20261026_first_reading_old_birds.sql");
+const api=read("supabase/functions/step-reading-live/index.ts");
+const student=read("step-grammar-student/reading-live.html");
+const admin=read("step-grammar-admin/reading.html");
+const hub=read("step-grammar-student/curriculum-hub.js");
+const parent=read("step-grammar-student/index.html");
+assert(sql.includes("old-birds-srclh5q"));
+assert((sql.match(/on conflict\(passage_id,position\) do nothing/g)||[]).length===5);
+assert(sql.includes("The Elephant bird was over nine feet tall"));
+assert(sql.includes("What can be understood about Daniel Field"));
+assert(sql.includes("needs_review"),"Ambiguous Word Q2 must not be automatically published");
+assert(sql.includes("item_ids uuid[]"),"Question IDs must be snapshotted per attempt");
+assert(api.includes('eq("review_state","approved")')&&api.includes('"/submit"'));
+assert(api.includes('"/admin/review"')&&api.includes('"/admin/grades"'));
+assert(api.includes('"/progress"')&&api.includes("correct_choice_snapshot"));
+assert(api.includes('item_ids:items.data.map(i=>i.id)'),"Question approval mid-test must not change grading");
+assert(api.includes('if(attempt.data.mode==="exam")return send(200,basic)'),"Exam must not leak answer key or explanation");
+assert(api.includes('if(!await isStudent())')&&api.includes("getUser(jwt)"));
+assert(student.includes("شوف الفقرة ")&&student.includes('lang="en"'));
+assert(student.includes('id="grade-cards"')&&student.includes('id="clock"'));
+assert(!student.includes("correct_choice")&&!student.includes("SUPABASE_SERVICE_ROLE_KEY"));
+assert(hub.includes('href="reading-live.html"'));
+assert(parent.includes("StepReadingProgressLoader"));
+assert(admin.includes('"/admin/review"')&&admin.includes("مفتاح الوورد"));
+for(const page of [student,admin,parent]){
+ for(const match of page.matchAll(/<script>([\s\S]*?)<\/script>/g))new Script(match[1]);
+}
+new Script(hub);
+console.log("PASS Reading contract: original 8 paragraphs, 5 reviewed questions, 4 eligible, authorized grading and histories");
