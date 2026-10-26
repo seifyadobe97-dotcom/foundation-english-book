@@ -112,7 +112,7 @@ Deno.serve(async req=>{
     if(items.error||!items.data?.length)return send(503,{error:"الأسئلة لسه تحت المراجعة"});
     const due=x.mode==="exam"?new Date(Date.now()+p.data.exam_seconds*1000).toISOString():null;
     const attempt=await db.from("step_reading_attempts").insert({user_id:user.id,passage_id:p.data.id,
-      mode:x.mode,state:"in_progress",due_at:due}).select("id").single();
+      mode:x.mode,state:"in_progress",due_at:due,item_ids:items.data.map(i=>i.id)}).select("id").single();
     if(attempt.error)return send(503,{error:"تعذر بدء محاولة القراءة"});
     return send(200,{attemptId:attempt.data.id,mode:x.mode,slug:p.data.slug,title:p.data.title_en,
       titleAr:p.data.title_ar,paragraphs:p.data.paragraphs,
@@ -122,10 +122,10 @@ Deno.serve(async req=>{
   if(req.method==="POST"&&path==="/submit"){
     const x=await read();
     const attempt=await db.from("step_reading_attempts")
-      .select("id,mode,state,passage_id,due_at").eq("id",x.attemptId).eq("user_id",user.id).maybeSingle();
+      .select("id,mode,state,passage_id,due_at,item_ids").eq("id",x.attemptId).eq("user_id",user.id).maybeSingle();
     if(!attempt.data||attempt.data.state!=="in_progress")return send(409,{error:"المحاولة منتهية أو مش بتاعتك"});
     const items=await db.from("step_reading_items").select("id,position,correct_choice,explanation_ar,paragraph_number")
-      .eq("passage_id",attempt.data.passage_id).eq("review_state","approved").order("position");
+      .eq("passage_id",attempt.data.passage_id).in("id",attempt.data.item_ids||[]).order("position");
     if(items.error||!items.data?.length)return send(503,{error:"تعذر تصحيح الأسئلة"});
     const answers=x.answers;
     if(!answers||typeof answers!=="object"||Array.isArray(answers))return send(400,{error:"إجابات غير صحيحة"});
