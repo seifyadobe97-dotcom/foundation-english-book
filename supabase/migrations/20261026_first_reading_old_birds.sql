@@ -82,7 +82,5 @@ insert into public.step_reading_items(passage_id,position,question_text,options,
 select id,5,'What can be understood about Daniel Field from paragraph (8)?','{"A":"He studies fossils.","B":"He studies animals.","C":"He studies caves and their formation.","D":"He studies modern birds."}'::jsonb,'A','الفقرة الثامنة بتصف Daniel Field إنه paleontologist، ودي مهنة عالم الحفريات اللي بيدرس البقايا القديمة.',8,'approved','Source key A.'
 from public.step_reading_passages where slug='old-birds-srclh5q'
 on conflict(passage_id,position) do nothing;
-insert into public.step_curriculum_indicators(axis_code,slug,title_ar,title_en,description,position,status)
-values ('reading-comprehension','old-birds','الطيور العملاقة القديمة','Old Birds',
-'قطعة استيعاب المقروء: 8 فقرات، 4 أسئلة معتمدة، وسؤال إضافي تحت المراجعة.',1,'published')
-on conflict do nothing;
+-- Reading discovery lives in its isolated authenticated catalogue and the existing student hub.
+-- Existing indicator table currently restricts axis to Grammar/Writing; leave that constraint unchanged.
