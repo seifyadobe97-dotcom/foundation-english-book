@@ -4,3 +4,8 @@ verify_jwt = false
 
 [functions.step-course]
 verify_jwt = true
+
+# Browser-safe preflight/401: the Reading function validates every Bearer JWT
+# via Supabase Auth getUser() and enforces owner/student DB roles itself.
+[functions.step-reading-live]
+verify_jwt = false
