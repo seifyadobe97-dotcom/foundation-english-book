@@ -25,7 +25,7 @@ window.StepCurriculumHub={
   const cards=[
    {id:"grammar",number:"01",icon:"Aa",title:"القواعد",en:"GRAMMAR",count:progress.length,description:"دروس الجرامر والتدريبات",ready:true},
    {id:"writing",number:"02",icon:"✎",title:"التحليل الكتابي",en:"WRITING ANALYSIS",count:writing.length,description:"الترقيم والترتيب والمهارات الكتابية",ready:!!writingPanel},
-   {id:"reading",number:"03",icon:"▤",title:"فهم المقروء",en:"READING",description:"المحتوى قيد الإعداد",ready:false},
+   {id:"reading",number:"03",icon:"▤",title:"فهم المقروء",en:"READING",description:"اقرأ القطعة، جاوب، وشوف تفسير كل إجابة ودرجاتك",ready:true,reading:true},
    {id:"listening",number:"04",icon:"♫",title:"الاستماع",en:"LISTENING",description:"اسمع التسجيل، حل، وتابع درجات الاستماع",ready:true,demo:true},
    {id:"exams",number:"05",icon:"◷",title:"الاختبارات المحاكية",en:"MOCK EXAMS",description:"مساحة للاختبارات القادمة",ready:true,upcoming:true}
   ];
@@ -36,13 +36,22 @@ window.StepCurriculumHub={
      '<span class="student-curriculum-index">'+item.number+' · '+item.en+'</span>'+
      '<strong>'+item.title+'</strong><span class="student-curriculum-desc">'+item.description+'</span>'+
      '<span class="student-curriculum-footer">'+(item.upcoming?'قريبًا · استكشف القسم':
-      item.demo?"أسئلة استماع صوتية · افتح القسم":item.ready?item.count+' درس متاح · افتح القسم':'قريبًا')+'</span>';
-    return item.demo?'<a class="student-curriculum-card is-demo" href="listening-live.html" aria-label="افتح أسئلة الاستماع ودرجاتك">'+text+'</a>':
+      item.reading?"قطعة Old Birds · ابدأ القراءة":item.demo?"أسئلة استماع صوتية · افتح القسم":item.ready?item.count+' درس متاح · افتح القسم':'قريبًا')+'</span>';
+    return item.reading?'<a class="student-curriculum-card" href="reading-live.html" aria-label="افتح قطع استيعاب المقروء ودرجاتك">'+text+'</a>':
+    item.demo?'<a class="student-curriculum-card is-demo" href="listening-live.html" aria-label="افتح أسئلة الاستماع ودرجاتك">'+text+'</a>':
      item.ready?'<button type="button" class="student-curriculum-card" data-curriculum-target="'+item.id+
      '" aria-pressed="false" aria-controls="'+(item.id==="grammar"?"student-learning-path":item.id==="writing"?"writing-analysis-lessons":"student-exams")+'">'+text+'</button>':
      '<div class="student-curriculum-card is-upcoming" aria-disabled="true">'+text+'</div>';
    }).join("")+'</div>';
   hero.insertAdjacentElement("afterend",hub);
+  const readingFooter=hub.querySelector('a[href="reading-live.html"] .student-curriculum-footer');
+  if(readingFooter&&typeof window.StepReadingProgressLoader==="function"){
+    window.StepReadingProgressLoader().then(r=>{
+      readingFooter.textContent=r.completed?
+        "درجات القراءة: "+r.correct+" / "+r.total+" · "+r.completed+" محاولة":
+        "قطعة Old Birds · ابدأ التدريب";
+    }).catch(()=>{readingFooter.textContent="قطعة قراءة معتمدة · افتح";});
+  }
   // Listening scores are a distinct STEP skill, and are shown in the same student account.
   const listeningFooter=hub.querySelector('a[href="listening-live.html"] .student-curriculum-footer');
   const loadListening=window.StepListeningProgressLoader;
