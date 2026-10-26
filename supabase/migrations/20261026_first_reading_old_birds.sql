@@ -29,6 +29,7 @@ create table if not exists public.step_reading_attempts (
  state text not null default 'in_progress' check(state in ('in_progress','submitted')),
  started_at timestamptz not null default now(),
  due_at timestamptz,
+ item_ids uuid[] not null default '{}',
  submitted_at timestamptz,
  correct_count integer, total_questions integer
 );
