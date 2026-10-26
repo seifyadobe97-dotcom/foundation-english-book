@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>استيعاب المقروء | STEP WITH SEIFY</title><meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="../step-brand/mark.svg" type="image/svg+xml">
+<style>
+:root{font-family:Tahoma,Arial,sans-serif;color:#203a42;background:#f4f7f5;line-height:1.8}
+*{box-sizing:border-box}body{margin:0}
+a{color:#17684e}
+header{background:#fff;border-bottom:1px solid #dce7df;padding:15px max(16px,calc((100vw - 1150px)/2));display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+main{max-width:1150px;margin:auto;padding:28px 16px 70px}
+h1{font-size:clamp(26px,3.4vw,36px);margin:4px 0 10px}h2{margin:0 0 12px;font-size:22px}h3{margin:5px 0 12px;font-size:18px}
+.eyebrow{font-size:12px;letter-spacing:.1em;color:#207458;font-weight:bold}
+.muted{color:#637b76}.card{background:#fff;border:1px solid #d8e6dd;border-radius:15px;padding:22px;margin:15px 0;box-shadow:0 10px 28px #1c453a09}
+.action{background:#196b54;color:#fff;border:1px solid #196b54;border-radius:9px;font:700 15px Tahoma,Arial;cursor:pointer;padding:13px 19px;min-height:46px}
+.action.alt{color:#196b54;background:white}.action:disabled{opacity:.55;cursor:wait}
+.action:focus-visible,input:focus-visible{outline:3px solid #e2ad50;outline-offset:2px}
+.error{color:#973d35;background:#fff3f1;border:1px solid #ecc9c4;border-radius:9px;padding:12px}
+.notice{background:#eef7f1;border:1px solid #d2e8da;border-radius:10px;padding:12px}
+.options{display:flex;gap:9px;flex-wrap:wrap}.mode{border:1px solid #c1d8cb;border-radius:9px;padding:12px 16px;cursor:pointer;background:white;font:inherit}
+.mode[aria-pressed=true]{background:#e6f4eb;border:2px solid #177454;padding:11px 15px}
+.columns{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;align-items:start}
+.reading{max-height:76vh;overflow:auto;position:sticky;top:10px}
+.reading p{font:17px/1.93 Georgia,"Times New Roman",serif;text-align:left;direction:ltr;margin:0;border-bottom:1px solid #e7ede9;padding:12px 4px;unicode-bidi:isolate}
+.reading p:target{background:#fff5d9}fieldset{border:1px solid #d5e3da;border-radius:11px;margin:0 0 15px;padding:16px;min-width:0}
+legend{font-weight:bold;padding:0 6px}legend span{unicode-bidi:isolate}
+.option{display:flex;gap:12px;text-align:left;direction:ltr;border:1px solid #d5e1da;background:#fff;border-radius:10px;padding:11px 12px;margin:8px 0;font:14px/1.55 Arial,sans-serif;cursor:pointer}
+.option input{accent-color:#197654;flex-shrink:0;margin:3px 0}.option:has(:checked){background:#eaf6ee;border-color:#197654}
+.option.correct{border-color:#34946c;background:#e9f8ee}.option.wrong{border-color:#c66861;background:#fff0ed}
+.review{padding:11px;border-right:3px solid #197654;background:#f1f8f3;border-radius:7px;margin-top:12px;font-size:14px}
+.timer{font-weight:800;font-variant-numeric:tabular-nums;background:#fff2d8;border-radius:9px;padding:8px 13px}
+.toolbar{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+.stat{display:inline-block;padding:10px 13px;border:1px solid #d8e5dc;background:#f8fcf9;border-radius:9px;margin:5px 5px}
+.scores{list-style:none;padding:0;margin:8px 0}.scores li{padding:8px;border-bottom:1px solid #e5eee7}
+.small{font-size:12px}.ltr{text-align:left;direction:ltr;unicode-bidi:isolate;display:block}
+[hidden]{display:none!important}@media(max-width:830px){.columns{grid-template-columns:1fr}.reading{max-height:none;position:static}.card{padding:16px}.reading p{font-size:16px}main{padding:20px 13px 50px}}
+</style></head>
+<body><header><strong dir="ltr">STEP WITH SEIFY · READING</strong><a href="./">← حساب الطالب</a></header>
+<main>
+<div class="eyebrow">READING COMPREHENSION · STEP</div><h1>أسئلة استيعاب المقروء</h1>
+<p class="muted">اقرأ القطعة كاملة، جاوب على الأسئلة، وبعد التدريب شوف تفسير كل إجابة والفقرة اللي فيها الدليل.</p>
+<section class="card" id="start-panel">
+<h2>اختار قطعة القراءة</h2><p id="load-state" role="status">بنحمّل القطع المتاحة…</p><div id="passage-list"></div>
+<h3>اختار وضع الحل</h3>
+<div class="options"><button type="button" data-mode="practice" class="mode" aria-pressed="true">تدريب · بدون توقيت، مع التصحيح</button>
+<button type="button" data-mode="exam" class="mode" aria-pressed="false">محاكاة تدريبية · 10 دقائق</button></div>
+<p class="small muted">العشر دقائق وقت تدريب داخل المنصة، مش توقيت STEP الرسمي. درجات التدريب والمحاكاة بتتحفظ بشكل منفصل.</p>
+<button id="start" class="action" type="button" disabled>ابدأ الحل</button><p id="start-error" class="error" role="alert" hidden></p>
+</section>
+<section id="study" hidden>
+<div class="toolbar"><button type="button" class="action alt" id="back">← اختيار قطعة أخرى</button><strong id="mode-label"></strong><span id="timer" class="timer" hidden role="timer"></span></div>
+<h2 id="title"></h2>
+<div class="columns"><article class="card reading" aria-label="Reading passage"><h3>Passage · نص القطعة</h3><div id="passage"></div></article>
+<section class="card"><h3>Questions · الأسئلة</h3><div id="questions"></div><p id="answer-error" class="error" hidden role="alert"></p>
+<button type="button" id="submit" class="action">تسليم الإجابات</button><div id="result" hidden aria-live="polite"></div></section></div>
+</section>
+<section class="card"><h2>درجات القراءة في حسابك</h2><p id="progress-state" role="status">بنراجع نتائجك…</p>
+<div id="stats"></div><ul id="history" class="scores"></ul></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+(async()=>{
+const URL="https://funltjxavowlnnfibhpl.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg";
+const db=window.supabase.createClient(URL,KEY);
+const e=id=>document.getElementById(id);
+const create=(tag,text,cls)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=String(text);if(cls)node.className=cls;return node;};
+let published=[],slug="",mode="practice",current=null,tick=null,complete=false,busy=false;
+async function call(action,payload={}){
+ const {data:{session},error:sessionError}=await db.auth.getSession();
+ if(sessionError||!session)throw Error("سجّل دخولك من حساب الطالب الأول، وبعدها افتح القراءة.");
+ const {data,error}=await db.rpc("step_reading_request",{p_action:action,p_payload:payload});
+ if(error)throw Error(error.message||"تعذر تحميل القراءة. حاول تاني.");
+ return data;
+}
+function setError(id,message){e(id).textContent=message||"";e(id).hidden=!message;}
+async function load(){
+ try{
+  const r=await call("catalog");published=r.passages||[];
+  e("passage-list").replaceChildren();
+  if(!published.length){e("load-state").textContent="مفيش قطع منشورة حاليًا.";return;}
+  for(const p of published){
+    const label=create("label"),input=create("input"),span=create("span",p.title+" — "+p.titleAr+" · "+p.questionCount+" أسئلة");
+    input.type="radio";input.name="reading-choice";input.value=p.slug;
+    if(!slug||slug===p.slug){slug=p.slug;input.checked=true;}
+    label.append(input,span);label.style.display="block";label.style.padding="8px";e("passage-list").append(label);
+  }
+  e("load-state").textContent="القطعة جاهزة.";
+  e("start").disabled=false;
+ }catch(err){e("load-state").textContent=err.message||"تعذر تحميل القطع";e("start").disabled=true;}
+}
+async function grades(){
+ try{
+   const x=await call("progress");
+   e("progress-state").textContent=x.completed?"محاولات مكتملة: "+x.completed+" · الإجابات الصحيحة: "+x.correct+" من "+x.total:
+      "لسه مفيش محاولات مكتملة.";
+   e("stats").replaceChildren();e("history").replaceChildren();
+   for(const [name,a] of [["تدريب",x.byMode?.practice],["محاكاة",x.byMode?.exam]])
+     e("stats").append(create("span",name+" · "+(a?.correct||0)+"/"+(a?.total||0)+" · "+(a?.attempts||0)+" محاولة","stat"));
+   for(const a of x.history||[])e("history").append(create("li",
+      (a.mode==="exam"?"محاكاة":"تدريب")+" · "+a.correct+"/"+a.total+" · "+new Date(a.at).toLocaleDateString("ar-SA")));
+ }catch(err){e("progress-state").textContent=err.message||"تعذر تحميل الدرجات";}
+}
+function render(data){
+ current=data;complete=false;
+ e("title").textContent=data.title+" — "+data.titleAr;e("passage").replaceChildren();e("questions").replaceChildren();
+ (data.paragraphs||[]).forEach((s,i)=>{const p=create("p",s);p.id="p-"+(i+1);p.lang="en";e("passage").append(p);});
+ for(const q of data.questions){
+   const field=create("fieldset");field.dataset.question=q.id;const legend=create("legend");
+   legend.append(create("span","Q"+q.number+" · "));
+   const qt=create("span",q.text);qt.dir="ltr";qt.lang="en";legend.append(qt);field.append(legend);
+   for(const letter of ["A","B","C","D"]){
+     const row=create("label",undefined,"option"),radio=create("input");
+     radio.type="radio";radio.name="answer-"+q.id;radio.value=letter;
+     row.append(radio,create("strong",letter+")"),create("span",q.options[letter]));field.append(row);
+   }
+   e("questions").append(field);
+ }
+ e("result").hidden=true;e("result").replaceChildren();e("submit").hidden=false;e("submit").disabled=false;
+ e("timer").hidden=mode!=="exam";e("mode-label").textContent=mode==="practice"?"تدريب وتصحيح":"محاكاة زمنية تدريبية";
+ e("start-panel").hidden=true;e("study").hidden=false;
+ if(mode==="exam"){updateClock();tick=setInterval(updateClock,600);}
+}
+function answers(){
+ const result={};for(const q of current.questions){
+   const checked=e("questions").querySelector('fieldset[data-question="'+q.id+'"] input:checked');
+   if(checked)result[q.id]=checked.value;
+ }return result;
+}
+function updateClock(){
+ if(complete||!current?.dueAt)return;
+ const seconds=Math.max(0,Math.ceil((new Date(current.dueAt)-Date.now())/1000));
+ const min=String(Math.floor(seconds/60)).padStart(2,"0"),sec=String(seconds%60).padStart(2,"0");
+ e("timer").textContent="متبقي "+min+":"+sec;
+ if(seconds<=0&&!busy){clearInterval(tick);submit();}
+}
+async function submit(){
+ if(!current||complete||busy)return;
+ const picked=answers();setError("answer-error","");
+ if(mode==="practice"&&Object.keys(picked).length!==current.questions.length){
+   setError("answer-error","جاوب على كل الأسئلة قبل التصحيح.");return;
+ }
+ busy=true;e("submit").disabled=true;
+ try{
+   const x=await call("submit",{attemptId:current.attemptId,answers:picked});
+   complete=true;clearInterval(tick);e("timer").hidden=true;e("submit").hidden=true;
+   e("questions").querySelectorAll("input").forEach(n=>n.disabled=true);
+   const result=e("result");result.hidden=false;
+   result.append(create("h3","درجتك: "+x.correct+" من "+x.total));
+   result.append(create("p","درجتك اتحفظت في حسابك ضمن Reading.","notice"));
+   for(const review of x.review||[]){
+     const field=e("questions").querySelector('fieldset[data-question="'+review.id+'"]');
+     field.querySelectorAll("label.option").forEach((row,i)=>{
+       const k=["A","B","C","D"][i];
+       if(k===review.correct)row.classList.add("correct");
+       if(k===review.selected&&!review.isCorrect)row.classList.add("wrong");
+     });
+     const box=create("div",undefined,"review");
+     box.append(create("strong",(review.isCorrect?"✓ إجابة صحيحة":"✕ الإجابة الصحيحة: "+review.correct)+" · الفقرة "+review.paragraph));
+     box.append(create("p",review.explanation));
+     const link=create("a","ارجع للفقرة "+review.paragraph);link.href="#p-"+review.paragraph;box.append(link);field.append(box);
+   }
+   if(mode==="exam")result.append(create("p","دي محاكاة تدريبية، شوف التفسيرات التفصيلية في وضع التدريب.","muted"));
+   grades();
+ }catch(err){setError("answer-error",err.message||"تعذر حفظ الإجابات");e("submit").disabled=false;}
+ finally{busy=false;}
+}
+document.querySelectorAll("[data-mode]").forEach(button=>button.addEventListener("click",()=>{
+ mode=button.dataset.mode;document.querySelectorAll("[data-mode]").forEach(b=>b.setAttribute("aria-pressed",String(b===button)));
+}));
+e("start").addEventListener("click",async()=>{
+ const checked=document.querySelector('input[name="reading-choice"]:checked');slug=checked?.value||slug;
+ setError("start-error","");e("start").disabled=true;
+ try{const data=await call("begin",{slug,mode});render(data);}
+ catch(err){setError("start-error",err.message||"تعذر بدء الحل");}
+ finally{e("start").disabled=false;}
+});
+e("submit").addEventListener("click",submit);
+e("back").addEventListener("click",()=>{
+ clearInterval(tick);current=null;complete=false;e("study").hidden=true;e("start-panel").hidden=false;
+});
+await Promise.all([load(),grades()]);
+})();
+</script></body></html>
