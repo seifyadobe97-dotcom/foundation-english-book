@@ -207,6 +207,10 @@ jobs:
         run: node tests/reading-admin-network-contract.mjs
       - name: Smoke-test production Reading CORS preflight and unauthorized errors
         run: node tests/reading-live-cors-smoke.mjs
+      - name: Install Firefox for Reading regression
+        run: npx playwright install --with-deps firefox
+      - name: Verify Firefox can call Reading RPC from live Pages origin
+        run: node tests/reading-firefox-real-origin.mjs
 
   deploy:
     name: Deploy verified static book
