@@ -65,12 +65,29 @@ const auth=window.supabase.createClient(BASE,KEY);
 const el=id=>document.getElementById(id);
 let catalog=[],selected="",mode="practice",attempt="",questions=[],started=false,dueAt=null,tickHandle=null,finished=false,busy=false;
 async function api(path,body){
- const {data:{session}}=await auth.auth.getSession();if(!session)throw Error("سجّل دخولك بحساب الطالب الأول");
- const r=await fetch(BASE+"/functions/v1/step-reading-live"+path,{
-  method:body===undefined?"GET":"POST",
-  headers:{"apikey":KEY,"authorization":"Bearer "+session.access_token,...(body===undefined?{}:{"content-type":"application/json"})},
-  ...(body===undefined?{}:{body:JSON.stringify(body)}),signal:AbortSignal.timeout(20000)});
- const x=await r.json().catch(()=>({}));if(!r.ok)throw Error(x.error||"تعذر الاتصال بقسم القراءة");return x;
+ const fetchData=async accessToken=>{
+  const r=await fetch(BASE+"/functions/v1/step-reading-live"+path,{
+   method:body===undefined?"GET":"POST",
+   headers:{"apikey":KEY,"authorization":"Bearer "+accessToken,...(body===undefined?{}:{"content-type":"application/json"})},
+   ...(body===undefined?{}:{body:JSON.stringify(body)}),signal:AbortSignal.timeout(20000)});
+  const x=await r.json().catch(()=>({}));
+  if(!r.ok){const e=new Error(x.error||"تعذر الاتصال بقسم القراءة");e.status=r.status;throw e;}
+  return x;
+ };
+ const {data:{session}}=await auth.auth.getSession();
+ if(!session)throw Error("سجّل دخولك بحساب الطالب الأول");
+ try{return await fetchData(session.access_token)}
+ catch(first){
+  if(first instanceof TypeError||first?.status===401){
+   const refreshed=await auth.auth.refreshSession().catch(()=>null);
+   if(refreshed?.data?.session){
+    try{return await fetchData(refreshed.data.session.access_token)}catch(second){first=second;}
+   }else if(first?.status===401)throw Error("جلسة الطالب انتهت. سجّل دخولك من جديد.");
+  }
+  if(first instanceof TypeError||["TimeoutError","AbortError"].includes(first?.name))
+    throw Error("تعذر الاتصال بخدمة القراءة. افحص اتصالك بالإنترنت وحدّث الصفحة.");
+  throw first;
+ }
 }
 function node(tag,txt,cls){const e=document.createElement(tag);if(txt!==undefined)e.textContent=String(txt);if(cls)e.className=cls;return e;}
 function alert(msg){el("form-error").hidden=!msg;el("form-error").textContent=msg||"";}
