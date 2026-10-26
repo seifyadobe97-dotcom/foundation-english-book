@@ -25,7 +25,9 @@ Deno.serve(async req=>{
  const jwt=req.headers.get("authorization")?.match(/^Bearer\s+(.+)$/i)?.[1];
  if(!jwt)return send(401,{error:"سجّل دخولك لحساب STEP الأول"});
  const db=createClient(URL,SECRET,{auth:{persistSession:false,autoRefreshToken:false}});
- const userResult=await db.auth.getUser(jwt);
+ let userResult;
+ try{userResult=await db.auth.getUser(jwt);}
+ catch(e){console.error("STEP Reading auth service unavailable",e);return send(503,{error:"تعذر التحقق من جلسة الدخول؛ جرب تاني"});}
  const user=userResult.data.user;
  if(userResult.error||!user)return send(401,{error:"جلسة الدخول منتهية، سجّل دخولك تاني"});
  const path=new URL(req.url).pathname.replace(/^\/(?:functions\/v1\/)?step-reading-live/,"")||"/";
