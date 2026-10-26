@@ -29,6 +29,14 @@
 "use strict";
 const config={"url":"https://funltjxavowlnnfibhpl.supabase.co","anonKey":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg"};
 const db=window.supabase.createClient(config.url,config.anonKey);
+window.StepReadingProgressLoader=async()=>{
+ const {data:{session}}=await db.auth.getSession();
+ if(!session)throw Error("Student not logged in");
+ const response=await fetch(config.url+"/functions/v1/step-reading-live/progress",{
+  headers:{"apikey":config.anonKey,"authorization":"Bearer "+session.access_token},signal:AbortSignal.timeout(10000)});
+ if(!response.ok)throw Error("Reading progress unavailable");
+ return response.json();
+};
 window.StepListeningProgressLoader=async()=>{
  const {data:{session}}=await db.auth.getSession();
  if(!session)throw Error("Student not signed in");
