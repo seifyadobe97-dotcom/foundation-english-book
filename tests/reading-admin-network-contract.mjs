@@ -17,6 +17,6 @@ assert(admin.includes("refreshSession()"),"Owner session is refreshed once after
 assert(student.includes("refreshSession()"),"Student session is refreshed once after network/401 error");
 assert(admin.includes('id="retry-reading"'),"Explicit admin retry");
 for(const html of [admin,student]){
- for(const match of html.matchAll(/<script>([\s\S]*?)<\\/script>/g))new Script(match[1]);
+ for(const part of html.split("<script>").slice(1))new Script(part.split("</script>")[0]);
 }
 console.log("PASS protected Reading network contract, owner and student session recovery, CORS");
