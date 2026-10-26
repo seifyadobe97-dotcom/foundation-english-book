@@ -24,7 +24,7 @@ table{width:100%;border-collapse:collapse;min-width:590px}th,td{border-bottom:1p
 <main><p class="muted">READING COMPREHENSION · OWNER</p><h1>إدارة أسئلة استيعاب المقروء</h1>
 <p>كل قطعة بتظهر بنصها وأسئلتها وإجاباتها. الأسئلة المعتمدة فقط هي اللي الطالب بيحلها وبتتحسب في درجته.</p>
 <p class="pending">تنبيه محتوى: السؤال الثاني في <b>Old Birds</b> محفوظ كما جاء في الوورد، لكن مفتاحه D بيوصف معرفة شكل الطائر بثقة أكبر من الدليل الموجود في النص. عشان كده متوقف عن التقييم لحد ما تراجع صياغة الاختيار D وتثبّت الدليل.</p>
-<p id="state" role="status">بنحمّل بنك القراءة…</p><div id="bank"></div>
+<p id="state" role="status">بنحمّل بنك القراءة…</p><button type="button" id="retry-reading">إعادة تحميل أسئلة القراءة والدرجات</button><div id="bank"></div>
 <section class="panel"><h2>نتائج الطلاب — Reading</h2><p class="muted">نتائج التدريب والمحاكاة مستقلة عن درجات Grammar وWriting وListening.</p>
 <p id="grade-status" role="status">بنحمّل النتائج…</p><div class="scroll"><table><thead><tr><th>اسم الطالب</th><th>المحاولات</th><th>تدريب</th><th>محاكاة</th><th>الإجابات الصحيحة</th><th>النسبة</th></tr></thead><tbody id="rows"></tbody></table></div></section>
 <p><a href="../step-grammar-student/reading-live.html">فتح تجربة الطالب</a></p></main>
@@ -35,12 +35,36 @@ table{width:100%;border-collapse:collapse;min-width:590px}th,td{border-bottom:1p
 const API="https://funltjxavowlnnfibhpl.supabase.co",KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg",db=window.supabase.createClient(API,KEY);
 const el=id=>document.getElementById(id);
 async function request(path,body){
- const {data:{session}}=await db.auth.getSession();
+ const fetchData=async accessToken=>{
+  const r=await fetch(API+"/functions/v1/step-reading-live"+path,{
+   method:body===undefined?"GET":"POST",
+   headers:{"apikey":KEY,"authorization":"Bearer "+accessToken,...(body===undefined?{}:{"content-type":"application/json"})},
+   ...(body===undefined?{}:{body:JSON.stringify(body)}),signal:AbortSignal.timeout(20000)
+  });
+  const x=await r.json().catch(()=>({}));
+  if(!r.ok){const e=new Error(x.error||"تعذر تحميل بيانات القراءة");e.status=r.status;throw e;}
+  return x;
+ };
+ let session;
+ try{const result=await db.auth.getSession();session=result.data.session;}
+ catch{throw Error("تعذر التحقق من جلسة الدخول. راجع الاتصال وجرّب تاني.");}
  if(!session)throw Error("لازم تسجّل دخولك من لوحة الأدمن الأول");
- const r=await fetch(API+"/functions/v1/step-reading-live"+path,{method:body===undefined?"GET":"POST",
- headers:{"apikey":KEY,"authorization":"Bearer "+session.access_token,...(body===undefined?{}:{"content-type":"application/json"})},
- ...(body===undefined?{}:{body:JSON.stringify(body)}),signal:AbortSignal.timeout(20000)});
- const x=await r.json().catch(()=>({}));if(!r.ok)throw Error(x.error||"تعذر تحميل بيانات القراءة");return x;
+ try{return await fetchData(session.access_token)}
+ catch(first){
+  // Firefox and some privacy/network proxies mask a gateway 401 as NetworkError.
+  // Retry once after a fresh session; do not retry non-auth server errors.
+  const retry=first instanceof TypeError||first?.status===401;
+  if(retry){
+   const refreshed=await db.auth.refreshSession().catch(()=>null);
+   if(refreshed?.data?.session){
+    try{return await fetchData(refreshed.data.session.access_token)}
+    catch(second){first=second;}
+   }else if(first?.status===401)throw Error("جلسة الأدمن انتهت. افتح لوحة الإدارة وسجّل الدخول من جديد.");
+  }
+  if(first instanceof TypeError||first?.name==="TimeoutError"||first?.name==="AbortError")
+    throw Error("تعذر الاتصال بخدمة القراءة. تأكد من الإنترنت، وحدّث الصفحة، ولو تستخدم Firefox جرّب تعطيل مانع التتبّع لهذه الصفحة فقط.");
+  throw first;
+ }
 }
 function node(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;}
 function input(labelText,value,kind="textarea"){const label=node("label",labelText);
@@ -117,6 +141,7 @@ async function loadGrades(){
   el("grade-status").textContent=x.completed?"المحاولات المكتملة: "+x.completed:"لسه مفيش محاولة قراءة مكتملة.";
  }catch(e){el("grade-status").textContent=e.message||"تعذر تحميل النتائج"}
 }
+el("retry-reading").addEventListener("click",()=>Promise.all([loadBank(),loadGrades()]));
 await Promise.all([loadBank(),loadGrades()]);
 })();
 </script></body></html>

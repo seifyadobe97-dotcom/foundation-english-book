@@ -1,13 +1,13 @@
 import {createClient} from "npm:@supabase/supabase-js@2.57.0";
 const URL=Deno.env.get("SUPABASE_URL")||"",SECRET=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")||"";
-const origins=new Set(["https://seifyadobe97-dotcom.github.io","http://localhost:3000","http://127.0.0.1:3000"]);
+const origins=new Set(["https://seifyadobe97-dotcom.github.io","https://www.qdrat.edu.sa","https://qdrat.edu.sa","http://localhost:3000","http://127.0.0.1:3000"]);
 const letters=["A","B","C","D"] as const;
 type Answers=Record<string,string>;
 function respond(origin:string,status:number,body:unknown){
  return new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json; charset=utf-8",
  "cache-control":"no-store","access-control-allow-origin":origins.has(origin)?origin:"https://seifyadobe97-dotcom.github.io",
  "access-control-allow-methods":"GET,POST,OPTIONS",
- "access-control-allow-headers":"authorization,apikey,content-type,x-client-info","vary":"Origin"}});
+ "access-control-allow-headers":"authorization,apikey,content-type,x-client-info","access-control-max-age":"600","vary":"Origin"}});
 }
 function cleanOptions(value:any){
  if(!value||typeof value!=="object"||Array.isArray(value))return null;
@@ -15,6 +15,8 @@ function cleanOptions(value:any){
  for(const key of letters){if(typeof value[key]!=="string"||value[key].trim().length<1||value[key].length>500)return null;copy[key]=value[key].trim();}
  return copy;
 }
+// JWT platform verification is disabled only to let preflight and expired-token responses carry CORS.
+// EVERY non-OPTIONS API request still authenticates using auth.getUser(jwt), followed by owner/student DB checks.
 Deno.serve(async req=>{
  const origin=req.headers.get("origin")||"",send=(status:number,x:unknown)=>respond(origin,status,x);
  if(req.method==="OPTIONS")return send(origins.has(origin)?200:403,{ok:origins.has(origin)});
@@ -23,7 +25,9 @@ Deno.serve(async req=>{
  const jwt=req.headers.get("authorization")?.match(/^Bearer\s+(.+)$/i)?.[1];
  if(!jwt)return send(401,{error:"سجّل دخولك لحساب STEP الأول"});
  const db=createClient(URL,SECRET,{auth:{persistSession:false,autoRefreshToken:false}});
- const userResult=await db.auth.getUser(jwt);
+ let userResult;
+ try{userResult=await db.auth.getUser(jwt);}
+ catch(e){console.error("STEP Reading auth service unavailable",e);return send(503,{error:"تعذر التحقق من جلسة الدخول؛ جرب تاني"});}
  const user=userResult.data.user;
  if(userResult.error||!user)return send(401,{error:"جلسة الدخول منتهية، سجّل دخولك تاني"});
  const path=new URL(req.url).pathname.replace(/^\/(?:functions\/v1\/)?step-reading-live/,"")||"/";

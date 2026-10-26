@@ -203,6 +203,10 @@ jobs:
         run: node tests/reading-old-birds-contract.mjs
       - name: Browser-test Old Birds Reading on mobile and desktop
         run: node tests/reading-old-birds-browser.mjs
+      - name: Verify Reading API session recovery and owner-only gates
+        run: node tests/reading-admin-network-contract.mjs
+      - name: Smoke-test production Reading CORS preflight and unauthorized errors
+        run: node tests/reading-live-cors-smoke.mjs
 
   deploy:
     name: Deploy verified static book
