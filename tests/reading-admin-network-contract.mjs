@@ -1,22 +1,19 @@
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import {Script} from "node:vm";
 const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
-const fn=read("supabase/functions/step-reading-live/index.ts");
-const admin=read("step-grammar-admin/reading.html");
-const student=read("step-grammar-student/reading-live.html");
-assert(fn.includes("getUser(jwt)"),"Every request must validate user session server-side");
-assert(fn.indexOf("getUser(jwt)")<fn.indexOf('if(path.startsWith("/admin/"))'),"Authentication precedes owner operations");
-assert(fn.includes('if(!await isOwner())'),"Owner-only admin routes");
-assert(fn.includes('if(!await isStudent())'),"Active student only");
-assert(fn.includes('if(!jwt)return send(401'),"Missing tokens always denied");
-assert(fn.includes('if(req.method==="OPTIONS")'),"Browser preflight explicitly supported");
-assert(fn.includes('https://seifyadobe97-dotcom.github.io'));
-assert(fn.includes('https://www.qdrat.edu.sa'));
-assert(admin.includes("refreshSession()"),"Owner session is refreshed once after network/401 error");
-assert(student.includes("refreshSession()"),"Student session is refreshed once after network/401 error");
-assert(admin.includes('id="retry-reading"'),"Explicit admin retry");
-for(const html of [admin,student]){
- for(const part of html.split("<script>").slice(1))new Script(part.split("</script>")[0]);
-}
-console.log("PASS protected Reading network contract, owner and student session recovery, CORS");
+const admin=read("step-grammar-admin/reading-v2.html");
+const student=read("step-grammar-student/reading-v2.html");
+const source=read("supabase/migrations/20261026_rebuild_reading_secure_rpc.sql");
+assert(admin.includes("step_reading_request")&&student.includes("step_reading_request"));
+assert(!admin.includes("/functions/v1/step-reading-live")&&!student.includes("/functions/v1/step-reading-live"));
+assert(admin.includes('id="reload"'),"Owner can retry on error");
+assert(admin.includes('e("grade-status")'),"Admin grades status visible");
+assert(student.includes('e("progress-state")'),"Student progress status visible");
+assert(source.includes("if not v_owner then raise exception"),"Owner auth gate");
+assert(source.includes("if not v_student then raise exception"),"Student active-gate");
+assert(source.includes("v_attempt.user_id")===false,"Avoid unsafe client-provided ownership");
+assert(source.includes("where id=(v_input->>'attemptId')::uuid and user_id=v_uid for update"));
+assert(source.includes("if v_attempt.mode='practice' then"),"Exam key stays private");
+const old=read("step-grammar-admin/reading.html");
+assert(old.includes('url=reading-v2.html'),"Old admin URL forwards to rebuilt page");
+console.log("PASS secure new Reading RPC and clear owner reload; no old Edge Function dependency");
