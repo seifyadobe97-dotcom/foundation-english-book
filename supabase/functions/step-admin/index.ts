@@ -1173,8 +1173,22 @@ Deno.serve(async(req)=>{
    const payload=JSON.parse(await req.text());
    const id=String(payload.id||"");
    if(id.length>100)return reply(422,{error:"معرّف غير صحيح"});
-   const {data:existing,error:findError}=await admin.from("step_question_edits").select("id,part_index").eq("id",id).eq("course_code",lesson.code).maybeSingle();
+   const {data:existing,error:findError}=await admin.from("step_question_edits")
+    .select("id,part_index,question_text,options,correct,status")
+    .eq("id",id).eq("course_code",lesson.code).maybeSingle();
    if(findError||!existing)return reply(404,{error:"احفظ السؤال كمسودة الأول"});
+   // The legacy owner editor may not bypass Studio's original-source approval gate.
+   if(!Object.hasOwn(lesson.questions,id)){
+    const {data:review,error:reviewErr}=await admin.from("step_source_item_reviews")
+     .select("review_status,original_stem,original_options,printed_key")
+     .eq("candidate_id",id).maybeSingle();
+    if(reviewErr)return reply(503,{error:"تعذر التحقق من تدقيق المصدر"});
+    if(!review||review.review_status!=="approved"||
+      review.original_stem!==existing.question_text||
+      review.printed_key!==existing.correct||
+      ["A","B","C","D"].some(k=>review.original_options?.[k]!==existing.options?.[k]))
+     return reply(422,{error:"السؤال المضاف يفضل مسودة حتى تدقيق مصدره ومفتاح إجابته"});
+   }
    const {error}=await admin.from("step_question_edits").update({status:"published",updated_at:new Date().toISOString()}).eq("id",id).eq("course_code",lesson.code);
    if(error)throw error;
    return reply(200,{ok:true,id,status:"published"});
