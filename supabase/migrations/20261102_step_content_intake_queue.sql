@@ -31,6 +31,8 @@ create table if not exists public.step_question_intake(
 );
 create index if not exists step_question_intake_review_order on public.step_question_intake(status,created_at desc);
 create index if not exists step_question_intake_author_order on public.step_question_intake(created_by,created_at desc);
+create index if not exists step_question_intake_reviewer_fk on public.step_question_intake(reviewed_by);
+create index if not exists step_content_contributors_granter_fk on public.step_content_contributors(granted_by);
 create unique index if not exists step_question_intake_active_fingerprint
  on public.step_question_intake(axis_code,target_code,lower(btrim(question_text)))
  where status<>'rejected';
