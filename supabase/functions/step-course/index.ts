@@ -91,6 +91,121 @@ Deno.serve(async(request)=>{
    return send(403,{error:"الدرس ده مش منشور للطلاب"});
   dynamicIndicator=data;
  }
+
+ // The student library needs lightweight stage progress, NOT 50 copies of full
+ // lesson teaching content. This remains server-authenticated and published-only.
+ if(request.method==="GET"&&path==="/overview"){
+  try{
+   const listed=await admin.from("step_curriculum_indicators")
+    .select("slug,axis_code,title_ar,title_en,legacy_course_code,position")
+    .eq("status","published").in("axis_code",["grammar","writing-analysis"])
+    .order("position");
+   if(listed.error)throw listed.error;
+   const core=new Set(["subject-verb-agreement","present-simple","present-continuous"]);
+   const candidates=(listed.data||[]).filter(i=>!core.has(i.slug));
+   const codes=[...new Set(candidates.map(i=>i.legacy_course_code).filter((x):x is string=>!!x))];
+   if(!codes.length)return send(200,{lessons:[],unavailable:candidates.length});
+   const [banks,partAttempts,questionEdits,lessonEdits,guides,sims]=await Promise.all([
+    admin.from("step_private_course_banks").select("course_code,payload").in("course_code",codes),
+    admin.from("step_part_attempts").select("course_code,part_index,correct_count,passed")
+      .eq("user_id",user.id).in("course_code",codes).limit(10000),
+    admin.from("step_question_edits").select("course_code,id,part_index,question_text,options,correct,status")
+      .in("course_code",codes).limit(3000),
+    admin.from("step_lesson_content_edits").select("course_code,part_index,published")
+      .in("course_code",codes).not("published","is",null).limit(5000),
+    admin.from("step_indicator_guides").select("indicator_slug,published")
+      .in("indicator_slug",candidates.filter(i=>i.axis_code==="writing-analysis").map(i=>i.slug)),
+    admin.from("step_simulated_item_reviews").select("course_code,question_id,question_text,options,correct,approval_status")
+      .in("course_code",codes).limit(3000)
+   ]);
+   if([banks,partAttempts,questionEdits,lessonEdits,guides,sims].some(r=>r.error))
+    throw Error("Overview query unavailable");
+   // Keep exact Writing source and simulation review gates in the batch summary.
+   const allWritingSources=(banks.data||[]).filter(b=>candidates.some(i=>
+    i.axis_code==="writing-analysis"&&i.legacy_course_code===b.course_code))
+    .flatMap(b=>Object.entries((b.payload as LessonData)?.questions||{})
+      .filter(([,q]:any)=>q?.origin!=="simulated").map(([id])=>id));
+   const sources=allWritingSources.length?
+     await admin.from("step_source_item_reviews")
+       .select("candidate_id,review_status,original_stem,original_options,printed_key")
+       .in("candidate_id",[...new Set(allWritingSources)]).limit(3000):
+     {data:[],error:null};
+   if(sources.error)throw sources.error;
+   const bankByCode=new Map((banks.data||[]).map(x=>[x.course_code,x.payload as LessonData]));
+   const guideBySlug=new Map((guides.data||[]).map(x=>[x.indicator_slug,x.published]));
+   const simByCode=new Map<string,Map<string,any>>();
+   for(const x of sims.data||[]){
+    if(!simByCode.has(x.course_code))simByCode.set(x.course_code,new Map());
+    simByCode.get(x.course_code)!.set(x.question_id,x);
+   }
+   const sourceById=new Map((sources.data||[]).map(x=>[x.candidate_id,x]));
+   const lessons:any[]=[];
+   let unavailable=0;
+   for(const indicator of candidates){
+    const code=indicator.legacy_course_code;
+    const lesson=code?bankByCode.get(code):null;
+    if(!lesson||lesson.code!==code||!Array.isArray(lesson.sections)||
+      typeof lesson.requiredPassRate!=="number"||!lesson.questions){
+     unavailable++;continue;
+    }
+    const originalQuestions=lesson.questions as QuestionMap;
+    const edited=(questionEdits.data||[]).filter(e=>e.course_code===code);
+    if(indicator.axis_code==="writing-analysis"){
+     const published=guideBySlug.get(indicator.slug);
+     const modules=published?.modules;
+     if(!Array.isArray(modules)||modules.length!==lesson.sections.length||
+       lesson.sections.some((section:any,n:number)=>modules[n]?.id!==section.id)||
+       modules.some((m:any)=>/ASGQ[A-Z0-9]+|STEP course book|STEP_Grammar_Question_Bank|TAJMEAAT|ص\s*\d{2,3}/i.test(String(m.intro_ar||"")))){
+      unavailable++;continue;
+     }
+     const simReview=simByCode.get(code)||new Map();
+     const invalid=Object.entries(originalQuestions).some(([id,q]:any)=>{
+      if(q.origin==="simulated"){
+       const r=simReview.get(id);
+       return !r||r.approval_status!=="approved"||r.question_text!==q.text||
+        r.correct!==q.correct||["A","B","C","D"].some(k=>r.options?.[k]!==q.options?.[k]);
+      }
+      const r=sourceById.get(id);
+      return !r||r.review_status!=="approved"||r.original_stem!==q.text||
+       r.printed_key!==q.correct||["A","B","C","D"].some(k=>r.original_options?.[k]!==q.options?.[k]);
+     })||edited.some(e=>e.status==="published"&&(
+      !Object.hasOwn(originalQuestions,e.id)||
+      e.question_text!==originalQuestions[e.id].text||
+      e.correct!==originalQuestions[e.id].correct||
+      ["A","B","C","D"].some(k=>e.options?.[k]!==originalQuestions[e.id].options[k])));
+     if(invalid){unavailable++;continue;}
+    }
+    const sections=lesson.sections.map((section:any)=>({...section,questionIds:[...section.questionIds]}));
+    for(const edit of (lessonEdits.data||[]).filter(x=>x.course_code===code)){
+     const section=sections[edit.part_index];
+     if(section&&edit.published&&typeof edit.published==="object"){
+      for(const key of ["titleAr","short","duration","description","title"])
+       if(Object.hasOwn(edit.published,key))section[key]=edit.published[key];
+     }
+    }
+    for(const edit of edited.filter(e=>e.status==="published")){
+     if(!Object.hasOwn(originalQuestions,edit.id)){
+      const part=sections[edit.part_index];
+      if(part&&!part.questionIds.includes(edit.id))part.questionIds.push(edit.id);
+     }
+    }
+    const rows=(partAttempts.data||[]).filter(a=>a.course_code===code);
+    const progress=sectionStatus(rows,{sections,requiredPassRate:lesson.requiredPassRate});
+    lessons.push({slug:indicator.slug,data:{
+     course:{title:lesson.title,titleAr:lesson.titleAr},
+     sections:progress.sections.map(s=>({index:s.index,title:s.title,titleAr:s.titleAr,
+      locked:s.locked,passed:s.passed,attempts:s.attempts,best:s.best,questionCount:s.questionCount})),
+     nextIndex:Math.min(progress.next,Math.max(0,sections.length-1)),
+     completed:progress.completed
+    }});
+   }
+   return send(200,{lessons,unavailable});
+  }catch(err){
+   console.error("STEP published overview unavailable",err);
+   return send(503,{error:"تعذر تحميل ملخص الدروس؛ حاول تحديث الصفحة"});
+  }
+ }
+
  const requestedCourseCode=dynamicIndicator?.legacy_course_code||
   (isContinuous?"ASGQPRCONT":isAgreement?"ASGQAGREE":"ASGQPRSIM");
  const {data:privateBank,error:bankError}=await admin.from("step_private_course_banks")
