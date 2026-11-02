@@ -72,7 +72,19 @@ try{
   assert.equal(await page.locator(".review").count(),0,"Answer keys must remain hidden before submitting");
   for(let i=0;i<4;i++)await page.locator('input[name="answer-mock-q-'+i+'"][value="C"]').check();
   await page.getByRole("button",{name:"صحّح إجاباتي واحفظ الدرجة"}).click();
-  await page.locator("#result:not([hidden])").waitFor();
+  try{await page.locator("#result:not([hidden])").waitFor({timeout:8000});}
+  catch(err){
+   const detail=await page.evaluate(()=>({
+    answerError:document.getElementById("answer-error")?.textContent,
+    answerErrorHidden:document.getElementById("answer-error")?.hidden,
+    resultHidden:document.getElementById("result")?.hidden,
+    submitHidden:document.getElementById("submit")?.hidden,
+    answered:Array.from(document.querySelectorAll("#questions input:checked")).map(n=>n.name),
+    calls:window.__calls,
+    scriptsLoaded:typeof window.supabase
+   }));
+   throw new Error("Reading submit debug: "+JSON.stringify(detail)+"; "+err.message);
+  }
   assert((await page.locator("#result").innerText()).includes("4 من 4"));
   assert.equal(await page.locator(".review").count(),4);
   assert((await page.evaluate(()=>window.__calls)).some(x=>x.action==="submit"&&Object.keys(x.payload.answers).length===4));
