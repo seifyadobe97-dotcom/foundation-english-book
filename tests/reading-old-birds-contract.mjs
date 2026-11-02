@@ -20,6 +20,11 @@ assert(rpc.includes("item_ids")&&rpc.includes("correct_choice_snapshot"),"Frozen
 assert(rpc.includes("if v_attempt.mode='practice' then"),"Exam never returns the answer key");
 assert(student.includes('db.rpc("step_reading_request"')&&!student.includes("step-reading-live"),"Student uses new backend");
 assert(admin.includes('db.rpc("step_reading_request"')&&!admin.includes("step-reading-live"),"Admin uses new backend");
+assert(student.includes('id="passage-list"')&&student.includes('passage-tile'),"Reading catalogue must show passage cards");
+assert(student.indexOf('id="passage"')<student.indexOf('id="questions"'),"Complete passage precedes its questions");
+assert(!student.includes('data-mode="exam"')&&!student.includes('id="timer"'),"Ordinary Reading should not copy Listening exam controls");
+assert(student.includes('mode:"practice"'),"Reading starts as untimed scored practice");
+assert(admin.includes('passage-sheet')&&admin.includes('question-list'),"Owner manages whole passages with nested questions");
 assert(hub.includes('href="reading-v2.html"'));
 assert(home.includes("StepReadingProgressLoader")&&home.includes('db.rpc("step_reading_request"'));
 assert(!student.includes("correct_choice_snapshot")&&!student.includes("SUPABASE_SERVICE_ROLE_KEY"));
