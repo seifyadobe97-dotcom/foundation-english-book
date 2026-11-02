@@ -56,7 +56,7 @@ try{
      courses:[{axis:"grammar",code:"ASGQAGREE",title:"تطابق الفاعل والفعل",sections:5}],
      passages:[{axis:"reading-comprehension",code:"old-birds",title:"Old Birds",sections:8,status:"approved"}],
      clips:[{axis:"listening",code:"record-1",title:"Clip",sections:1}]});
-    if(action==="list")return ok({role:window.__mockRole,items:window.__intake});
+    if(action==="list"){const filter=payload.status||"all";return ok({role:window.__mockRole,items:window.__intake.filter(x=>filter==="all"||x.status===filter),next:null});}
     if(action==="contributors")return window.__mockRole==="owner"?
       ok({contributors:[]}):fail("Denied");
     if(action==="submit_batch"){
@@ -118,6 +118,13 @@ try{
   await page.locator("#check-json").click();
   assert((await page.locator("#json-status").innerText()).includes("سؤال"));
   await page.locator("#upload-json").click();
+  await page.waitForFunction(()=>document.querySelectorAll("#items .item").length===2);
+  await page.locator("#queue-filter").selectOption("pending_review");
+  await page.waitForFunction(()=>Array.from(document.querySelectorAll("#items .item"))
+    .every(card=>card.textContent.includes("تحت المراجعة")));
+  assert.equal(await page.locator("#items .item").count(),role==="owner"?1:2,
+   "Status filter must only show matching queued items");
+  await page.locator("#queue-filter").selectOption("all");
   await page.waitForFunction(()=>document.querySelectorAll("#items .item").length===2);
   assert.deepEqual(errors,[],"No browser JS errors "+role+"/"+width+": "+errors.join("; "));
   assert(!(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+3)),"No horizontal overflow "+width);
