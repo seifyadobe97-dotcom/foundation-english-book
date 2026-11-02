@@ -178,6 +178,7 @@ async function submit(){
  }catch(err){setError("answer-error",err.message||"تعذر حفظ الإجابات");e("submit").disabled=false;}
  finally{busy=false;}
 }
+e("submit").addEventListener("click",submit);
 e("back").addEventListener("click",()=>{
  current=null;complete=false;e("study").hidden=true;e("start-panel").hidden=false;e("start-panel").scrollIntoView({behavior:"smooth",block:"start"});
 });
