@@ -7,13 +7,13 @@ assert(key,"Public client key must be available");
 const browser=await firefox.launch({headless:true});
 try{
  const page=await browser.newPage({viewport:{width:390,height:800}});
- await page.goto("https://seifyadobe97-dotcom.github.io/foundation-english-book/",{waitUntil:"domcontentloaded",timeout:35000});
+ await page.goto("https://seifyadobe97-dotcom.github.io/foundation-english-book/",{waitUntil:"commit",timeout:25000});
  const outcome=await page.evaluate(async key=>{
   const url="https://funltjxavowlnnfibhpl.supabase.co/rest/v1/rpc/step_reading_request";
   try{
    const r=await fetch(url,{method:"POST",headers:{
     "apikey":key,"authorization":"Bearer "+key,"content-type":"application/json"},
-    body:JSON.stringify({p_action:"admin_catalog",p_payload:{}})});
+    body:JSON.stringify({p_action:"admin_catalog",p_payload:{}}),signal:AbortSignal.timeout(15000)});
    return {status:r.status,body:await r.text()};
   }catch(error){return {error:String(error)};}
  },key);
