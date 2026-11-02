@@ -9,6 +9,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const html=await readFile(path.join(root,"step-grammar-admin/content-intake.html"),"utf8");
 const migration=await readFile(path.join(root,"supabase/migrations/20261102_step_content_intake_queue.sql"),"utf8");
 const nav=await readFile(path.join(root,"step-grammar-admin/admin-nav.js"),"utf8");
+const adminApi=await readFile(path.join(root,"supabase/functions/step-admin/index.ts"),"utf8");
 assert(nav.includes('content-intake.html'),"Content Intake must be visible in admin nav");
 assert(html.includes('id="json-text"')&&html.includes('id="question-form"'));
 assert(migration.includes('step_content_internal.handle_intake'));
@@ -17,6 +18,10 @@ assert(migration.includes("revoke all on public.step_question_intake from public
 assert(migration.includes("v_item.status<>'approved'"),"Only approved items can be transferred");
 assert(migration.includes("status','transferred'")||migration.includes("status='transferred'"));
 assert(!migration.includes("status='published'"),"Intake must not publish any student questions");
+assert(adminApi.includes('if(path==="/questions/publish"&&req.method==="POST")'));
+assert(adminApi.includes('review.original_stem!==existing.question_text')&&
+       adminApi.includes('review.printed_key!==existing.correct'),
+  "Legacy question publish route must enforce exact reviewed source and answer key");
 for(const part of html.split("<script>").slice(1)){
  const content=part.split("</script>")[0];
  if(content.trim().startsWith('"use strict"'))new Script(content);
