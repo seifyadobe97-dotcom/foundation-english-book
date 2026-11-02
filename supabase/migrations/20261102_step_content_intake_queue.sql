@@ -51,6 +51,7 @@ declare
  v_axis text; v_target text; v_question text; v_exp text; v_correct text;
  v_source text; v_origin text; v_part int; v_key text; v_item public.step_question_intake%rowtype;
  v_count int:=0; v_skipped int:=0; v_username text; v_uid uuid;
+ v_filter text; v_before timestamptz; v_before_id uuid; v_cursor jsonb;
  v_passage public.step_reading_passages%rowtype;
  v_bank jsonb; v_draft_id text; v_status text; v_note text;
 begin
@@ -81,13 +82,37 @@ begin
  end if;
 
  if p_action='list' then
+  v_filter:=coalesce(v_data->>'status','all');
+  if v_filter not in ('all','pending_review','approved','rejected','transferred') then
+   raise exception 'حالة فلترة غير صحيحة' using errcode='22023';end if;
+  if v_data ? 'before_at' or v_data ? 'before_id' then
+   if coalesce(v_data->>'before_id','') !~*
+    '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' or
+    coalesce(v_data->>'before_at','') !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}T' then
+    raise exception 'مؤشر الصفحة غير صحيح' using errcode='22023';end if;
+   v_before:=(v_data->>'before_at')::timestamptz;
+   v_before_id:=(v_data->>'before_id')::uuid;
+  end if;
+  select coalesce(jsonb_agg(to_jsonb(x) order by x.created_at desc,x.id desc),'[]'::jsonb)
+   into v_rows from (
+    select q.id,q.axis_code,q.target_code,q.part_index,q.question_text,
+     q.options,q.proposed_correct,q.explanation_ar,q.wrong_reasons,q.source_reference,
+     q.origin_kind,q.status,q.review_note,q.created_at,q.created_by,q.transferred_question_id
+    from public.step_question_intake q
+    where (v_owner or q.created_by=v_actor)
+      and (v_filter='all' or q.status=v_filter)
+      and (v_before is null or (q.created_at,q.id)<(v_before,v_before_id))
+    order by q.created_at desc,q.id desc limit 101) x;
+  if jsonb_array_length(v_rows)>100 then
+   v_cursor:=jsonb_build_object('before_at',v_rows->99->>'created_at',
+    'before_id',v_rows->99->>'id');
+   select jsonb_agg(value order by ordinality) into v_rows
+    from jsonb_array_elements(v_rows) with ordinality where ordinality<=100;
+  else
+   v_cursor:=null;
+  end if;
   return jsonb_build_object('role',case when v_owner then 'owner' else 'contributor' end,
-    'items',coalesce((select jsonb_agg(to_jsonb(x) order by x.created_at desc)
-       from (select q.id,q.axis_code,q.target_code,q.part_index,q.question_text,
-        q.options,q.proposed_correct,q.explanation_ar,q.wrong_reasons,q.source_reference,
-        q.origin_kind,q.status,q.review_note,q.created_at,q.created_by,q.transferred_question_id
-        from public.step_question_intake q
-        where v_owner or q.created_by=v_actor order by q.created_at desc limit 250) x),'[]'::jsonb));
+   'items',v_rows,'next',v_cursor);
  end if;
 
  if p_action='contributors' then
