@@ -4,6 +4,7 @@
  const routes=[
   ["الرئيسية","./","home","⌂"],
   ["تعديل الدروس","studio.html","studio","✎"],
+  ["إدخال الأسئلة","content-intake.html","intake","＋"],
   ["الطلاب","./#students","students","♙"],
   ["التقارير","reports.html","reports","▤"],
   ["ترتيب المنهج","curriculum.html","curriculum","☷"],
@@ -14,6 +15,7 @@
  const current=()=>{
   const p=location.pathname.split("/").at(-1)||"index.html";
   if(p==="index.html")return location.hash==="#students"?"students":"home";
+  if(p==="content-intake.html")return "intake";
   if(p==="studio.html"||p==="continuous-preview.html")return "studio";
   if(p==="courses.html")return "drafts";
   if(p==="curriculum.html"||p==="guide.html")return "curriculum";
