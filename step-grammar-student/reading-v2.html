@@ -16,8 +16,6 @@ h1{font-size:clamp(26px,3.4vw,36px);margin:4px 0 10px}h2{margin:0 0 12px;font-si
 .action:focus-visible,input:focus-visible{outline:3px solid #e2ad50;outline-offset:2px}
 .error{color:#973d35;background:#fff3f1;border:1px solid #ecc9c4;border-radius:9px;padding:12px}
 .notice{background:#eef7f1;border:1px solid #d2e8da;border-radius:10px;padding:12px}
-.options{display:flex;gap:9px;flex-wrap:wrap}.mode{border:1px solid #c1d8cb;border-radius:9px;padding:12px 16px;cursor:pointer;background:white;font:inherit}
-.mode[aria-pressed=true]{background:#e6f4eb;border:2px solid #177454;padding:11px 15px}
 .columns{display:flex;flex-direction:column;gap:14px}
 .passage-catalog{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,285px),1fr));gap:14px}
 .passage-tile{border:1px solid #d7e5dc;border-radius:13px;background:#fcfefd;padding:19px;display:flex;flex-direction:column;align-items:start;gap:8px}
@@ -27,7 +25,6 @@ h1{font-size:clamp(26px,3.4vw,36px);margin:4px 0 10px}h2{margin:0 0 12px;font-si
 .reading #passage{max-width:88ch;margin:0 auto}
 .questions-sheet{max-width:970px;width:100%;margin:0 auto 20px}
 .questions-sheet fieldset{margin-bottom:23px}
-.question-number{display:block;color:#187056;font-size:12px;font-weight:800;letter-spacing:.08em}
 .student-reading-guide{background:#f0f8f2;border-right:3px solid #207658;border-radius:8px;padding:11px 14px;margin-bottom:16px}
 
 .reading{max-height:none;overflow:visible;position:static}
@@ -38,7 +35,6 @@ legend{font-weight:bold;padding:0 6px}legend span{unicode-bidi:isolate}
 .option input{accent-color:#197654;flex-shrink:0;margin:3px 0}.option:has(:checked){background:#eaf6ee;border-color:#197654}
 .option.correct{border-color:#34946c;background:#e9f8ee}.option.wrong{border-color:#c66861;background:#fff0ed}
 .review{padding:11px;border-right:3px solid #197654;background:#f1f8f3;border-radius:7px;margin-top:12px;font-size:14px}
-.timer{font-weight:800;font-variant-numeric:tabular-nums;background:#fff2d8;border-radius:9px;padding:8px 13px}
 .toolbar{display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
 .stat{display:inline-block;padding:10px 13px;border:1px solid #d8e5dc;background:#f8fcf9;border-radius:9px;margin:5px 5px}
 .scores{list-style:none;padding:0;margin:8px 0}.scores li{padding:8px;border-bottom:1px solid #e5eee7}
@@ -93,6 +89,7 @@ async function openPassage(chosenSlug,button){
   e("study").scrollIntoView({behavior:"smooth",block:"start"});
  }catch(err){
   setError("start-error",err.message||"تعذر فتح قطعة القراءة");
+ }finally{
   button.disabled=false;button.textContent="اقرأ القطعة وحل الأسئلة";
  }
 }
@@ -182,7 +179,7 @@ async function submit(){
  finally{busy=false;}
 }
 e("back").addEventListener("click",()=>{
- current=null;complete=false;e("study").hidden=true;e("start-panel").hidden=false;
+ current=null;complete=false;e("study").hidden=true;e("start-panel").hidden=false;e("start-panel").scrollIntoView({behavior:"smooth",block:"start"});
 });
 await Promise.all([load(),grades()]);
 })();
