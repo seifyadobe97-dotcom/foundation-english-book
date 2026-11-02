@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>إدخال الأسئلة والمراجعة | STEP WITH SEIFY</title>
+<link rel="icon" href="../step-brand/mark.svg" type="image/svg+xml">
+<style>
+:root{--navy:#203943;--green:#187052;--line:#dbe6df;--bg:#f3f7f5;--muted:#617b72;--gold:#dfbc72}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--navy);font:15px/1.85 Tahoma,Arial,sans-serif}
+header{background:white;border-bottom:1px solid var(--line);padding:15px max(18px,calc((100vw - 1160px)/2));display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+main{max-width:1160px;margin:auto;padding:24px 14px 75px}h1{font-size:clamp(25px,3vw,36px);margin:10px 0}h2{font-size:20px;margin:0 0 12px}
+h3{font-size:17px;margin:0}.muted{color:var(--muted)}.small{font-size:13px}
+a{color:var(--green)}.card{background:white;border:1px solid var(--line);border-radius:16px;padding:22px;margin:16px 0}
+label{display:block;font-weight:bold;margin:12px 0 4px}input,textarea,select{width:100%;padding:11px;border:1px solid #cbded2;border-radius:9px;background:white;font:inherit}
+textarea{resize:vertical;min-height:90px}.english{direction:ltr;text-align:left;unicode-bidi:plaintext;font-family:Arial,sans-serif;line-height:1.65}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:15px}.four{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+button{font:inherit;font-weight:700;background:var(--green);color:white;border:0;border-radius:10px;padding:11px 17px;cursor:pointer}
+button.alt{background:#edf6ef;color:var(--green);border:1px solid #b8d6c4}
+button.warn{background:#fef4ef;color:#9c422c;border:1px solid #e4b6aa}
+button:disabled{opacity:.48;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.notice{background:#f2f9f5;border:1px solid #d1e4d6;border-radius:10px;padding:13px;margin:12px 0}
+.danger{color:#a23220}.item{border:1px solid var(--line);padding:16px;border-radius:12px;margin-top:12px}
+.item-header{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.item-q{white-space:pre-wrap;direction:ltr;text-align:left}
+.item-options{padding-inline-start:20px;direction:ltr;text-align:left;line-height:1.8}.item details{margin:10px 0}
+.pill{display:inline-block;border:1px solid #cee0d4;border-radius:100px;padding:2px 10px;font-size:12px}
+.loading{opacity:.65}.select-title{font-weight:normal}.filezone{border:1px dashed #a5c9b4;border-radius:12px;padding:16px;margin-top:12px}
+[hidden]{display:none!important}
+@media(max-width:720px){.card{padding:15px}.two,.four{grid-template-columns:1fr}.item{padding:12px}}
+</style>
+</head><body>
+<header><strong dir="ltr">STEP WITH SEIFY · CONTENT INTAKE</strong>
+<nav><a href="./">لوحة الأدمن</a> · <a href="studio.html">محرر الدروس</a> · <a href="reading-v2.html">إدارة القراءة</a></nav></header>
+<main>
+<p class="small muted">CONTENT ENTRY · HUMAN REVIEW · PRIVATE QUESTION BANK</p>
+<h1>مركز إدخال الأسئلة</h1>
+<p>مدخل المحتوى يجهّز الأسئلة ومصادرها، والمدير يراجعها ويعتمدها. <strong>ولا سؤال جديد بيظهر للطالب بمجرد إدخاله.</strong></p>
+<div id="global-status" class="notice" role="status">بنراجع صلاحية الحساب ونحمّل قائمة الدروس…</div>
+<section class="card" id="manual" hidden>
+<h2>إضافة سؤال جديد</h2><p class="muted small">كل إجابة لازم يبقى لها تفسير، وكل اختيار غلط له سبب محدد. رقم المرحلة يبدأ من 1 في واجهة الإدخال.</p>
+<form id="question-form">
+<div class="two">
+<div><label for="axis">القسم</label><select id="axis" required>
+<option value="grammar">Grammar</option><option value="writing-analysis">Writing Analysis</option>
+<option value="reading-comprehension">Reading</option><option value="listening">Listening</option></select></div>
+<div><label for="target">الدرس / القطعة / التسجيل</label><select id="target" required></select></div>
+</div>
+<div class="two">
+<div><label for="part">رقم المرحلة أو الفقرة</label><input type="number" id="part" min="1" step="1" value="1" required></div>
+<div><label for="origin">تصنيف مصدر السؤال</label><select id="origin">
+<option value="original">من مصدر أصلي</option><option value="simulated">سؤال محاكي</option><option value="authored">تأليف تعليمي</option></select></div>
+</div>
+<label for="source">مرجع المصدر (للإدارة فقط، مثل اسم الملف والصفحة)</label>
+<input id="source" maxlength="500" required placeholder="Book / file / page or original author notes">
+<label for="stem">نص السؤال بالإنجليزي</label><textarea id="stem" class="english" maxlength="2000" required></textarea>
+<div class="four" id="choices"></div>
+<div class="two"><div><label for="correct">الإجابة المرشحة</label><select id="correct">
+<option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+<div><label for="explanation">التفسير بالعربي</label><textarea id="explanation" required maxlength="2500"></textarea></div></div>
+<div class="four" id="reasons"></div>
+<div class="actions"><button type="submit" id="save-one">حفظ في قائمة المراجعة</button>
+<span id="save-status" role="status" class="muted"></span></div>
+</form></section>
+<section class="card" id="bulk" hidden>
+<h2>استيراد دفعة أسئلة من ChatGPT أو ملف JSON</h2>
+<p class="muted">تقدر تلزق مجموعة أسئلة بنفس الصيغة المعتمدة، أو تختار ملف <strong>.json</strong>. أقصى دفعة 30 سؤال. لا تُنشر تلقائيًا.</p>
+<div class="actions"><button type="button" class="alt" id="example">نسخ نموذج JSON جاهز</button><button type="button" class="alt" id="check-json">فحص محتوى الدفعة</button></div>
+<div class="filezone"><label for="json-file">اختار ملف JSON من جهازك (بدون رفع الملف لخادم آخر)</label>
+<input id="json-file" type="file" accept=".json,application/json"></div>
+<label for="json-text">أو الصق JSON هنا</label><textarea class="english" id="json-text" rows="9" placeholder='{"items":[{"axis":"grammar",...}]}'></textarea>
+<div class="actions"><button type="button" id="upload-json">إضافة الدفعة للمراجعة</button>
+<span id="json-status" role="status" class="muted"></span></div>
+</section>
+<section class="card" id="queue" hidden>
+<div class="actions"><h2 style="margin:0">الأسئلة المحفوظة</h2><button class="alt" type="button" id="refresh">تحديث القائمة</button></div>
+<div class="two"><div><label for="queue-filter">حالة الأسئلة</label>
+<select id="queue-filter"><option value="all">كل الحالات</option>
+<option value="pending_review">تحت المراجعة</option><option value="approved">معتمدة داخليًا</option>
+<option value="transferred">نُقلت للمحرر</option><option value="rejected">مرفوضة</option></select></div></div>
+<p class="muted small" id="queue-help"></p><div id="items"></div><div class="actions"><button class="alt" id="load-more" type="button" hidden>عرض أسئلة أقدم</button></div>
+</section>
+<section class="card" id="access" hidden>
+<h2>صلاحيات فريق Data Entry</h2>
+<p class="muted">إدخال الأسئلة فقط، من غير صلاحيات الوصول لتقارير الطلاب أو نشر الأسئلة. لازم يكون للمستخدم حساب قائم بالفعل على المنصة.</p>
+<form id="invite"><label for="username">اسم المستخدم الموجود في المنصة</label><input id="username" autocomplete="off" required placeholder="username">
+<div class="actions"><button type="submit">منح صلاحية إدخال</button><span id="access-status" role="status"></span></div></form>
+<div id="contributors"></div>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
+<script>
+"use strict";
+(async()=>{
+ const db=window.supabase.createClient("https://funltjxavowlnnfibhpl.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg");
+ const e=id=>document.getElementById(id);
+ const make=(tag,text,cls)=>{const v=document.createElement(tag);if(text!==undefined)v.textContent=String(text);if(cls)v.className=cls;return v;};
+ let catalog=null,role=null,loading=false,nextCursor=null,loadedRows=[];
+ async function rpc(action,payload={}){
+  const {data:{session},error:sErr}=await db.auth.getSession();
+  if(sErr||!session)throw Error("لازم تسجّل الدخول بحساب له صلاحية إدخال أسئلة أولًا.");
+  const {data,error}=await db.rpc("step_content_intake",{p_action:action,p_payload:payload});
+  if(error)throw Error(error.message||"حصل خطأ أثناء الحفظ");
+  return data;
+ }
+ function currentTargets(){
+  return (catalog?.courses||[]).concat(catalog?.passages||[],catalog?.clips||[])
+   .filter(v=>v.axis===e("axis").value);
+ }
+ function updateTargets(){
+  const select=e("target");select.replaceChildren();
+  for(const item of currentTargets()){
+   const opt=make("option",item.title+" — "+item.code);
+   opt.value=item.code;opt.dataset.count=String(item.sections);
+   select.append(opt);
+  }
+  updatePart();
+ }
+ function updatePart(){
+  const item=currentTargets().find(x=>x.code===e("target").value);
+  const part=e("part"),reading=e("axis").value==="reading-comprehension",listening=e("axis").value==="listening";
+  part.min=listening?"0":"1";part.max=String(listening?0:Math.max(1,item?.sections||1));
+  part.value=listening?"0":"1";part.disabled=listening;
+ }
+ function makeFields(){
+  for(const k of ["A","B","C","D"]){
+   const holder=make("div"),label=make("label","الاختيار "+k);
+   const input=make("textarea");input.id="choice-"+k;input.required=true;input.className="english";
+   input.rows=2;label.htmlFor=input.id;holder.append(label,input);e("choices").append(holder);
+   const whyHolder=make("div"),why=make("label","ليه "+k+" غلط؟");
+   const box=make("textarea");box.id="reason-"+k;box.rows=2;box.maxLength=1000;
+   why.htmlFor=box.id;whyHolder.id="reason-holder-"+k;whyHolder.append(why,box);e("reasons").append(whyHolder);
+  }
+ }
+ function updateReasons(){
+  const right=e("correct").value;
+  for(const k of ["A","B","C","D"]){
+   const holder=e("reason-holder-"+k);
+   holder.hidden=k===right;
+   e("reason-"+k).required=k!==right;
+   if(k===right)e("reason-"+k).value="";
+  }
+ }
+ function pack(){
+  const axis=e("axis").value;
+  return {axis,target:e("target").value,part_index:axis==="listening"?0:Number(e("part").value)-(axis==="reading-comprehension"?0:1),
+   origin_kind:e("origin").value,source_reference:e("source").value.trim(),
+   question:e("stem").value.trim(),correct:e("correct").value,
+   options:Object.fromEntries(["A","B","C","D"].map(k=>[k,e("choice-"+k).value.trim()])),
+   explanation_ar:e("explanation").value.trim(),
+   wrong_reasons:Object.fromEntries(["A","B","C","D"].filter(k=>k!==e("correct").value)
+    .map(k=>[k,e("reason-"+k).value.trim()]))};
+ }
+ async function work(button,status,fn){
+  if(loading)return;loading=true;button.disabled=true;
+  try{status.textContent="جارٍ الحفظ…";await fn();}
+  catch(err){status.textContent=err.message||"تعذر تنفيذ الطلب";status.classList.add("danger")}
+  finally{loading=false;button.disabled=false;}
+ }
+ async function loadQueue(more=false){
+  const params={status:e("queue-filter").value};
+  if(more&&nextCursor)Object.assign(params,nextCursor);
+  const result=await rpc("list",params);
+  const fresh=result.items||[];
+  loadedRows=more?loadedRows.concat(fresh):fresh;
+  nextCursor=result.next||null;
+  e("load-more").hidden=!nextCursor;
+  const items=loadedRows;
+  const list=e("items");list.replaceChildren();
+  e("queue-help").textContent=role==="owner"?
+   "أنت بتشوف كل الأسئلة المضافة من الفريق. الموافقة هنا لا تساوي النشر للطلاب.":
+   "أنت بتشوف الأسئلة اللي أدخلتها فقط، وحالتها الحالية بعد مراجعة المدير.";
+  if(!items.length){list.append(make("p","مفيش أسئلة مدخلة حاليًا.","muted"));return;}
+  for(const item of items){
+   const card=make("article",undefined,"item");
+   const header=make("div",undefined,"item-header");
+   header.append(make("strong",item.axis_code+" · "+item.target_code+" · "+(Number(item.part_index)+1)));
+   header.append(make("span",({pending_review:"تحت المراجعة",approved:"اعتمد داخليًا",rejected:"مرفوض",transferred:"اتنقل للمحرر"})[item.status]||item.status,"pill"));
+   card.append(header,make("p",item.question_text,"item-q"));
+   const detail=make("details"),summary=make("summary","عرض الاختيارات والإجابة والتفسيرات والمصدر");
+   detail.append(summary);
+   const choices=make("ul",undefined,"item-options");
+   for(const k of ["A","B","C","D"])choices.append(make("li",k+" — "+(item.options?.[k]||"")+
+    (k===item.proposed_correct?" (الإجابة المرشحة)":"")));
+   detail.append(choices,make("p","التفسير: "+item.explanation_ar),
+    make("p","المصدر: "+item.source_reference+" · "+item.origin_kind));
+   for(const [k,reason] of Object.entries(item.wrong_reasons||{}))detail.append(make("p",k+": "+reason));
+   if(item.review_note)detail.append(make("p","قرار المراجعة: "+item.review_note));
+   card.append(detail);
+   if(role==="owner"&&item.status==="pending_review"){
+    const review=make("div"),note=make("textarea");
+    note.placeholder="ملاحظات المراجعة، والتأكد من المصدر أو سبب الرفض";note.rows=2;note.maxLength=1200;
+    const bar=make("div",undefined,"actions");
+    const ok=make("button","اعتماد داخلي"),no=make("button","رفض","warn");
+    for(const [button,action] of [[ok,"approve"],[no,"reject"]]){
+     button.type="button";button.addEventListener("click",()=>work(button,e("global-status"),async()=>{
+      const result=await rpc(action,{id:item.id,note:note.value});
+      e("global-status").textContent="تمت المراجعة: "+result.status;
+      await loadQueue();
+     }));
+    }
+    bar.append(ok,no);review.append(note,bar);card.append(review);
+   }
+   if(role==="owner"&&item.status==="approved"){
+    const bar=make("div",undefined,"actions"),move=make("button","نقل السؤال كمسودة إلى محرر القسم","alt");
+    move.type="button";move.addEventListener("click",()=>work(move,e("global-status"),async()=>{
+     if(!confirm("السؤال هيتنقل كمسودة فقط، ومش هيتنشر للطلاب. نكمل؟"))return;
+     const result=await rpc("transfer",{id:item.id});
+     e("global-status").textContent="اتنقل السؤال كمسودة: "+result.draft_question_id+" (غير منشور).";
+     await loadQueue();
+    }));
+    bar.append(move);if(item.axis_code==="listening")bar.append(make("span","يحتاج ربطًا بملف صوتي واختبار المجموعة أولًا.","muted"));
+    card.append(bar);
+   }
+   list.append(card);
+  }
+ }
+ function normalizeBatch(){
+  const value=JSON.parse(e("json-text").value);
+  const items=Array.isArray(value)?value:value.items;
+  if(!Array.isArray(items)||items.length<1||items.length>30)throw Error("لازم الدفعة تحتوي من 1 إلى 30 سؤال.");
+  for(const item of items){
+   if(!item||!item.axis||!item.target||!item.question||!item.options||
+     !item.correct||!item.source_reference||!item.origin_kind||!item.wrong_reasons||
+     !item.explanation_ar||!Number.isInteger(Number(item.part_index)))
+    throw Error("فيه سؤال ناقص حقل أو رقم مرحلة.");
+  }
+  return items;
+ }
+ function exampleData(){
+  const target=currentTargets()[0]||(catalog.courses||[])[0];
+  const axis=target?.axis||"grammar",code=target?.code||"COURSE_CODE";
+  return JSON.stringify({items:[{
+   axis,target:code,part_index:axis==="reading-comprehension"?1:0,
+   origin_kind:"authored",source_reference:"Draft authored example — replace with verified source",
+   question:"Which option best completes the example sentence?",
+   options:{A:"Option one",B:"Option two",C:"Option three",D:"Option four"},
+   correct:"B",explanation_ar:"تفسير واضح للقاعدة ولماذا الإجابة الثانية مناسبة",
+   wrong_reasons:{A:"الاختيار الأول لا يحقق القاعدة المطلوبة",
+    C:"الاختيار الثالث لا يطابق السياق المقصود",
+    D:"الاختيار الرابع يغيّر معنى الجملة المطلوب"}
+  }]},null,2);
+ }
+ async function loadContributors(){
+  if(role!=="owner")return;
+  const data=await rpc("contributors"),list=e("contributors");list.replaceChildren();
+  for(const contributor of data.contributors||[]){
+   const bar=make("div",undefined,"actions");
+   bar.append(make("span",contributor.username||contributor.user_id));
+   const revoke=make("button","إلغاء صلاحية الإدخال","warn");
+   revoke.addEventListener("click",()=>work(revoke,e("access-status"),async()=>{
+    await rpc("revoke",{username:contributor.username});
+    e("access-status").textContent="تم إلغاء صلاحية "+contributor.username;
+    await loadContributors();
+   }));bar.append(revoke);list.append(bar);
+  }
+ }
+ e("axis").addEventListener("change",updateTargets);
+ e("target").addEventListener("change",updatePart);
+ e("correct").addEventListener("change",updateReasons);
+ e("question-form").addEventListener("submit",ev=>{ev.preventDefault();
+  work(e("save-one"),e("save-status"),async()=>{
+   const r=await rpc("submit_batch",{items:[pack()]});
+   e("save-status").classList.remove("danger");
+   e("save-status").textContent="تم حفظ "+r.saved+" سؤال للمراجعة.";
+   e("question-form").reset();updateTargets();updateReasons();await loadQueue();
+  });
+ });
+ e("example").addEventListener("click",async()=>{
+  const data=exampleData();e("json-text").value=data;
+  try{await navigator.clipboard.writeText(data);e("json-status").textContent="النموذج اتنسخ واتحط في الصندوق.";}
+  catch{e("json-status").textContent="النموذج جاهز في الصندوق للنسخ.";}
+ });
+ e("check-json").addEventListener("click",()=>{
+  try{e("json-status").textContent="الملف صالح مبدئيًا: "+normalizeBatch().length+" سؤال. السيرفر هيراجع كل الحقول قبل الحفظ.";}
+  catch(err){e("json-status").textContent=err.message;}
+ });
+ e("json-file").addEventListener("change",async()=>{
+  const file=e("json-file").files[0];if(!file)return;
+  if(file.size>180000){e("json-status").textContent="الملف أكبر من 180 KB";return;}
+  e("json-text").value=await file.text();
+  e("json-status").textContent="تم فتح الملف محليًا. اضغط فحص الدفعة.";
+ });
+ e("upload-json").addEventListener("click",()=>work(e("upload-json"),e("json-status"),async()=>{
+  const items=normalizeBatch(),result=await rpc("submit_batch",{items});
+  e("json-status").classList.remove("danger");
+  e("json-status").textContent="اتحفظ "+result.saved+" سؤال. تم تجاهل "+result.duplicates_skipped+" مكرر.";
+  e("json-text").value="";await loadQueue();
+ }));
+ e("refresh").addEventListener("click",()=>loadQueue().catch(err=>{e("global-status").textContent=err.message;}));
+ e("queue-filter").addEventListener("change",()=>loadQueue().catch(err=>{e("global-status").textContent=err.message;}));
+ e("load-more").addEventListener("click",()=>loadQueue(true).catch(err=>{e("global-status").textContent=err.message;}));
+ e("invite").addEventListener("submit",ev=>{ev.preventDefault();
+  const button=e("invite").querySelector("button");
+  work(button,e("access-status"),async()=>{
+   const r=await rpc("grant",{username:e("username").value});
+   e("access-status").textContent="اتفعّلت صلاحية الإدخال لـ "+r.username;
+   e("invite").reset();await loadContributors();
+  });
+ });
+ try{
+  catalog=await rpc("catalog");role=catalog.role;makeFields();updateTargets();updateReasons();
+  for(const name of ["manual","bulk","queue"])e(name).hidden=false;
+  e("access").hidden=role!=="owner";
+  e("global-status").textContent="تم التحقق من صلاحية "+(role==="owner"?"صاحب المنصة":"مدخل المحتوى")+
+   ". الأسئلة الجديدة تفضل تحت المراجعة ولا تُنشر تلقائيًا.";
+  await Promise.all([loadQueue(),loadContributors()]);
+ }catch(err){
+  e("global-status").textContent=err.message+" — افتح صفحة تسجيل الدخول وبعدين ارجع للمركز.";
+  const link=make("a","تسجيل الدخول");link.href="../step-grammar-account-preview/";
+  e("global-status").append(" ",link);
+ }
+})();
+</script>
+</body></html>

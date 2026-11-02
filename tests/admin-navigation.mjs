@@ -102,7 +102,8 @@ try{
   assert.match(await page.locator("#home-status-08").innerText(),/منشور للطلاب/);
   assert.match(await page.locator("#home-status-07").innerText(),/مسودة غير منشورة/,"Lesson 07 must not appear as published");
   assert.match(await page.locator("#home-status-06").innerText(),/منشور للطلاب/,"Lesson 06 must be clearly marked as published");
-  assert.equal(await page.locator(".admin-global-nav a").count(),8,"Admin pages use eight unambiguous destinations");
+  assert.equal(await page.locator(".admin-global-nav a").count(),9,"Admin pages show nine distinct destinations including Data Entry");
+   assert.equal(await page.locator('.admin-global-nav a[href="content-intake.html"]').count(),1,"Data Entry has its own route");
   assert.equal(await page.locator('.admin-global-nav a[aria-current="page"]').innerText().then(x=>x.includes("الرئيسية")),true);
   const lesson3Link=page.locator('a[href="studio.html?course=ASGQPRCONT&tab=questions"]').first();
   assert.equal(await page.locator('a[href="studio.html?course=ASGQPASIM&tab=questions"]').count(),1,"Past Simple has its own Studio editing button");
