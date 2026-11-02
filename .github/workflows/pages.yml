@@ -201,6 +201,8 @@ jobs:
         run: node tests/listening-word-question-grades.mjs
       - name: Audit first STEP Reading passage and protected scoring
         run: node tests/reading-old-birds-contract.mjs
+      - name: Verify owner can safely author and publish Reading passages
+        run: node tests/reading-passage-editor-contract.mjs
       - name: Browser-test Old Birds Reading on mobile and desktop
         run: node tests/reading-old-birds-browser.mjs
       - name: Verify Reading API session recovery and owner-only gates
