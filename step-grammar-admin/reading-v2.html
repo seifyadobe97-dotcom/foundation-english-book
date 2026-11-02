@@ -30,9 +30,9 @@ textarea{min-height:70px;resize:vertical}.two{display:grid;grid-template-columns
 <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
 <button id="reload" type="button" class="secondary">إعادة تحميل الأسئلة والدرجات</button><span id="status" class="muted" role="status">بنحمّل القطع…</span>
 </div><div id="bank"></div></section>
-<section class="card"><h2>نتائج الطلاب في Reading</h2><p class="muted small">درجات قسم القراءة مستقلة عن الاستماع والجرامر والتحليل الكتابي.</p>
+<section class="card"><h2>نتائج الطلاب في Reading</h2><p class="muted small">كل قطعة لها أسئلتها، وبعد الحل بنحفظ الدرجة. نتائج القراءة مستقلة عن باقي أقسام STEP.</p>
 <p id="grade-status" role="status">بنحمّل النتائج…</p><div class="scroll">
-<table><thead><tr><th>الطالب</th><th>المحاولات</th><th>التدريب</th><th>المحاكاة</th><th>الإجابات الصحيحة</th><th>النسبة</th></tr></thead>
+<table><thead><tr><th>الطالب</th><th>محاولات قطع القراءة</th><th>الإجابات الصحيحة</th><th>النسبة</th></tr></thead>
 <tbody id="grades"></tbody></table></div></section>
 <p><a href="../step-grammar-student/reading-v2.html">فتح تجربة الطالب</a></p>
 </main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.min.js"></script>
@@ -129,7 +129,7 @@ async function grades(){
    const result=await call("admin_grades");e("grades").replaceChildren();
    for(const g of result.students||[]){
      const row=make("tr");
-     for(const value of [g.username,g.attempts,g.practice,g.exam,g.correct+" / "+g.total,g.percent+"%"])
+     for(const value of [g.username,g.attempts,g.correct+" / "+g.total,g.percent+"%"])
        row.append(make("td",value));
      e("grades").append(row);
    }
