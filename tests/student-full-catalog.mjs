@@ -95,7 +95,7 @@ try{
   assert.equal(await page.locator("#student-learning-path .student-course-tile").count(),45);
   assert.equal(await page.locator("#writing-analysis-lessons .student-course-tile").count(),8);
   assert.equal(requested.size,0,"Successful authenticated overview must not fan out into 50 full lesson reads");
-  assert.equal(overviewRequests,width===390?1:2,"Only one protected overview request per dashboard load");
+  assert.equal(overviewRequests,1,"Only one protected overview request per dashboard load");
   assert.equal(await page.locator(".metrics .metric").first().locator("strong").innerText(),"53/263",
    "Student metrics account for 263 teaching stages across both published axes");
   assert.equal(await page.locator("#student-lessons-load-warning").count(),0);
