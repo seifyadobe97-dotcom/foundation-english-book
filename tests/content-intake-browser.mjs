@@ -39,7 +39,8 @@ const server=createServer(async(req,res)=>{
 await new Promise(ok=>server.listen(0,"127.0.0.1",ok));
 const base="http://127.0.0.1:"+server.address().port;
 const browser=await chromium.launch({headless:true});
-const sdk='window.supabase={createClient(){return {auth:{getSession:async()=>({data:{session:{access_token:"test-token"}}})},rpc:async(a,p)=>window.__mockRPC(a,p)}}}};';
+const sdk='window.supabase={createClient(){return {auth:{getSession:async()=>({data:{session:{access_token:"test-token"}}})},rpc:async(a,p)=>window.__mockRPC(a,p)}}};';
+new Script(sdk); // Catch syntax errors in the synthetic SDK before launching Chromium.
 try{
  for(const role of ["owner","contributor"]){
  for(const width of [390,1280]){
