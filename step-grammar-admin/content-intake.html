@@ -74,7 +74,11 @@ button:disabled{opacity:.48;cursor:not-allowed}button:focus-visible,input:focus-
 </section>
 <section class="card" id="queue" hidden>
 <div class="actions"><h2 style="margin:0">الأسئلة المحفوظة</h2><button class="alt" type="button" id="refresh">تحديث القائمة</button></div>
-<p class="muted small" id="queue-help"></p><div id="items"></div>
+<div class="two"><div><label for="queue-filter">حالة الأسئلة</label>
+<select id="queue-filter"><option value="all">كل الحالات</option>
+<option value="pending_review">تحت المراجعة</option><option value="approved">معتمدة داخليًا</option>
+<option value="transferred">نُقلت للمحرر</option><option value="rejected">مرفوضة</option></select></div></div>
+<p class="muted small" id="queue-help"></p><div id="items"></div><div class="actions"><button class="alt" id="load-more" type="button" hidden>عرض أسئلة أقدم</button></div>
 </section>
 <section class="card" id="access" hidden>
 <h2>صلاحيات فريق Data Entry</h2>
@@ -91,7 +95,7 @@ button:disabled{opacity:.48;cursor:not-allowed}button:focus-visible,input:focus-
  const db=window.supabase.createClient("https://funltjxavowlnnfibhpl.supabase.co","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ1bmx0anhhdm93bG5uZmliaHBsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjYwODQsImV4cCI6MjEwODAwMjA4NH0.bvypJvBORTQ79Wf0yz5mLgKeFylDZtvf74uTvy4DWCg");
  const e=id=>document.getElementById(id);
  const make=(tag,text,cls)=>{const v=document.createElement(tag);if(text!==undefined)v.textContent=String(text);if(cls)v.className=cls;return v;};
- let catalog=null,role=null,loading=false;
+ let catalog=null,role=null,loading=false,nextCursor=null,loadedRows=[];
  async function rpc(action,payload={}){
   const {data:{session},error:sErr}=await db.auth.getSession();
   if(sErr||!session)throw Error("لازم تسجّل الدخول بحساب له صلاحية إدخال أسئلة أولًا.");
@@ -153,8 +157,15 @@ button:disabled{opacity:.48;cursor:not-allowed}button:focus-visible,input:focus-
   catch(err){status.textContent=err.message||"تعذر تنفيذ الطلب";status.classList.add("danger")}
   finally{loading=false;button.disabled=false;}
  }
- async function loadQueue(){
-  const result=await rpc("list"),items=result.items||[];
+ async function loadQueue(more=false){
+  const params={status:e("queue-filter").value};
+  if(more&&nextCursor)Object.assign(params,nextCursor);
+  const result=await rpc("list",params);
+  const fresh=result.items||[];
+  loadedRows=more?loadedRows.concat(fresh):fresh;
+  nextCursor=result.next||null;
+  e("load-more").hidden=!nextCursor;
+  const items=loadedRows;
   const list=e("items");list.replaceChildren();
   e("queue-help").textContent=role==="owner"?
    "أنت بتشوف كل الأسئلة المضافة من الفريق. الموافقة هنا لا تساوي النشر للطلاب.":
@@ -277,6 +288,8 @@ button:disabled{opacity:.48;cursor:not-allowed}button:focus-visible,input:focus-
   e("json-text").value="";await loadQueue();
  }));
  e("refresh").addEventListener("click",()=>loadQueue().catch(err=>{e("global-status").textContent=err.message;}));
+ e("queue-filter").addEventListener("change",()=>loadQueue().catch(err=>{e("global-status").textContent=err.message;}));
+ e("load-more").addEventListener("click",()=>loadQueue(true).catch(err=>{e("global-status").textContent=err.message;}));
  e("invite").addEventListener("submit",ev=>{ev.preventDefault();
   const button=e("invite").querySelector("button");
   work(button,e("access-status"),async()=>{
