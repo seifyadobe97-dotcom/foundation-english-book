@@ -1,0 +1,25 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {Script} from "node:vm";
+const read=p=>readFileSync(new URL("../"+p,import.meta.url),"utf8");
+const sql=read("supabase/migrations/20261102_reading_owner_passage_editor.sql");
+const admin=read("step-grammar-admin/reading-v2.html");
+const student=read("step-grammar-student/reading-v2.html");
+assert(sql.includes("security definer set search_path=''"),"Owner operation stays in private schema");
+assert(sql.includes("auth.uid()")&&sql.includes("step_admin_accounts"));
+assert(sql.includes("role='owner'"),"Owner role verified server-side");
+assert(sql.includes("revoke all on function public.step_reading_admin(text,jsonb)"));
+assert(sql.includes("grant execute on function public.step_reading_admin(text,jsonb) to authenticated"));
+assert(sql.includes("v_passage.status<>'draft'"),"Published passage text and keys remain frozen");
+assert(sql.includes("if v_count=0 or v_pending>0 then"),"Do not publish unfinished passages");
+assert(sql.includes("'needs_review'"),"New questions are unpublished until reviewed");
+assert(sql.includes("if exists(select 1 from public.step_reading_attempts"),"Lock history against rewrites");
+assert(admin.includes('id="create-passage"')&&admin.includes('id="new-text"'));
+assert(admin.includes('id="new-source"')&&admin.includes("paragraphList"));
+for(const action of ["create_passage","update_passage","add_question","publish_passage"])
+ assert(admin.includes('manage("'+action+'"'),"Admin UI missing "+action);
+assert(admin.includes("publicationControls")&&admin.includes("draftEditor")&&admin.includes("newQuestionEditor"));
+assert(!student.includes("step_reading_admin"),"Learners must never get admin controls");
+assert(student.includes("passage-tile"),"Retain normal passage-first learner interface");
+for(const inline of admin.split("<script>").slice(1))new Script(inline.split("</script>")[0]);
+console.log("PASS owner Reading passage editing contract; draft lifecycle, authorization and grade integrity");

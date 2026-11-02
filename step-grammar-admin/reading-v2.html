@@ -19,6 +19,13 @@ legend{font-weight:bold;padding:0 6px}.ltr{direction:ltr;text-align:left;unicode
 .source p{font:16px/1.8 Georgia,serif;text-align:left;direction:ltr;border-bottom:1px solid #edf2ee;padding:12px 0;margin:0}
 label{display:block;margin:12px 0;font-weight:bold}input,textarea,select{display:block;width:100%;padding:11px;border:1px solid #cadfd3;border-radius:8px;font:inherit;background:#fff}
 textarea{min-height:70px;resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.editor{background:#fafdfb;border:1px solid #dae8de;border-radius:12px;padding:16px;margin:14px 0}
+.editor summary{cursor:pointer;font-weight:bold;color:#156d50}
+.editor textarea{min-height:115px}.editor .passage-text{min-height:255px;font-family:Georgia,serif;line-height:1.75}
+.editor .actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+.editor .actions button{min-width:150px}.intro-note{font-size:13px;color:#58796c}
+.textarea-ltr{direction:ltr;text-align:left;unicode-bidi:plaintext}
+.edit-title{font-size:19px;font-weight:bold}
 .scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:580px}th,td{text-align:right;padding:10px;border-bottom:1px solid #e2eae4}
 [hidden]{display:none!important}@media(max-width:720px){.card{padding:14px}.two{grid-template-columns:1fr}}
 </style></head><body>
@@ -26,6 +33,20 @@ textarea{min-height:70px;resize:vertical}.two{display:grid;grid-template-columns
 <main><p class="small muted">READING COMPREHENSION · CONTENT & GRADES</p>
 <h1>إدارة قطع استيعاب المقروء</h1>
 <p>كل قطعة قراءة مستقلة بعنوانها ونصها الكامل وأسئلتها. راجع القطعة نفسها الأول، وبعدها أسئلتها واختياراتها. الطالب بيحل أسئلة القطعة مرة واحدة ودرجته بتتحفظ.</p>
+<section class="card" id="new-reading-passage">
+<h2>إضافة قطعة قراءة جديدة</h2>
+<p class="muted">انسخ القطعة من ملف Word أو PDF وحطها هنا كفقرات. هتتحفظ <strong>مسودة خاصة بالأدمن</strong> ومش هتظهر للطلاب غير لما تراجع وتُعتمد أسئلتها.</p>
+<form id="create-passage">
+<div class="two">
+<label>عنوان القطعة بالإنجليزي<input id="new-title-en" dir="ltr" placeholder="مثال: The History of Flight" required minlength="3" maxlength="200"></label>
+<label>العنوان بالعربي<input id="new-title-ar" placeholder="تاريخ الطيران" required minlength="3" maxlength="240"></label>
+</div>
+<label>المصدر (للإدارة فقط)<input id="new-source" placeholder="اسم الملف أو الكتاب، ورقم الصفحة لو متاح" required minlength="2"></label>
+<label>نص القطعة بالإنجليزي، وافصل بين الفقرات بسطر فاضي<textarea id="new-text" class="textarea-ltr passage-text" placeholder="Paragraph 1...&#10;&#10;Paragraph 2..." required rows="9"></textarea></label>
+<div class="actions"><button type="submit" id="create-button">حفظ قطعة جديدة كمسودة</button></div>
+<p id="create-feedback" class="muted" role="status"></p>
+</form>
+</section>
 <section class="card"><h2>مكتبة قطع القراءة</h2>
 <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
 <button id="reload" type="button" class="secondary">إعادة تحميل الأسئلة والدرجات</button><span id="status" class="muted" role="status">بنحمّل القطع…</span>
@@ -48,6 +69,35 @@ async function call(action,payload={}){
  if(error)throw Error(error.message||"تعذر الاتصال بقاعدة البيانات");
  return data;
 }
+async function manage(action,payload={}){
+ const {data:{session},error:sessErr}=await db.auth.getSession();
+ if(sessErr||!session)throw Error("سجّل دخولك بحساب صاحب المنصة أولاً");
+ const {data,error}=await db.rpc("step_reading_admin",{p_action:action,p_payload:payload});
+ if(error)throw Error(error.message||"تعذر حفظ قطعة القراءة");
+ return data;
+}
+function paragraphList(text){
+ return String(text||"").replace(/\r/g,"").split(/\n\s*\n/g).map(v=>v.trim()).filter(Boolean);
+}
+async function savedMessage(status,promise,success){
+ try{status.textContent="جارٍ الحفظ…";await promise;status.textContent=success;await refresh();}
+ catch(err){status.textContent=err.message||"تعذر الحفظ";}
+}
+e("create-passage").addEventListener("submit",async(event)=>{
+ event.preventDefault();
+ const button=e("create-button"),status=e("create-feedback");
+ const data={title_en:e("new-title-en").value,title_ar:e("new-title-ar").value,
+  source_label:e("new-source").value,paragraphs:paragraphList(e("new-text").value)};
+ button.disabled=true;
+ try{
+  status.textContent="بنحفظ قطعة القراءة كمسودة خاصة…";
+  await manage("create_passage",data);
+  e("create-passage").reset();
+  status.textContent="اتحفظت القطعة كمسودة. أضف أسئلتها من مكتبة القطع، وبعد المراجعة اعتمدها.";
+  await refresh();
+ }catch(err){status.textContent=err.message||"تعذر حفظ القطعة";}
+ finally{button.disabled=false;}
+});
 function field(name,value,type="textarea"){
  const row=make("label",name),element=make(type);element.value=value;row.append(element);
  return {row,element};
@@ -94,6 +144,80 @@ function showQuestion(q){
  buttons.append(save,approve);fieldset.append(buttons,status);
  return fieldset;
 }
+function draftEditor(passage){
+ const details=make("details",undefined,"editor");
+ details.append(make("summary","تعديل عنوان ونص القطعة (المسودة فقط)"));
+ const titleEn=field("عنوان القطعة بالإنجليزي",passage.title_en,"input");
+ titleEn.element.dir="ltr";const titleAr=field("العنوان بالعربي",passage.title_ar,"input");
+ const source=field("المصدر الداخلي",passage.source_label,"input");
+ const text=field("نص القطعة — بين كل فقرتين سطر فارغ",passage.paragraphs.join("\n\n"));
+ text.element.className="passage-text textarea-ltr";text.element.dir="ltr";
+ details.append(titleEn.row,titleAr.row,source.row,text.row);
+ const bar=make("div",undefined,"actions"),save=make("button","حفظ تعديلات القطعة"),feedback=make("span",undefined,"muted");
+ save.type="button";
+ save.addEventListener("click",async()=>{
+  save.disabled=true;
+  await savedMessage(feedback,manage("update_passage",{
+    id:passage.id,title_en:titleEn.element.value,title_ar:titleAr.element.value,
+    source_label:source.element.value,paragraphs:paragraphList(text.element.value)
+  }),"تم تعديل المسودة بنجاح");
+  save.disabled=false;
+ });
+ bar.append(save,feedback);details.append(bar);return details;
+}
+function newQuestionEditor(passage){
+ const details=make("details",undefined,"editor");
+ details.append(make("summary","إضافة سؤال جديد للقطعة"));
+ details.append(make("p","السؤال بيتحفظ للمراجعة أولًا؛ اختار الإجابة المرشحة واكتب تفسيرها وربطها بالفقرة.","intro-note"));
+ const title=field("السؤال بالإنجليزي","","textarea");title.element.dir="ltr";title.row.className="ltr";
+ details.append(title.row);
+ const options={};const grid=make("div",undefined,"two");
+ for(const key of ["A","B","C","D"]){
+  const x=field("الاختيار "+key,"","textarea");
+  x.element.dir="ltr";x.row.className="ltr";options[key]=x.element;grid.append(x.row);
+ }details.append(grid);
+ const correct=make("label","الإجابة الصحيحة المرشحة");
+ const select=make("select");
+ for(const key of ["A","B","C","D"]){const opt=make("option",key);opt.value=key;select.append(opt);}
+ correct.append(select);details.append(correct);
+ const pNum=field("رقم الفقرة الداعمة","1","input");pNum.element.type="number";
+ pNum.element.min="1";pNum.element.max=String(passage.paragraphs.length);details.append(pNum.row);
+ const explanation=field("تفسير الإجابة بالعربي","");details.append(explanation.row);
+ const note=field("ملاحظات المراجعة الداخلية","");details.append(note.row);
+ const bar=make("div",undefined,"actions"),save=make("button","حفظ السؤال للمراجعة"),status=make("span",undefined,"muted");
+ save.type="button";save.addEventListener("click",async()=>{
+  save.disabled=true;
+  await savedMessage(status,manage("add_question",{
+    id:passage.id,question_text:title.element.value,
+    options:Object.fromEntries(["A","B","C","D"].map(k=>[k,options[k].value])),
+    correct_choice:select.value,paragraph_number:Number(pNum.element.value),
+    explanation_ar:explanation.element.value,editorial_notes:note.element.value
+  }),"تمت إضافة السؤال، راجع الاختيارات والإجابة واعتمده.");
+  save.disabled=false;
+ });
+ bar.append(save,status);details.append(bar);return details;
+}
+function publicationControls(passage,approved,pending){
+ const bar=make("div",undefined,"actions"),label=make("span",undefined,"muted");
+ if(passage.status==="draft"){
+   const publish=make("button","اعتماد ونشر القطعة"),status=make("span",undefined,"muted");
+   publish.type="button";
+   publish.disabled=!approved||pending>0;
+   label.textContent=publish.disabled?"النشر متاح بعد اعتماد كل أسئلة القطعة.":"القطعة جاهزة للنشر في حساب الطالب.";
+   publish.addEventListener("click",async()=>{
+     publish.disabled=true;
+     await savedMessage(status,manage("publish_passage",{id:passage.id}),"اتنشرت القطعة للطلاب بنجاح");
+   });
+   bar.append(publish,label,status);
+ }else if(passage.status==="approved"){
+   label.textContent="منشورة للطلاب. نص القطعة وأسئلتها المعتمدة ثابتة حفاظًا على درجاتهم.";
+   bar.append(label);
+ }else{
+   label.textContent="القطعة مؤرشفة ومخفية عن الطلاب. المحاولات القديمة محفوظة.";
+   bar.append(label);
+ }
+ return bar;
+}
 async function bank(){
  try{
    const r=await call("admin_catalog");e("bank").replaceChildren();
@@ -105,7 +229,11 @@ async function bank(){
      const meta=make("p",passage.paragraphs.length+" فقرات · "+passage.items.length+
        " أسئلة اختيار من متعدد · "+approved+" معتمد"+(pending?" · "+pending+" تحت المراجعة":""),
        "muted passage-meta");
+     const badge=passage.status==="approved"?"منشورة":passage.status==="draft"?"مسودة":"مؤرشفة";
+     meta.textContent+=" · الحالة: "+badge;
      area.append(head,meta);
+     if(passage.status==="draft")area.append(draftEditor(passage));
+
      const content=make("section",undefined,"source passage-sheet");
      content.append(make("h4","نص القطعة كاملًا"));
      for(const txt of passage.paragraphs||[]){
@@ -119,6 +247,8 @@ async function bank(){
      }
      for(const q of passage.items||[])questions.append(showQuestion(q));
      area.append(questions);
+     if(passage.status==="draft")area.append(newQuestionEditor(passage));
+     area.append(publicationControls(passage,approved,pending));
      e("bank").append(area);
    }
    e("status").textContent="عدد القطع المحفوظة: "+(r.passages||[]).length+".";

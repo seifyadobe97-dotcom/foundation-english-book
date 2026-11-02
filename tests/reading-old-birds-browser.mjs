@@ -32,6 +32,7 @@ async function mockApi(page){
      review_state:"approved",editorial_notes:""})).concat([{id:"pending-q",position:2,
        question_text:"Original source question under review",options:{A:"A",B:"B",C:"C",D:"D"},
        correct_choice:"D",explanation_ar:"محتاج مراجعة",paragraph_number:5,review_state:"needs_review",editorial_notes:""}])};
+  const stories=[story];
   window.supabase={createClient:()=>({
    auth:{getSession:async()=>({data:{session:{access_token:"mock"}}})},
    rpc:async(name,args)=>{
@@ -46,9 +47,42 @@ async function mockApi(page){
      if(args.p_action==="submit")value={saved:true,correct:4,total:4,mode:"practice",
        review:questions.map(q=>({id:q.id,number:q.number,selected:"C",correct:"C",
          isCorrect:true,explanation:"الإجابة مذكورة في النص",paragraph:1}))};
-     if(args.p_action==="admin_catalog")value={passages:[story]};
+     if(args.p_action==="admin_catalog")value={passages:stories};
+     if(name==="step_reading_admin"){
+       const payload=args.p_payload;
+       const target=stories.find(x=>x.id===payload.id);
+       if(args.p_action==="create_passage"){
+         const passage={id:"created-draft",slug:"reading-created",title_en:payload.title_en,
+           title_ar:payload.title_ar,source_label:payload.source_label,paragraphs:payload.paragraphs,
+           status:"draft",items:[],exam_seconds:600};
+         stories.push(passage);
+         value={saved:true,id:passage.id,status:"draft"};
+       }else if(args.p_action==="update_passage"){
+         Object.assign(target,{title_en:payload.title_en,title_ar:payload.title_ar,
+          source_label:payload.source_label,paragraphs:payload.paragraphs});
+         value={saved:true,status:"draft"};
+       }else if(args.p_action==="add_question"){
+         target.items.push({id:"created-q1",position:target.items.length+1,
+          question_text:payload.question_text,options:payload.options,
+          correct_choice:payload.correct_choice,explanation_ar:payload.explanation_ar,
+          paragraph_number:payload.paragraph_number,review_state:"needs_review",
+          editorial_notes:payload.editorial_notes});
+         value={saved:true,status:"needs_review"};
+       }else if(args.p_action==="publish_passage"){
+         if(target.items.some(q=>q.review_state!=="approved"))return {data:null,error:{message:"Pending questions"}};
+         target.status="approved";value={saved:true,status:"approved"};
+       }
+     }
      if(args.p_action==="admin_grades")value={students:[],completed:0};
-     if(args.p_action==="admin_review")value={saved:true,status:"needs_review"};
+     if(args.p_action==="admin_review"){
+       for(const p of stories){
+         const item=p.items.find(q=>q.id===args.p_payload.id);
+         if(item){
+           Object.assign(item,{...args.p_payload,review_state:args.p_payload.approve?"approved":"needs_review"});
+         }
+       }
+       value={saved:true,status:args.p_payload.approve?"approved":"needs_review"};
+     }
      return value?{data:value,error:null}:{data:null,error:{message:"unknown action"}};
    }
   })};
@@ -109,6 +143,48 @@ try{
   assert((await admin.locator("#grade-status").innerText()).includes("مافيش محاولات"));
   await admin.getByRole("button",{name:"إعادة تحميل الأسئلة والدرجات"}).click();
   await admin.getByText("عدد القطع المحفوظة: 1.").waitFor();
+  assert.equal(await admin.locator("#create-passage").count(),1,"Owner can create Reading passage drafts");
+  await admin.locator("#new-title-en").fill("New Passage From Word");
+  await admin.locator("#new-title-ar").fill("قطعة قراءة جديدة");
+  await admin.locator("#new-source").fill("Uploaded sample file.docx");
+  await admin.locator("#new-text").fill("First paragraph contains complete English text.\n\nSecond paragraph adds more details.");
+  await admin.locator("#create-button").click();
+  await admin.waitForFunction(()=>document.querySelectorAll("#bank .passage-unit").length===2);
+  const draft=admin.locator("#bank .passage-unit").nth(1);
+  assert((await draft.innerText()).includes("مسودة"));
+  const editors=draft.locator("details.editor");
+  assert.equal(await editors.count(),2,"Draft passage and question editors available");
+  await editors.first().locator("summary").click();
+  await editors.first().locator('input').first().fill("Revised Word Passage");
+  await editors.first().getByRole("button",{name:"حفظ تعديلات القطعة"}).click();
+  await admin.waitForFunction(()=>document.querySelector("#bank")?.textContent?.includes("Revised Word Passage"));
+  const updated=admin.locator("#bank .passage-unit").nth(1);
+  await updated.locator("details.editor").last().locator("summary").click();
+  const newQuestion=updated.locator("details.editor").last();
+  const textboxes=newQuestion.locator("textarea");
+  assert.equal(await textboxes.count(),7);
+  await textboxes.nth(0).fill("What does the first paragraph describe?");
+  await textboxes.nth(1).fill("A first paragraph");
+  await textboxes.nth(2).fill("A second paragraph");
+  await textboxes.nth(3).fill("No paragraph at all");
+  await textboxes.nth(4).fill("An unrelated detail");
+  await textboxes.nth(5).fill("الإجابة الأولى مبنية على الفقرة الأولى من القطعة");
+  await textboxes.nth(6).fill("Reviewed by owner after source comparison");
+  await newQuestion.getByRole("button",{name:"حفظ السؤال للمراجعة"}).click();
+  await admin.waitForFunction(()=>document.querySelectorAll("#bank .passage-unit")[1]?.querySelectorAll("fieldset").length===1);
+  const draftWithQuestion=admin.locator("#bank .passage-unit").nth(1);
+  assert.equal(await draftWithQuestion.getByRole("button",{name:"اعتماد ونشر القطعة"}).isDisabled(),true,
+    "Publication blocked while MCQ remains under review");
+  await draftWithQuestion.getByRole("button",{name:"اعتماد السؤال ونشره"}).click();
+  await admin.waitForFunction(()=>document.querySelectorAll("#bank .passage-unit")[1]?.querySelector(".good")!==null);
+  const approvedDraft=admin.locator("#bank .passage-unit").nth(1);
+  await approvedDraft.getByRole("button",{name:"اعتماد ونشر القطعة"}).click();
+  await admin.waitForFunction(()=>document.querySelectorAll("#bank .passage-unit")[1]?.textContent?.includes("الحالة: منشورة"));
+  const adminCalls=await admin.evaluate(()=>window.__calls);
+  assert(adminCalls.some(v=>v.name==="step_reading_admin"&&v.action==="create_passage"));
+  assert(adminCalls.some(v=>v.name==="step_reading_admin"&&v.action==="update_passage"));
+  assert(adminCalls.some(v=>v.name==="step_reading_admin"&&v.action==="add_question"));
+  assert(adminCalls.some(v=>v.name==="step_reading_admin"&&v.action==="publish_passage"));
   assert.deepEqual(adminErrors,[]);
   await admin.close();
   console.log("PASS passage-first STEP Reading student + owner UX "+width+"px");
