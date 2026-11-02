@@ -55,7 +55,7 @@ const course=slug=>{
 try{
  for(const width of [390,1280]){
   const page=await browser.newPage({viewport:{width,height:900}});
-  const errors=[],requested=new Set();
+  const errors=[],requested=new Set();let overviewRequests=0;
   page.on("pageerror",e=>errors.push(String(e)));
   await page.route("https://cdn.jsdelivr.net/npm/@supabase/**",r=>
    r.fulfill({contentType:"text/javascript",body:sdk}));
@@ -67,6 +67,13 @@ try{
     "/continuous/course":"present-continuous"};
    let body=null;
    if(endpoint==="/catalog")body=catalog;
+   else if(endpoint==="/overview"){
+    overviewRequests++;
+    await new Promise(done=>setTimeout(done,280));
+    body={lessons:catalog.indicators.filter(i=>!
+      ["subject-verb-agreement","present-simple","present-continuous"].includes(i.slug))
+      .map(i=>({slug:i.slug,data:course(i.slug)})),unavailable:0};
+   }
    else if(endpoint==="/followups")body={followups:[]};
    else if(special[endpoint])body=course(special[endpoint]);
    else{
@@ -87,7 +94,8 @@ try{
   await page.locator("#student-learning-path .student-course-tile").first().waitFor();
   assert.equal(await page.locator("#student-learning-path .student-course-tile").count(),45);
   assert.equal(await page.locator("#writing-analysis-lessons .student-course-tile").count(),8);
-  assert.equal(requested.size,50,"All 50 additional lessons require successful protected reads");
+  assert.equal(requested.size,0,"Successful authenticated overview must not fan out into 50 full lesson reads");
+  assert.equal(overviewRequests,1,"Only one protected overview request per dashboard load");
   assert.equal(await page.locator(".metrics .metric").first().locator("strong").innerText(),"53/263",
    "Student metrics account for 263 teaching stages across both published axes");
   assert.equal(await page.locator("#student-lessons-load-warning").count(),0);
@@ -103,7 +111,7 @@ try{
   assert(!(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+3)),
    "53-course page must not overflow at "+width+"px");
   assert.deepEqual(errors,[],"Browser errors "+width+": "+errors.join(", "));
-  console.log("PASS full STEP catalog "+width+"px: 45 Grammar, 8 Writing, 263 stages, 50 protected reads");
+  console.log("PASS full STEP catalog "+width+"px: 53 lessons / 263 stages with ONE protected bulk summary");
   await page.close();
  }
 }finally{
