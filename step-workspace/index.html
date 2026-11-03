@@ -158,7 +158,7 @@ async function initialize(){
   document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{message.innerHTML='';navigate(n.dataset.tab)});
   const deep=workspaceReadRoute();
   const requestedBatch=new URLSearchParams(location.search).get('batch');
-  if(deep)await navigate(deep.name,{...deep.args,history:false});
+  if(deep&&me.nav.some(v=>v.id===(deep.name==='batch'?'imports':deep.name)))await navigate(deep.name,{...deep.args,history:false});
   else if(requestedBatch&&/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(requestedBatch)&&me.permissions.can_enter)
    await navigate('batch',{id:requestedBatch,history:false});
   else await navigate('home',{history:false});
@@ -191,7 +191,8 @@ async function navigate(next,opts={}){
    if(opts.upload){const upload=document.getElementById('uploadPanel');if(upload)upload.open=true;}
   }else if(next==='users')await users(main);
   else if(next==='activity')await activity(main);
-  window.scrollTo(0,0);
+  if(opts.upload){const formPanel=document.getElementById('uploadPanel');if(formPanel)formPanel.scrollIntoView({behavior:'smooth',block:'start'});}
+  else window.scrollTo(0,0);
  }catch(err){
   main.innerHTML='<section class="panel"><h2>تعذر عرض البيانات</h2><p>'+esc(err.message)+'</p><button class="outline" id="retry">إعادة المحاولة</button></section>';
   const retry=document.getElementById('retry');if(retry)retry.onclick=()=>navigate(next,{...opts,history:false});
@@ -200,7 +201,7 @@ async function navigate(next,opts={}){
 window.addEventListener('popstate',()=>{
  if(!me)return;
  const route=workspaceReadRoute();
- if(route)navigate(route.name,{...route.args,history:false});
+ if(route&&me.nav.some(v=>v.id===(route.name==='batch'?'imports':route.name)))navigate(route.name,{...route.args,history:false});
  else navigate('home',{history:false});
 });
 async function home(main){
