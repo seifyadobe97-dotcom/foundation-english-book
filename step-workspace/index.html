@@ -88,7 +88,11 @@ async function initialize(){
  document.getElementById('logout').onclick=async()=>{await call('logout',{});message.innerHTML='';login()};
  document.getElementById('menu').innerHTML=me.nav.map(v=>'<button type="button" class="nav" data-tab="'+esc(v.id)+'">'+esc(v.label)+'</button>').join('');
  document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{message.innerHTML='';navigate(n.dataset.tab)});
- await navigate('home');
+ const requestedBatch=new URLSearchParams(location.search).get('batch');
+ if(requestedBatch&&/^[0-9a-f-]{36}$/i.test(requestedBatch)&&me.permissions.can_enter){
+  await navigate('imports');
+  try{await openImportBatch(document.getElementById('main'),requestedBatch,1)}catch(err){note(err.message,true)}
+ }else await navigate('home');
  }catch{login()}
 }
 async function navigate(next){
