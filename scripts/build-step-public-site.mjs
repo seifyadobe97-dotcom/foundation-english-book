@@ -11,7 +11,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const out=path.resolve(process.argv[2]||path.join(root,".step-public-release"));
 if(out===root||out===path.parse(out).root||!path.basename(out).includes("step-public"))throw new Error("Refusing unsafe build destination");
 const files=[".nojekyll","index.html","app.js","data.js","style.css","logo.svg","service-worker.js","manifest.webmanifest"];
-const dirs=["audio","step-brand","step-grammar-account-preview","step-grammar-admin","step-grammar-pilot","step-grammar-student"];
+const dirs=["audio","step-brand","step-grammar-account-preview","step-grammar-admin","step-grammar-pilot","step-grammar-student","step-workspace"];
 const forbidden=name=>/^foundation-sentence-elements(?:[-.]|$)/.test(name);
 await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});
 for(const file of files)await cp(path.join(root,file),path.join(out,file));
@@ -46,7 +46,7 @@ for(const blocked of ["supabase","curriculum","docs","tests","scripts",".github"
 }
 const names=(await readdir(path.join(out,"step-grammar-student"))).filter(forbidden);
 if(names.length)throw new Error("Blocked foundation files present: "+names.join(", "));
-for(const needed of ["step-grammar-student/index.html","step-grammar-student/learn.html","step-grammar-admin/index.html","index.html"]){
+for(const needed of ["step-grammar-student/index.html","step-grammar-student/learn.html","step-grammar-admin/index.html","step-workspace/index.html","index.html"]){
  const f=await stat(path.join(out,needed));if(!f.isFile())throw new Error("Missing public page "+needed);
 }
 process.stdout.write("PASS STEP release: foundation student route excluded; only allowlisted public files packaged into "+out+"\n");
