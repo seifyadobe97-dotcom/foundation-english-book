@@ -38,5 +38,12 @@
  A.score=(qs,answers)=>qs.reduce((n,q)=>n+(answers[q.id]===q.answer?1:0),0);
  A.allAnswered=(qs,answers)=>qs.length>0&&qs.every(q=>Number.isInteger(answers[q.id]));
  A.progressBar=n=>'<div class="progress-track"><span style="width:'+Math.max(0,Math.min(100,n))+'%"></span></div>';
+
+ A.questionHtml=(q,i,answers,context,review=false,showReason=true)=>{
+  const val=answers[q.id];
+  const options=q.options.map((opt,j)=>'<label class="answer '+(review?(j===q.answer?'correct':j===val?'incorrect':''):'')+'"><input data-answer-context="'+context+'" type="radio" name="'+A.esc(q.id)+'" value="'+j+'" '+(val===j?'checked':'')+' '+(review?'disabled':'')+'><b class="letter">'+["A","B","C","D"][j]+'</b><span class="english">'+A.esc(opt)+'</span></label>').join("");
+  return '<fieldset class="question-card" data-q="'+A.esc(q.id)+'"><legend><span class="kicker">سؤال '+(i+1)+' · '+A.esc(q.skill||q.axis)+'</span><span class="english" dir="ltr">'+A.esc(q.stem)+'</span></legend><div class="answers">'+options+'</div>'+(review&&showReason?'<p class="explanation"><b>الإجابة '+["A","B","C","D"][q.answer]+'</b> — '+A.esc(q.why)+'</p>':'')+'</fieldset>';
+ };
+ A.download=(obj,name)=>{const url=URL.createObjectURL(new Blob([JSON.stringify(obj,null,2)],{type:"application/json"}));const a=document.createElement("a");a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),600)};
  window.STEP_SHOWCASE_CORE=true;
 })();
