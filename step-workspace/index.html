@@ -334,7 +334,12 @@ async function importWorkspace(main){
      proposed_correct:['A','B','C','D'].includes(x.proposed_correct)?x.proposed_correct:null,
      source_answer_key:['A','B','C','D'].includes(x.proposed_correct)?x.proposed_correct:null,
      skill_tag:String(x.skill_tag||''),flags,source_reference:file.name+' PDF p'+(p||1)+' Q'+key,
-     origin_kind:'original',explanation_ar:null,wrong_reasons:{},status:'needs_review'});
+     origin_kind:'original',
+     explanation_ar:String(x.explanation_ar||'').slice(0,2500)||null,
+     wrong_reasons:x.wrong_reasons&&typeof x.wrong_reasons==='object'?x.wrong_reasons:{},
+     solution_basis:x.axis==='listening'?'needs_audio':String(x.solution_basis||'unreviewed'),
+     solution_evidence:String(x.solution_evidence||'').slice(0,1100),
+     status:'needs_review'});
    }
    if(!items.length)throw Error('لم يتم العثور على أسئلة واضحة؛ استخدم تصدير النص أو ChatGPT للمراجعة');
    if(items.length>80)throw Error('عدد الأسئلة أكبر من 80؛ قسم ملف PDF');
