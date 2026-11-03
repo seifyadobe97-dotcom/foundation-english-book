@@ -349,15 +349,15 @@ async function importWorkspace(main){
   }catch(e){progress.textContent=e.message;note(e.message,true)}finally{btn.disabled=false}
  };
 }
-async function openImportBatch(main,id,page=1,axis=''){
+async function openImportBatch(main,id,page=1,axis='',group=''){
  main.innerHTML='<section class="panel"><h2>جاري فتح الأسئلة والقطع…</h2><p class="muted">بنحمّل محتوى الدفعة من مساحة العمل.</p></section>';
  let data;
  try{
-  data=await call('import/items?batch_id='+encodeURIComponent(id)+'&page='+page+'&axis='+encodeURIComponent(axis));
+  data=await call('import/items?batch_id='+encodeURIComponent(id)+'&page='+page+'&axis='+encodeURIComponent(axis)+'&group='+encodeURIComponent(group));
   if(!data||!data.batch||!Array.isArray(data.items))throw Error('الاستجابة من الخادم غير مكتملة');
  }catch(err){
   main.innerHTML='<section class="panel"><h2>تعذر فتح الأسئلة</h2><p class="muted">'+esc(err.message||'حدث خطأ أثناء التحميل')+'</p><div class="actions"><button class="primary" id="retryImport">إعادة المحاولة</button><button class="outline" id="backToImports">العودة للملفات</button></div></section>';
-  document.getElementById('retryImport').onclick=()=>openImportBatch(main,id,page).catch(e=>note(e.message,true));
+  document.getElementById('retryImport').onclick=()=>openImportBatch(main,id,page,axis,group).catch(e=>note(e.message,true));
   document.getElementById('backToImports').onclick=()=>navigate('imports');
   throw err;
  }
@@ -368,6 +368,10 @@ async function openImportBatch(main,id,page=1,axis=''){
   +'<div class="actions">'+(page>1?'<button class="outline" id="prevImport">السابق</button>':'')+(data.items.length===25?'<button class="outline" id="nextImport">التالي</button>':'')+'<span class="tag">صفحة '+page+'</span></div>'
   +(data.batch.source_groups?.length?'<details class="item"><summary><strong>القطع الأصلية المرفقة ('+data.batch.source_groups.length+')</strong></summary>'+data.batch.source_groups.map(p=>'<details class="item"><summary>'+safeF(p.title)+' — صفحات '+(p.source_pages||[]).join(', ')+'</summary><div class="muted tiny" style="white-space:pre-wrap;direction:ltr;text-align:left">'+(p.source_text||[]).map(s=>'<p><b>PDF p'+safeF(s.page)+'</b> '+safeF(s.text)+'</p>').join('')+'</div></details>').join('')+'</details>':'')
   +'<div class="filter-bar">'+[['','الكل'],['grammar','Grammar'],['listening','Listening'],['reading-comprehension','Reading'],['writing-analysis','Writing Analysis']].map(v=>'<button type="button" class="outline filterAxis '+(axis===v[0]?'selected':'')+'" data-axis="'+v[0]+'">'+v[1]+' ('+(v[0]?(data.by_axis?.[v[0]]||0):data.batch.total_candidates)+')</button>').join('')+'</div>'
+  +(axis==='reading-comprehension'?
+   '<div class="filter-bar"><button type="button" class="outline filterGroup '+(!group?'selected':'')+'" data-group="">كل القطع ('+(data.by_axis?.['reading-comprehension']||0)+')</button>'
+   +(data.batch.source_groups||[]).map(p=>'<button type="button" class="outline filterGroup '+(group===p.id?'selected':'')+'" data-group="'+safeF(p.id)+'">'+safeF(p.title)+' ('+(data.by_group?.[p.id]||0)+')</button>').join('')+'</div>'
+   :'')
   +'<div id="candidateList">'+(data.items.length?data.items.map((q,i)=>importCandidate(q,i)).join(''):'<p>لا توجد أسئلة في هذا القسم.</p>')+'</div>'
   +'<div class="actions">'+(page>1?'<button class="outline" id="prevImport2">السابق</button>':'')+(data.items.length===25?'<button class="outline" id="nextImport2">التالي</button>':'')+'</div></section>';
  const setImportSuggestions=()=>{
@@ -399,9 +403,10 @@ async function openImportBatch(main,id,page=1,axis=''){
   finally{if(down.isConnected){down.disabled=false;down.textContent='تحميل الملف بالتصنيف والحلول'}}
  };
  document.querySelectorAll('.filterAxis').forEach(b=>b.onclick=()=>openImportBatch(main,id,1,b.dataset.axis));
+ document.querySelectorAll('.filterGroup').forEach(b=>b.onclick=()=>openImportBatch(main,id,1,'reading-comprehension',b.dataset.group));
  document.getElementById('backImport').onclick=()=>navigate('imports');
  for(const idBtn of ['prevImport','prevImport2','nextImport','nextImport2']){
-  const b=document.getElementById(idBtn);if(b)b.onclick=()=>openImportBatch(main,id,page+(idBtn.startsWith('prev')?-1:1),axis);
+  const b=document.getElementById(idBtn);if(b)b.onclick=()=>openImportBatch(main,id,page+(idBtn.startsWith('prev')?-1:1),axis,group);
  }
  main.querySelectorAll('.candidate').forEach(card=>{
   const q=data.items[Number(card.dataset.idx)],form=card.querySelector('form'),save=card.querySelector('.saveCandidate'),
@@ -417,8 +422,8 @@ async function openImportBatch(main,id,page=1,axis=''){
     review_note:String(fd.get('notes')||''),review_state:'ready'});
   }
   if(save)save.onclick=async()=>{save.disabled=true;try{await saveData();note('تم حفظ تعديل السؤال رقم '+q.source_number)}catch(e){note(e.message,true)}finally{save.disabled=false}};
-  if(send)send.onclick=async()=>{send.disabled=true;try{await saveData();await call('import/send',{id:q.id});await openImportBatch(main,id,page,axis);note('السؤال '+q.source_number+' دخل بنك مراجعة الأدمن، ولم يُنشر للطلاب')}catch(e){note(e.message,true);send.disabled=false}};
-  if(exclude)exclude.onclick=async()=>{if(!confirm('استبعاد هذا السؤال من الاستيراد؟'))return;try{await call('import/update',{id:q.id,review_state:'excluded'});await openImportBatch(main,id,page,axis);note('تم استبعاد السؤال')}catch(e){note(e.message,true)}};
+  if(send)send.onclick=async()=>{send.disabled=true;try{await saveData();await call('import/send',{id:q.id});await openImportBatch(main,id,page,axis,group);note('السؤال '+q.source_number+' دخل بنك مراجعة الأدمن، ولم يُنشر للطلاب')}catch(e){note(e.message,true);send.disabled=false}};
+  if(exclude)exclude.onclick=async()=>{if(!confirm('استبعاد هذا السؤال من الاستيراد؟'))return;try{await call('import/update',{id:q.id,review_state:'excluded'});await openImportBatch(main,id,page,axis,group);note('تم استبعاد السؤال')}catch(e){note(e.message,true)}};
  });
 }
 function importCandidate(q,i){
