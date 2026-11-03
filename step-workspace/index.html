@@ -191,7 +191,7 @@ async function navigate(next,opts={}){
    if(opts.upload){const upload=document.getElementById('uploadPanel');if(upload)upload.open=true;}
   }else if(next==='users')await users(main);
   else if(next==='activity')await activity(main);
-  window.scrollTo({top:0,behavior:'instant'});
+  window.scrollTo(0,0);
  }catch(err){
   main.innerHTML='<section class="panel"><h2>تعذر عرض البيانات</h2><p>'+esc(err.message)+'</p><button class="outline" id="retry">إعادة المحاولة</button></section>';
   const retry=document.getElementById('retry');if(retry)retry.onclick=()=>navigate(next,{...opts,history:false});
@@ -448,16 +448,24 @@ const downloadText=(file,pages)=>{
 async function importWorkspace(main){
  if(!me.permissions.can_enter)throw Error('هذه الصفحة للداتا إنتري وصاحب المنصة');
  const status=await call('import/status'),old=await call('import/batches');
- main.innerHTML='<section class="panel"><div class="kicker">DATA ENTRY · FILE IMPORT</div><h2>مركز استيراد وتصنيف ملفات STEP</h2>'
-  +'<p class="muted">ارفع الملف، راجع التصنيف، وبعدها كل سؤال يظهر منفصلًا. القطع مرتبطة بمجموعاتها، ومفيش أي نشر للطلاب من هنا.</p>'
-  +'<div class="item"><h3>1. ملف مصنّف من ChatGPT</h3><p class="muted tiny">الطريقة المتاحة الآن: ارفع ملف JSON الناتج من المحادثة بالصيغة الموحدة. حتى 80 سؤالًا في الدفعة.</p>'
-  +'<input type="file" id="classifiedJson" accept=".json,application/json"><div class="actions"><button class="primary" id="importJson">إضافة البنود إلى مسودات الاستيراد</button></div></div>'
-  +'<div class="item"><h3>2. تحليل PDF تلقائي</h3><p class="muted tiny">الملف يتحلل على جهازك، ولو مفتاح OpenAI API متضاف للمشروع يتم إرسال النص لاستخراج الأسئلة آليًا. أي نتيجة تظل محتاجة مراجعة.</p>'
+
+ main.innerHTML='<section class="panel"><div class="kicker">STEP WORKSPACE · FILES</div><h2>ملفات التجميعات والأسئلة</h2>'
+  +'<p class="muted">اختار ملف من الملفات الموجودة واضغط فتح، أو افتح «إضافة ملف جديد» لو هترفع تجميعات تانية.</p>'
+  +'<div class="head"><h3>ملفاتك الحالية</h3><span class="tag">'+old.batches.length+' ملف</span></div>'
+  +'<div id="importBatches">'+(old.batches.length?old.batches.map(v=>'<article class="item"><div class="head"><div><strong>'+safeF(v.source_name)+'</strong>'
+    +'<p class="muted tiny">'+safeF(v.total_candidates)+' سؤال · '+safeF(new Date(v.created_at).toLocaleString('ar-EG'))+'</p></div>'
+    +'<button type="button" class="primary openBatch" data-id="'+safeF(v.id)+'">فتح أسئلة الملف</button></div></article>').join('')
+    :'<div class="dashboard-empty">لسه مفيش ملفات مستوردة. افتح إضافة ملف جديد علشان تبدأ.</div>')+'</div>'
+  +'<details class="item" id="uploadPanel"><summary><strong>+ إضافة ملف جديد (JSON أو PDF)</strong></summary>'
+  +'<p class="muted tiny">الملفات المرفوعة بتتحفظ كمسودات للمراجعة؛ مفيش أي نشر تلقائي للطلاب.</p>'
+  +'<div class="item"><h3>استيراد ملف JSON مصنّف</h3><p class="muted tiny">ارفع ملف التصنيف الناتج من ChatGPT. الحد الأقصى 80 سؤال في الدفعة.</p>'
+  +'<input type="file" id="classifiedJson" accept=".json,application/json"><div class="actions"><button class="primary" id="importJson">استيراد الأسئلة كمسودات</button></div></div>'
+  +'<div class="item"><h3>تحليل PDF</h3><p class="muted tiny">التحليل المباشر يتطلب تفعيل OpenAI API. يمكنك استخراج نص الملف وإكمال تصنيفه في ChatGPT.</p>'
   +'<input type="file" id="importPdf" accept=".pdf,application/pdf">'
-  +'<div class="actions"><button class="primary" id="aiPdf" '+(status.ai_enabled?'':'disabled')+'>تصنيف PDF بالذكاء الاصطناعي</button><button class="outline" id="pdfText">استخراج النص لإرساله إلى ChatGPT</button></div>'
-  +'<p class="muted tiny">'+(status.ai_enabled?'التصنيف المباشر متاح بالمفتاح الحالي.':'التصنيف المباشر غير مفعّل حتى إضافة OPENAI_API_KEY في Supabase Secrets؛ استيراد JSON شغال.')+'</p></div>'
-  +'<div id="importProgress" class="notice" role="status">اختار ملف علشان تبدأ.</div>'
-  +'<h3>الدفعات اللي تم استيرادها</h3><div id="importBatches">'+(old.batches.length?old.batches.map(v=>'<article class="item"><div class="head"><strong>'+safeF(v.source_name)+'</strong><span class="tag">'+v.total_candidates+' سؤال</span></div><p class="muted tiny">'+safeF(new Date(v.created_at).toLocaleString('ar-EG'))+'</p><button class="outline openBatch" data-id="'+safeF(v.id)+'">فتح الأسئلة والقطع</button></article>').join(''):'<div class="stat muted">مافيش دفعات مستوردة لسه.</div>')+'</div></section>';
+  +'<div class="actions"><button class="primary" id="aiPdf" '+(status.ai_enabled?'':'disabled')+'>تصنيف PDF بالذكاء الاصطناعي</button>'
+  +'<button class="outline" id="pdfText">استخراج النص للتصنيف</button></div>'
+  +'<p class="muted tiny">'+(status.ai_enabled?'التصنيف المباشر متاح.':'التصنيف الآلي المباشر غير مفعّل الآن؛ استيراد JSON متاح.')+'</p></div>'
+  +'<div id="importProgress" class="notice" role="status">اختار ملف علشان تبدأ.</div></details></section>';
  const progress=document.getElementById('importProgress');
  document.querySelectorAll('.openBatch').forEach(b=>b.onclick=async()=>{
   if(b.disabled)return;
