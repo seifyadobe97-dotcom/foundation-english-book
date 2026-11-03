@@ -1,4 +1,4 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; connect-src https://funltjxavowlnnfibhpl.supabase.co; script-src &#39;unsafe-inline&#39;; style-src &#39;unsafe-inline&#39;; form-action &#39;self&#39;; base-uri &#39;none&#39;; object-src &#39;none&#39;"><meta name="referrer" content="no-referrer"><meta name="viewport" content="width=device-width,initial-scale=1"><title>STEP WITH SEIFY — مساحة العمل</title>
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; connect-src https://funltjxavowlnnfibhpl.supabase.co https://cdnjs.cloudflare.com; script-src &#39;unsafe-inline&#39; https://cdnjs.cloudflare.com; style-src &#39;unsafe-inline&#39;; worker-src blob: https://cdnjs.cloudflare.com; form-action &#39;self&#39;; base-uri &#39;none&#39;; object-src &#39;none&#39;"><meta name="referrer" content="no-referrer"><meta name="viewport" content="width=device-width,initial-scale=1"><title>STEP WITH SEIFY — مساحة العمل</title>
 <style>
 :root{font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;color:#142b3a;background:#f3f6f7}
 *{box-sizing:border-box}body{margin:0}button,input,textarea,select{font:inherit}button{cursor:pointer}
@@ -94,7 +94,7 @@ async function initialize(){
 async function navigate(next){
  tab=next;document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.tab===next));
  const main=document.getElementById('main');main.innerHTML='<section class="panel">جاري تحميل البيانات…</section>';
- try{if(next==='home')await home(main);else if(next==='new')await questionForm(main);else if(next==='my'||next==='review')await itemList(main,next==='review');else if(next==='users')await users(main);else if(next==='activity')await activity(main)}
+ try{if(next==='home')await home(main);else if(next==='new')await questionForm(main);else if(next==='my'||next==='review')await itemList(main,next==='review');else if(next==='imports')await importWorkspace(main);else if(next==='users')await users(main);else if(next==='activity')await activity(main)}
  catch(err){main.innerHTML='<section class="panel"><h2>تعذر عرض البيانات</h2><p>'+esc(err.message)+'</p><button class="outline" id="retry">إعادة المحاولة</button></section>';document.getElementById('retry').onclick=()=>navigate(next)}
 }
 async function home(main){
@@ -195,6 +195,162 @@ async function activity(main,page=1){
  const prev=document.getElementById('activityPrev'),next=document.getElementById('activityNext');
  if(prev)prev.onclick=()=>activity(main,page-1);
  if(next)next.onclick=()=>activity(main,page+1);
+}
+
+const importLabels={audio_missing_from_pdf:'الصوت الأصلي غير مرفق',missing_options:'اختيارات ناقصة',
+ unusable_until_missing_choices_supplied:'لا يصلح للحل قبل استكمال الاختيارات',review_source_completeness:'راجع اكتمال النص من المصدر',
+ check_pdf_text_order:'راجع ترتيب نص القطعة',requires_editor_review:'مراجعة القطعة مطلوبة'};
+const safeF=x=>esc(x==null?'':x);
+const fileJson=async file=>{
+ if(!file||file.size>2500000)throw Error('اختار ملف JSON أصغر من 2.5 ميجابايت');
+ let parsed;try{parsed=JSON.parse(await file.text())}catch{throw Error('صيغة JSON غير صحيحة')}
+ if(parsed.schema!=='step-classified-import/v1'||!Array.isArray(parsed.items))throw Error('الملف مش بصيغة STEP Classified Import v1');
+ return parsed;
+};
+async function classifyPDF(file,status){
+ if(file.size>10000000)throw Error('الملف أكبر من 10 ميجابايت، قسّمه أولًا');
+ const docmod=await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs');
+ docmod.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs';
+ status.textContent='بقرأ صفحات PDF على جهازك…';
+ const pdf=await docmod.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+ if(pdf.numPages>70)throw Error('قسّم الملف إلى دفعات أقل من 70 صفحة');
+ const pages=[];
+ for(let n=1;n<=pdf.numPages;n++){
+  const p=await pdf.getPage(n),content=await p.getTextContent();
+  const blocks=content.items.filter(x=>typeof x.str==='string'&&x.str.trim())
+   .map(x=>({y:Math.round(x.transform[5]),x:Math.round(x.transform[4]),text:x.str.trim()}))
+   .sort((a,b)=>b.y-a.y||a.x-b.x);
+  let lines=[],last=null;
+  for(const word of blocks){
+   if(!last||Math.abs(last.y-word.y)>3){last={y:word.y,parts:[]};lines.push(last)}
+   last.parts.push({x:word.x,t:word.text});
+  }
+  const text=lines.map(x=>'y'+x.y+': '+x.parts.sort((a,b)=>a.x-b.x).map(z=>z.t).join(' ')).join('\n');
+  pages.push({page:n,text:text.slice(0,9500)});
+  status.textContent='قراءة PDF: '+n+' / '+pdf.numPages;
+ }
+ return pages;
+}
+const downloadText=(file,pages)=>{
+ const content='Extracted from '+file.name+'\n\n'+pages.map(p=>'--- PAGE '+p.page+' ---\n'+p.text).join('\n\n');
+ const link=document.createElement('a'),url=URL.createObjectURL(new Blob([content],{type:'text/plain;charset=utf-8'}));
+ link.href=url;link.download=file.name.replace(/\.pdf$/i,'')+'-for-chatgpt.txt';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+async function importWorkspace(main){
+ if(!me.permissions.can_enter)throw Error('هذه الصفحة للداتا إنتري وصاحب المنصة');
+ const status=await call('import/status'),old=await call('import/batches');
+ main.innerHTML='<section class="panel"><div class="kicker">DATA ENTRY · FILE IMPORT</div><h2>مركز استيراد وتصنيف ملفات STEP</h2>'
+  +'<p class="muted">ارفع الملف، راجع التصنيف، وبعدها كل سؤال يظهر منفصلًا. القطع مرتبطة بمجموعاتها، ومفيش أي نشر للطلاب من هنا.</p>'
+  +'<div class="item"><h3>1. ملف مصنّف من ChatGPT</h3><p class="muted tiny">الطريقة المتاحة الآن: ارفع ملف JSON الناتج من المحادثة بالصيغة الموحدة. حتى 80 سؤالًا في الدفعة.</p>'
+  +'<input type="file" id="classifiedJson" accept=".json,application/json"><div class="actions"><button class="primary" id="importJson">إضافة البنود إلى مسودات الاستيراد</button></div></div>'
+  +'<div class="item"><h3>2. تحليل PDF تلقائي</h3><p class="muted tiny">الملف يتحلل على جهازك، ولو مفتاح OpenAI API متضاف للمشروع يتم إرسال النص لاستخراج الأسئلة آليًا. أي نتيجة تظل محتاجة مراجعة.</p>'
+  +'<input type="file" id="importPdf" accept=".pdf,application/pdf">'
+  +'<div class="actions"><button class="primary" id="aiPdf" '+(status.ai_enabled?'':'disabled')+'>تصنيف PDF بالذكاء الاصطناعي</button><button class="outline" id="pdfText">استخراج النص لإرساله إلى ChatGPT</button></div>'
+  +'<p class="muted tiny">'+(status.ai_enabled?'التصنيف المباشر متاح بالمفتاح الحالي.':'التصنيف المباشر غير مفعّل حتى إضافة OPENAI_API_KEY في Supabase Secrets؛ استيراد JSON شغال.')+'</p></div>'
+  +'<div id="importProgress" class="notice" role="status">اختار ملف علشان تبدأ.</div>'
+  +'<h3>الدفعات اللي تم استيرادها</h3><div id="importBatches">'+(old.batches.length?old.batches.map(v=>'<article class="item"><div class="head"><strong>'+safeF(v.source_name)+'</strong><span class="tag">'+v.total_candidates+' سؤال</span></div><p class="muted tiny">'+safeF(new Date(v.created_at).toLocaleString('ar-EG'))+'</p><button class="outline openBatch" data-id="'+safeF(v.id)+'">فتح الأسئلة والقطع</button></article>').join(''):'<div class="stat muted">مافيش دفعات مستوردة لسه.</div>')+'</div></section>';
+ const progress=document.getElementById('importProgress');
+ document.querySelectorAll('.openBatch').forEach(b=>b.onclick=()=>openImportBatch(main,b.dataset.id,1));
+ document.getElementById('importJson').onclick=async()=>{
+  const btn=document.getElementById('importJson'),file=document.getElementById('classifiedJson').files[0];
+  if(!file){progress.textContent='اختار ملف JSON أولًا';return}
+  btn.disabled=true;try{
+   const pack=await fileJson(file);progress.textContent='بحفظ '+pack.items.length+' سؤال…';
+   const out=await call('import/stage',pack);
+   await openImportBatch(main,out.batch_id,1);note('تم تسجيل '+out.candidates+' سؤالًا كمسودات خاصة؛ لا يوجد نشر تلقائي');
+  }catch(e){progress.textContent=e.message;note(e.message,true)}finally{btn.disabled=false}
+ };
+ document.getElementById('pdfText').onclick=async()=>{
+  const file=document.getElementById('importPdf').files[0];if(!file){progress.textContent='اختار PDF أولًا';return}
+  try{const pages=await classifyPDF(file,progress);downloadText(file,pages);progress.textContent='تم استخراج النص. ارفع ملف PDF الأصلي ومعاه النص في ChatGPT، واطلب STEP Classified Import v1.'}
+  catch(e){progress.textContent=e.message}
+ };
+ document.getElementById('aiPdf').onclick=async()=>{
+  const btn=document.getElementById('aiPdf'),file=document.getElementById('importPdf').files[0];
+  if(!file){progress.textContent='اختار PDF أولًا';return}
+  if(!confirm('سيُرسل النص المستخرج من PDF إلى OpenAI API للتصنيف. هل توافق؟'))return;
+  btn.disabled=true;
+  try{
+   const pages=await classifyPDF(file,progress),all=[];
+   const bytes=await file.arrayBuffer(),digest=await crypto.subtle.digest('SHA-256',bytes);
+   const hash=Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,'0')).join('');
+   for(let i=0;i<pages.length;i+=2){
+    progress.textContent='تصنيف صفحات '+(i+1)+' إلى '+Math.min(i+2,pages.length)+' من '+pages.length+'…';
+    const r=await call('import/ai',{pages:pages.slice(i,i+2)});
+    all.push(...(r.items||[]));
+   }
+   const seen=new Set(),items=[];
+   for(const x of all){
+    const n=Number(x.source_number),p=Number(x.source_page);
+    const key=Number.isInteger(n)&&n>0&&!seen.has(n)?n:p*1000+items.length+1;
+    if(seen.has(key))continue;seen.add(key);
+    if(!x.question||String(x.question).length<8)continue;
+    const options=Object.fromEntries(['A','B','C','D'].map(k=>[k,String(x.options?.[k]||'')]));
+    const flags=Array.isArray(x.flags)?x.flags.slice(0,20):[];
+    if(Object.values(options).some(v=>!v||/^[-—.\s]+$/.test(v)))flags.push('missing_options');
+    if(x.axis==='listening'&&!flags.includes('audio_missing_from_pdf'))flags.push('audio_missing_from_pdf');
+    items.push({source_number:key,source_page:p||1,axis:axes[x.axis]?x.axis:'reading-comprehension',
+     group:String(x.group||'unspecified').slice(0,100),question:String(x.question),options,
+     proposed_correct:['A','B','C','D'].includes(x.proposed_correct)?x.proposed_correct:null,
+     source_answer_key:['A','B','C','D'].includes(x.proposed_correct)?x.proposed_correct:null,
+     skill_tag:String(x.skill_tag||''),flags,source_reference:file.name+' PDF p'+(p||1)+' Q'+key,
+     origin_kind:'original',explanation_ar:null,wrong_reasons:{},status:'needs_review'});
+   }
+   if(!items.length)throw Error('لم يتم العثور على أسئلة واضحة؛ استخدم تصدير النص أو ChatGPT للمراجعة');
+   if(items.length>80)throw Error('عدد الأسئلة أكبر من 80؛ قسم ملف PDF');
+   const pack={schema:'step-classified-import/v1',source_file:file.name,source_date:'',source_sha256:hash,passages:[],items,import_method:'openai_api'};
+   const out=await call('import/stage',pack);
+   await openImportBatch(main,out.batch_id,1);note('تم تصنيف '+out.candidates+' سؤالًا آليًا كمسودات، راجعها جميعًا قبل التحويل');
+  }catch(e){progress.textContent=e.message;note(e.message,true)}finally{btn.disabled=false}
+ };
+}
+async function openImportBatch(main,id,page=1){
+ const data=await call('import/items?batch_id='+encodeURIComponent(id)+'&page='+page);
+ const groupById=Object.fromEntries((data.batch.source_groups||[]).map(p=>[p.id,p]));
+ main.innerHTML='<section class="panel"><div class="head"><div><div class="kicker">ملف مستورد · مراجعة بشرية</div><h2>'+safeF(data.batch.source_name)+'</h2></div><button class="outline" id="backImport">كل الملفات</button></div>'
+  +'<p class="muted">إجمالي '+data.batch.total_candidates+' سؤال. كل سؤال مسودة مستقلة لحد ما تكتمل الاختيارات والشرح وتتربط بالمنهج.</p>'
+  +'<div class="actions">'+(page>1?'<button class="outline" id="prevImport">السابق</button>':'')+(data.items.length===25?'<button class="outline" id="nextImport">التالي</button>':'')+'<span class="tag">صفحة '+page+'</span></div>'
+  +(data.batch.source_groups?.length?'<details class="item"><summary><strong>القطع الأصلية المرفقة ('+data.batch.source_groups.length+')</strong></summary>'+data.batch.source_groups.map(p=>'<details class="item"><summary>'+safeF(p.title)+' — صفحات '+(p.source_pages||[]).join(', ')+'</summary><div class="muted tiny" style="white-space:pre-wrap;direction:ltr;text-align:left">'+(p.source_text||[]).map(s=>'<p><b>PDF p'+safeF(s.page)+'</b> '+safeF(s.text)+'</p>').join('')+'</div></details>').join('')+'</details>':'')
+  +'<div id="candidateList">'+(data.items.length?data.items.map((q,i)=>importCandidate(q,i)).join(''):'<p>لا توجد أسئلة في هذه الصفحة.</p>')+'</div>'
+  +'<div class="actions">'+(page>1?'<button class="outline" id="prevImport2">السابق</button>':'')+(data.items.length===25?'<button class="outline" id="nextImport2">التالي</button>':'')+'</div></section>';
+ document.getElementById('backImport').onclick=()=>navigate('imports');
+ for(const idBtn of ['prevImport','prevImport2','nextImport','nextImport2']){
+  const b=document.getElementById(idBtn);if(b)b.onclick=()=>openImportBatch(main,id,page+(idBtn.startsWith('prev')?-1:1));
+ }
+ main.querySelectorAll('.candidate').forEach(card=>{
+  const q=data.items[Number(card.dataset.idx)],form=card.querySelector('form'),save=card.querySelector('.saveCandidate'),
+   send=card.querySelector('.sendCandidate'),exclude=card.querySelector('.excludeCandidate');
+  async function saveData(){
+   const fd=new FormData(form);
+   const opts=Object.fromEntries(['A','B','C','D'].map(k=>[k,String(fd.get('opt_'+k)||'')]));
+   const why=Object.fromEntries(['A','B','C','D'].map(k=>[k,String(fd.get('why_'+k)||'').trim()]).filter(v=>v[1]));
+   const answer=String(fd.get('answer')||'');
+   await call('import/update',{id:q.id,question_text:String(fd.get('question')||''),
+    options:opts,proposed_correct:answer||null,explanation_ar:String(fd.get('explanation')||''),
+    wrong_reasons:why,mapped_target_code:String(fd.get('target')||''),part_index:fd.get('part')===''?null:Number(fd.get('part')),
+    review_note:String(fd.get('notes')||''),review_state:'ready'});
+  }
+  if(save)save.onclick=async()=>{save.disabled=true;try{await saveData();note('تم حفظ تعديل السؤال رقم '+q.source_number)}catch(e){note(e.message,true)}finally{save.disabled=false}};
+  if(send)send.onclick=async()=>{send.disabled=true;try{await saveData();await call('import/send',{id:q.id});await openImportBatch(main,id,page);note('السؤال '+q.source_number+' دخل بنك مراجعة الأدمن، ولم يُنشر للطلاب')}catch(e){note(e.message,true);send.disabled=false}};
+  if(exclude)exclude.onclick=async()=>{if(!confirm('استبعاد هذا السؤال من الاستيراد؟'))return;try{await call('import/update',{id:q.id,review_state:'excluded'});await openImportBatch(main,id,page);note('تم استبعاد السؤال')}catch(e){note(e.message,true)}};
+ });
+}
+function importCandidate(q,i){
+ const flags=Array.isArray(q.flags)?q.flags:[];
+ return '<article class="item candidate" data-idx="'+i+'"><div class="head"><b>سؤال '+q.source_number+' · صفحة '+q.source_page+'</b><span class="tag">'+safeF(q.review_state==='sent'?'أُرسل للأدمن':q.review_state==='excluded'?'مستبعد':'يحتاج مراجعة')+'</span></div>'
+  +'<p class="muted tiny">'+safeF(axes[q.axis_code])+' · مجموعة: '+safeF(q.group_key)+' · مهارة: '+safeF(q.skill_tag)+'</p>'
+  +'<p class="item-q"><b>'+safeF(q.question_text)+'</b></p>'
+  +(flags.length?'<p class="notice err">'+flags.map(x=>safeF(importLabels[x]||x)).join(' · ')+'</p>':'')
+  +'<details '+(q.review_state==='sent'?'':'open')+'><summary>تحرير السؤال والمراجعة</summary><form>'
+  +'<label>نص السؤال</label><textarea class="english" name="question" required>'+safeF(q.question_text)+'</textarea>'
+  +'<div class="formgrid">'+['A','B','C','D'].map(k=>'<div><label>الاختيار '+k+'</label><textarea class="english" name="opt_'+k+'">'+safeF(q.options?.[k])+'</textarea></div>').join('')+'</div>'
+  +'<div class="formgrid"><div><label>الإجابة بعد التحقق من المصدر</label><select name="answer"><option value="">مفتاح غير مؤكد</option>'+['A','B','C','D'].map(k=>'<option value="'+k+'" '+(q.proposed_correct===k?'selected':'')+'>'+k+'</option>').join('')+'</select></div>'
+  +'<div><label>كود المهارة / القطعة / التسجيل</label><input name="target" value="'+safeF(q.mapped_target_code)+'" placeholder="اختاره بعد إعداد الدرس"></div><div><label>رقم الجزء (صفر للقواعد والاستماع)</label><input name="part" type="number" min="0" max="100" value="'+safeF(q.part_index)+'"></div>'
+  +'<div class="wide"><label>شرح الإجابة بالعربي (من مراجعة الداتا إنتري)</label><textarea name="explanation">'+safeF(q.explanation_ar)+'</textarea></div>'
+  +['A','B','C','D'].map(k=>'<div><label>سبب خطأ '+k+'</label><textarea name="why_'+k+'">'+safeF(q.wrong_reasons?.[k])+'</textarea></div>').join('')
+  +'<div class="wide"><label>ملاحظات التحرير</label><textarea name="notes">'+safeF(q.review_note)+'</textarea></div></div></form>'
+  +(q.review_state==='sent'?'<p class="notice">تم إرسال السؤال لبنك مراجعة الأدمن.</p>':'<div class="actions"><button type="button" class="outline saveCandidate">حفظ التعديلات</button><button type="button" class="primary sendCandidate">إرسال لبنك المراجعة</button><button type="button" class="outline danger excludeCandidate">استبعاد</button></div>')
+  +'<p class="muted tiny">مفتاح المصدر: '+safeF(q.source_answer||'غير موجود')+' · '+safeF(q.source_reference)+'</p></details></article>';
 }
 async function users(main){
  if(!me.owner)throw Error('صفحة المستخدمين مخصصة لصاحب المنصة');
