@@ -254,7 +254,14 @@ async function importWorkspace(main){
   +'<div id="importProgress" class="notice" role="status">اختار ملف علشان تبدأ.</div>'
   +'<h3>الدفعات اللي تم استيرادها</h3><div id="importBatches">'+(old.batches.length?old.batches.map(v=>'<article class="item"><div class="head"><strong>'+safeF(v.source_name)+'</strong><span class="tag">'+v.total_candidates+' سؤال</span></div><p class="muted tiny">'+safeF(new Date(v.created_at).toLocaleString('ar-EG'))+'</p><button class="outline openBatch" data-id="'+safeF(v.id)+'">فتح الأسئلة والقطع</button></article>').join(''):'<div class="stat muted">مافيش دفعات مستوردة لسه.</div>')+'</div></section>';
  const progress=document.getElementById('importProgress');
- document.querySelectorAll('.openBatch').forEach(b=>b.onclick=()=>openImportBatch(main,b.dataset.id,1));
+ document.querySelectorAll('.openBatch').forEach(b=>b.onclick=async()=>{
+  if(b.disabled)return;
+  const label=b.textContent;
+  b.disabled=true;b.textContent='جاري فتح الأسئلة والقطع…';
+  try{await openImportBatch(main,b.dataset.id,1)}
+  catch(err){note('تعذر فتح الدفعة: '+err.message,true)}
+  finally{if(b.isConnected){b.disabled=false;b.textContent=label}}
+ });
  document.getElementById('importJson').onclick=async()=>{
   const btn=document.getElementById('importJson'),file=document.getElementById('classifiedJson').files[0];
   if(!file){progress.textContent='اختار ملف JSON أولًا';return}
@@ -309,16 +316,38 @@ async function importWorkspace(main){
  };
 }
 async function openImportBatch(main,id,page=1){
- if(!catalog)catalog=await call('catalog');
- const data=await call('import/items?batch_id='+encodeURIComponent(id)+'&page='+page);
- 
+ main.innerHTML='<section class="panel"><h2>جاري فتح الأسئلة والقطع…</h2><p class="muted">بنحمّل محتوى الدفعة من مساحة العمل.</p></section>';
+ let data;
+ try{
+  data=await call('import/items?batch_id='+encodeURIComponent(id)+'&page='+page);
+  if(!data||!data.batch||!Array.isArray(data.items))throw Error('الاستجابة من الخادم غير مكتملة');
+ }catch(err){
+  main.innerHTML='<section class="panel"><h2>تعذر فتح الأسئلة</h2><p class="muted">'+esc(err.message||'حدث خطأ أثناء التحميل')+'</p><div class="actions"><button class="primary" id="retryImport">إعادة المحاولة</button><button class="outline" id="backToImports">العودة للملفات</button></div></section>';
+  document.getElementById('retryImport').onclick=()=>openImportBatch(main,id,page).catch(e=>note(e.message,true));
+  document.getElementById('backToImports').onclick=()=>navigate('imports');
+  throw err;
+ }
  main.innerHTML='<section class="panel"><div class="head"><div><div class="kicker">ملف مستورد · مراجعة بشرية</div><h2>'+safeF(data.batch.source_name)+'</h2></div><button class="outline" id="backImport">كل الملفات</button></div>'
   +'<p class="muted">إجمالي '+data.batch.total_candidates+' سؤال. كل سؤال مسودة مستقلة لحد ما تكتمل الاختيارات والشرح وتتربط بالمنهج.</p>'
-  +'<datalist id="importTargets">'+(catalog.skills||[]).map(v=>'<option value="'+safeF(v.slug)+'" label="'+safeF(axes[v.axis_code]+': '+v.title_ar)+'"></option>').join('')+(catalog.reading||[]).map(v=>'<option value="'+safeF(v.slug)+'" label="قراءة: '+safeF(v.title_ar)+'"></option>').join('')+(catalog.audio||[]).map(v=>'<option value="'+safeF(v.sample_code)+'" label="استماع: '+safeF(v.title_ar)+'"></option>').join('')+'</datalist>'
+  +'<p class="muted tiny" id="importCatalogHint">تحميل اقتراحات ربط الدروس اختياري؛ الأسئلة تفتح حتى لو فهرس المنهج غير متاح.</p><datalist id="importTargets"></datalist>'
   +'<div class="actions">'+(page>1?'<button class="outline" id="prevImport">السابق</button>':'')+(data.items.length===25?'<button class="outline" id="nextImport">التالي</button>':'')+'<span class="tag">صفحة '+page+'</span></div>'
   +(data.batch.source_groups?.length?'<details class="item"><summary><strong>القطع الأصلية المرفقة ('+data.batch.source_groups.length+')</strong></summary>'+data.batch.source_groups.map(p=>'<details class="item"><summary>'+safeF(p.title)+' — صفحات '+(p.source_pages||[]).join(', ')+'</summary><div class="muted tiny" style="white-space:pre-wrap;direction:ltr;text-align:left">'+(p.source_text||[]).map(s=>'<p><b>PDF p'+safeF(s.page)+'</b> '+safeF(s.text)+'</p>').join('')+'</div></details>').join('')+'</details>':'')
   +'<div id="candidateList">'+(data.items.length?data.items.map((q,i)=>importCandidate(q,i)).join(''):'<p>لا توجد أسئلة في هذه الصفحة.</p>')+'</div>'
   +'<div class="actions">'+(page>1?'<button class="outline" id="prevImport2">السابق</button>':'')+(data.items.length===25?'<button class="outline" id="nextImport2">التالي</button>':'')+'</div></section>';
+ const setImportSuggestions=()=>{
+  const el=document.getElementById('importTargets'),hint=document.getElementById('importCatalogHint');
+  if(!el||!main.contains(el)||!catalog)return;
+  const options=[...(catalog.skills||[]).map(v=>[v.slug,(axes[v.axis_code]||v.axis_code)+': '+v.title_ar]),
+   ...(catalog.reading||[]).map(v=>[v.slug,'قراءة: '+v.title_ar]),
+   ...(catalog.audio||[]).map(v=>[v.sample_code,'استماع: '+v.title_ar])];
+  el.innerHTML=options.map(v=>'<option value="'+safeF(v[0])+'" label="'+safeF(v[1])+'"></option>').join('');
+  if(hint)hint.textContent='يمكنك اختيار كود المهارة من اقتراحات المنهج أو كتابته يدويًا.';
+ };
+ if(catalog)setImportSuggestions();
+ else call('catalog').then(v=>{catalog=v;setImportSuggestions()}).catch(err=>{
+  const hint=document.getElementById('importCatalogHint');
+  if(hint&&main.contains(hint))hint.textContent='قائمة اقتراحات الدروس غير متاحة حاليًا؛ الأسئلة ظاهرة وتقدر تراجعها وتكتب كود الدرس يدويًا.';
+ });
  document.getElementById('backImport').onclick=()=>navigate('imports');
  for(const idBtn of ['prevImport','prevImport2','nextImport','nextImport2']){
   const b=document.getElementById(idBtn);if(b)b.onclick=()=>openImportBatch(main,id,page+(idBtn.startsWith('prev')?-1:1));
