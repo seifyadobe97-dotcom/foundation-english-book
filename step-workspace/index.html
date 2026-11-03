@@ -5,6 +5,18 @@
 .solution-summary p{margin:6px 0}
 .filter-bar{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}
 .filter-bar .selected{background:#e7f6f2;color:#126a65;border-color:#80c5b9}
+.quick-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px;margin:12px 0;border:1px solid #b9ddd4;background:#f1f9f6;border-radius:14px}
+.quick-bar strong{font-size:18px}
+.quick-bar p{margin:5px 0;font-size:12px;color:#55717b}
+.quick-status{font-size:12px;background:#e8f3f5;padding:4px 10px;border-radius:20px}
+.quick-ready{background:#e2f4e9;color:#126344}
+.quick-pending{background:#fff0e8;color:#995424}
+.quick-mini{color:#506b77;font-size:12px;margin:8px 0}
+.quick-steps{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0;color:#4e6877;font-size:13px}
+.quick-steps span{background:#f2f6f7;padding:7px 10px;border-radius:16px}
+.solution-summary>summary{cursor:pointer;font-weight:700;color:#176b65}
+#importProgress,#bulkProgress{word-break:break-word}
+@media(max-width:750px){.quick-bar{padding:11px}.quick-bar button{width:100%}}
 :root{font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;color:#142b3a;background:#f3f6f7}
 *{box-sizing:border-box}body{margin:0}button,input,textarea,select{font:inherit}button{cursor:pointer}
 button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #80c4b7;outline-offset:2px}
@@ -362,7 +374,11 @@ async function openImportBatch(main,id,page=1,axis='',group=''){
   throw err;
  }
  main.innerHTML='<section class="panel"><div class="head"><div><div class="kicker">ملف مستورد · مراجعة بشرية</div><h2>'+safeF(data.batch.source_name)+'</h2></div><button class="outline" id="backImport">كل الملفات</button></div>'
-  +'<p class="muted">إجمالي '+data.batch.total_candidates+' سؤال. كل سؤال مسودة مستقلة لحد ما تكتمل الاختيارات والشرح وتتربط بالمنهج.</p>'
+  +'<p class="muted">ابدأ باختيار القسم، وراجع البنود التي تحتاج استكمالًا. يمكنك إرسال الأسئلة المكتملة بضغطة واحدة لمراجعة الأدمن.</p>'
+  +'<div class="quick-steps"><span>1. تصنيف</span><span>2. تدقيق</span><span>3. إرسال للأدمن</span><span>4. اعتماد ومسودة فقط</span></div>'
+  +'<div class="quick-bar"><div><strong>'+data.items.filter(q=>importReadiness(q).ok).length+' سؤال جاهز في الصفحة</strong><p>الإرسال الجماعي للمكتمل فقط. لا اعتماد ولا نشر تلقائي.</p></div>'
+  +'<button type="button" class="primary" id="sendReadyBatch" '+(data.items.some(q=>importReadiness(q).ok)?'':'disabled')+'>إرسال المكتمل للأدمن</button></div>'
+  +'<p id="bulkProgress" class="muted tiny" role="status"></p>'
   +'<p class="muted tiny" id="importCatalogHint">تحميل اقتراحات ربط الدروس اختياري؛ الأسئلة تفتح حتى لو فهرس المنهج غير متاح.</p><datalist id="importTargets"></datalist>'
   +'<div class="actions"><button type="button" class="outline" id="downloadSolved">تحميل الملف بالتصنيف والحلول</button></div>'
   +'<div class="actions">'+(page>1?'<button class="outline" id="prevImport">السابق</button>':'')+(data.items.length===25?'<button class="outline" id="nextImport">التالي</button>':'')+'<span class="tag">صفحة '+page+'</span></div>'
@@ -389,6 +405,22 @@ async function openImportBatch(main,id,page=1,axis='',group=''){
   if(hint&&main.contains(hint))hint.textContent='قائمة اقتراحات الدروس غير متاحة حاليًا؛ الأسئلة ظاهرة وتقدر تراجعها وتكتب كود الدرس يدويًا.';
  });
 
+ const bulkButton=document.getElementById('sendReadyBatch');
+ if(bulkButton)bulkButton.onclick=async()=>{
+  const ready=data.items.filter(q=>importReadiness(q).ok);
+  if(!ready.length)return;
+  if(!confirm('إرسال '+ready.length+' سؤال مكتمل من الصفحة إلى مراجعة الأدمن؟ سيتم الاحتفاظ بباقي البنود للمراجعة، ولن يُنشر أي سؤال للطلاب.'))return;
+  bulkButton.disabled=true;
+  const progress=document.getElementById('bulkProgress');
+  let done=0;const failures=[];
+  for(const q of ready){
+   if(progress)progress.textContent='جارٍ إرسال السؤال '+q.source_number+' ('+(done+failures.length+1)+' / '+ready.length+')';
+   try{await call('import/send',{id:q.id});done++}
+   catch(err){failures.push('س'+q.source_number+': '+err.message)}
+  }
+  await openImportBatch(main,id,page,axis,group);
+  note('تم إرسال '+done+' سؤال للأدمن'+(failures.length?'، وتعذر إرسال '+failures.length+' سؤال: '+failures.join(' | '):'، ولم يُنشر شيء للطلاب'),!!failures.length);
+ };
  const down=document.getElementById('downloadSolved');
  if(down)down.onclick=async()=>{
   down.disabled=true;down.textContent='جاري تجهيز ملف الإجابات…';
@@ -426,16 +458,36 @@ async function openImportBatch(main,id,page=1,axis='',group=''){
   if(exclude)exclude.onclick=async()=>{if(!confirm('استبعاد هذا السؤال من الاستيراد؟'))return;try{await call('import/update',{id:q.id,review_state:'excluded'});await openImportBatch(main,id,page,axis,group);note('تم استبعاد السؤال')}catch(e){note(e.message,true)}};
  });
 }
+function importReadiness(q){
+ if(q.review_state==='sent'||q.review_state==='excluded')return {ok:false,why:'السؤال ليس في قائمة الإرسال'};
+ const f=Array.isArray(q.flags)?q.flags:[];
+ if(q.solution_basis==='needs_audio'||f.includes('audio_missing_from_pdf'))return {ok:false,why:'لازم التسجيل الصوتي الأصلي'};
+ if(q.solution_basis==='needs_full_source'||f.includes('passage_truncated')||f.includes('answer_not_fully_supported'))return {ok:false,why:'لازم النص الأصلي الكامل'};
+ if(!['grammar_rule','text_evidence'].includes(q.solution_basis))return {ok:false,why:'مفتاح الإجابة يحتاج تدقيقًا'};
+ if(f.some(x=>['semantic_context_weak','option_wording_overgeneralized','source_question_typo_lighting_vs_fighting','needs_precise_curriculum_mapping','check_pdf_text_order','check_inflation_passage_exact_support'].includes(x)))
+  return {ok:false,why:'مطلوب مراجعة صياغة أو تصنيف'};
+ if(['A','B','C','D'].some(k=>!String(q.options?.[k]||'').trim()||/^[-–—.\s]+$/.test(String(q.options?.[k]||''))))
+  return {ok:false,why:'اختيارات ناقصة'};
+ if(!['A','B','C','D'].includes(q.proposed_correct)||String(q.explanation_ar||'').trim().length<8)
+  return {ok:false,why:'راجع الحل والشرح'};
+ if(['grammar','writing-analysis'].includes(q.axis_code)&&['A','B','C','D'].some(k=>k!==q.proposed_correct&&String(q.wrong_reasons?.[k]||'').trim().length<8))
+  return {ok:false,why:'أسباب خطأ الاختيارات ناقصة'};
+ if(!q.mapped_target_code||!Number.isInteger(q.part_index))return {ok:false,why:'اربط السؤال بدرس أو قطعة وحدد الجزء'};
+ return {ok:true,why:'مكتمل مبدئيًا، ينتظر مراجعة الأدمن'};
+}
 function importCandidate(q,i){
  const flags=Array.isArray(q.flags)?q.flags:[];
- return '<article class="item candidate" data-idx="'+i+'"><div class="head"><b>سؤال '+q.source_number+' · صفحة '+q.source_page+'</b><span class="tag">'+safeF(q.review_state==='sent'?'أُرسل للأدمن':q.review_state==='excluded'?'مستبعد':'يحتاج مراجعة')+'</span></div>'
-  +'<p class="muted tiny">'+safeF(axes[q.axis_code])+' · مجموعة: '+safeF(q.group_key)+' · مهارة: '+safeF(q.skill_tag)+'</p>'
+ const readiness=importReadiness(q);
+ const stage=q.review_state==='sent'?'أُرسل للأدمن':q.review_state==='excluded'?'مستبعد':readiness.ok?'جاهز للإرسال':'يحتاج استكمال';
+ return '<article class="item candidate" data-idx="'+i+'"><div class="head"><b>سؤال '+q.source_number+' · صفحة '+q.source_page+'</b><span class="quick-status '+(readiness.ok?'quick-ready':'quick-pending')+'">'+safeF(stage)+'</span></div>'
+  +'<p class="quick-mini">'+safeF(axes[q.axis_code])+' · '+safeF(importSkillLabels[q.skill_tag]||q.skill_tag)+' · الإجابة: <strong>'+safeF(q.proposed_correct||'غير مؤكدة')+'</strong></p>'
   +'<p class="item-q english"><b>'+safeF(q.question_text)+'</b></p>'
-  +'<div class="solution-summary"><p><strong>'+safeF(solutionBasisLabels[q.solution_basis]||'مراجعة أولية')+'</strong> · المهارة: '+safeF(importSkillLabels[q.skill_tag]||q.skill_tag)+'</p>'
+  +'<p class="quick-mini">'+safeF(readiness.why)+'</p>'
+  +'<details class="solution-summary"><summary>شوف الحل الكامل ودليل الإجابة</summary><p><strong>'+safeF(solutionBasisLabels[q.solution_basis]||'مراجعة أولية')+'</strong></p>'
   +'<p><b>مفتاح الإجابة: '+safeF(q.proposed_correct||'غير محدد')+'</b> '+(q.solution_basis==='needs_audio'?'(غير مؤكد؛ التسجيل مفقود)':'')+'</p>'
   +'<p>'+safeF(q.explanation_ar||'الشرح لم يضف بعد')+'</p>'
   +(q.solution_evidence?'<p class="muted tiny">الدليل من المصدر: '+safeF(q.solution_evidence)+'</p>':'')
-  +(q.mapped_target_code?'<p class="muted tiny">مرتبط بدرس: '+safeF(q.mapped_target_code)+'</p>':'')+'</div>'
+  +(q.mapped_target_code?'<p class="muted tiny">مرتبط بدرس: '+safeF(q.mapped_target_code)+'</p>':'')+'</details>'
   +(flags.length?'<p class="notice err">'+flags.map(x=>safeF(importLabels[x]||x)).join(' · ')+'</p>':'')
   +'<details><summary>تعديل التفاصيل والاختيارات أو إرسال السؤال للمراجعة</summary><form>'
   +'<label>نص السؤال</label><textarea class="english" name="question" required>'+safeF(q.question_text)+'</textarea>'
