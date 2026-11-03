@@ -50,6 +50,7 @@ async function run(width,height){
  // Lesson: grammar with three correct answers.
  await page.locator('[data-module="grammar"]').click();
  await page.waitForURL(/#grammar/);
+ await page.locator('fieldset[data-q="g1"]').waitFor();
  assert.equal(await page.locator("fieldset.question-card").count(),3);
  for(const name of ["g1","g2","g3"])await page.locator('input[name="'+name+'"][value="1"]').check();
  await page.locator("#markAnswers").click();
@@ -57,6 +58,7 @@ async function run(width,height){
  // Lesson: source-independent reading text, four questions.
  await page.locator("#goBack").click();
  await page.locator('[data-module="reading"]').click();
+ await page.locator(".passage p").first().waitFor();
  assert.equal(await page.locator(".passage p").count(),4);
  for(const [name,v] of [["r1",1],["r2",2],["r3",1],["r4",0]])
    await page.locator('input[name="'+name+'"][value="'+v+'"]').check();
@@ -65,6 +67,7 @@ async function run(width,height){
  // Writing Analysis, three question rationales.
  await page.locator("#goBack").click();
  await page.locator('[data-module="writing"]').click();
+ await page.locator('fieldset[data-q="w1"]').waitFor();
  for(const [name,v] of [["w1",0],["w2",1],["w3",2]])
    await page.locator('input[name="'+name+'"][value="'+v+'"]').check();
  await page.locator("#markAnswers").click();
