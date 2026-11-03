@@ -305,10 +305,12 @@ async function importWorkspace(main){
  };
 }
 async function openImportBatch(main,id,page=1){
+ if(!catalog)catalog=await call('catalog');
  const data=await call('import/items?batch_id='+encodeURIComponent(id)+'&page='+page);
- const groupById=Object.fromEntries((data.batch.source_groups||[]).map(p=>[p.id,p]));
+ 
  main.innerHTML='<section class="panel"><div class="head"><div><div class="kicker">ملف مستورد · مراجعة بشرية</div><h2>'+safeF(data.batch.source_name)+'</h2></div><button class="outline" id="backImport">كل الملفات</button></div>'
   +'<p class="muted">إجمالي '+data.batch.total_candidates+' سؤال. كل سؤال مسودة مستقلة لحد ما تكتمل الاختيارات والشرح وتتربط بالمنهج.</p>'
+  +'<datalist id="importTargets">'+(catalog.skills||[]).map(v=>'<option value="'+safeF(v.slug)+'" label="'+safeF(axes[v.axis_code]+': '+v.title_ar)+'"></option>').join('')+(catalog.reading||[]).map(v=>'<option value="'+safeF(v.slug)+'" label="قراءة: '+safeF(v.title_ar)+'"></option>').join('')+(catalog.audio||[]).map(v=>'<option value="'+safeF(v.sample_code)+'" label="استماع: '+safeF(v.title_ar)+'"></option>').join('')+'</datalist>'
   +'<div class="actions">'+(page>1?'<button class="outline" id="prevImport">السابق</button>':'')+(data.items.length===25?'<button class="outline" id="nextImport">التالي</button>':'')+'<span class="tag">صفحة '+page+'</span></div>'
   +(data.batch.source_groups?.length?'<details class="item"><summary><strong>القطع الأصلية المرفقة ('+data.batch.source_groups.length+')</strong></summary>'+data.batch.source_groups.map(p=>'<details class="item"><summary>'+safeF(p.title)+' — صفحات '+(p.source_pages||[]).join(', ')+'</summary><div class="muted tiny" style="white-space:pre-wrap;direction:ltr;text-align:left">'+(p.source_text||[]).map(s=>'<p><b>PDF p'+safeF(s.page)+'</b> '+safeF(s.text)+'</p>').join('')+'</div></details>').join('')+'</details>':'')
   +'<div id="candidateList">'+(data.items.length?data.items.map((q,i)=>importCandidate(q,i)).join(''):'<p>لا توجد أسئلة في هذه الصفحة.</p>')+'</div>'
@@ -345,7 +347,7 @@ function importCandidate(q,i){
   +'<label>نص السؤال</label><textarea class="english" name="question" required>'+safeF(q.question_text)+'</textarea>'
   +'<div class="formgrid">'+['A','B','C','D'].map(k=>'<div><label>الاختيار '+k+'</label><textarea class="english" name="opt_'+k+'">'+safeF(q.options?.[k])+'</textarea></div>').join('')+'</div>'
   +'<div class="formgrid"><div><label>الإجابة بعد التحقق من المصدر</label><select name="answer"><option value="">مفتاح غير مؤكد</option>'+['A','B','C','D'].map(k=>'<option value="'+k+'" '+(q.proposed_correct===k?'selected':'')+'>'+k+'</option>').join('')+'</select></div>'
-  +'<div><label>كود المهارة / القطعة / التسجيل</label><input name="target" value="'+safeF(q.mapped_target_code)+'" placeholder="اختاره بعد إعداد الدرس"></div><div><label>رقم الجزء (صفر للقواعد والاستماع)</label><input name="part" type="number" min="0" max="100" value="'+safeF(q.part_index)+'"></div>'
+  +'<div><label>كود المهارة / القطعة / التسجيل</label><input name="target" list="importTargets" value="'+safeF(q.mapped_target_code)+'" placeholder="اختر كود المهارة من القائمة"></div><div><label>رقم الجزء (صفر للقواعد والاستماع)</label><input name="part" type="number" min="0" max="100" value="'+safeF(q.part_index)+'"></div>'
   +'<div class="wide"><label>شرح الإجابة بالعربي (من مراجعة الداتا إنتري)</label><textarea name="explanation">'+safeF(q.explanation_ar)+'</textarea></div>'
   +['A','B','C','D'].map(k=>'<div><label>سبب خطأ '+k+'</label><textarea name="why_'+k+'">'+safeF(q.wrong_reasons?.[k])+'</textarea></div>').join('')
   +'<div class="wide"><label>ملاحظات التحرير</label><textarea name="notes">'+safeF(q.review_note)+'</textarea></div></div></form>'
