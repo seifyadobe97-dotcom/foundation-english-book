@@ -1,0 +1,208 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; connect-src https://funltjxavowlnnfibhpl.supabase.co; script-src &#39;unsafe-inline&#39;; style-src &#39;unsafe-inline&#39;; form-action &#39;self&#39;; base-uri &#39;none&#39;; object-src &#39;none&#39;"><meta name="referrer" content="no-referrer"><meta name="viewport" content="width=device-width,initial-scale=1"><title>STEP WITH SEIFY — مساحة العمل</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;color:#142b3a;background:#f3f6f7}
+*{box-sizing:border-box}body{margin:0}button,input,textarea,select{font:inherit}button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #80c4b7;outline-offset:2px}
+.shell{max-width:1280px;margin:auto;padding:24px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0 24px}
+.logo{font-weight:900;font-size:21px;letter-spacing:.5px}.logo span{color:#147d77}.muted{color:#5f7180}.tiny{font-size:12px}
+.panel{background:white;border:1px solid #e0e8e9;border-radius:20px;padding:23px;box-shadow:0 8px 30px #15333a0a}
+.login{max-width:440px;margin:6vh auto}.login h1{font-size:26px}
+input,select,textarea{width:100%;padding:12px 13px;border:1px solid #cfdbdf;border-radius:11px;background:white;color:#152c3c;line-height:1.5}
+textarea{min-height:94px;resize:vertical}label{display:block;font-weight:650;font-size:13px;margin:12px 0 6px}
+.primary{background:#137e78;border:1px solid #137e78;color:white}.primary:hover{background:#0d6c67}
+.outline{background:white;border:1px solid #cfdcdf;color:#213e49}.outline:hover{background:#eef4f5}
+.danger{color:#a23535;border-color:#e5c5c5}
+button{padding:10px 15px;border-radius:11px;font-weight:700;transition:background .15s}
+button:disabled{opacity:.45;cursor:wait}
+.layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:20px}
+.sidebar{background:white;border:1px solid #e0e8e9;border-radius:19px;padding:13px;height:max-content}
+.nav{width:100%;display:block;text-align:right;border:none;background:transparent;color:#486271;margin:3px 0}
+.nav.active{background:#e7f6f2;color:#0c756e}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:13px}
+.stat{border:1px solid #e5ecec;border-radius:15px;padding:18px;background:#fbfdfd}
+.stat strong{display:block;font-size:28px;margin:6px 0}
+.kicker{font-size:12px;color:#6d818c}
+.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}
+.wide{grid-column:1/-1}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.item{border:1px solid #e1e9ea;border-radius:15px;padding:17px;margin:12px 0;background:#fff}
+.item h3{margin:8px 0;font-size:17px}.tag{font-size:12px;border-radius:40px;padding:4px 10px;display:inline-block;background:#eaf3f3;color:#356f74}
+.opt{margin:5px 0;background:#f5f8f9;border-radius:9px;padding:7px 10px}.good{background:#e7f5ee;color:#166f4d}
+#message{position:sticky;top:10px;z-index:3;margin-bottom:12px}
+.notice{padding:12px;border-radius:12px;background:#edf7f3;color:#145947;border:1px solid #b9e3d2}.err{background:#fff1ef;color:#8e3531;border-color:#f0c7bd}
+footer{padding:25px 0;text-align:center}
+@media(max-width:750px){.shell{padding:12px}.layout{grid-template-columns:1fr}.sidebar{display:flex;overflow-x:auto}.nav{white-space:nowrap;width:auto;padding:10px 12px}.panel{padding:17px}.formgrid{grid-template-columns:1fr}.top{padding-bottom:15px}}
+</style></head>
+<body><div class="shell"><header class="top"><div class="logo">STEP <span>WITH SEIFY</span><div class="muted tiny">منصة التدريب — مساحة العمل</div></div><div id="who" class="muted"></div></header><div id="message"></div><div id="root"></div><footer class="muted tiny">كل دور يعرض بياناته وصلاحياته فقط · اعتماد الأسئلة لا يعني نشرها تلقائيًا</footer></div>
+<script>
+(function(){
+'use strict';
+const endpoint='https://funltjxavowlnnfibhpl.supabase.co/functions/v1/step-workspace',root=document.getElementById('root'),message=document.getElementById('message'),who=document.getElementById('who');
+let me=null,items=[],catalog=null,tab='home',editing=null;
+const esc=x=>String(x??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const states={draft:'مسودة',pending_review:'قيد المراجعة',changes_requested:'مطلوب تعديل',approved:'معتمد',rejected:'مرفوض',transferred:'منقول للبنك'};
+const axes={grammar:'القواعد', 'writing-analysis':'التحليل الكتابي',listening:'الاستماع','reading-comprehension':'القراءة'};
+function note(txt,bad){message.innerHTML='<div class="notice'+(bad?' err':'')+'">'+esc(txt)+'</div>';window.scrollTo({top:0,behavior:'smooth'})}
+const tokenKey='step_workspace_session_v2';
+let session=null;
+try{session=JSON.parse(sessionStorage.getItem(tokenKey)||'null')}catch{sessionStorage.removeItem(tokenKey)}
+const saveSession=s=>{session=s;sessionStorage.setItem(tokenKey,JSON.stringify(s))};
+const forgetSession=()=>{session=null;sessionStorage.removeItem(tokenKey)};
+async function requestApi(path,data,token){
+ const headers=data===undefined?{}:{'Content-Type':'application/json'};
+ if(token)headers.Authorization='Bearer '+token;
+ const response=await fetch(endpoint+'/api/'+path,{method:data===undefined?'GET':'POST',headers,
+  body:data===undefined?undefined:JSON.stringify(data),mode:'cors',credentials:'omit',cache:'no-store'});
+ let result={};try{result=await response.json()}catch{}
+ if(!response.ok){const e=new Error(result.error||'تعذر تنفيذ الطلب');e.status=response.status;throw e}
+ return result;
+}
+async function call(path,data){
+ if(path==='login'){
+  const v=await requestApi(path,data);
+  if(!v.access_token||!v.refresh_token)throw Error('تعذر إنشاء جلسة دخول');
+  saveSession({access_token:v.access_token,refresh_token:v.refresh_token});
+  return {ok:true};
+ }
+ if(path==='logout'){forgetSession();return {ok:true}}
+ if(!session?.access_token)throw Error('يرجى تسجيل الدخول');
+ try{return await requestApi(path,data,session.access_token)}
+ catch(e){
+  if(e.status!==401||!session?.refresh_token)throw e;
+  try{
+   const r=await requestApi('refresh',{refresh_token:session.refresh_token});
+   if(!r.access_token||!r.refresh_token)throw Error('انتهت الجلسة');
+   saveSession({access_token:r.access_token,refresh_token:r.refresh_token});
+   return await requestApi(path,data,session.access_token);
+  }catch(err){forgetSession();throw err}
+ }
+}
+function login(){
+ me=null;who.textContent='';root.innerHTML='<section class="panel login"><div class="kicker">مساحة عمل مخصصة لكل مستخدم</div><h1>تسجيل الدخول</h1><p class="muted">ادخل بنفس حسابك في STEP. ستظهر لك الأدوات المسموحة لحسابك فقط.</p><form id="login"><label for="user">اسم المستخدم</label><input id="user" autocomplete="username" required><label for="password">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required><div class="actions"><button class="primary" type="submit">الدخول إلى مساحتي</button></div></form></section>';
+ document.getElementById('login').onsubmit=async e=>{e.preventDefault();const btn=e.target.querySelector('button');btn.disabled=true;try{await call('login',{username:document.getElementById('user').value,password:document.getElementById('password').value});message.innerHTML='';await initialize()}catch(err){note(err.message,true)}finally{btn.disabled=false}};
+}
+async function initialize(){
+ try{me=await call('me');who.innerHTML='<strong>'+esc(me.username)+'</strong> · '+esc(me.role==='admin'?'الأدمن':me.role==='data_entry'?'الداتا إنتري':'الطالب')+' <button id="logout" class="outline">خروج</button>';
+ root.innerHTML='<div class="layout"><aside class="sidebar" id="menu"></aside><main id="main"></main></div>';
+ document.getElementById('logout').onclick=async()=>{await call('logout',{});message.innerHTML='';login()};
+ document.getElementById('menu').innerHTML=me.nav.map(v=>'<button type="button" class="nav" data-tab="'+esc(v.id)+'">'+esc(v.label)+'</button>').join('');
+ document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{message.innerHTML='';navigate(n.dataset.tab)});
+ await navigate('home');
+ }catch{login()}
+}
+async function navigate(next){
+ tab=next;document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.tab===next));
+ const main=document.getElementById('main');main.innerHTML='<section class="panel">جاري تحميل البيانات…</section>';
+ try{if(next==='home')await home(main);else if(next==='new')await questionForm(main);else if(next==='my'||next==='review')await itemList(main,next==='review');else if(next==='users')await users(main);else if(next==='activity')await activity(main)}
+ catch(err){main.innerHTML='<section class="panel"><h2>تعذر عرض البيانات</h2><p>'+esc(err.message)+'</p><button class="outline" id="retry">إعادة المحاولة</button></section>';document.getElementById('retry').onclick=()=>navigate(next)}
+}
+async function home(main){
+ const d=await call('dashboard'),s=d.stats;
+ let cards;
+ if(me.role==='student'){
+  cards=[['المهارات المنشورة',s.skills],['تدريبات تم حلها',s.practice],['اختبارات تم حلها',s.exams],['اختبارات استماع مكتملة',s.listening],['تدريبات قراءة مكتملة',s.reading]];
+  const published=await call('student/catalog');
+  main.innerHTML='<section class="panel"><div class="kicker">مساحتك التعليمية</div><h1>أهلاً بك في STEP</h1><p class="muted">المنهج المتاح وتقدمك في مكان واحد. حل الدروس والاختبارات لسه من المنصة التعليمية الأساسية.</p><div class="grid">'+cards.map(x=>'<div class="stat"><span class="muted">'+esc(x[0])+'</span><strong>'+esc(x[1])+'</strong></div>').join('')+'</div><h2>مهارات المنهج المنشورة</h2>'+Object.entries(axes).map(([code,label])=>{const found=published.items.filter(x=>x.axis_code===code);return '<details class="item"><summary><b>'+esc(label)+'</b> <span class="tag">'+found.length+' مهارة</span></summary>'+(found.length?found.map(x=>'<div class="opt"><b>'+esc(x.title_ar)+'</b><p class="muted tiny">'+esc(x.description||'')+'</p></div>').join(''):'<p class="muted">المحتوى التفصيلي موجود بالمنصة الأساسية</p>')+'</details>'}).join('')+'</section>';return;
+ }
+ if(me.role==='admin'&&!me.owner){main.innerHTML='<section class="panel"><h1>لوحة المتابعة</h1><p class="muted">المراجعة وإدارة الحسابات للمدير فقط.</p><div class="grid">'+[['أسئلة تنتظر المراجعة',s.pending_review],['مسودات',s.draft],['أسئلة معتمدة',s.approved]].map(x=>'<div class="stat"><span>'+esc(x[0])+'</span><strong>'+esc(x[1])+'</strong></div>').join('')+'</div><button id="showBank" class="outline">عرض بنك الأسئلة</button></section>';document.getElementById('showBank').onclick=()=>navigate('my');return;}
+ cards=me.role==='admin'?[['الأسئلة الجديدة',s.pending_review],['الأسئلة المعتمدة',s.approved],['الداتا إنتري',s.contributors],['الحسابات المسجلة',s.users]]:[['مسوداتي',s.draft],['في انتظار المراجعة',s.pending_review],['مطلوب تعديل',s.changes_requested],['تم اعتمادها',s.approved]];
+ main.innerHTML='<section class="panel"><div class="kicker">'+esc(me.role==='admin'?'إدارة المنصة':'مساحة إدخال المحتوى')+'</div><h1>'+esc(me.role==='admin'?'نظرة عامة على العمل':'جاهز تضيف سؤال جديد؟')+'</h1><p class="muted">'+esc(me.role==='admin'?'راجع المحتوى، عيّن الداتا إنتري، وتابع مراحل اعتماد الأسئلة.':'احفظ سؤالك كمسودة، ثم أرسله للمراجعة. ملاحظات الأدمن هتظهر لك في أسئلتي.')+'</p><div class="grid">'+cards.map(x=>'<div class="stat"><span class="muted">'+esc(x[0])+'</span><strong>'+esc(x[1])+'</strong></div>').join('')+'</div><div class="actions"><button id="goNew" class="primary">إضافة سؤال</button>'+(me.role==='admin'?'<button id="goReview" class="outline">فتح قائمة المراجعة</button>':'<button id="goMy" class="outline">عرض أسئلتي</button>')+'</div></section>';
+ document.getElementById('goNew').onclick=()=>navigate('new');const shortcut=document.getElementById('goReview')||document.getElementById('goMy');shortcut.onclick=()=>navigate(me.role==='admin'?'review':'my');
+}
+async function questionForm(main){
+ if(!catalog)catalog=await call('catalog');
+ main.innerHTML='<section class="panel"><div class="head"><div><div class="kicker">بنك الأسئلة · نموذج آمن</div><h2 id="formTitle">إضافة سؤال جديد</h2></div><button id="clear" class="outline">سؤال جديد</button></div><form id="question"><div class="formgrid"><div><label>القسم</label><select name="axis_code" id="axis">'+Object.entries(axes).map(([k,v])=>'<option value="'+esc(k)+'">'+esc(v)+'</option>').join('')+'</select></div><div><label>المهارة / القطعة / التسجيل</label><input name="target_code" id="target" list="targets" required minlength="3"><datalist id="targets"></datalist></div><div><label>جزء الدرس</label><select name="part_index" id="part_index" required><option value="0">الجزء الأول</option></select></div><div><label>نوع المصدر</label><select name="origin_kind"><option value="authored">سؤال مؤلَّف</option><option value="simulated">سؤال محاكي</option><option value="original">سؤال أصلي مُصرَّح باستخدامه</option></select></div><div class="wide"><label>نص السؤال</label><textarea name="question_text" required minlength="10"></textarea></div>'+['A','B','C','D'].map(k=>'<div><label>الاختيار '+k+'</label><input name="option_'+k+'" required></div>').join('')+'<div><label>الإجابة الصحيحة</label><select name="proposed_correct">'+['A','B','C','D'].map(k=>'<option value="'+k+'">'+k+'</option>').join('')+'</select></div><div><label>المصدر الداخلي / المرجع</label><input name="source_reference" minlength="3" required></div><div class="wide"><label>شرح الإجابة بالعربي</label><textarea name="explanation_ar" minlength="8" required></textarea></div><div class="wide"><h3>ليه باقي الاختيارات غلط؟</h3><p class="muted tiny">مهم لكل سؤال قواعد أو تحليل كتابي قبل اعتماد الأدمن.</p></div>'+['A','B','C','D'].map(k=>'<div><label>سبب خطأ الاختيار '+k+' (اترك الصحيح فارغًا)</label><textarea name="wrong_'+k+'"></textarea></div>').join('')+'</div><p class="muted tiny">الطالب مش هيشوف ملاحظات المصدر أو مسودات الأسئلة. مراجعة الأدمن مطلوبة قبل الاعتماد، والاعتماد لا ينشر السؤال تلقائيًا.</p><div class="actions"><button class="primary" type="submit">حفظ المسودة</button><button class="outline" type="button" id="backMy">عرض بنك الأسئلة</button></div></form></section>';
+ const form=document.getElementById('question'),axis=document.getElementById('axis');
+ function sections(){
+  const current=document.getElementById('part_index'),last=current.value;
+  const selected=catalog.skills.find(v=>v.axis_code===axis.value&&v.slug===document.getElementById('target').value);
+  const bank=(catalog.courses||[]).find(v=>v.code===selected?.legacy_course_code);
+  const choices=bank?.sections?.length?bank.sections:[{index:0,title:'الجزء الأول / المقطع الحالي'}];
+  current.innerHTML=choices.map(p=>'<option value="'+esc(p.index)+'">'+esc(p.title)+'</option>').join('');
+  if(choices.some(x=>String(x.index)===last))current.value=last;
+ }
+ function targets(){
+  let x=[];
+  if(axis.value==='grammar'||axis.value==='writing-analysis')x=catalog.skills.filter(v=>v.axis_code===axis.value).map(v=>[v.slug,v.title_ar]);
+  else if(axis.value==='listening')x=catalog.audio.map(v=>[v.sample_code,v.title_ar]);
+  else x=catalog.reading.map(v=>[v.slug,v.title_ar]);
+  document.getElementById('targets').innerHTML=x.map(v=>'<option value="'+esc(v[0])+'" label="'+esc(v[1])+'"></option>').join('');
+  sections();
+ }
+ axis.onchange=()=>{document.getElementById('target').value='';targets();};
+ document.getElementById('target').addEventListener('input',sections);
+ targets();
+ document.getElementById('clear').onclick=()=>{editing=null;form.reset();document.getElementById('formTitle').textContent='إضافة سؤال جديد';targets()};
+ document.getElementById('backMy').onclick=()=>navigate('my');
+ if(editing){
+  document.getElementById('formTitle').textContent='تعديل مسودة السؤال';
+  const q=editing;editing=null;
+  for(const k of ['axis_code','target_code','origin_kind','question_text','proposed_correct','source_reference','explanation_ar'])form.elements.namedItem(k).value=q[k]??'';
+  for(const k of ['A','B','C','D']){form.elements.namedItem('option_'+k).value=q.options?.[k]??'';form.elements.namedItem('wrong_'+k).value=q.wrong_reasons?.[k]??'';}
+  form.dataset.id=q.id;targets();form.elements.namedItem('part_index').value=String(q.part_index??0);
+ }
+ form.onsubmit=async ev=>{
+  ev.preventDefault();const button=form.querySelector('[type=submit]');button.disabled=true;
+  try{
+   const f=new FormData(form),value={axis_code:f.get('axis_code'),target_code:f.get('target_code'),part_index:Number(f.get('part_index')),
+    origin_kind:f.get('origin_kind'),question_text:f.get('question_text'),proposed_correct:f.get('proposed_correct'),
+    source_reference:f.get('source_reference'),explanation_ar:f.get('explanation_ar'),options:{},wrong_reasons:{}};
+   for(const k of ['A','B','C','D']){value.options[k]=f.get('option_'+k);const why=String(f.get('wrong_'+k)||'').trim();if(why)value.wrong_reasons[k]=why;}
+   if(form.dataset.id)value.id=form.dataset.id;
+   await call('items/save',value);note('تم حفظ المسودة. تقدر تراجعها أو ترسلها للأدمن.');await navigate('my');
+  }catch(err){note(err.message,true)}finally{button.disabled=false}
+ };
+}
+async function itemList(main,review,page=1,status=''){
+ const query=new URLSearchParams({page:String(page)});if(review)query.set('status','pending_review');else if(status)query.set('status',status);
+ const r=await call('items?'+query.toString()),rows=r.items;
+ const filters=review?'':'<label for="stage">فلترة حسب الحالة</label><select id="stage"><option value="">كل الحالات</option>'+Object.entries(states).map(([k,v])=>'<option value="'+esc(k)+'" '+(status===k?'selected':'')+'>'+esc(v)+'</option>').join('')+'</select>';
+ const content=rows.map((q,i)=>{
+  const card=['<article class="item" data-i="'+i+'"><div class="head"><span class="tag">'+esc(states[q.status]||q.status)+'</span><span class="muted tiny">'+esc(axes[q.axis_code])+' · '+esc(q.target_code)+'</span></div><h3>'+esc(q.question_text)+'</h3>'];
+  for(const k of ['A','B','C','D'])card.push('<div class="opt '+(q.proposed_correct===k?'good':'')+'">'+k+' — '+esc(q.options?.[k])+(q.wrong_reasons?.[k]?'<p class="muted tiny">سبب الخطأ: '+esc(q.wrong_reasons[k])+'</p>':'')+'</div>');
+  card.push('<p class="muted tiny">الشرح: '+esc(q.explanation_ar)+'</p><p class="muted tiny">المصدر: '+esc(q.source_reference)+'</p>');
+  if(q.review_note)card.push('<p class="notice">'+esc(q.review_note)+'</p>');
+  if(q.transferred_question_id)card.push('<p class="muted tiny">معرّف المسودة: '+esc(q.transferred_question_id)+'</p>');
+  if(review)card.push('<label>ملاحظات المراجعة</label><textarea class="reviewNote"></textarea><div class="actions"><button class="primary reviewAction" data-decision="approved">اعتماد</button><button class="outline reviewAction" data-decision="changes_requested">طلب تعديل</button><button class="outline danger reviewAction" data-decision="rejected">رفض</button></div>');
+  else if(['draft','changes_requested'].includes(q.status)&&me.permissions.can_enter)card.push('<div class="actions"><button class="outline edit">تعديل</button><button class="primary submit">إرسال للمراجعة</button></div>');
+  else if(q.status==='approved'&&me.owner&&['grammar','writing-analysis'].includes(q.axis_code))card.push('<div class="actions"><button class="primary transfer">نقل لمحرر الدرس كمسودة</button></div>');
+  card.push('</article>');return card.join('');
+ }).join('');
+ main.innerHTML='<section class="panel"><div class="head"><h2>'+esc(review?'قائمة المراجعة':'بنك الأسئلة')+'</h2><span class="muted tiny">صفحة '+page+'</span></div><p class="muted">'+esc(review?'تأكد من توثيق السؤال وإجابته وأسباب خطأ الاختيارات.':'السؤال المعتمد يظل غير منشور حتى مراجعة محرر المنهج.')+'</p>'+filters+(content||'<div class="stat">لا توجد أسئلة في القائمة.</div>')+'<div class="actions">'+(page>1?'<button id="previous" class="outline">السابق</button>':'')+(rows.length===30?'<button id="next" class="outline">التالي</button>':'')+'</div></section>';
+ const stage=document.getElementById('stage');if(stage)stage.onchange=()=>itemList(main,false,1,stage.value);
+ const previous=document.getElementById('previous'),next=document.getElementById('next');
+ if(previous)previous.onclick=()=>itemList(main,review,page-1,status);
+ if(next)next.onclick=()=>itemList(main,review,page+1,status);
+ main.querySelectorAll('article[data-i]').forEach(article=>{
+  const q=rows[Number(article.dataset.i)];
+  const edit=article.querySelector('.edit'),submit=article.querySelector('.submit'),transfer=article.querySelector('.transfer');
+  if(edit)edit.onclick=()=>{editing=q;navigate('new')};
+  if(submit)submit.onclick=async()=>{submit.disabled=true;try{await call('items/submit',{id:q.id});await itemList(main,false,page,status);note('تم إرسال السؤال للمراجعة')}catch(e){note(e.message,true);submit.disabled=false}};
+  if(transfer)transfer.onclick=async()=>{if(!confirm('نقل السؤال لمسودة محرر الدرس دون نشر للطلاب؟'))return;transfer.disabled=true;try{const out=await call('owner/transfer',{id:q.id});await itemList(main,false,page,status);note('تم النقل لمسودة الدرس '+out.course+'، ومطلوب تدقيق المصدر قبل النشر')}catch(e){note(e.message,true);transfer.disabled=false}};
+  article.querySelectorAll('.reviewAction').forEach(b=>b.onclick=async()=>{b.disabled=true;try{await call('owner/review',{id:q.id,decision:b.dataset.decision,note:article.querySelector('.reviewNote').value});await itemList(main,true,page);note('تم تسجيل قرار المراجعة')}catch(e){note(e.message,true);b.disabled=false}});
+ });
+}
+async function activity(main,page=1){
+ if(!me.owner)throw Error('سجل النشاط خاص بصاحب المنصة');
+ const data=await call('owner/activity?page='+page);
+ const labels={contributor_grant:'إضافة داتا إنتري',contributor_revoke:'إلغاء صلاحية الداتا إنتري',
+  question_create:'إضافة سؤال',question_update:'تعديل سؤال',question_submit:'إرسال سؤال للمراجعة',
+  question_review:'قرار مراجعة سؤال',question_transfer:'نقل سؤال لمحرر الدروس'};
+ main.innerHTML='<section class="panel"><h2>سجل نشاط الفريق</h2><p class="muted">متابعة من أضاف الأسئلة وراجعها وحوّلها للمحرر. السجل خاص بصاحب المنصة.</p>'
+ +(data.items.length?data.items.map(x=>'<article class="item"><div class="head"><b>'+esc(labels[x.action]||x.action)+'</b><span class="tag">'+esc(x.username)+'</span></div><p class="muted tiny">'+esc(new Date(x.created_at).toLocaleString('ar-EG'))+'</p>'+(x.course?'<p class="muted tiny">الدرس: '+esc(x.course)+'</p>':'')+'</article>').join(''):'<div class="stat muted">لا يوجد نشاط مسجل حتى الآن.</div>')
+ +'<div class="actions">'+(page>1?'<button class="outline" id="activityPrev">السابق</button>':'')+(data.items.length===30?'<button class="outline" id="activityNext">التالي</button>':'')+'</div></section>';
+ const prev=document.getElementById('activityPrev'),next=document.getElementById('activityNext');
+ if(prev)prev.onclick=()=>activity(main,page-1);
+ if(next)next.onclick=()=>activity(main,page+1);
+}
+async function users(main){
+ if(!me.owner)throw Error('صفحة المستخدمين مخصصة لصاحب المنصة');
+ const r=await call('owner/contributors');
+ main.innerHTML='<section class="panel"><h2>إدارة حسابات الداتا إنتري</h2><p class="muted">اختر مستخدمًا مسجلاً بالفعل. المنح والسحب فوريان، ولن يحصل على بيانات الطلاب أو حق النشر.</p><form id="grant"><label>اسم المستخدم</label><input name="username" required pattern="[a-z][a-z0-9_]{2,23}" placeholder="اسم الحساب"><div class="actions"><button class="primary" name="action" value="grant">منح صلاحية الداتا إنتري</button><button class="outline danger" name="action" value="revoke">سحب الصلاحية</button></div></form><h3>الحسابات المصرح لها ('+r.contributors.length+')</h3><div id="contributors">'+(r.contributors.length?r.contributors.map(c=>'<div class="item"><b>'+esc(c.username)+'</b> <span class="tag">'+esc(c.active?'نشط':'موقوف')+'</span><button class="outline danger revoke" data-user="'+esc(c.username)+'">سحب الصلاحية</button></div>').join(''):'<p class="muted">لم تتم إضافة أي حساب داتا إنتري حتى الآن.</p>')+'</div></section>';
+ document.getElementById('grant').onsubmit=async e=>{e.preventDefault();const action=e.submitter?.value||'grant',username=new FormData(e.target).get('username');if(action==='revoke'&&!confirm('تأكيد سحب صلاحية الداتا إنتري؟'))return;try{await call('owner/'+action,{username});note('تم تحديث صلاحية '+username);await navigate('users')}catch(err){note(err.message,true)}};
+ main.querySelectorAll('.revoke').forEach(b=>b.onclick=async()=>{if(!confirm('سحب صلاحية '+b.dataset.user+'؟'))return;try{await call('owner/revoke',{username:b.dataset.user});note('تم سحب الصلاحية');await navigate('users')}catch(err){note(err.message,true)}});
+}
+initialize();
+})();
+</script></body></html>
