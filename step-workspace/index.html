@@ -5,6 +5,25 @@
 .solution-summary p{margin:6px 0}
 .filter-bar{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}
 .filter-bar .selected{background:#e7f6f2;color:#126a65;border-color:#80c5b9}
+.dashboard-hero{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.dashboard-hero h1{margin:5px 0 9px;font-size:26px}
+.dashboard-steps{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0 22px;color:#4c6873;font-size:12px}
+.dashboard-steps span{border-radius:20px;padding:7px 11px;background:#f0f6f7;border:1px solid #e2ebed}
+.dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:12px;margin:16px 0 23px}
+.dashboard-tile{display:flex;flex-direction:column;align-items:stretch;gap:7px;min-height:125px;padding:17px;text-align:right;border:1px solid #dbe8e9;border-radius:15px;background:#fbfdfd;color:#153c49;cursor:pointer}
+.dashboard-tile:hover,.dashboard-file:hover{background:#edf8f5;border-color:#66b9aa;transform:translateY(-1px)}
+.dashboard-tile:focus-visible,.dashboard-file:focus-visible{outline:3px solid #7fc4b5;outline-offset:2px}
+.dashboard-tile .number{font-size:29px;line-height:1.15;font-weight:850}
+.dashboard-tile .tile-label{font-weight:760;font-size:14px}
+.dashboard-tile .tile-hint{font-weight:400;color:#58717e;font-size:12px}
+.dashboard-actions{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0 22px}
+.dashboard-file{width:100%;text-align:right;background:white;color:#1d3d49;border:1px solid #dfe9ea;padding:15px 17px;border-radius:14px;cursor:pointer;margin:8px 0;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.dashboard-file strong{display:block;margin-bottom:6px}
+.dashboard-file .small{font-size:12px;color:#617784}
+.dashboard-file .file-detail{font-size:12px;color:#3c7b72;white-space:nowrap}
+.dashboard-empty{border:1px dashed #cbdcdd;padding:17px;border-radius:14px;color:#6b7e86}
+@media(max-width:750px){.dashboard-hero h1{font-size:23px}.dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-tile{padding:12px;min-height:120px}.dashboard-actions button{flex:1}.dashboard-file{align-items:flex-start}.dashboard-file .file-detail{white-space:normal}}
+
 .quick-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:15px;margin:12px 0;border:1px solid #b9ddd4;background:#f1f9f6;border-radius:14px}
 .quick-bar strong{font-size:18px}
 .quick-bar p{margin:5px 0;font-size:12px;color:#55717b}
@@ -99,25 +118,91 @@ function login(){
  me=null;who.textContent='';root.innerHTML='<section class="panel login"><div class="kicker">مساحة عمل مخصصة لكل مستخدم</div><h1>تسجيل الدخول</h1><p class="muted">ادخل بنفس حسابك في STEP. ستظهر لك الأدوات المسموحة لحسابك فقط.</p><form id="login"><label for="user">اسم المستخدم</label><input id="user" autocomplete="username" required><label for="password">كلمة المرور</label><input id="password" type="password" autocomplete="current-password" required><div class="actions"><button class="primary" type="submit">الدخول إلى مساحتي</button></div></form></section>';
  document.getElementById('login').onsubmit=async e=>{e.preventDefault();const btn=e.target.querySelector('button');btn.disabled=true;try{await call('login',{username:document.getElementById('user').value,password:document.getElementById('password').value});message.innerHTML='';await initialize()}catch(err){note(err.message,true)}finally{btn.disabled=false}};
 }
+
+function workspaceReadRoute(){
+ try{
+  const hash=location.hash.replace(/^#\/?/,'');
+  if(!hash)return null;
+  const cut=hash.indexOf('?'),path=(cut<0?hash:hash.slice(0,cut)).split('/').filter(Boolean);
+  const params=new URLSearchParams(cut<0?'':hash.slice(cut+1));
+  const status=params.get('status')||'';
+  if(path[0]==='batch'&&path.length===2&&/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(path[1])){
+   return {name:'batch',args:{id:path[1],axis:params.get('axis')||'',group:params.get('group')||'',page:Math.max(1,Math.min(100,Number(params.get('page'))||1))}};
+  }
+  if(path.length===1&&['home','imports','my','review','new','users','activity'].includes(path[0]))
+   return {name:path[0],args:{status:['approved','transferred','pending_review','changes_requested','rejected','draft'].includes(status)?status:'',upload:params.get('upload')==='1'}};
+ }catch(e){}
+ return null;
+}
+function workspaceWriteRoute(next,opts={}){
+ const args=new URLSearchParams();
+ let route='/'+next;
+ if(next==='batch'){
+  route='/batch/'+encodeURIComponent(opts.id||'');
+  if(opts.axis)args.set('axis',opts.axis);
+  if(opts.group)args.set('group',opts.group);
+  if(opts.page&&opts.page!==1)args.set('page',String(opts.page));
+ }
+ if(next==='my'&&opts.status)args.set('status',opts.status);
+ if(next==='imports'&&opts.upload)args.set('upload','1');
+ const path='#'+route+(String(args)?'?'+String(args):'');
+ if(location.hash!==path)history.pushState({},'',location.pathname+location.search+path);
+}
 async function initialize(){
- try{me=await call('me');who.innerHTML='<strong>'+esc(me.username)+'</strong> · '+esc(me.role==='admin'?'الأدمن':me.role==='data_entry'?'الداتا إنتري':'الطالب')+' <button id="logout" class="outline">خروج</button>';
- root.innerHTML='<div class="layout"><aside class="sidebar" id="menu"></aside><main id="main"></main></div>';
- document.getElementById('logout').onclick=async()=>{await call('logout',{});message.innerHTML='';login()};
- document.getElementById('menu').innerHTML=me.nav.map(v=>'<button type="button" class="nav" data-tab="'+esc(v.id)+'">'+esc(v.label)+'</button>').join('');
- document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{message.innerHTML='';navigate(n.dataset.tab)});
- const requestedBatch=new URLSearchParams(location.search).get('batch');
- if(requestedBatch&&/^[0-9a-f-]{36}$/i.test(requestedBatch)&&me.permissions.can_enter){
-  await navigate('imports');
-  try{await openImportBatch(document.getElementById('main'),requestedBatch,1)}catch(err){note(err.message,true)}
- }else await navigate('home');
- }catch{login()}
+ try{
+  me=await call('me');
+  who.innerHTML='<strong>'+esc(me.username)+'</strong> · '+esc(me.role==='admin'?'الأدمن':me.role==='data_entry'?'الداتا إنتري':'الطالب')+' <button id="logout" class="outline">خروج</button>';
+  root.innerHTML='<div class="layout"><aside class="sidebar" id="menu"></aside><main id="main"></main></div>';
+  document.getElementById('logout').onclick=async()=>{await call('logout',{});message.innerHTML='';login()};
+  document.getElementById('menu').innerHTML=me.nav.map(v=>'<button type="button" class="nav" data-tab="'+esc(v.id)+'">'+esc(v.label)+'</button>').join('');
+  document.querySelectorAll('.nav').forEach(n=>n.onclick=()=>{message.innerHTML='';navigate(n.dataset.tab)});
+  const deep=workspaceReadRoute();
+  const requestedBatch=new URLSearchParams(location.search).get('batch');
+  if(deep)await navigate(deep.name,{...deep.args,history:false});
+  else if(requestedBatch&&/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(requestedBatch)&&me.permissions.can_enter)
+   await navigate('batch',{id:requestedBatch,history:false});
+  else await navigate('home',{history:false});
+ }catch(err){
+  if(!me)login();
+  else{
+   const main=document.getElementById('main');
+   if(main)main.innerHTML='<section class="panel"><h2>تعذر فتح الصفحة</h2><p>'+esc(err.message||'خطأ في التحميل')+'</p><button id="recoverHome" class="primary">الرئيسية</button></section>';
+   const b=document.getElementById('recoverHome');if(b)b.onclick=()=>navigate('home');
+  }
+ }
 }
-async function navigate(next){
- tab=next;document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.tab===next));
- const main=document.getElementById('main');main.innerHTML='<section class="panel">جاري تحميل البيانات…</section>';
- try{if(next==='home')await home(main);else if(next==='new')await questionForm(main);else if(next==='my'||next==='review')await itemList(main,next==='review');else if(next==='imports')await importWorkspace(main);else if(next==='users')await users(main);else if(next==='activity')await activity(main)}
- catch(err){main.innerHTML='<section class="panel"><h2>تعذر عرض البيانات</h2><p>'+esc(err.message)+'</p><button class="outline" id="retry">إعادة المحاولة</button></section>';document.getElementById('retry').onclick=()=>navigate(next)}
+async function navigate(next,opts={}){
+ const selected=next==='batch'?'imports':next;
+ if(!me||!me.nav.some(v=>v.id===selected)){
+  note('القسم ده مش متاح لصلاحيات الحساب الحالي',true);return;
+ }
+ if(opts.history!==false)workspaceWriteRoute(next,opts);
+ tab=selected;
+ document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.tab===selected));
+ const main=document.getElementById('main');
+ main.innerHTML='<section class="panel">جاري تحميل البيانات…</section>';
+ try{
+  if(next==='batch')await openImportBatch(main,opts.id,opts.page||1,opts.axis||'',opts.group||'',true);
+  else if(next==='home')await home(main);
+  else if(next==='new')await questionForm(main);
+  else if(next==='my'||next==='review')await itemList(main,next==='review',1,opts.status||'');
+  else if(next==='imports'){
+   await importWorkspace(main);
+   if(opts.upload){const upload=document.getElementById('uploadPanel');if(upload)upload.open=true;}
+  }else if(next==='users')await users(main);
+  else if(next==='activity')await activity(main);
+  window.scrollTo({top:0,behavior:'instant'});
+ }catch(err){
+  main.innerHTML='<section class="panel"><h2>تعذر عرض البيانات</h2><p>'+esc(err.message)+'</p><button class="outline" id="retry">إعادة المحاولة</button></section>';
+  const retry=document.getElementById('retry');if(retry)retry.onclick=()=>navigate(next,{...opts,history:false});
+ }
 }
+window.addEventListener('popstate',()=>{
+ if(!me)return;
+ const route=workspaceReadRoute();
+ if(route)navigate(route.name,{...route.args,history:false});
+ else navigate('home',{history:false});
+});
 async function home(main){
  const d=await call('dashboard'),s=d.stats;
  let cards;
@@ -126,10 +211,62 @@ async function home(main){
   const published=await call('student/catalog');
   main.innerHTML='<section class="panel"><div class="kicker">مساحتك التعليمية</div><h1>أهلاً بك في STEP</h1><p class="muted">المنهج المتاح وتقدمك في مكان واحد. حل الدروس والاختبارات لسه من المنصة التعليمية الأساسية.</p><div class="grid">'+cards.map(x=>'<div class="stat"><span class="muted">'+esc(x[0])+'</span><strong>'+esc(x[1])+'</strong></div>').join('')+'</div><h2>مهارات المنهج المنشورة</h2>'+Object.entries(axes).map(([code,label])=>{const found=published.items.filter(x=>x.axis_code===code);return '<details class="item"><summary><b>'+esc(label)+'</b> <span class="tag">'+found.length+' مهارة</span></summary>'+(found.length?found.map(x=>'<div class="opt"><b>'+esc(x.title_ar)+'</b><p class="muted tiny">'+esc(x.description||'')+'</p></div>').join(''):'<p class="muted">المحتوى التفصيلي موجود بالمنصة الأساسية</p>')+'</details>'}).join('')+'</section>';return;
  }
+
+ if(me.owner||me.role==='data_entry'){await workflowHome(main,s);return;}
  if(me.role==='admin'&&!me.owner){main.innerHTML='<section class="panel"><h1>لوحة المتابعة</h1><p class="muted">المراجعة وإدارة الحسابات للمدير فقط.</p><div class="grid">'+[['أسئلة تنتظر المراجعة',s.pending_review],['مسودات',s.draft],['أسئلة معتمدة',s.approved]].map(x=>'<div class="stat"><span>'+esc(x[0])+'</span><strong>'+esc(x[1])+'</strong></div>').join('')+'</div><button id="showBank" class="outline">عرض بنك الأسئلة</button></section>';document.getElementById('showBank').onclick=()=>navigate('my');return;}
  cards=me.role==='admin'?[['الأسئلة الجديدة',s.pending_review],['الأسئلة المعتمدة',s.approved],['الداتا إنتري',s.contributors],['الحسابات المسجلة',s.users]]:[['مسوداتي',s.draft],['في انتظار المراجعة',s.pending_review],['مطلوب تعديل',s.changes_requested],['تم اعتمادها',s.approved]];
  main.innerHTML='<section class="panel"><div class="kicker">'+esc(me.role==='admin'?'إدارة المنصة':'مساحة إدخال المحتوى')+'</div><h1>'+esc(me.role==='admin'?'نظرة عامة على العمل':'جاهز تضيف سؤال جديد؟')+'</h1><p class="muted">'+esc(me.role==='admin'?'راجع المحتوى، عيّن الداتا إنتري، وتابع مراحل اعتماد الأسئلة.':'احفظ سؤالك كمسودة، ثم أرسله للمراجعة. ملاحظات الأدمن هتظهر لك في أسئلتي.')+'</p><div class="grid">'+cards.map(x=>'<div class="stat"><span class="muted">'+esc(x[0])+'</span><strong>'+esc(x[1])+'</strong></div>').join('')+'</div><div class="actions"><button id="goNew" class="primary">إضافة سؤال</button>'+(me.role==='admin'?'<button id="goReview" class="outline">فتح قائمة المراجعة</button>':'<button id="goMy" class="outline">عرض أسئلتي</button>')+'</div></section>';
  document.getElementById('goNew').onclick=()=>navigate('new');const shortcut=document.getElementById('goReview')||document.getElementById('goMy');shortcut.onclick=()=>navigate(me.role==='admin'?'review':'my');
+}
+
+async function workflowHome(main,intake){
+ let overview={stats:{batches:0,total:0,pending:0,sent:0,excluded:0,missing_audio:0,missing_source:0},batches:[]},loadError='';
+ try{overview=await call('workflow/overview')}catch(err){loadError=err.message}
+ const o=overview.stats||{},owner=!!me.owner;
+ const tiles=owner?[
+  {label:'ملفات التجميعات',value:o.batches||0,sub:'فتح الملفات الموجودة',route:'imports'},
+  {label:'أسئلة بانتظار التدقيق',value:o.pending||0,sub:'داخل ملفات الاستيراد',route:'imports'},
+  {label:'بانتظار مراجعة الأدمن',value:intake.pending_review||0,sub:'فتح قائمة المراجعة',route:'review'},
+  {label:'أسئلة معتمدة',value:intake.approved||0,sub:'جاهزة للنقل كمسودات',route:'my',status:'approved'},
+  {label:'انتقلت لمسودات الدروس',value:intake.transferred||0,sub:'عرض الأسئلة المنقولة',route:'my',status:'transferred'},
+  {label:'مطلوب تعديل',value:intake.changes_requested||0,sub:'فتح ملاحظات التعديل',route:'my',status:'changes_requested'}
+ ]:[
+  {label:'ملفاتي المستوردة',value:o.batches||0,sub:'فتح الملفات الموجودة',route:'imports'},
+  {label:'أسئلة تحتاج مراجعة',value:o.pending||0,sub:'داخل ملفات الاستيراد',route:'imports'},
+  {label:'مرسلة للأدمن',value:intake.pending_review||0,sub:'عرض أسئلتي المرسلة',route:'my',status:'pending_review'},
+  {label:'أسئلة معتمدة',value:intake.approved||0,sub:'عرض الأسئلة المعتمدة',route:'my',status:'approved'},
+  {label:'انتقلت لمسودات الدروس',value:intake.transferred||0,sub:'متابعة الأسئلة المنقولة',route:'my',status:'transferred'},
+  {label:'تحتاج تعديل',value:intake.changes_requested||0,sub:'فتح ملاحظات الأدمن',route:'my',status:'changes_requested'}
+ ];
+ const actions=[
+  {label:'فتح ملفات التجميعات',route:'imports',cls:'primary'},
+  {label:'إضافة ملف جديد',route:'imports',upload:'1',cls:'outline'},
+  {label:'إضافة سؤال يدويًا',route:'new',cls:'outline'},
+  owner?{label:'مراجعة الأدمن',route:'review',cls:'outline'}:{label:'متابعة أسئلتي',route:'my',cls:'outline'}
+ ];
+ main.innerHTML='<section class="panel">'
+  +'<div class="dashboard-hero"><div><div class="kicker">STEP WITH SEIFY · CONTENT WORKSPACE</div><h1>إدارة المحتوى</h1>'
+  +'<p class="muted">كل رقم وزر بيفتح قسمه مباشرة. هنا تتابع ملفات التجميعات وحالة الأسئلة من مكان واحد.</p></div>'
+  +'<button class="outline" id="refreshWorkflow">تحديث الأرقام</button></div>'
+  +'<div class="dashboard-steps"><span>1. ملف وتصنيف</span><span>2. تدقيق الأسئلة</span><span>3. مراجعة الأدمن</span><span>4. مسودة الدرس</span></div>'
+  +(loadError?'<p class="notice err">تعذر تحميل أرقام الملفات: '+esc(loadError)+' — باقي أزرار الأقسام متاحة.</p>':'')
+  +'<div class="dashboard-grid">'+tiles.map(t=>'<button type="button" class="dashboard-tile" data-dest="'+esc(t.route)+'" data-stage="'+esc(t.status||'')+'">'
+     +'<span class="number">'+esc(t.value)+'</span><span class="tile-label">'+esc(t.label)+'</span>'
+     +'<span class="tile-hint">'+esc(t.sub)+'</span></button>').join('')+'</div>'
+  +'<h2>تبدأ منين؟</h2><div class="dashboard-actions">'
+  +actions.map(t=>'<button type="button" class="'+esc(t.cls)+' dashboard-go" data-dest="'+esc(t.route)+'" data-upload="'+esc(t.upload||'')+'">'+esc(t.label)+'</button>').join('')
+  +'</div><div class="head"><h2>آخر ملفات التجميعات</h2><button type="button" class="outline dashboard-all">عرض كل الملفات</button></div>'
+  +(overview.batches?.length?overview.batches.map(b=>'<button type="button" class="dashboard-file" data-batch="'+esc(b.id)+'"><span><strong>'+esc(b.source_name)+'</strong>'
+     +'<span class="small">'+esc(b.total_candidates)+' سؤال · '+esc(b.pending||0)+' يحتاج تدقيق · '+esc(b.sent||0)+' أُرسل للأدمن</span></span>'
+     +'<span class="file-detail">فتح أسئلة الملف</span></button>').join('')
+    :'<div class="dashboard-empty">مافيش ملفات مستوردة ظاهرة لحسابك. اضغط «إضافة ملف جديد» للبدء.</div>')
+  +'<p class="muted tiny">الاعتماد لا يعني النشر للطلاب. البيانات هنا للمتابعة الداخلية فقط.</p></section>';
+ const refresh=document.getElementById('refreshWorkflow');
+ if(refresh)refresh.onclick=()=>navigate('home');
+ main.querySelectorAll('.dashboard-tile').forEach(b=>b.onclick=()=>navigate(b.dataset.dest,{status:b.dataset.stage||''}));
+ main.querySelectorAll('.dashboard-go').forEach(b=>b.onclick=()=>navigate(b.dataset.dest,{upload:b.dataset.upload==='1'}));
+ main.querySelectorAll('.dashboard-file').forEach(b=>b.onclick=()=>navigate('batch',{id:b.dataset.batch}));
+ const all=main.querySelector('.dashboard-all');if(all)all.onclick=()=>navigate('imports');
 }
 async function questionForm(main){
  if(!catalog)catalog=await call('catalog');
@@ -197,7 +334,7 @@ async function itemList(main,review,page=1,status=''){
   card.push('</article>');return card.join('');
  }).join('');
  main.innerHTML='<section class="panel"><div class="head"><h2>'+esc(review?'قائمة المراجعة':'بنك الأسئلة')+'</h2><span class="muted tiny">صفحة '+page+'</span></div><p class="muted">'+esc(review?'راجع صحة السؤال ومصدره أولًا. في القواعد يمكن اعتماد السؤال ونقله لمسودة الدرس في خطوة واحدة.':'السؤال المعتمد يظل غير منشور حتى مراجعة محرر المنهج.')+'</p>'+filters+(content||'<div class="stat">لا توجد أسئلة في القائمة.</div>')+'<div class="actions">'+(page>1?'<button id="previous" class="outline">السابق</button>':'')+(rows.length===30?'<button id="next" class="outline">التالي</button>':'')+'</div></section>';
- const stage=document.getElementById('stage');if(stage)stage.onchange=()=>itemList(main,false,1,stage.value);
+ const stage=document.getElementById('stage');if(stage)stage.onchange=()=>navigate('my',{status:stage.value});
  const previous=document.getElementById('previous'),next=document.getElementById('next');
  if(previous)previous.onclick=()=>itemList(main,review,page-1,status);
  if(next)next.onclick=()=>itemList(main,review,page+1,status);
@@ -388,7 +525,10 @@ async function importWorkspace(main){
   }catch(e){progress.textContent=e.message;note(e.message,true)}finally{btn.disabled=false}
  };
 }
-async function openImportBatch(main,id,page=1,axis='',group=''){
+async function openImportBatch(main,id,page=1,axis='',group='',skipRoute=false){
+ if(!me?.permissions.can_enter)throw Error('هذا الملف غير متاح لصلاحيات حسابك');
+ tab='imports';document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.tab==='imports'));
+ if(!skipRoute)workspaceWriteRoute('batch',{id,page,axis,group});
  main.innerHTML='<section class="panel"><h2>جاري فتح الأسئلة والقطع…</h2><p class="muted">بنحمّل محتوى الدفعة من مساحة العمل.</p></section>';
  let data;
  try{
