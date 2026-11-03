@@ -1,5 +1,10 @@
 <!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; connect-src https://funltjxavowlnnfibhpl.supabase.co https://cdnjs.cloudflare.com; script-src &#39;unsafe-inline&#39; https://cdnjs.cloudflare.com; style-src &#39;unsafe-inline&#39;; worker-src blob: https://cdnjs.cloudflare.com; form-action &#39;self&#39;; base-uri &#39;none&#39;; object-src &#39;none&#39;"><meta name="referrer" content="no-referrer"><meta name="viewport" content="width=device-width,initial-scale=1"><title>STEP WITH SEIFY — مساحة العمل</title>
 <style>
+.english{direction:ltr;text-align:left;unicode-bidi:plaintext}
+.solution-summary{padding:12px;margin-top:10px;border-radius:12px;background:#f1f8f5;border:1px solid #d7e8df}
+.solution-summary p{margin:6px 0}
+.filter-bar{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}
+.filter-bar .selected{background:#e7f6f2;color:#126a65;border-color:#80c5b9}
 :root{font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;color:#142b3a;background:#f3f6f7}
 *{box-sizing:border-box}body{margin:0}button,input,textarea,select{font:inherit}button{cursor:pointer}
 button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #80c4b7;outline-offset:2px}
@@ -201,6 +206,30 @@ async function activity(main,page=1){
  if(next)next.onclick=()=>activity(main,page+1);
 }
 
+const importSkillLabels={
+ 'modal-perfect-passive':'المبني للمجهول مع الاستنتاج في الماضي',
+ 'interrogative-whom-formal-object':'Whom في السؤال عن المفعول',
+ 'imperative-question-tags':'الأسئلة المذيلة بعد الأمر',
+ 'was-were-about-to-just-before-event':'كان على وشك فعل شيء',
+ 'negative-adverbial-inversion':'قلب ترتيب الجملة بعد النفي',
+ 'gerunds-after-enjoy':'Gerund بعد enjoy',
+ 'detail-and-evidence':'استخراج معلومة مباشرة',
+ 'main-idea':'الفكرة الرئيسية',
+ 'cause-and-effect':'السبب والنتيجة',
+ 'cross-text-comparison':'المقارنة بين نصين',
+ 'vocabulary-in-context':'المفردات من السياق',
+ 'author-attitude-opinion':'رأي الكاتب وموقفه',
+ 'inference-and-purpose':'الاستنتاج والغرض'
+};
+const solutionBasisLabels={
+ grammar_rule:'تم تحليل قاعدة الإجابة',
+ text_evidence:'الشرح مستند إلى النص',
+ needs_audio:'مفتاح تجميعات فقط — نحتاج الصوت',
+ needs_full_source:'نحتاج القطعة الأصلية كاملة',
+ key_disputed:'المفتاح محل مراجعة',
+ source_key_only:'مفتاح المصدر فقط',
+ unreviewed:'لم تتم المراجعة'
+};
 const importLabels={audio_missing_from_pdf:'الصوت الأصلي غير مرفق',missing_options:'اختيارات ناقصة',
  unusable_until_missing_choices_supplied:'لا يصلح للحل قبل استكمال الاختيارات',review_source_completeness:'راجع اكتمال النص من المصدر',
  check_pdf_text_order:'راجع ترتيب نص القطعة',requires_editor_review:'مراجعة القطعة مطلوبة'};
@@ -315,11 +344,11 @@ async function importWorkspace(main){
   }catch(e){progress.textContent=e.message;note(e.message,true)}finally{btn.disabled=false}
  };
 }
-async function openImportBatch(main,id,page=1){
+async function openImportBatch(main,id,page=1,axis=''){
  main.innerHTML='<section class="panel"><h2>جاري فتح الأسئلة والقطع…</h2><p class="muted">بنحمّل محتوى الدفعة من مساحة العمل.</p></section>';
  let data;
  try{
-  data=await call('import/items?batch_id='+encodeURIComponent(id)+'&page='+page);
+  data=await call('import/items?batch_id='+encodeURIComponent(id)+'&page='+page+'&axis='+encodeURIComponent(axis));
   if(!data||!data.batch||!Array.isArray(data.items))throw Error('الاستجابة من الخادم غير مكتملة');
  }catch(err){
   main.innerHTML='<section class="panel"><h2>تعذر فتح الأسئلة</h2><p class="muted">'+esc(err.message||'حدث خطأ أثناء التحميل')+'</p><div class="actions"><button class="primary" id="retryImport">إعادة المحاولة</button><button class="outline" id="backToImports">العودة للملفات</button></div></section>';
@@ -330,9 +359,11 @@ async function openImportBatch(main,id,page=1){
  main.innerHTML='<section class="panel"><div class="head"><div><div class="kicker">ملف مستورد · مراجعة بشرية</div><h2>'+safeF(data.batch.source_name)+'</h2></div><button class="outline" id="backImport">كل الملفات</button></div>'
   +'<p class="muted">إجمالي '+data.batch.total_candidates+' سؤال. كل سؤال مسودة مستقلة لحد ما تكتمل الاختيارات والشرح وتتربط بالمنهج.</p>'
   +'<p class="muted tiny" id="importCatalogHint">تحميل اقتراحات ربط الدروس اختياري؛ الأسئلة تفتح حتى لو فهرس المنهج غير متاح.</p><datalist id="importTargets"></datalist>'
+  +'<div class="actions"><button type="button" class="outline" id="downloadSolved">تحميل الملف بالتصنيف والحلول</button></div>'
   +'<div class="actions">'+(page>1?'<button class="outline" id="prevImport">السابق</button>':'')+(data.items.length===25?'<button class="outline" id="nextImport">التالي</button>':'')+'<span class="tag">صفحة '+page+'</span></div>'
   +(data.batch.source_groups?.length?'<details class="item"><summary><strong>القطع الأصلية المرفقة ('+data.batch.source_groups.length+')</strong></summary>'+data.batch.source_groups.map(p=>'<details class="item"><summary>'+safeF(p.title)+' — صفحات '+(p.source_pages||[]).join(', ')+'</summary><div class="muted tiny" style="white-space:pre-wrap;direction:ltr;text-align:left">'+(p.source_text||[]).map(s=>'<p><b>PDF p'+safeF(s.page)+'</b> '+safeF(s.text)+'</p>').join('')+'</div></details>').join('')+'</details>':'')
-  +'<div id="candidateList">'+(data.items.length?data.items.map((q,i)=>importCandidate(q,i)).join(''):'<p>لا توجد أسئلة في هذه الصفحة.</p>')+'</div>'
+  +'<div class="filter-bar">'+[['','الكل'],['grammar','Grammar'],['listening','Listening'],['reading-comprehension','Reading'],['writing-analysis','Writing Analysis']].map(v=>'<button type="button" class="outline filterAxis '+(axis===v[0]?'selected':'')+'" data-axis="'+v[0]+'">'+v[1]+' ('+(v[0]?(data.by_axis?.[v[0]]||0):data.batch.total_candidates)+')</button>').join('')+'</div>'
+  +'<div id="candidateList">'+(data.items.length?data.items.map((q,i)=>importCandidate(q,i)).join(''):'<p>لا توجد أسئلة في هذا القسم.</p>')+'</div>'
   +'<div class="actions">'+(page>1?'<button class="outline" id="prevImport2">السابق</button>':'')+(data.items.length===25?'<button class="outline" id="nextImport2">التالي</button>':'')+'</div></section>';
  const setImportSuggestions=()=>{
   const el=document.getElementById('importTargets'),hint=document.getElementById('importCatalogHint');
@@ -348,9 +379,24 @@ async function openImportBatch(main,id,page=1){
   const hint=document.getElementById('importCatalogHint');
   if(hint&&main.contains(hint))hint.textContent='قائمة اقتراحات الدروس غير متاحة حاليًا؛ الأسئلة ظاهرة وتقدر تراجعها وتكتب كود الدرس يدويًا.';
  });
+
+ const down=document.getElementById('downloadSolved');
+ if(down)down.onclick=async()=>{
+  down.disabled=true;down.textContent='جاري تجهيز ملف الإجابات…';
+  try{
+   const exportData=await call('import/export?batch_id='+encodeURIComponent(id));
+   const blob=new Blob([JSON.stringify(exportData,null,2)],{type:'application/json;charset=utf-8'});
+   const objectUrl=URL.createObjectURL(blob),link=document.createElement('a');
+   link.href=objectUrl;link.download='STEP_2026-11-02_Classified_Solved_Review.json';
+   document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(objectUrl),1000);
+   note('تم تجهيز ملف التصنيف والحلول. الاستماع ما زال يحتاج الملفات الصوتية.');
+  }catch(err){note('تعذر استخراج الملف: '+err.message,true)}
+  finally{if(down.isConnected){down.disabled=false;down.textContent='تحميل الملف بالتصنيف والحلول'}}
+ };
+ document.querySelectorAll('.filterAxis').forEach(b=>b.onclick=()=>openImportBatch(main,id,1,b.dataset.axis));
  document.getElementById('backImport').onclick=()=>navigate('imports');
  for(const idBtn of ['prevImport','prevImport2','nextImport','nextImport2']){
-  const b=document.getElementById(idBtn);if(b)b.onclick=()=>openImportBatch(main,id,page+(idBtn.startsWith('prev')?-1:1));
+  const b=document.getElementById(idBtn);if(b)b.onclick=()=>openImportBatch(main,id,page+(idBtn.startsWith('prev')?-1:1),axis);
  }
  main.querySelectorAll('.candidate').forEach(card=>{
   const q=data.items[Number(card.dataset.idx)],form=card.querySelector('form'),save=card.querySelector('.saveCandidate'),
@@ -366,17 +412,22 @@ async function openImportBatch(main,id,page=1){
     review_note:String(fd.get('notes')||''),review_state:'ready'});
   }
   if(save)save.onclick=async()=>{save.disabled=true;try{await saveData();note('تم حفظ تعديل السؤال رقم '+q.source_number)}catch(e){note(e.message,true)}finally{save.disabled=false}};
-  if(send)send.onclick=async()=>{send.disabled=true;try{await saveData();await call('import/send',{id:q.id});await openImportBatch(main,id,page);note('السؤال '+q.source_number+' دخل بنك مراجعة الأدمن، ولم يُنشر للطلاب')}catch(e){note(e.message,true);send.disabled=false}};
-  if(exclude)exclude.onclick=async()=>{if(!confirm('استبعاد هذا السؤال من الاستيراد؟'))return;try{await call('import/update',{id:q.id,review_state:'excluded'});await openImportBatch(main,id,page);note('تم استبعاد السؤال')}catch(e){note(e.message,true)}};
+  if(send)send.onclick=async()=>{send.disabled=true;try{await saveData();await call('import/send',{id:q.id});await openImportBatch(main,id,page,axis);note('السؤال '+q.source_number+' دخل بنك مراجعة الأدمن، ولم يُنشر للطلاب')}catch(e){note(e.message,true);send.disabled=false}};
+  if(exclude)exclude.onclick=async()=>{if(!confirm('استبعاد هذا السؤال من الاستيراد؟'))return;try{await call('import/update',{id:q.id,review_state:'excluded'});await openImportBatch(main,id,page,axis);note('تم استبعاد السؤال')}catch(e){note(e.message,true)}};
  });
 }
 function importCandidate(q,i){
  const flags=Array.isArray(q.flags)?q.flags:[];
  return '<article class="item candidate" data-idx="'+i+'"><div class="head"><b>سؤال '+q.source_number+' · صفحة '+q.source_page+'</b><span class="tag">'+safeF(q.review_state==='sent'?'أُرسل للأدمن':q.review_state==='excluded'?'مستبعد':'يحتاج مراجعة')+'</span></div>'
   +'<p class="muted tiny">'+safeF(axes[q.axis_code])+' · مجموعة: '+safeF(q.group_key)+' · مهارة: '+safeF(q.skill_tag)+'</p>'
-  +'<p class="item-q"><b>'+safeF(q.question_text)+'</b></p>'
+  +'<p class="item-q english"><b>'+safeF(q.question_text)+'</b></p>'
+  +'<div class="solution-summary"><p><strong>'+safeF(solutionBasisLabels[q.solution_basis]||'مراجعة أولية')+'</strong> · المهارة: '+safeF(importSkillLabels[q.skill_tag]||q.skill_tag)+'</p>'
+  +'<p><b>مفتاح الإجابة: '+safeF(q.proposed_correct||'غير محدد')+'</b> '+(q.solution_basis==='needs_audio'?'(غير مؤكد؛ التسجيل مفقود)':'')+'</p>'
+  +'<p>'+safeF(q.explanation_ar||'الشرح لم يضف بعد')+'</p>'
+  +(q.solution_evidence?'<p class="muted tiny">الدليل من المصدر: '+safeF(q.solution_evidence)+'</p>':'')
+  +(q.mapped_target_code?'<p class="muted tiny">مرتبط بدرس: '+safeF(q.mapped_target_code)+'</p>':'')+'</div>'
   +(flags.length?'<p class="notice err">'+flags.map(x=>safeF(importLabels[x]||x)).join(' · ')+'</p>':'')
-  +'<details '+(q.review_state==='sent'?'':'open')+'><summary>تحرير السؤال والمراجعة</summary><form>'
+  +'<details><summary>تعديل التفاصيل والاختيارات أو إرسال السؤال للمراجعة</summary><form>'
   +'<label>نص السؤال</label><textarea class="english" name="question" required>'+safeF(q.question_text)+'</textarea>'
   +'<div class="formgrid">'+['A','B','C','D'].map(k=>'<div><label>الاختيار '+k+'</label><textarea class="english" name="opt_'+k+'">'+safeF(q.options?.[k])+'</textarea></div>').join('')+'</div>'
   +'<div class="formgrid"><div><label>الإجابة بعد التحقق من المصدر</label><select name="answer"><option value="">مفتاح غير مؤكد</option>'+['A','B','C','D'].map(k=>'<option value="'+k+'" '+(q.proposed_correct===k?'selected':'')+'>'+k+'</option>').join('')+'</select></div>'
