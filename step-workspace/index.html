@@ -185,12 +185,18 @@ async function itemList(main,review,page=1,status=''){
   card.push('<p class="muted tiny">الشرح: '+esc(q.explanation_ar)+'</p><p class="muted tiny">المصدر: '+esc(q.source_reference)+'</p>');
   if(q.review_note)card.push('<p class="notice">'+esc(q.review_note)+'</p>');
   if(q.transferred_question_id)card.push('<p class="muted tiny">معرّف المسودة: '+esc(q.transferred_question_id)+'</p>');
-  if(review)card.push('<label>ملاحظات المراجعة</label><textarea class="reviewNote"></textarea><div class="actions"><button class="primary reviewAction" data-decision="approved">اعتماد</button><button class="outline reviewAction" data-decision="changes_requested">طلب تعديل</button><button class="outline danger reviewAction" data-decision="rejected">رفض</button></div>');
+  if(review)card.push('<label>ملاحظات المراجعة</label><textarea class="reviewNote" placeholder="وضح سبب التعديل أو الرفض"></textarea><div class="actions">'
+  +(me.owner&&['grammar','writing-analysis'].includes(q.axis_code)?'<button class="primary reviewAction" data-decision="approved_transfer">اعتماد ونقل كمسودة</button>':'')
+  +'<button class="outline reviewAction" data-decision="approved">اعتماد فقط</button>'
+  +'<button class="outline reviewAction" data-decision="changes_requested">طلب تعديل</button>'
+  +'<button class="outline danger reviewAction" data-decision="rejected">رفض</button></div>'
+  +(me.owner&&['grammar','writing-analysis'].includes(q.axis_code)?'<p class="muted tiny">اعتماد ونقل كمسودة لا ينشر السؤال للطلاب.</p>':'')
+  );
   else if(['draft','changes_requested'].includes(q.status)&&me.permissions.can_enter)card.push('<div class="actions"><button class="outline edit">تعديل</button><button class="primary submit">إرسال للمراجعة</button></div>');
   else if(q.status==='approved'&&me.owner&&['grammar','writing-analysis'].includes(q.axis_code))card.push('<div class="actions"><button class="primary transfer">نقل لمحرر الدرس كمسودة</button></div>');
   card.push('</article>');return card.join('');
  }).join('');
- main.innerHTML='<section class="panel"><div class="head"><h2>'+esc(review?'قائمة المراجعة':'بنك الأسئلة')+'</h2><span class="muted tiny">صفحة '+page+'</span></div><p class="muted">'+esc(review?'تأكد من توثيق السؤال وإجابته وأسباب خطأ الاختيارات.':'السؤال المعتمد يظل غير منشور حتى مراجعة محرر المنهج.')+'</p>'+filters+(content||'<div class="stat">لا توجد أسئلة في القائمة.</div>')+'<div class="actions">'+(page>1?'<button id="previous" class="outline">السابق</button>':'')+(rows.length===30?'<button id="next" class="outline">التالي</button>':'')+'</div></section>';
+ main.innerHTML='<section class="panel"><div class="head"><h2>'+esc(review?'قائمة المراجعة':'بنك الأسئلة')+'</h2><span class="muted tiny">صفحة '+page+'</span></div><p class="muted">'+esc(review?'راجع صحة السؤال ومصدره أولًا. في القواعد يمكن اعتماد السؤال ونقله لمسودة الدرس في خطوة واحدة.':'السؤال المعتمد يظل غير منشور حتى مراجعة محرر المنهج.')+'</p>'+filters+(content||'<div class="stat">لا توجد أسئلة في القائمة.</div>')+'<div class="actions">'+(page>1?'<button id="previous" class="outline">السابق</button>':'')+(rows.length===30?'<button id="next" class="outline">التالي</button>':'')+'</div></section>';
  const stage=document.getElementById('stage');if(stage)stage.onchange=()=>itemList(main,false,1,stage.value);
  const previous=document.getElementById('previous'),next=document.getElementById('next');
  if(previous)previous.onclick=()=>itemList(main,review,page-1,status);
@@ -201,7 +207,28 @@ async function itemList(main,review,page=1,status=''){
   if(edit)edit.onclick=()=>{editing=q;navigate('new')};
   if(submit)submit.onclick=async()=>{submit.disabled=true;try{await call('items/submit',{id:q.id});await itemList(main,false,page,status);note('تم إرسال السؤال للمراجعة')}catch(e){note(e.message,true);submit.disabled=false}};
   if(transfer)transfer.onclick=async()=>{if(!confirm('نقل السؤال لمسودة محرر الدرس دون نشر للطلاب؟'))return;transfer.disabled=true;try{const out=await call('owner/transfer',{id:q.id});await itemList(main,false,page,status);note('تم النقل لمسودة الدرس '+out.course+'، ومطلوب تدقيق المصدر قبل النشر')}catch(e){note(e.message,true);transfer.disabled=false}};
-  article.querySelectorAll('.reviewAction').forEach(b=>b.onclick=async()=>{b.disabled=true;try{await call('owner/review',{id:q.id,decision:b.dataset.decision,note:article.querySelector('.reviewNote').value});await itemList(main,true,page);note('تم تسجيل قرار المراجعة')}catch(e){note(e.message,true);b.disabled=false}});
+  article.querySelectorAll('.reviewAction').forEach(b=>b.onclick=async()=>{
+    const action=b.dataset.decision,noteValue=article.querySelector('.reviewNote').value;
+    if(action==='approved_transfer'&&!confirm('راجعت السؤال والمصدر والإجابة؟ سيتم اعتماده ونقله لمسودة الدرس، دون نشره للطلاب.'))return;
+    b.disabled=true;let approved=false;
+    try{
+      await call('owner/review',{id:q.id,decision:action==='approved_transfer'?'approved':action,note:noteValue});
+      if(action==='approved_transfer'){
+        approved=true;
+        const out=await call('owner/transfer',{id:q.id});
+        await itemList(main,true,page);
+        note('تم الاعتماد والنقل لمسودة درس '+out.course+'، بدون نشر للطلاب');
+      }else{
+        await itemList(main,true,page);
+        note('تم تسجيل قرار المراجعة');
+      }
+    }catch(err){
+      if(approved){
+        try{await itemList(main,false,1,'approved')}catch{}
+        note('تم اعتماد السؤال، لكن النقل تعذر: '+err.message+'. افتح بنك الأسئلة > معتمد لإعادة النقل.',true);
+      }else{note(err.message,true);b.disabled=false}
+    }
+  });
  });
 }
 async function activity(main,page=1){
