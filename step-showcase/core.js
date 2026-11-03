@@ -30,5 +30,13 @@
   log(text){A.db.log.unshift({action:text,date:new Date().toISOString()});A.db.log=A.db.log.slice(0,120);A.save()},
   cleanupAudio(){if(A.ui.audio?.timer)clearInterval(A.ui.audio.timer);try{speechSynthesis.cancel()}catch{}A.ui.audio=null}
  };
+
+ A.passRate=()=>Number(A.db.passRate||75);
+ A.activeText=()=>{const u=A.current();return u.status!=="active"?"موقوف":!A.plan(u.plan)?"بلا باقة":u.expiry<A.today()?"منتهي":"نشط"};
+ A.attempts=id=>A.db.attempts.filter(a=>!id||a.userId===id).slice().reverse();
+ A.record=(kind,score,total,extra={})=>{A.db.attempts.push({id:"at"+Date.now().toString(36).slice(2,6),userId:A.current().id,kind,score,total,date:new Date().toISOString(),...extra});A.save()};
+ A.score=(qs,answers)=>qs.reduce((n,q)=>n+(answers[q.id]===q.answer?1:0),0);
+ A.allAnswered=(qs,answers)=>qs.length>0&&qs.every(q=>Number.isInteger(answers[q.id]));
+ A.progressBar=n=>'<div class="progress-track"><span style="width:'+Math.max(0,Math.min(100,n))+'%"></span></div>';
  window.STEP_SHOWCASE_CORE=true;
 })();
