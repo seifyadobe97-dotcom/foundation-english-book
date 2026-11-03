@@ -332,7 +332,7 @@ async function importWorkspace(main){
     items.push({source_number:key,source_page:p||1,axis:axes[x.axis]?x.axis:'reading-comprehension',
      group:String(x.group||'unspecified').slice(0,100),question:String(x.question),options,
      proposed_correct:['A','B','C','D'].includes(x.proposed_correct)?x.proposed_correct:null,
-     source_answer_key:['A','B','C','D'].includes(x.proposed_correct)?x.proposed_correct:null,
+     source_answer_key:['A','B','C','D'].includes(x.source_answer_key)?x.source_answer_key:null,
      skill_tag:String(x.skill_tag||''),flags,source_reference:file.name+' PDF p'+(p||1)+' Q'+key,
      origin_kind:'original',
      explanation_ar:String(x.explanation_ar||'').slice(0,2500)||null,
