@@ -15,7 +15,8 @@ assert(!/https?:\/\/funltjxavowlnnfibhpl|SUPABASE_SERVICE_ROLE_KEY|service_role/
 assert(index.includes("connect-src 'none'"),"Demo must not make external network requests");
 assert(app.includes("15*questions.listening.length"),"Listening exam preview must use 15 seconds per visible question");
 const server=createServer(async (req,res)=>{
- const file=path.resolve(root,"."+decodeURIComponent(new URL(req.url,"http://localhost").pathname));
+ const requestPath=decodeURIComponent(new URL(req.url,"http://localhost").pathname);
+ const file=path.resolve(root,"."+requestPath+(requestPath.endsWith("/")?"index.html":""));
  if(!file.startsWith(root+path.sep)){res.writeHead(403);res.end();return;}
  try{
   if(!(await stat(file)).isFile())throw Error("Missing file");
